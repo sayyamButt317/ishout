@@ -13,7 +13,7 @@ interface GuidedQuestionState {
     getField: <K extends keyof Omit<GuidedQuestionState, 'getField'>>(
         field: K
     ) => GuidedQuestionState[K];
-    clearGuidedQuestion: () => void;
+    // clearGuidedQuestion: () => void;
 }
 
 export const useGuidedQuestionStore = create<GuidedQuestionState>()(
@@ -45,29 +45,29 @@ export const useGuidedQuestionStore = create<GuidedQuestionState>()(
                 // setField: (field: keyof GuidedQuestionsType, value: GuidedQuestionState[keyof GuidedQuestionState]) => set((state) => ({ ...state, [field]: value })),
                 setMultipleFields: (fields: Partial<GuidedQuestionsType>) => set({ guidedQuestion: { ...get().guidedQuestion, ...fields } }),
                 getField: (field) => get()[field],
-                clearGuidedQuestion: () => set({
-                    guidedQuestion: {
-                        goal: '',
-                        industry: '',
-                        targetCountry: '',
-                        targetDemographics: '',
-                        platforms: [],
-                        startDate: '',
-                        endDate: '',
-                        budgetRange: '',
-                        influencerCount: '',
-                        influencerTier: '',
-                        keyRequirements: '',
-                        nationalities: [],
-                        contentType: [],
-                        contentQuantity: '',
-                        messaging: '',
-                        hashtags: '',
-                        brandGuidelines: '',
-                        restrictions: '',
-                        usageRights: false,
-                    }
-                }),
+                // clearGuidedQuestion: () => set({
+                //     guidedQuestion: {
+                //         goal: '',
+                //         industry: '',
+                //         targetCountry: '',
+                //         targetDemographics: '',
+                //         platforms: [],
+                //         startDate: '',
+                //         endDate: '',
+                //         budgetRange: '',
+                //         influencerCount: '',
+                //         influencerTier: '',
+                //         keyRequirements: '',
+                //         nationalities: [],
+                //         contentType: [],
+                //         contentQuantity: '',
+                //         messaging: '',
+                //         hashtags: '',
+                //         brandGuidelines: '',
+                //         restrictions: '',
+                //         usageRights: false,
+                //     }
+                // }),
 
 
             }),

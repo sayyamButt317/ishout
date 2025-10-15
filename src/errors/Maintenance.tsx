@@ -1,4 +1,4 @@
-import { Button } from '@/src/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 const MaintenanceError = () => {
   return (
@@ -8,7 +8,7 @@ const MaintenanceError = () => {
         <span className="font-medium">Website is under maintenance!</span>
         <p className="text-center text-muted-foreground">
           The site is not available at the moment. <br />
-          We'll be back online shortly.
+          We&apos;ll be back online shortly.
         </p>
         <div className="mt-6 flex gap-4">
           <Button variant="outline">Learn more</Button>

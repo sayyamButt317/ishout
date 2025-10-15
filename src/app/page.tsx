@@ -23,8 +23,8 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
           <div className="flex flex-col items-center md:items-start">
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-center md:text-left text-colored bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 via-teal-600 to-sky-600 drop-shadow-sm">
-              <span className="text-black">Find the right creators</span> on
-              Instagram <span className="text-black">TikTok</span> and YouTube
+              <span className="text-black">Activate on</span> on Instagram{" "}
+              <span className="text-black">TikTok</span> and YouTube
             </h1>
             <p className="mt-5 text-slate-600 md:text-lg max-w-2xl text-center md:text-left">
               Launch data-driven campaigns, discover creators by followers,
