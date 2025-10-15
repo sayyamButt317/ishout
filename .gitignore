@@ -1,0 +1,33 @@
+# Ignore node modules in both frontend and backend
+node_modules
+.next
+
+# Ignore environment variables
+.env
+
+# Ignore logs
+logs
+*.log
+
+# === LOG FILES ===
+*.log
+logs/
+npm-debug.log*
+
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore build files
+dist
+build
+
+# Ignore IDE/editor folders
+.vscode/
+.idea/
+
+# Ignore coverage reports
+coverage/
+package-lock.json
+node_modules
