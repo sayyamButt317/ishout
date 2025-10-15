@@ -1,6 +1,6 @@
-import { Card } from '@/src/components/ui/card';
-import { AlertCircleIcon, X } from 'lucide-react';
-import { Button } from '@/src/components/ui/button';
+import { Card } from "@/components/ui/card";
+import { AlertCircleIcon, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface errorProps {
   statuscode: number;
@@ -59,20 +59,18 @@ const Errormessage = ({
             Oops! Something went wrong
           </h1>
           <p className="text-blue-200 max-w-md text-sm md:text-base">
-            We couldn&apos;t process your request at the moment. Please check your
-            connection and try again later.
+            We couldn&apos;t process your request at the moment. Please check
+            your connection and try again later.
           </p>
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 md:p-4 w-full">
             <p className="text-error text-xs md:text-sm">
-              <span className="font-semibold">Error {statuscode}:</span>{' '}
+              <span className="font-semibold">Error {statuscode}:</span>{" "}
               {actualMessage}
             </p>
           </div>
         </div>
         <div className="pt-4 md:pt-6 flex justify-center md:justify-end">
-          <Button onClick={SendAnotherMessage}>
-            Send Another Message
-          </Button>
+          <Button onClick={SendAnotherMessage}>Send Another Message</Button>
         </div>
       </Card>
     </div>

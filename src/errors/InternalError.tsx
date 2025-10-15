@@ -1,5 +1,5 @@
-import { Button } from '@/src/components/ui/button';
-import { useNavigate } from 'react-router';
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
 
 interface InternalErrorProps {
   message?: string;
@@ -24,7 +24,7 @@ const InternalError = ({
               Go Back
             </Button>
           )}
-          <Button onClick={() => navigate('/')}>Back to Home</Button>
+          <Button onClick={() => navigate("/")}>Back to Home</Button>
         </div>
       </div>
     </div>

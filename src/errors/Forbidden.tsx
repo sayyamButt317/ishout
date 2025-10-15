@@ -1,5 +1,5 @@
-import { Button } from '@/src/components/ui/button';
-import { useNavigate } from 'react-router';
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
 
 const ForbiddenError = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const ForbiddenError = () => {
           <Button variant="outline" onClick={() => navigate(-1)}>
             Go Back
           </Button>
-          <Button onClick={() => navigate('/')}>Back to Home</Button>
+          <Button onClick={() => navigate("/")}>Back to Home</Button>
         </div>
       </div>
     </div>
