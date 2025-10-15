@@ -18,14 +18,14 @@ import { CampaignMessageComponent } from "@/src/app/component/guided-questions/c
 import { CompetitorComponent } from "@/src/app/component/guided-questions/competitor";
 import { UsageRightsComponent } from "@/src/app/component/guided-questions/usagerights";
 import QuestionGuidedhook from "@/src/hooks/questuionguided.hook";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+// import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 
 export default function GuidedQuestionsPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 15;
   const guidedQuestion = useGuidedQuestionStore((s) => s.guidedQuestion);
   const setMultipleFields = useGuidedQuestionStore((s) => s.setMultipleFields);
-  const {clearGuidedQuestion} = useReadyMadeTemplateStore();
+  // const {clearGuidedQuestion} = useReadyMadeTemplateStore();
   const { mutateAsync: questionGuided } = QuestionGuidedhook();
 
   const nextStep = () => {
@@ -219,9 +219,7 @@ export default function GuidedQuestionsPage() {
                 </Button>
               )}
             </div>
-            <Button variant="outline" 
-            className="cursor-pointer"
-            >
+            <Button variant="outline" className="cursor-pointer">
               New Campaign
             </Button>
           </form>
