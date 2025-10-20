@@ -31,10 +31,10 @@ export function ChoosePlatform() {
       >
         {Platforms.map((platform) => (
           <SeletedItem
-            key={platform.name}
-            item={platform.name as PlatformType}
-            color={platform.color}
-            icon={platform.icon}
+            key={platform?.name}
+            item={platform?.name as PlatformType}
+            color={platform?.color}
+            icon={platform?.icon}
             // isSelected={getField("isSelected")}
             onClick={() => {
               addToArray("platform", platform.name);

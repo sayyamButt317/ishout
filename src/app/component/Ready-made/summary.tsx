@@ -18,8 +18,6 @@ const Summary = () => {
       country: country,
     });
   };
-  // const { handleLaunchCampaign } = useLaunchCampaign();
-  // const { isPending } = useLaunchCampaign();
   return (
     <>
       {/* Summary */}
@@ -98,9 +96,6 @@ const Summary = () => {
           </div>
 
           <div className="mt-6 flex items-center justify-between gap-4">
-            {/* <button className="px-4 py-2 text-Secondary-text hover:text-Primary-text transition-colors">
-              ← Back
-            </button> */}
             <CustomButton
               onClick={() => clearTemplate()}
               className="bg-primaryButton hover:bg-primaryHover"

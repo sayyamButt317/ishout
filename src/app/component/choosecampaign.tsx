@@ -7,6 +7,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { CampaignType } from "@/src/app/component/Ready-made/campaignType";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 export function ChooseCampaign({
   open,
@@ -18,6 +19,7 @@ export function ChooseCampaign({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
+        <DialogTitle>Choose Template</DialogTitle>
         <CampaignType />
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>

@@ -1,17 +1,9 @@
 import React from "react";
 import { campaignNames, getCategoryIcon } from "@/src/constant/campaignname";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
-// import { Button } from "@/components/ui/button";
-// import { CirclePlus } from "lucide-react";
-// import { Input } from "@/components/ui/input";
 
 const CampaignCategoryComponent = () => {
   const { addToArray } = useReadyMadeTemplateStore();
-
-  // const addnewInput = () => {
-  //   setField("iseditable", !getField("iseditable"));
-  //   // addToArray("category", getField("category")[0] || "");
-  // };
 
   return (
     <section className=" rounded-xl border border-section-overlays bg-background p-6 bg-gradient-to-r from-[#0c0c22]  via-[#3c69bb] to-[#1a1a3f]">

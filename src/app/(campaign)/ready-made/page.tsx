@@ -10,7 +10,6 @@ import Summary from "../../component/Ready-made/summary";
 export default function CampaignPage() {
   return (
     <div className="min-h-screen ">
-      {/* Header */}
       <header className="border-b border-section-overlays bg-background/80 backdrop-blur">
         <div className="max-w-7xl mx-auto px-6 py-10 text-center">
           <h1 className="text-3xl md:text-4xl font-bold text-Primary-text">
@@ -21,10 +20,7 @@ export default function CampaignPage() {
           </p>
         </div>
       </header>
-
-      {/* Main: steps */}
       <main className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-12 gap-6 ">
-        {/* Steps */}
         <section className="lg:col-span-8 space-y-6">
           <ChoosePlatform />
           <CampaignName />

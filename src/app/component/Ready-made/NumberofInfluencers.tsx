@@ -20,7 +20,7 @@ export function NumberofInfluencers() {
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
-        {NumberofFollowers.map((influencer) => (
+        {NumberofFollowers?.map((influencer) => (
           <button
             key={influencer}
             onClick={() => setField("limit", influencer)}
