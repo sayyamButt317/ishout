@@ -1,14 +1,13 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
 
 @theme {
   --font-sans: "sora", sans-serif;
+
   --color-background: #00102a;
   --color-foreground: #ffffff;
-  --color-gradient: #ffff004d, rgba(51, 255, 0, 0.3), rgba(255, 128, 0, 0.17);
   --color-background-gradient: #0e0e22, #14142f;
+
   --color-section-overlays: rgba(255, 255, 255, 0.04);
   --color-highlight-gradient: linear-gradient(135deg, #0c0c22 0%, #1a1a3f 100%);
 
@@ -20,13 +19,21 @@
   --color-red-text: #ff5e7e;
   --color-error: #ff0000;
 
-  --button-primary: #82de68;
-  --button-primary-strong: #64c857;
-  --button-primary-foreground: #ffffff;
-  --button-primary-foreground-strong: #ffffff;
-  --button-primary-hover: #64c857;
-  --button-primary-hover-strong: #4a9e40;
-  --button-primary-active: #347a30;
+  --color-primaryButton: #ff4e7e;
+  --color-primaryHover: #ff6f7f;
+  --color-secondaryButton: #170f49;
+  --color-secondaryHover: #18124b;
+  --color-deleteButton: #ef4444;
+
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
 }
 
 @theme inline {

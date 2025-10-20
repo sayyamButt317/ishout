@@ -1,0 +1,22 @@
+export const CampaignRegion = [
+    'Asia',
+    'Africa',
+    'Europe',
+    'North America',
+    'South America',
+    'Australia',
+    'United Kingdom',
+    'Canada',
+    'Mexico',
+    'Brazil',
+    'Argentina',
+    'India',
+    'China',
+    'Japan',
+    'South Korea',
+    'Singapore',
+    'UAE',
+    'South Africa',
+    'Middle East',
+    'Other'
+]

@@ -3,15 +3,12 @@ import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
 
 
-interface AddedInfluencersProps{
+interface AddedInfluencersProps {
     influencers: ReadyMadeInfluencerResponse[];
-    setField: <K extends keyof Omit<AddedInfluencersProps, 'setField'>>(
-        field: K,
-        value: AddedInfluencersProps[K]
-    ) => void;
-    getField: <K extends keyof Omit<AddedInfluencersProps, 'getField'>>(
-        field: K
-    ) => AddedInfluencersProps[K];
+    addInfluencer: (influencer: ReadyMadeInfluencerResponse) => void;
+    addInfluencers: (influencers: ReadyMadeInfluencerResponse[]) => void;
+    getInfluencers: () => void;
+    removeInfluencerById: (_id: string) => void;
     clearInfluencers: () => void;
 }
 
@@ -20,8 +17,14 @@ export const AddedInfluencersStore = create<AddedInfluencersProps>()(
         persist(
             (set, get) => ({
                 influencers: [],
-                setField: (field, value) => set((state) => ({ ...state, [field]: value })),
-                getField: (field) => get()[field],
+                addInfluencer: (influencer: ReadyMadeInfluencerResponse) =>
+                    set({ influencers: [...get().influencers, influencer] }),
+                addInfluencers: (influencers: ReadyMadeInfluencerResponse[]) =>
+                    set({ influencers: [...get().influencers, ...influencers] }),
+                getInfluencers() {
+                },
+                removeInfluencerById: (_id: string) =>
+                    set({ influencers: get().influencers.filter((i) => i._id !== _id) }),
                 clearInfluencers: () => set({ influencers: [] }),
             }),
             {

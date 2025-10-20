@@ -1,10 +1,11 @@
-import { PlatformType } from "@/src/store/Campaign/ready-made";
+import { PlatformType } from "@/src/types/readymadeinfluencers-type";
+import { Check } from "lucide-react";
 
 interface SeletedItemProps {
   item: PlatformType;
   color: string;
   icon: React.ReactNode;
-  isSelected: boolean;
+  isSelected?: boolean;
   onClick: () => void;
 }
 export default function SeletedItem({
@@ -23,7 +24,9 @@ export default function SeletedItem({
     >
       <div
         className={`mb-1 ${
-          isSelected ? "animate-pulse" : "group-hover:animate-pulse"
+          isSelected
+            ? "animate-pulse bg-secondaryButton"
+            : "group-hover:animate-pulse"
         }`}
       >
         {icon}
@@ -36,9 +39,10 @@ export default function SeletedItem({
         {item}
       </span>
       {isSelected && (
-        <span className="ring-2 ring-green-500 ring-offset-2 ring-offset-white shadow-lg scale-[1.03] pointer-events-none absolute -inset-px rounded-xl border"></span>
+        <span className="bg-secondaryButton w-full h-full absolute -inset-px rounded-xl animate-pulse">
+          <Check size="sm" />
+        </span>
       )}
-      
     </div>
   );
 }

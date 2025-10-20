@@ -5,11 +5,18 @@ import React from "react";
 export function NumberofInfluencers() {
   const { setField } = useReadyMadeTemplateStore();
   return (
-    <section className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+    <section className=" rounded-2xl border p-6 shadow-sm bg-background bg-gradient-to-r from-[#0c0c22]  via-[#3c69bb] to-[#1a1a3f]">
       <div className="flex items-start justify-between gap-3 mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-slate-900">Choose Number of Influencers</h3>
-          <p className="text-sm text-slate-600">Pick 1, 2, 5, 10 or a custom number.</p>
+          <div className="mb-4 flex items-center gap-3">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primaryButton text-white text-xs font-semibold">
+              5
+            </span>
+            <h2 className="text-lg font-semibold text-Primary-text">
+              Number of Influencers
+            </h2>
+          </div>
+          <p className="text-sm text-Secondary-text">Pick a number.</p>
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">

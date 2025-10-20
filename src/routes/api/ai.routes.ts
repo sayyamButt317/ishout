@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { AI_ENDPOINT } from './endpoint';
-import { PlatformType } from '@/src/store/Campaign/ready-made';
-import { ReadyMadeInfluencersResponse } from '@/src/types/readymadeinfluencers-type';
+import { DeleterInfluenceerequest, InfluencerResponseProps, MoreInfluencerRequest, ReadyMadeInfluencersRequest } from '@/src/types/readymadeinfluencers-type';
 import { GuidedQuestionsType } from '@/src/types/guidedquestion-type';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -49,10 +48,21 @@ const api = axios.create({
 
 //Get All Jobs
 
-export const FindInfluencer = async (platform: PlatformType, category: string, limit: string, followers: string, country: string) => {
-  const response = await api.post<ReadyMadeInfluencersResponse>(AI_ENDPOINT.FIND_INFLUENCER, { platform, category, limit, followers,country});
+export const FindInfluencer = async (influencerRequest: InfluencerResponseProps) => {
+  const response = await api.post<ReadyMadeInfluencersRequest>(AI_ENDPOINT.FIND_INFLUENCER, influencerRequest);
   return response.data;
 };
+
+export const MoreInfluencer = async (influencerRequest: MoreInfluencerRequest) => {
+  const response = await api.post<ReadyMadeInfluencersRequest>(AI_ENDPOINT.MORE_INFLUENCER, influencerRequest);
+  return response.data;
+}
+
+export const DeleteInfluencer = async (deleteInfluencerRequest: DeleterInfluenceerequest) => {
+  const response = await api.delete(AI_ENDPOINT.DELETE_INFLUENCER, { data: deleteInfluencerRequest });
+  return response.data;
+};
+
 
 export const QuestionGuided = async (guidedQuestion: GuidedQuestionsType) => {
   const response = await api.post<GuidedQuestionsType>(AI_ENDPOINT.QUESTION_GUIDED, guidedQuestion);

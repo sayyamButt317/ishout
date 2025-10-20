@@ -1,5 +1,6 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
   content: [
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
@@ -16,42 +17,23 @@ module.exports = {
     },
     extend: {
       colors: {
-        'background-color': '#0B0B17',
-        'background-Gradient': '#0E0E22, #14142F',
+        'background': '#0B0B17',
+        'backgroundGradient': '#0E0E22, #14142F',
         'section-overlays': 'rgba(255,255,255,0.04)',
         //behind phon gradient
         'highlight-gradient': 'linear-gradient(135deg, #0C0C22 0%, #1A1A3F 100%)',
-        'tess-gradient': '#ffff004d, rgba(51, 255, 0, 0.3), rgba(255, 128, 0, 0.17)',
-        'tess-blue': '#170F49',
-        'tess-gray': '#6F6C90',
-        'tess-orange': '#f7941D',
-        'tess-red': '#EF4444',
-      },
-      textColor: {
+        // Custom button colors
+        'primaryButton': '#FF5E7E',
+        'primaryHover': '#FF6F7F',
+        'secondaryButton': '#170F49',
+        'secondaryHover': '#18124B',
+
+        // Custom text colors
         'Primary-text': '#FFFFFF',
         'Secondary-text': '#B0B0C3',
         'Pink-text': '#FF3CAC',
         'Purple-text': '#784BA0',
         'Red-text': '#FF5E7E',
-      },
-      button: {
-        'tess-primary': '#82de68',
-        'tess-primary-strong': '#64C857',
-        'tess-primary-foreground': '#FFFFFF',
-        'tess-primary-foreground-strong': '#FFFFFF',
-        'tess-primary-hover': '#64C857',
-      },
-      borderRadius: {
-        sm: 'calc(var(--radius) - 4px)',
-        md: 'calc(var(--radius) - 2px)',
-        lg: 'var(--radius)',
-        xl: 'calc(var(--radius) + 4px)',
-        input: '1rem',
-      },
-      spacing: {
-        'input-height': '4rem',
-        'section-padding': '2rem',
-        'section-padding-lg': '4rem',
       },
       fontFamily: {
         roboto: ['var(--font-roboto)', 'Roboto', 'sans-serif'],
@@ -86,4 +68,6 @@ module.exports = {
     },
   },
   plugins: [],
-};
+}
+
+export default config

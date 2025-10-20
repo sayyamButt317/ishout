@@ -4,64 +4,36 @@ import CampaignName from "@/src/app/component/Ready-made/campaignCategory";
 import { InfluencersFollowersRange } from "@/src/app/component/Ready-made/InfluencersFollowersRange";
 import { NumberofInfluencers } from "@/src/app/component/Ready-made/NumberofInfluencers";
 import { ChoosePlatform } from "@/src/app/component/Ready-made/platform";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
-import FindInfluencerResponsehook from "@/src/hooks/readymadeinfluencer.hook";
-import Spinner from "../../component/spinner";
 import { InfluencerCountry } from "../../component/Ready-made/country";
+import Summary from "../../component/Ready-made/summary";
 
 export default function CampaignPage() {
-  const { platform, category, limit, followers, country } =
-    useReadyMadeTemplateStore();
-  const { mutateAsync: findInfluencer, isPending } =
-    FindInfluencerResponsehook();
-  const handleLaunchCampaign = async () => {
-    await findInfluencer({ platform, category, limit, followers, country });
-  };
-
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen ">
       {/* Header */}
-      <div className="bg-white border-b border-slate-200">
-        <div className="max-w-4xl mx-auto px-6 py-8">
-          <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">
-              Create Your Campaign
-            </h1>
-            <p className="text-slate-600 max-w-2xl mx-auto">
-              Build a targeted influencer campaign in just a few simple steps
-            </p>
-          </div>
+      <header className="border-b border-section-overlays bg-background/80 backdrop-blur">
+        <div className="max-w-7xl mx-auto px-6 py-10 text-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-Primary-text">
+            Create Your Campaign
+          </h1>
+          <p className="text-Secondary-text mt-2">
+            Build a targeted influencer campaign in just a few simple steps
+          </p>
         </div>
-      </div>
+      </header>
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="space-y-12">
-          <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <ChoosePlatform />
-          </div>
-         
+      {/* Main: steps */}
+      <main className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-12 gap-6 ">
+        {/* Steps */}
+        <section className="lg:col-span-8 space-y-6">
+          <ChoosePlatform />
           <CampaignName />
           <InfluencersFollowersRange />
           <InfluencerCountry />
-     
           <NumberofInfluencers />
-        </div>
-        <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-between items-center">
-          <button className="px-6 py-3 text-slate-600 hover:text-slate-800 transition-colors">
-            ← Back to Home
-          </button>
-          <div className="flex gap-4">
-            <button
-              onClick={() => handleLaunchCampaign()}
-              disabled={isPending}
-              className="px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg hover:shadow-md transition-all font-semibold cursor-pointer"
-            >
-              {isPending ? <Spinner /> : "Launch Campaign"}
-            </button>
-          </div>
-        </div>
-      </div>
+        </section>
+        <Summary />
+      </main>
     </div>
   );
 }
