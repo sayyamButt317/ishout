@@ -5,7 +5,7 @@ import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
 
 export default function ApprovedInfluencers() {
-  const { influencers } = AddedInfluencersStore();
+  const { influencers, clearInfluencers } = AddedInfluencersStore();
   const router = useRouter();
 
   return (
@@ -76,11 +76,11 @@ export default function ApprovedInfluencers() {
         <CustomButton
           className="sm:w-auto bg-primaryButton hover:bg-primaryHover text-white"
           onClick={() => {
-            // Handle campaign creation or next step
-            console.log("Proceed with campaign");
+            clearInfluencers();
+            router.push("/ready-made");
           }}
         >
-          Create Campaign
+          Clear All
         </CustomButton>
       </div>
     </div>
