@@ -28,7 +28,7 @@ const Summary = () => {
             <div>
               <p className="text-Secondary-text mb-2">Platform</p>
               <div className="flex flex-wrap gap-2">
-                {platform?.length ? (
+                {platform && Array.isArray(platform) && platform.length ? (
                   platform.map((platform, i) => (
                     <span
                       key={`${platform}-${i}`}
@@ -46,7 +46,7 @@ const Summary = () => {
             <div>
               <p className="text-Secondary-text mb-2">Category</p>
               <div className="flex flex-wrap gap-2">
-                {category?.length ? (
+                {category && Array.isArray(category) && category.length ? (
                   category.map((category, i) => (
                     <span
                       key={`${category}-${i}`}
@@ -65,7 +65,9 @@ const Summary = () => {
               <div>
                 <p className="text-Secondary-text mb-1">Followers</p>
                 <span className="inline-block rounded-md border border-section-overlays px-2.5 py-1 text-Primary-text min-h-8">
-                  {followers?.length ? followers.join(", ") : "-"}
+                  {followers && Array.isArray(followers) && followers.length
+                    ? followers.join(", ")
+                    : "-"}
                 </span>
               </div>
               <div>
@@ -79,7 +81,7 @@ const Summary = () => {
             <div>
               <p className="text-Secondary-text mb-2">Country</p>
               <div className="flex flex-wrap gap-2">
-                {country?.length ? (
+                {country && Array.isArray(country) && country.length ? (
                   country.map((country, i) => (
                     <span
                       key={`${country}-${i}`}

@@ -45,8 +45,14 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
                 setField: (field, value) => set((state) => ({ ...state, [field]: value })),
                 getField: (field) => get()[field],
 
-                addToArray: (field, value) => set((state) => ({ ...state, [field]: [...(state[field] || []), value] })),
-                removeFromArray: (field, value) => set((state) => ({ ...state, [field]: (state[field] || []).filter((v) => v !== value) })),
+                addToArray: (field, value) => set((state) => ({
+                    ...state,
+                    [field]: [...(Array.isArray(state[field]) ? state[field] : []), value]
+                })),
+                removeFromArray: (field, value) => set((state) => ({
+                    ...state,
+                    [field]: (Array.isArray(state[field]) ? state[field] : []).filter((v) => v !== value)
+                })),
                 clearArray: (field) => set((state) => ({ ...state, [field]: [] })),
 
                 setResults: (results: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest) => set({ results }),
