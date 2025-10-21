@@ -11,28 +11,28 @@ export default function LandingPage() {
       <ChooseCampaign open={isOpen} onOpenChange={setIsOpen} />
 
       {/* Hero Section */}
-      <section className=" w-full bg-background ">
-        <div className="max-w-6xl mx-auto gap-10 items-center">
-          <div className="flex flex-col items-center md:items-center justify-center py-20">
-            <h1 className="italic text-Primary-text text-5xl font-thin text-center md:text-left drop-shadow-sm">
+      <section className="w-full bg-background">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 gap-10 items-center">
+          <div className="flex flex-col items-center md:items-center justify-center py-14 sm:py-16 md:py-20">
+            <h1 className="italic text-Primary-text text-3xl sm:text-4xl md:text-5xl font-thin text-center drop-shadow-sm">
               Activate at Scale,1000 collaborations
             </h1>
-            <h1 className="italic text-Pink-text text-4xl font-bold mt-3">
+            <h1 className="italic text-Pink-text text-2xl sm:text-3xl md:text-4xl font-bold mt-2 sm:mt-3 text-center">
               One AI-Powered platform.
             </h1>
-            <p className="italic mt-5 text-sm text-Secondary-text md:text-lg max-w-2xl text-center md:text-left">
+            <p className="italic mt-4 sm:mt-5 text-sm sm:text-base md:text-lg text-Secondary-text max-w-2xl text-center">
               where brands build influence with data, spread and precision
             </p>
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center md:items-stretch">
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-stretch sm:items-center">
               <CustomButton
-                className="bg-primaryButton hover:bg-primaryHover"
+                className="w-full sm:w-auto bg-primaryButton hover:bg-primaryHover"
                 onClick={() => setIsOpen(true)}
               >
                 Book a Demo
               </CustomButton>
               <CustomButton
-                className="bg-secondaryButton hover:bg-secondaryHover"
+                className="w-full sm:w-auto bg-secondaryButton hover:bg-secondaryHover"
                 onClick={() => setIsOpen(true)}
               >
                 Watch How it Works

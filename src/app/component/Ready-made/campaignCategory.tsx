@@ -24,7 +24,7 @@ const CampaignCategoryComponent = () => {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
-        {campaignNames.map((category) => (
+        {campaignNames?.map((category) => (
           <button
             key={category}
             onClick={() => addToArray("category", category)}
@@ -41,24 +41,6 @@ const CampaignCategoryComponent = () => {
           </button>
         ))}
       </div>
-      {/* {getField("iseditable") && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 mt-4">
-          <Input
-            type="text"
-            className="w-full"
-            value={getField("category")}
-            onChange={(e) => addToArray("category", e.target.value)}
-          />
-        </div>
-      )} */}
-      {/* <Button
-        className="mt-4 cursor-pointer rounded-full bg-transparent text-black border hover:text-white hover:bg-[#f7941D] hover:border-transparent"
-        type="button"
-        onClick={addnewInput}
-      >
-        <CirclePlus />
-        {getField("iseditable") ? "save" : "add manually"}
-      </Button> */}
     </section>
   );
 };

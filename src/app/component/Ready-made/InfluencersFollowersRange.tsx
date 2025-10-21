@@ -35,7 +35,7 @@ export function InfluencersFollowersRange() {
       </div>
 
       <div className="space-y-6">
-        {influencerCategories.map((category) => (
+        {influencerCategories?.map((category) => (
           <div key={category?.title} className="space-y-3 ">
             <div className="border-l-4 border-blue-500 pl-4">
               <h4 className="text-sm font-semibold text-Primary-text">

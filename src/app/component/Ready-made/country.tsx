@@ -20,7 +20,7 @@ export function InfluencerCountry() {
         </div>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
-        {INSTAGRAM_INFLUENCERS_COUNTRIES.map((influencer_country) => (
+        {INSTAGRAM_INFLUENCERS_COUNTRIES?.map((influencer_country) => (
           <button
             key={influencer_country}
             onClick={() => addToArray("country", influencer_country)}

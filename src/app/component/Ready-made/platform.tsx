@@ -29,7 +29,7 @@ export function ChoosePlatform() {
         role="radiogroup"
         aria-label="Choose Platform"
       >
-        {Platforms.map((platform) => (
+        {Platforms?.map((platform) => (
           <SeletedItem
             key={platform?.name}
             item={platform?.name as PlatformType}
@@ -37,7 +37,7 @@ export function ChoosePlatform() {
             icon={platform?.icon}
             // isSelected={getField("isSelected")}
             onClick={() => {
-              addToArray("platform", platform.name);
+              addToArray("platform", platform?.name);
               // setField("isSelected", !getField("isSelected"));
             }}
           />
