@@ -2,9 +2,7 @@
 import { useState } from "react";
 import CustomButton from "./component/button";
 import { ChooseCampaign } from "@/src/app/component/choosecampaign";
-import Link from "next/link";
 import Header from "./component/header";
-
 export default function LandingPage() {
   const [isOpen, setIsOpen] = useState(false);
 
