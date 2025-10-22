@@ -3,12 +3,12 @@ import { toast } from "sonner";
 import { MoreInfluencerReplacePayload, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from "../types/readymadeinfluencers-type";
 import { useMutation } from "@tanstack/react-query";
 import { useReadyMadeTemplateStore } from "../store/Campaign/ready-made";
-import { MoreInfluencer } from "../routes/api/ai.routes";
+import { RejectedInfluencer } from "../routes/api/ai.routes";
 
-export default function MoreInfluencershook() {
+export default function RejectedInfluencershook() {
     const { results, setResults } = useReadyMadeTemplateStore();
     return useMutation({
-        mutationFn: (payload: MoreInfluencerReplacePayload) => MoreInfluencer(payload.request),
+        mutationFn: (payload: MoreInfluencerReplacePayload) => RejectedInfluencer(payload.request),
         onSuccess: async (data: ReadyMadeInfluencersRequest, variables: MoreInfluencerReplacePayload) => {
             // Replace the rejected influencer with the first returned suggestion
             const replacement = data?.influencers?.[0];

@@ -4,6 +4,7 @@ export interface InfluencerResponseProps {
   limit: string;
   followers: string[];
   country: string[];
+  is_campaign_create: boolean;
 }
 export type PlatformType = "Instagram" | "YouTube" | "TikTok" | ""
 export interface FoundedInfluencers {
@@ -76,4 +77,26 @@ export interface MoreInfluencerRequest {
 export interface MoreInfluencerReplacePayload {
   request: MoreInfluencerRequest;
   replaceId: string;
+}
+
+export interface ApprovedInfluencersRequest {
+  campaign_id: string;
+  platform: string[];
+  category: string[];
+  influencer_username: string[];
+  bio: string[];
+  pic: string[];
+  followers: string[];
+  min: number;
+  country: string[];
+  engagementRate: number[];
+};
+export interface ApprovedInfluencersResponse {
+  influencers: ApprovedInfluencersResponse[];
+  notes: {
+    requested: number;
+    returned: number;
+    global_cap: number;
+    strategy: string;
+  };
 }

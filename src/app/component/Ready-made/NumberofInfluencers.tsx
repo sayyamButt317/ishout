@@ -1,9 +1,12 @@
 import { NumberofFollowers } from "@/src/constant/numberofInfluencers";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 import React from "react";
+import SeletedItem from "../seleteditem";
 
 export function NumberofInfluencers() {
-  const { setField } = useReadyMadeTemplateStore();
+  const { setField, getField, removeFromArray } = useReadyMadeTemplateStore();
+  const selectedLimit = getField("limit");
+
   return (
     <section className=" rounded-2xl border p-6 shadow-sm bg-background bg-gradient-to-r from-[#0c0c22]  via-[#3c69bb] to-[#1a1a3f]">
       <div className="flex items-start justify-between gap-3 mb-4">
@@ -21,17 +24,44 @@ export function NumberofInfluencers() {
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
         {NumberofFollowers?.map((influencer) => (
-          <button
+          <SeletedItem
             key={influencer}
-            onClick={() => setField("limit", influencer)}
-            className="group rounded-xl border border-slate-200 bg-white p-3 sm:p-4 transition-all hover:shadow-md hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-300"
-          >
-            <span className="block w-full text-left text-sm font-medium text-slate-700 group-hover:text-slate-900 truncate">
-              {influencer}
-            </span>
-          </button>
+            item={influencer}
+            color="bg-white hover:bg-gray-50 border border-slate-200 hover:border-primaryButton focus:ring-2 focus:ring-primaryButton focus:ring-offset-2"
+            icon={
+              <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+                {influencer}
+              </span>
+            }
+            isSelected={selectedLimit === influencer}
+            onClick={() => {
+              if (selectedLimit === influencer) {
+                removeFromArray("limit", influencer);
+              } else {
+                setField("limit", influencer);
+              }
+            }}
+          />
         ))}
       </div>
+      {/* {getField("iseditable") && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 mt-4">
+          <Input
+            type="text"
+            className="w-full"
+            value={getField("category")}
+            onChange={(e) => addToArray("category", e.target.value)}
+          />
+        </div>
+      )} */}
+      {/* <Button
+        className="mt-4 cursor-pointer rounded-full bg-transparent text-black border hover:text-white hover:bg-[#f7941D] hover:border-transparent"
+        type="button"
+        onClick={addnewInput}
+      >
+        <CirclePlus />
+        {getField("iseditable") ? "save" : "add manually"}
+      </Button> */}
     </section>
   );
 }

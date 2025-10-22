@@ -3,10 +3,18 @@ import CustomButton from "../button";
 import Spinner from "../spinner";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 import FindInfluencerResponsehook from "@/src/hooks/readymadeinfluencer.hook";
+import { X } from "lucide-react";
 
 const Summary = () => {
-  const { platform, category, limit, followers, country, clearTemplate } =
-    useReadyMadeTemplateStore();
+  const {
+    platform,
+    category,
+    limit,
+    followers,
+    country,
+    clearTemplate,
+    removeFromArray,
+  } = useReadyMadeTemplateStore();
   const { mutateAsync: findInfluencer, isPending } =
     FindInfluencerResponsehook();
   const handleLaunchCampaign = async () => {
@@ -16,6 +24,7 @@ const Summary = () => {
       limit: limit,
       followers: followers,
       country: country,
+      is_campaign_create: true,
     });
   };
   return (
@@ -32,9 +41,15 @@ const Summary = () => {
                   platform.map((platform, i) => (
                     <span
                       key={`${platform}-${i}`}
-                      className="inline-flex items-center rounded-full border border-section-overlays px-2.5 py-1 text-Primary-text"
+                      className="inline-flex items-center rounded-full border border-white px-2.5 py-1 text-Primary-text "
                     >
                       {platform}
+                      <button
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={() => removeFromArray("platform", platform)}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </span>
                   ))
                 ) : (
@@ -50,9 +65,15 @@ const Summary = () => {
                   category.map((category, i) => (
                     <span
                       key={`${category}-${i}`}
-                      className="inline-flex items-center rounded-full border border-section-overlays px-2.5 py-1 text-Primary-text"
+                      className="inline-flex items-center rounded-full border border-white px-2.5 py-1 text-Primary-text"
                     >
                       {category}
+                      <button
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={() => removeFromArray("category", category)}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </span>
                   ))
                 ) : (
@@ -61,21 +82,35 @@ const Summary = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <p className="text-Secondary-text mb-1">Followers</p>
-                <span className="inline-block rounded-md border border-section-overlays px-2.5 py-1 text-Primary-text min-h-8">
-                  {followers && Array.isArray(followers) && followers.length
-                    ? followers.join(", ")
-                    : "-"}
-                </span>
+            <div>
+              <p className="text-Secondary-text mb-2">Followers</p>
+              <div className="flex flex-wrap gap-2">
+                {followers && Array.isArray(followers) && followers.length ? (
+                  followers?.map((follower, i) => (
+                    <span
+                      key={`${follower}-${i}`}
+                      className="inline-flex items-center rounded-full border border-white px-2.5 py-1 text-Primary-text"
+                    >
+                      {follower}
+                      <button
+                        className="w-4 h-4 cursor-pointer ml-1"
+                        onClick={() => removeFromArray("followers", follower)}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-Secondary-text">Not selected</span>
+                )}
               </div>
-              <div>
-                <p className="text-Secondary-text mb-1">Limit</p>
-                <span className="inline-block rounded-md border border-section-overlays px-2.5 py-1 text-Primary-text min-h-8">
-                  {limit || "-"}
-                </span>
-              </div>
+            </div>
+
+            <div>
+              <p className="text-Secondary-text mb-2">Limit</p>
+              <span className="inline-block rounded-md border border-section-overlays px-2.5 py-1 text-Primary-text min-h-8">
+                {limit || "Not selected"}
+              </span>
             </div>
 
             <div>
@@ -85,9 +120,15 @@ const Summary = () => {
                   country.map((country, i) => (
                     <span
                       key={`${country}-${i}`}
-                      className="inline-flex items-center rounded-full border border-section-overlays px-2.5 py-1 text-Primary-text"
+                      className="inline-flex items-center rounded-full border border-white px-2.5 py-1 text-Primary-text"
                     >
                       {country}
+                      <button
+                        className="w-4 h-4 cursor-pointer"
+                        onClick={() => removeFromArray("country", country)}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
                     </span>
                   ))
                 ) : (

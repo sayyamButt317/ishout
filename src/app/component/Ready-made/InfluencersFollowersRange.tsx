@@ -5,9 +5,11 @@ import {
 } from "@/src/constant/rangeoffollowers";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 import React from "react";
+import SeletedItem from "../seleteditem";
 
 export function InfluencersFollowersRange() {
-  const { addToArray } = useReadyMadeTemplateStore();
+  const { addToArray, getField, removeFromArray } = useReadyMadeTemplateStore();
+  const selectedFollowers = getField("followers");
 
   const influencerCategories = [
     { title: "Micro Influencers", ranges: microInfluencers },
@@ -44,15 +46,24 @@ export function InfluencersFollowersRange() {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
               {category?.ranges?.map((followersRange) => (
-                <button
+                <SeletedItem
                   key={followersRange}
-                  onClick={() => addToArray("followers", followersRange)}
-                  className="group rounded-xl border border-slate-200 bg-white p-3 sm:p-4 transition-all hover:shadow-md hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                >
-                  <span className="block w-full text-left text-sm font-medium text-slate-700 group-hover:text-blue-700 truncate">
-                    {followersRange}
-                  </span>
-                </button>
+                  item={followersRange}
+                  color="bg-white hover:bg-gray-50 border border-slate-200 hover:border-primaryButton focus:ring-2 focus:ring-primaryButton focus:ring-offset-2"
+                  icon={
+                    <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+                      {followersRange}
+                    </span>
+                  }
+                  isSelected={selectedFollowers?.includes(followersRange)}
+                  onClick={() => {
+                    if (selectedFollowers?.includes(followersRange)) {
+                      removeFromArray("followers", followersRange);
+                    } else {
+                      addToArray("followers", followersRange);
+                    }
+                  }}
+                />
               ))}
             </div>
           </div>

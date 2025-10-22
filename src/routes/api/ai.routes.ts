@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { AI_ENDPOINT } from './endpoint';
-import { DeleterInfluenceerequest, InfluencerResponseProps, MoreInfluencerRequest, ReadyMadeInfluencersRequest } from '@/src/types/readymadeinfluencers-type';
+import { ApprovedInfluencersRequest, ApprovedInfluencersResponse, DeleterInfluenceerequest, InfluencerResponseProps, MoreInfluencerRequest, ReadyMadeInfluencersRequest } from '@/src/types/readymadeinfluencers-type';
 import { GuidedQuestionsType } from '@/src/types/guidedquestion-type';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -53,8 +53,13 @@ export const FindInfluencer = async (influencerRequest: InfluencerResponseProps)
   return response.data;
 };
 
-export const MoreInfluencer = async (influencerRequest: MoreInfluencerRequest) => {
-  const response = await api.post<ReadyMadeInfluencersRequest>(AI_ENDPOINT.MORE_INFLUENCER, influencerRequest);
+export const ApprovedInfluencersApi = async (influencerRequest: ApprovedInfluencersRequest) => {
+  const response = await api.post<ApprovedInfluencersResponse>(AI_ENDPOINT.APPROVED_INFLUENCER, influencerRequest);
+  return response.data;
+}
+
+export const RejectedInfluencer = async (influencerRequest: MoreInfluencerRequest) => {
+  const response = await api.post<ReadyMadeInfluencersRequest>(AI_ENDPOINT.REJECTED_INFLUENCER, influencerRequest);
   return response.data;
 }
 

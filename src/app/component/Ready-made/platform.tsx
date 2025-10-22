@@ -1,10 +1,10 @@
 import { Platforms } from "@/src/constant/platform";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 import SeletedItem from "../seleteditem";
-import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 
 export function ChoosePlatform() {
-  const { addToArray } = useReadyMadeTemplateStore();
+  const { addToArray, getField, removeFromArray } = useReadyMadeTemplateStore();
+  const selectedPlatform = getField("platform");
 
   return (
     <div className="space-y-4 rounded-xl border border-section-overlays bg-background p-6 bg-gradient-to-r from-[#0c0c22]  via-[#3c69bb] to-[#1a1a3f]">
@@ -32,13 +32,16 @@ export function ChoosePlatform() {
         {Platforms?.map((platform) => (
           <SeletedItem
             key={platform?.name}
-            item={platform?.name as PlatformType}
-            color={platform?.color}
+            item={platform?.name}
+            color="bg-white hover:bg-gray-50 border border-slate-200 hover:border-primaryButton focus:ring-2 focus:ring-primaryButton focus:ring-offset-2"
             icon={platform?.icon}
-            // isSelected={getField("isSelected")}
+            isSelected={selectedPlatform?.includes(platform?.name)}
             onClick={() => {
-              addToArray("platform", platform?.name);
-              // setField("isSelected", !getField("isSelected"));
+              if (selectedPlatform?.includes(platform?.name)) {
+                removeFromArray("platform", platform?.name);
+              } else {
+                addToArray("platform", platform?.name);
+              }
             }}
           />
         ))}

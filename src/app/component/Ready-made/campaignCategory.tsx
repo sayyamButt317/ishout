@@ -1,9 +1,11 @@
 import React from "react";
 import { campaignNames, getCategoryIcon } from "@/src/constant/campaignname";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import SeletedItem from "../seleteditem";
 
 const CampaignCategoryComponent = () => {
-  const { addToArray } = useReadyMadeTemplateStore();
+  const { addToArray, getField, removeFromArray } = useReadyMadeTemplateStore();
+  const selectedCategory = getField("category");
 
   return (
     <section className=" rounded-xl border border-section-overlays bg-background p-6 bg-gradient-to-r from-[#0c0c22]  via-[#3c69bb] to-[#1a1a3f]">
@@ -25,20 +27,24 @@ const CampaignCategoryComponent = () => {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3">
         {campaignNames?.map((category) => (
-          <button
+          <SeletedItem
             key={category}
-            onClick={() => addToArray("category", category)}
-            className="group cursor-pointer rounded-xl border border-slate-200 bg-white p-4 transition-all hover:shadow-md hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-2xl shrink-0">
-                {getCategoryIcon(category)}
+            item={category}
+            color="bg-white hover:bg-gray-50 border border-slate-200 hover:border-primaryButton focus:ring-2 focus:ring-primaryButton focus:ring-offset-2"
+            icon={
+              <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900">
+                {getCategoryIcon(category)} {category}
               </span>
-              <span className="text-sm font-medium text-slate-700 group-hover:text-slate-900 truncate">
-                {category}
-              </span>
-            </div>
-          </button>
+            }
+            onClick={() => {
+              if (selectedCategory?.includes(category)) {
+                removeFromArray("category", category);
+              } else {
+                addToArray("category", category);
+              }
+            }}
+            isSelected={selectedCategory?.includes(category)}
+          />
         ))}
       </div>
     </section>
