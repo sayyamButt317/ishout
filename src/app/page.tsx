@@ -3,6 +3,8 @@ import { useState } from "react";
 import CustomButton from "./component/button";
 import { ChooseCampaign } from "@/src/app/component/choosecampaign";
 import Header from "./component/header";
+import CaseStudies from "./(landingPage/casestudies";
+import HowItWorks from "./(landingPage/howitswork";
 export default function LandingPage() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,6 +41,8 @@ export default function LandingPage() {
                 Watch How it Works
               </CustomButton>
             </div>
+            {/* <HowItWorks />
+            <CaseStudies /> */}
           </div>
         </div>
       </section>

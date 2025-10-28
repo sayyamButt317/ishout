@@ -6,7 +6,11 @@
 
   --color-background: #00102a;
   --color-foreground: #ffffff;
-  --color-background-gradient: #0e0e22, #14142f;
+  --color-background-gradient: linear-gradient(
+    135deg,
+    #170f49 0%,
+    #b0b0c3 100%
+  );
 
   --color-section-overlays: rgba(255, 255, 255, 0.04);
   --color-highlight-gradient: linear-gradient(135deg, #0c0c22 0%, #1a1a3f 100%);
@@ -14,6 +18,8 @@
   --color-tess-red: #ef4444;
   --color-primary-text: #ffffff;
   --color-secondary-text: #b0b0c3;
+  --color-sidebar-text: #170f49;
+  --color-sidebar-hover: #18124b;
   --color-pink-text: #ff3cac;
   --color-purple-text: #784ba0;
   --color-red-text: #ff5e7e;

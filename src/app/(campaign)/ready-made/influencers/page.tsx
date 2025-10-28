@@ -4,17 +4,37 @@ import { useRouter } from "next/navigation";
 import { AddedInfluencersStore } from "@/src/store/Campaign/added-influencers.store";
 import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
 import CustomButton from "@/src/app/component/button";
-import { ReadyMadeInfluencersApiResponse } from "@/src/types/readymadeinfluencers-type";
+import ApprovedInfluencersHook from "@/src/routes/Admin/Hooks/approvedInfluencers-hook";
+import Spinner from "@/src/app/component/spinner";
+import {
+  ReadyMadeInfluencerResponse,
+  ReadyMadeInfluencersApiResponse,
+} from "@/src/types/readymadeinfluencers-type";
 
 export default function ReadyMadeInfluencersPage() {
   const router = useRouter();
-  const {
-    results: resultsState,
-    clearTemplate,
-    setResults,
-  } = useReadyMadeTemplateStore();
-  const results = resultsState as ReadyMadeInfluencersApiResponse;
-  const { addInfluencers, removeInfluencerById } = AddedInfluencersStore();
+  const { clearTemplate, getField, setResults, results } =
+    useReadyMadeTemplateStore();
+  const data = results as ReadyMadeInfluencersApiResponse;
+  const { mutateAsync: approvedInfluencers, isPending: isApprovedLoading } =
+    ApprovedInfluencersHook();
+  const { addInfluencers, getInfluencers, clearAddedInfluencers } =
+    AddedInfluencersStore();
+
+  const influencers = getInfluencers();
+  // console.log("campaign_id", results?.campaign?.campaign_id);
+  const handleApprovedInfluencers = async () => {
+    if (!influencers.length) return;
+    if (influencers.length) {
+      await approvedInfluencers({
+        campaign_id: getField("campaign_id"),
+        influencers: influencers.map((influencer) => ({
+          influencer_id: influencer._id,
+          platform: influencer.platform,
+        })),
+      });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-[#0c0c22]  via-[#3c69bb] to-[#1a1a3f]">
@@ -37,7 +57,7 @@ export default function ReadyMadeInfluencersPage() {
       </div>
 
       <div className="w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
-        {results?.influencers?.length ? (
+        {data?.influencers?.length ? (
           <div className="space-y-8">
             <section className="bg-gradient-to-r from-[#0c0c22]  via-[#3c69bb] to-[#1a1a3f] rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm">
               <div className="flex items-start justify-between gap-3 sm:gap-4 mb-4">
@@ -46,13 +66,13 @@ export default function ReadyMadeInfluencersPage() {
                     AI Recommended Influencers
                   </h2>
                   <div className="mt-1 flex flex-wrap gap-2 text-[11px] sm:text-xs">
-                    {results?.notes && (
+                    {data?.notes && (
                       <>
                         <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-slate-700">
-                          Requested Influencers: {results?.notes?.requested}
+                          Requested Influencers: {data?.notes?.requested}
                         </span>
                         <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-slate-700">
-                          Returned Influencers: {results?.notes?.returned}
+                          Returned Influencers: {data?.notes?.returned}
                         </span>
                       </>
                     )}
@@ -61,32 +81,28 @@ export default function ReadyMadeInfluencersPage() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-                {results.influencers.map((influencer, i) => (
-                  <InfluencerCard
-                    key={`${influencer?.influencer_username}-${i}`}
-                    influencer={influencer}
-                    onAccept={() => {
-                      addInfluencers([influencer]);
-                    }}
-                    onReject={() => {
-                      if (!results) return;
-                      const updatedInfluencers = results.influencers.filter(
-                        (influencer) => influencer._id !== influencer._id
-                      );
-                      setResults({
-                        ...results,
-                        influencers: updatedInfluencers,
-                        notes: results.notes
-                          ? {
-                              ...results.notes,
-                              returned: updatedInfluencers.length,
-                            }
-                          : results.notes,
-                      });
-                      removeInfluencerById(influencer._id);
-                    }}
-                  />
-                ))}
+                {data?.influencers?.map(
+                  (influencer: ReadyMadeInfluencerResponse, i: number) => (
+                    <InfluencerCard
+                      key={`${influencer?.influencer_username}-${i}`}
+                      influencer={influencer}
+                      onAccept={() => {
+                        addInfluencers([influencer]);
+                      }}
+                      onReject={() => {
+                        if (!data) return;
+                        const updatedInfluencers = data.influencers.filter(
+                          (influencer: ReadyMadeInfluencerResponse) =>
+                            influencer._id !== influencer._id
+                        );
+                        setResults({
+                          ...data,
+                          influencers: updatedInfluencers,
+                        });
+                      }}
+                    />
+                  )
+                )}
               </div>
             </section>
           </div>
@@ -102,17 +118,24 @@ export default function ReadyMadeInfluencersPage() {
           onClick={() => {
             router.push("/ready-made");
             clearTemplate();
+            clearAddedInfluencers();
           }}
         >
           New Campaign
         </CustomButton>
         <CustomButton
           className=" sm:w-auto bg-primaryButton hover:bg-primaryHover text-white"
-          onClick={() => {
-            router.push("/ready-made/approved-influencers");
+          disabled={isApprovedLoading}
+          loading={isApprovedLoading}
+          onClick={async () => {
+            await handleApprovedInfluencers();
           }}
         >
-          Show Approved Influencers
+          {isApprovedLoading ? (
+            <Spinner size="sm" />
+          ) : (
+            "Add Approved Influencers"
+          )}
         </CustomButton>
       </div>
     </div>

@@ -1,5 +1,5 @@
 
-import { QuestionGuided } from "@/src/routes/api/ai.routes";
+import { QuestionGuided } from "@/src/routes/Company/api/company.routes";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";

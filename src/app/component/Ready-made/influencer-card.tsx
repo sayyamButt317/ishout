@@ -3,8 +3,8 @@ import Image from "next/image";
 import React from "react";
 import CustomButton from "../button";
 import { Loader2Icon, Trash2Icon } from "lucide-react";
-import DeleteInfluencerhook from "@/src/hooks/deleteinfluencer-hook";
-import MoreInfluencershook from "@/src/hooks/rejectedinfluencers.hook";
+import DeleteInfluencerhook from "@/src/routes/Admin/Hooks/deleteinfluencer-hook";
+import RejectedInfluencershook from "@/src/routes/Admin/Hooks/rejectedinfluencers.hook";
 import { MoreInfluencerReplacePayload } from "@/src/types/readymadeinfluencers-type";
 import Spinner from "../spinner";
 export interface InfluencerCardProps {
@@ -38,7 +38,7 @@ const InfluencerCard = ({
   } = influencer;
 
   const deleteInfluencerhook = DeleteInfluencerhook();
-  const moreInfluencershook = MoreInfluencershook();
+  const moreInfluencershook = RejectedInfluencershook();
 
   const onDelete = (platform: string, influencer_id: string) => {
     deleteInfluencerhook.mutate({
@@ -125,7 +125,7 @@ const InfluencerCard = ({
               onClick={() => onAccept?.(influencer)}
               className="bg-primaryButton hover:bg-primaryHover text-white text-xs px-3 py-1.5"
             >
-              Accept
+              Approve
             </CustomButton>
           )}
           {showReject && (

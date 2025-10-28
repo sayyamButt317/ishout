@@ -36,16 +36,11 @@ export interface ReadyMadeInfluencerResponse {
 }
 
 export interface ReadyMadeInfluencersRequest {
-  category: string;
-  platform: string;
-  followers: {
-    min: number;
-    max: number;
-    range: string;
-  };
-  limit: number;
-  count: number;
-  country: string;
+  data: {
+    campaign: {
+      campaign_id: string;
+    }
+  }
   influencers: ReadyMadeInfluencerResponse[];
 }
 
@@ -81,15 +76,10 @@ export interface MoreInfluencerReplacePayload {
 
 export interface ApprovedInfluencersRequest {
   campaign_id: string;
-  platform: string[];
-  category: string[];
-  influencer_username: string[];
-  bio: string[];
-  pic: string[];
-  followers: string[];
-  min: number;
-  country: string[];
-  engagementRate: number[];
+  influencers: {
+    influencer_id: string;
+    platform: string;
+  }[];
 };
 export interface ApprovedInfluencersResponse {
   influencers: ApprovedInfluencersResponse[];

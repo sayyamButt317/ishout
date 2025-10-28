@@ -1,13 +1,15 @@
 import { ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from "@/src/types/readymadeinfluencers-type";
 import { create } from "zustand";
-import { persist, devtools } from "zustand/middleware";
+import { persist, devtools, createJSONStorage } from "zustand/middleware";
 
 interface TemplateProps {
+    _id: string[];
     platform: string[];
     category: string[];
     limit: string;
     followers: string[];
     country: string[];
+    campaign_id: string;
     iseditable: boolean;
     isSelected: boolean;
     results?: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest;
@@ -22,8 +24,8 @@ interface TemplateProps {
     ) => TemplateProps[K];
 
     addToArray: (field: "platform" | "category" | "followers" | "country", value: string) => void;
-    removeFromArray: (field: "platform" | "category" | "followers" | "country", value: string) => void;
-    clearArray: (field: "platform" | "category" | "followers" | "country") => void;
+    removeFromArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
+    clearArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
     clearTemplate: () => void;
     setResults: (results: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest) => void;
 }
@@ -33,11 +35,13 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
     devtools(
         persist(
             (set, get) => ({
+                _id: [],
                 category: [],
                 platform: [],
                 limit: "",
                 followers: [],
                 country: [],
+                campaign_id: "",
                 results: undefined,
                 iseditable: false,
                 isSelected: false,
@@ -57,6 +61,8 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
 
                 setResults: (results: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest) => set({ results }),
                 clearTemplate: () => set({
+                    _id: [],
+                    campaign_id: "",
                     category: [],
                     platform: [],
                     limit: "",
@@ -69,6 +75,10 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
 
             {
                 name: "campaign-store",
+                storage: createJSONStorage(() => localStorage),
+                // partialize: (state) => ({
+                //     results: state.results,
+                // }),
             }
         )
     )

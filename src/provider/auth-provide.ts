@@ -1,0 +1,48 @@
+import useAuthStore from '@/src/store/AuthStore/authStore';
+
+
+export const setAuthTokenProvider = (token: string, role: string) => {
+    if (typeof window !== 'undefined') {
+        const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
+        const cookieFlags = `path=/; max-age=${60 * 60 * 24}; samesite=strict${isHttps ? '; secure' : ''}`;
+        document.cookie = `access_token=${token}; ${cookieFlags}`;
+        document.cookie = `role=${role}; ${cookieFlags}`;
+    }
+    useAuthStore.getState().setField('isAuthenticated', true);
+};
+
+export const clearAuthTokenProvider = () => {
+    if (typeof window !== 'undefined') {
+        document.cookie = 'access_token=; path=/; max-age=0';
+        document.cookie = 'role=; path=/; max-age=0';
+    }
+    useAuthStore.getState().clearAuth();
+};
+
+export const getAuthTokenProvider = () => {
+    if (typeof window !== 'undefined') {
+        return (
+            getAuthCookieProvider()
+        );
+
+    }
+    return useAuthStore.getState().getField('isAuthenticated');
+};
+
+export const getAuthRoleProvider = () => {
+    if (typeof window !== 'undefined') {
+        return (
+            useAuthStore.getState().getField('isAuthenticated') ||
+            getAuthCookieProvider()
+        );
+    }
+    return useAuthStore.getState().getField('isAuthenticated');
+};
+
+export const getAuthCookieProvider = () => {
+    if (typeof document !== 'undefined') {
+        const match = document.cookie.match(/(?:^|;\s*)access_token=([^;]*)/);
+        return match?.[1] ?? '';
+    }
+    return '';
+};

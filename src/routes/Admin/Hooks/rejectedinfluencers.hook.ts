@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { MoreInfluencerReplacePayload, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from "../types/readymadeinfluencers-type";
+import { MoreInfluencerReplacePayload, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from "../../../types/readymadeinfluencers-type";
 import { useMutation } from "@tanstack/react-query";
-import { useReadyMadeTemplateStore } from "../store/Campaign/ready-made";
-import { RejectedInfluencer } from "../routes/api/ai.routes";
+import { useReadyMadeTemplateStore } from "../../../store/Campaign/ready-made";
+import { RejectedInfluencer } from "../API/admin.routes";
 
 export default function RejectedInfluencershook() {
     const { results, setResults } = useReadyMadeTemplateStore();
