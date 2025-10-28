@@ -12,20 +12,7 @@ export default function LandingPage() {
       {/* <ChooseCampaign open={isOpen} onOpenChange={setIsOpen} /> */}
 
       <Header />
-      <div className="flex flex-row gap-2 justify-end items-center p-4">
-        <CustomButton
-          onClick={() => router.push("/auth/login")}
-          className="w-full sm:w-auto bg-secondaryButton hover:bg-secondaryHover"
-        >
-          Login
-        </CustomButton>
-        <CustomButton
-          onClick={() => router.push("/auth/register")}
-          className="w-full sm:w-auto bg-primaryButton hover:bg-primaryHover"
-        >
-          Register
-        </CustomButton>
-      </div>
+
       {/* Hero Section */}
       <section className="w-full bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 gap-10 items-center">
