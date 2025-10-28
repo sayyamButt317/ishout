@@ -13,7 +13,7 @@ export default function FindInfluencerResponsehook() {
     mutationFn: (influencerRequest: InfluencerResponseProps) => FindInfluencer(influencerRequest),
     onSuccess: async (data: ReadyMadeInfluencersRequest) => {
       setResults(data);
-      setField("campaign_id", data?.campaign?.campaign_id);
+      // setField("campaign_id", data?.campaign?.campaign_id);
       toast.success('Influencers found successfully', {
         description: 'You will be notified when the influencers are approved',
       });
