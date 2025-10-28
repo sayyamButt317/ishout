@@ -1,18 +1,31 @@
 "use client";
-import { useState } from "react";
 import CustomButton from "./component/button";
 import { ChooseCampaign } from "@/src/app/component/choosecampaign";
 import Header from "./component/header";
 import CaseStudies from "./(landingPage/casestudies";
 import HowItWorks from "./(landingPage/howitswork";
+import { useRouter } from "next/navigation";
 export default function LandingPage() {
-  const [isOpen, setIsOpen] = useState(false);
-
+  const router = useRouter();
   return (
     <main className="relative min-h-screen text-foreground bg-background">
-      <ChooseCampaign open={isOpen} onOpenChange={setIsOpen} />
+      {/* <ChooseCampaign open={isOpen} onOpenChange={setIsOpen} /> */}
 
       <Header />
+      <div className="flex flex-row gap-2 justify-end items-center p-4">
+        <CustomButton
+          onClick={() => router.push("/auth/login")}
+          className="w-full sm:w-auto bg-secondaryButton hover:bg-secondaryHover"
+        >
+          Login
+        </CustomButton>
+        <CustomButton
+          onClick={() => router.push("/auth/register")}
+          className="w-full sm:w-auto bg-primaryButton hover:bg-primaryHover"
+        >
+          Register
+        </CustomButton>
+      </div>
       {/* Hero Section */}
       <section className="w-full bg-background">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 gap-10 items-center">
@@ -28,15 +41,12 @@ export default function LandingPage() {
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-stretch sm:items-center">
-              <CustomButton
-                className="w-full sm:w-auto bg-primaryButton hover:bg-primaryHover"
-                onClick={() => setIsOpen(true)}
-              >
+              <CustomButton className="w-full sm:w-auto bg-primaryButton hover:bg-primaryHover">
                 Book a Demo
               </CustomButton>
               <CustomButton
                 className="w-full sm:w-auto bg-secondaryButton hover:bg-secondaryHover"
-                onClick={() => setIsOpen(true)}
+                // onClick={() => setIsOpen(true)}
               >
                 Watch How it Works
               </CustomButton>
