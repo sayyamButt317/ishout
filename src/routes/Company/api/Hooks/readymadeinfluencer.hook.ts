@@ -1,17 +1,18 @@
 import { FindInfluencer } from "@/src/routes/Company/api/company.routes";
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { InfluencerResponseProps, ReadyMadeInfluencersRequest } from "@/src/types/readymadeinfluencers-type";
-import { useReadyMadeTemplateStore } from "../../../store/Campaign/ready-made";
+import { FindInfluencerRequestProps, ReadyMadeInfluencersRequest } from "@/src/types/readymadeinfluencers-type";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 
 
 export default function FindInfluencerResponsehook() {
-
+  const queryClient = useQueryClient();
   const { setResults, setField } = useReadyMadeTemplateStore();
   return useMutation({
-    mutationFn: (influencerRequest: InfluencerResponseProps) => FindInfluencer(influencerRequest),
+    mutationFn: (influencerRequest: FindInfluencerRequestProps) => FindInfluencer(influencerRequest),
     onSuccess: async (data: ReadyMadeInfluencersRequest) => {
+      queryClient.invalidateQueries({ queryKey: ['all-campaign'] });
       setResults(data);
       // setField("campaign_id", data?.campaign?.campaign_id);
       toast.success('Influencers found successfully', {

@@ -1,10 +1,10 @@
-export interface InfluencerResponseProps {
+export interface FindInfluencerRequestProps {
+  name?: string;
   platform: string[];
   category: string[];
   limit: string;
   followers: string[];
   country: string[];
-  is_campaign_create: boolean;
 }
 export type PlatformType = "Instagram" | "YouTube" | "TikTok" | ""
 export interface FoundedInfluencers {

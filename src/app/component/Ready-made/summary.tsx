@@ -2,7 +2,7 @@ import React from "react";
 import CustomButton from "../button";
 import Spinner from "../spinner";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
-import FindInfluencerResponsehook from "@/src/routes/Admin/Hooks/readymadeinfluencer.hook";
+import FindInfluencerResponsehook from "@/src/routes/Company/api/Hooks/readymadeinfluencer.hook";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -30,7 +30,6 @@ const Summary = () => {
       limit: limit,
       followers: followers,
       country: country,
-      is_campaign_create: true,
     });
   };
 

@@ -7,5 +7,9 @@ export default function CampaignByIdHook(campaign_id: string) {
         queryKey: ['campaign-by-id', campaign_id],
         queryFn: () => AdminCampaignByIdApi(campaign_id),
         enabled: !!campaign_id,
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 5,
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
     })
 }

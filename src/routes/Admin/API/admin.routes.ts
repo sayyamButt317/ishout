@@ -11,7 +11,6 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    withCredentials: true,
 });
 
 api.interceptors.request.use(
@@ -53,7 +52,7 @@ api.interceptors.response.use(
 
 
 export const AdminAllCampaignApi = async () => {
-    const response = await api.get(AdminENDPOINT.ADMIN_ALL_CAMPAIGN);
+    const response = await api.get(AdminENDPOINT.ADMIN_ALL_CAMPAIGN,);
     return response.data;
 }
 

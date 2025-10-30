@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { CompanyENDPOINT } from './endpoint';
-import { ApprovedInfluencersRequest, ApprovedInfluencersResponse, DeleterInfluenceerequest, InfluencerResponseProps, MoreInfluencerRequest, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from '@/src/types/readymadeinfluencers-type';
+import { FindInfluencerRequestProps } from '@/src/types/readymadeinfluencers-type';
 import { GuidedQuestionsType } from '@/src/types/guidedquestion-type';
-import { SignUpFormValidator } from '@/src/validators/Auth-Validator/signUp-Validators';
-import { LoginFormValidator } from '@/src/validators/Auth-Validator/login-validator';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import { toast } from 'sonner';
+import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 
 
 const api = axios.create({
@@ -15,9 +14,41 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use(
+  (config) => {
+    const accessToken = getAuthTokenProvider();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const originalRequest = error.config;
+
+    if (error.response && error.response.status === 401) {
+      useAuthStore().clearAuth();
+
+      if (error.response?.status === 403) {
+        toast.error('Unauthorized access');
+      } else if (error.response?.status === 500) {
+        toast.error('Server error');
+      } else {
+        toast.error('Session expired. Please login again.');
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  },
+);
+
 //Get All Jobs
 
-export const FindInfluencer = async (influencerRequest: InfluencerResponseProps) => {
+export const FindInfluencer = async (influencerRequest: FindInfluencerRequestProps) => {
   const response = await api.post(CompanyENDPOINT.CREATE_CAMPAIGN, influencerRequest);
   return response.data;
 };
