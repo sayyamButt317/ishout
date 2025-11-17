@@ -11,11 +11,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { clearAuthTokenProvider } from "@/src/provider/auth-provide";
-import useAuthStore from "@/src/store/AuthStore/authStore";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { toast } from "sonner";
+
 interface LogoutDialogueProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -26,7 +23,6 @@ export default function LogoutDialogue({
   onOpenChange,
 }: LogoutDialogueProps) {
   const router = useRouter();
-  const { getField } = useAuthStore();
   const handleLogout = () => {
     onOpenChange(false);
     router.replace("/auth/login");

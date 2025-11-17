@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
 import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
-import exportToExcel from "@/src/app/component/custom-component/exportToExcel";
 import Spinner from "@/src/app/component/custom-component/spinner";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
 import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
@@ -61,15 +60,17 @@ export default function CampaignByIdPage() {
 
       {data?.approved_influencers?.length ? (
         <div className="w-full mx-auto mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-          {data.approved_influencers.map((approved: any) => (
-            <InfluencerCard
-              key={approved._id}
-              influencer={approved}
-              showAccept={false}
-              showReject={false}
-              showDelete={false}
-            />
-          ))}
+          {data.approved_influencers.map(
+            (approved: ReadyMadeInfluencerResponse) => (
+              <InfluencerCard
+                key={approved._id}
+                influencer={approved}
+                showAccept={false}
+                showReject={false}
+                showDelete={false}
+              />
+            )
+          )}
         </div>
       ) : (
         <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10 mb-8">

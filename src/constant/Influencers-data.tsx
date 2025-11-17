@@ -3,8 +3,8 @@ import { useEffect, useMemo, useRef, useCallback } from "react";
 import { useGesture } from "@use-gesture/react";
 import "./DomeGallery.css";
 import { INFLUENCERS_IMAGES } from "./Data/influencersImages";
+import Image from "next/image";
 
-// Types
 export type Platform = "instagram" | "youtube" | "tiktok";
 
 export interface InfluencerImage {
@@ -423,7 +423,7 @@ export default function DomeGallery({
         }
         if (last) {
           draggingRef.current = false;
-          let [vMagX, vMagY] = velocity;
+          const [vMagX, vMagY] = velocity;
           const [dirX, dirY] = direction;
           let vx = vMagX * dirX;
           let vy = vMagY * dirY;
@@ -772,7 +772,7 @@ export default function DomeGallery({
                   onPointerUp={onTilePointerUp}
                 >
                   <div className="item__image-inner">
-                    <img src={it.src} draggable={false} alt={it.alt} />
+                    <Image src={it.src} draggable={false} alt={it.alt} />
                     {(it.platform || it.followers) && (
                       <div className="item__badge">
                         <span className="item__badge-platform">

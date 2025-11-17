@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Loader2, Eye, EyeOff, Check } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import {
   SignUpFormSchema,
@@ -24,31 +24,6 @@ import dynamic from "next/dynamic";
 const DomeGallery = dynamic(() => import("@/src/constant/Influencers-data"), {
   ssr: false,
 });
-
-// Custom Checkbox Component
-const CustomCheckbox = ({
-  checked,
-  onChange,
-  className = "",
-}: {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  className?: string;
-}) => {
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!checked)}
-      className={`w-4 h-4 border-2 rounded flex items-center justify-center transition-colors ${
-        checked
-          ? "bg-blue-600 border-blue-600 text-white"
-          : "border-slate-300 dark:border-slate-600 hover:border-blue-500"
-      } ${className}`}
-    >
-      {checked && <Check className="w-3 h-3" />}
-    </button>
-  );
-};
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);

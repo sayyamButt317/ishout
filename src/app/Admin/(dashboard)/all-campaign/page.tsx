@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
 import { WhatsAppShareButton } from "@/src/app/component/custom-component/sharebutton";
 import Spinner from "@/src/app/component/custom-component/spinner";
-import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import AllCampaignHook from "@/src/routes/Admin/Hooks/Allcampaign-hook";
 import { Eye, Share2, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";

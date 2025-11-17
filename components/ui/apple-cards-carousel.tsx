@@ -83,10 +83,6 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   //   }
   // };
 
-  const isMobile = () => {
-    return window && window.innerWidth < 768;
-  };
-
   return (
     <CarouselContext.Provider value={{ onCardClose: () => {}, currentIndex }}>
       <div className="relative w-full">
