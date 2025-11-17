@@ -23,6 +23,11 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "yt3.ggpht.com" },
       { protocol: "https", hostname: "p16-amd-va.tiktokcdn.com" },
       { protocol: "https", hostname: "p*.tiktokcdn.com" },
+      { protocol: "https", hostname: "i.pinimg.com" },
+      { protocol: "https", hostname: "assets.pinterest.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "www.canva.com" },
+      { protocol: "https", hostname: "www.pinterest.com" },
 
     ],
   },

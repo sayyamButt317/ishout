@@ -15,21 +15,16 @@ export default function LoginMutation() {
         onSuccess: (data: LoginResponseProps) => {
             setIsAuthenticated(true);
             setAuthTokenProvider(data.access_token, data.user.role);
-            console.log("I am Logging in you are company", data.user.role);
             if (data.user.role === "company") {
                 router.replace('/client/campaign');
                 toast.success('Login successful to client dashboard', {
                     description: 'You are now logged in',
                 });
             } if (data.user.role === "admin") {
-                router.replace('/Admin/requested-campaign');
+                router.replace('/Admin/all-campaign');
                 toast.success('Login successful to admin dashboard', {
                     description: 'You are now logged in',
                 });
-            }
-            else {
-                toast.error('Unexpected Error')
-
             }
         },
         onError: (error) => {

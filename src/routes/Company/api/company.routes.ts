@@ -53,7 +53,7 @@ export const FindInfluencer = async (influencerRequest: FindInfluencerRequestPro
   return response.data;
 };
 
-export const Campaign = async () => {
+export const CompanyCampaign = async () => {
   const response = await api.get(CompanyENDPOINT.CAMPAIGN);
   return response.data;
 }
