@@ -2,7 +2,6 @@ import { setAuthTokenProvider } from "@/src/provider/auth-provide";
 import { SignUpMutationApi } from "@/src/routes/Auth-Routes/Api/auth.routes";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { SignUpRequestProps, SignUpResponseProps } from "@/src/types/Auth-Type/signup-type";
-import { SignUpFormValidator } from "@/src/validators/Auth-Validator/signUp-Validators";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";

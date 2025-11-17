@@ -11,6 +11,22 @@ import {
   InstagramWebhookMessage,
 } from "../types/Admin-Type/websocket.type";
 
+type LegacyData = {
+  from_psid: string;
+  from_username: string;
+  text: string;
+  timestamp: number;
+  attachments: Attachment[];
+};
+type Notification = {
+  type: string;
+  from_psid: string;
+  from_username: string;
+  text: string;
+  timestamp: number;
+  attachments: Attachment[];
+};
+
 export default function WebSocketListener() {
   const { addNotification } = useNotificationStore();
 
@@ -87,8 +103,8 @@ export default function WebSocketListener() {
         // Legacy format support (if backend sends processed data)
         else if (data.type === "ig_reply" && data.from_username) {
           // Convert legacy attachments format to new format
-          const legacyData = data as any;
-          const notification = {
+          const legacyData = data as LegacyData;
+          const notification: Notification = {
             type: "ig_reply",
             from_psid: legacyData.from_psid,
             from_username: legacyData.from_username,

@@ -28,7 +28,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const originalRequest = error.config;
 
     if (error.response && error.response.status === 401) {
       useAuthStore().clearAuth();
@@ -63,7 +62,7 @@ export const CampaignRejectedInfluencers = async () => {
   return response.data;
 }
 
-export const CampaignApprovedInfluencers = async (campaign_id: string) => {
+export const CampaignApprovedInfluencers = async () => {
   const response = await api.get(CompanyENDPOINT.CAMPAIGN_APPROVED_INFLUENCERS)
   return response.data;
 }

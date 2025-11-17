@@ -11,7 +11,7 @@ interface AuthStore {
     // refresh_token: string;
     // setRefreshToken: (refresh_token: string) => void;
     clearAuth: () => void;
-    getField: (field: keyof AuthStore) => any;
+    getField: (field: keyof AuthStore) => AuthStore[keyof AuthStore];
     setField: (field: keyof AuthStore, value: AuthStore[keyof AuthStore]) => void;
 }
 

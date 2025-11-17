@@ -1,5 +1,5 @@
 import { FindInfluencer } from "@/src/routes/Company/api/company.routes";
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { FindInfluencerRequestProps, ReadyMadeInfluencersRequest } from "@/src/types/readymadeinfluencers-type";
@@ -8,17 +8,15 @@ import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 
 export default function FindInfluencerResponsehook() {
   const queryClient = useQueryClient();
-  const { setResults, setField } = useReadyMadeTemplateStore();
+  const { setResults } = useReadyMadeTemplateStore();
   return useMutation({
     mutationFn: (influencerRequest: FindInfluencerRequestProps) => FindInfluencer(influencerRequest),
     onSuccess: async (data: ReadyMadeInfluencersRequest) => {
       queryClient.invalidateQueries({ queryKey: ['all-campaign'] });
       setResults(data);
-      // setField("campaign_id", data?.campaign?.campaign_id);
       toast.success('Influencers generated successfully', {
         description: 'You will be notified when the influencers are approved',
       });
-      // router.push("/ready-made/influencers");
     },
     onError: (error) => {
       const axiosError = error as AxiosError<{ detail: string }>;

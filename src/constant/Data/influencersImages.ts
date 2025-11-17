@@ -1,6 +1,6 @@
 export const INFLUENCERS_IMAGES = [
     {
-        src: "https://ishout.s3.us-east-2.amazonaws.com/influencers/profile-photos/211413ce-65d5-4c43-bb10-163f6b9cb68b.jpg",
+        src: "https://images.unsplash.com/photo-1713072048185-fc0a44cd3eb4?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=686",
         alt: "Abstract art",
 
     },

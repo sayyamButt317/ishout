@@ -1,6 +1,5 @@
 import { LoginRequestProps, LoginResponseProps } from "@/src/types/Auth-Type/login-type";
 import { AuthENDPOINT } from "./endpoint";
-import { SignUpFormValidator } from "@/src/validators/Auth-Validator/signUp-Validators";
 import axios from "axios";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { toast } from "sonner";

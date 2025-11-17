@@ -772,7 +772,13 @@ export default function DomeGallery({
                   onPointerUp={onTilePointerUp}
                 >
                   <div className="item__image-inner">
-                    <Image src={it.src} draggable={false} alt={it.alt} />
+                    <Image
+                      src={it.src}
+                      width={512}
+                      height={512}
+                      draggable={false}
+                      alt={it.alt}
+                    />
                     {(it.platform || it.followers) && (
                       <div className="item__badge">
                         <span className="item__badge-platform">
