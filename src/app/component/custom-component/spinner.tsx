@@ -9,7 +9,7 @@ interface SpinnerProps {
 
 // Default brand colors mentioned in code: #f7941D (orange), white, #1E4B8E (blue)
 const DEFAULT_COLORS: [string, string, string] = [
-  "#ffff004d",
+  "#ff5e7e",
   "#FFFFFF",
   "#1E4B8E",
 ];

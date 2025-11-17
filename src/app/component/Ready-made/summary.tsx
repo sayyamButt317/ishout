@@ -1,6 +1,6 @@
 import React from "react";
 import CustomButton from "../button";
-import Spinner from "../spinner";
+import Spinner from "../custom-component/spinner";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 import FindInfluencerResponsehook from "@/src/routes/Company/api/Hooks/readymadeinfluencer.hook";
 import { X } from "lucide-react";
@@ -31,6 +31,7 @@ const Summary = () => {
       followers: followers,
       country: country,
     });
+    clearTemplate();
   };
 
   const isFormComplete =
@@ -243,10 +244,10 @@ const Summary = () => {
                 {isPending ? (
                   <div className="flex items-center gap-2">
                     <Spinner size="sm" />
-                    Launching...
+                    Creating...
                   </div>
                 ) : (
-                  "Launch Campaign"
+                  "Create"
                 )}
               </CustomButton>
             </div>

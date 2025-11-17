@@ -15,7 +15,7 @@ export default function FindInfluencerResponsehook() {
       queryClient.invalidateQueries({ queryKey: ['all-campaign'] });
       setResults(data);
       // setField("campaign_id", data?.campaign?.campaign_id);
-      toast.success('Influencers found successfully', {
+      toast.success('Influencers generated successfully', {
         description: 'You will be notified when the influencers are approved',
       });
       // router.push("/ready-made/influencers");

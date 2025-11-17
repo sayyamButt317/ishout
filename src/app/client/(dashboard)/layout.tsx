@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import "@/src/app/globals.css";
 import { Toaster } from "sonner";
 import QueryProvider from "@/src/context/QueryProvider";
-import CustomToast from "../../component/customtoast";
 import Sidebar from "../../component/sidebar";
 import { employeeSidebarLinks } from "../../../constant/sidebaritems";
 import useAuthStore from "@/src/store/AuthStore/authStore";
@@ -17,7 +16,6 @@ export default function ClientDashboardLayout({
   const router = useRouter();
   const { getField } = useAuthStore();
 
-  // Redirect to login if not authenticated and block preview via replace
   useEffect(() => {
     if (!getField("isAuthenticated")) {
       router.replace("/auth/login");
@@ -39,7 +37,6 @@ export default function ClientDashboardLayout({
             {children}
           </div>
         </div>
-        <CustomToast />
       </QueryProvider>
     </div>
   );

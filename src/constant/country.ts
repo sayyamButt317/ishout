@@ -34,3 +34,15 @@ export const YOUTUBE_INFLUENCERS_COUNTRIES = [
     'United Arab Emirates', 'Yemen',
     'Not Specified'
 ]
+
+export const COUNTRY_CODES: Record<string, string> = {
+    'United Arab Emirates': '971',
+    'Saudi Arabia': '966',
+    'Qatar': '974',
+    'Oman': '968',
+    'Lebanon': '961',
+    'Kuwait': '965',
+    'Jordan': '962',
+    'Iraq': '964',
+    'Egypt': '20',
+};

@@ -1,18 +1,35 @@
-import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
+import {
+  PlatformType,
+  ReadyMadeInfluencerResponse,
+} from "@/src/types/readymadeinfluencers-type";
 import Image from "next/image";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import CustomButton from "../button";
-import { Loader2Icon, Trash2Icon } from "lucide-react";
+import {
+  CircleCheck,
+  Loader2Icon,
+  Trash2Icon,
+  XCircle,
+  MessageCircle,
+} from "lucide-react";
 import DeleteInfluencerhook from "@/src/routes/Admin/Hooks/deleteinfluencer-hook";
-import RejectedInfluencershook from "@/src/routes/Admin/Hooks/rejectedinfluencers.hook";
-import { MoreInfluencerReplacePayload } from "@/src/types/readymadeinfluencers-type";
-import Spinner from "../spinner";
+import Spinner from "../custom-component/spinner";
+import { Button } from "@/components/ui/button";
+import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";
+import { useParams } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
+
 export interface InfluencerCardProps {
   influencer: ReadyMadeInfluencerResponse;
-  onAccept?: (influencer: ReadyMadeInfluencerResponse) => void;
-  onReject?: (influencer: ReadyMadeInfluencerResponse) => void;
-  onAddAll?: () => void;
-  onRejectAll?: () => void;
+
+  onAccept?: (
+    payload: UpdateInfluencerStatusRequestProps
+  ) => Promise<void> | void;
+  onReject?: (
+    payload: UpdateInfluencerStatusRequestProps
+  ) => Promise<void> | void;
+
   showAccept?: boolean;
   showReject?: boolean;
   showDelete?: boolean;
@@ -21,24 +38,20 @@ export interface InfluencerCardProps {
 const InfluencerCard = ({
   influencer,
   onAccept,
+  onReject,
   showAccept = true,
   showReject = true,
   showDelete = true,
 }: InfluencerCardProps) => {
-  const {
-    influencer_username,
-    name,
-    bio,
-    country,
-    followers,
-    engagementRate,
-    pic,
-    platform,
-    category,
-  } = influencer;
+  const [actionLoading, setActionLoading] = useState<
+    "approved" | "rejected" | null
+  >(null);
+  const [actionSuccess, setActionSuccess] = useState<
+    "approved" | "rejected" | null
+  >(null);
 
   const deleteInfluencerhook = DeleteInfluencerhook();
-  const moreInfluencershook = RejectedInfluencershook();
+  const { Id } = useParams<{ Id: string }>();
 
   const onDelete = (platform: string, influencer_id: string) => {
     deleteInfluencerhook.mutate({
@@ -46,123 +59,228 @@ const InfluencerCard = ({
       influencer_id: influencer_id,
     });
   };
+
+  // Format followers number ( 195000 -> 195K)
+  const formatFollowers = (num: number) => {
+    if (num >= 1000000) {
+      return `${(num / 1000000).toFixed(1)}M`;
+    } else if (num >= 1000) {
+      return `${(num / 1000).toFixed(0)}K`;
+    }
+    return num.toString();
+  };
+
+  const engagementPercentage = influencer?.engagementRate
+    ? Math.round(influencer?.engagementRate * 100)
+    : 0;
+
+  const UsernameLink = (platform: PlatformType, username: string) => {
+    if (platform === "instagram") {
+      return `https://www.instagram.com/${username}`;
+    } else if (platform === "tiktok") {
+      return `https://www.tiktok.com/@${username}`;
+    } else if (platform === "youtube") {
+      return `https://www.youtube.com/@${username}`;
+    }
+  };
+  const handleMessage = useCallback(
+    (platform: PlatformType, username: string) => {
+      if (platform === "instagram") {
+        window.open(`https://ig.me/m/${username}`, "_blank");
+      } else if (platform === "tiktok") {
+        window.open(`https://www.tiktok.com/@${username}`, "_blank");
+      }
+    },
+    []
+  );
+
+  const handleStatusChange = async (status: "approved" | "rejected") => {
+    const actionFn = status === "approved" ? onAccept : onReject;
+    if (!actionFn) return;
+
+    const payload = {
+      campaign_id: Id ?? "",
+      influencer_id: influencer.id,
+      platform: influencer?.platform,
+      status,
+      username: influencer?.username,
+      followers: influencer?.followers,
+      engagementRate: influencer?.engagementRate,
+      picture: influencer?.picture,
+      bio: influencer?.bio,
+      country: influencer?.country,
+    } as UpdateInfluencerStatusRequestProps;
+
+    setActionLoading(status);
+    setActionSuccess(null);
+
+    try {
+      await actionFn(payload);
+      if (status === "approved") {
+        ApprovedInfluencersStore.getState().addApprovedInfluencer(influencer);
+      }
+      setActionSuccess(status);
+    } catch (error) {
+      console.error("Failed to update influencer status", error);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   return (
-    <article className="group rounded-xl border border-slate-200 bg-white p-4 sm:p-5 shadow-sm hover:shadow-md transition-shadow">
-      {/* Header */}
-      <div className="flex items-center gap-3 sm:gap-4">
+    <article className="group relative w-full rounded-xl border bg-gray-800/50 backdrop-blur-sm text-white p-2 shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
+      {actionLoading && (
+        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
+          <Spinner size="md" />
+          <p className="mt-2 text-sm font-medium">
+            {actionLoading === "approved" ? "Approving..." : "Rejecting..."}
+          </p>
+        </div>
+      )}
+      <div className="flex items-center justify-center mb-4">
         <Image
-          src={pic || "/assets/avatar.png"}
-          alt={influencer_username || "influencer"}
-          width={56}
-          height={56}
-          className="h-14 w-14 sm:h-16 sm:w-16 rounded-full border object-cover ring-1 ring-slate-200"
+          src={influencer?.picture}
+          alt={influencer?.username}
+          width={80}
+          height={80}
+          className="h-20 w-20 rounded-full border-2 border-gray-600 object-cover"
         />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-2">
-            <p className="font-semibold text-slate-900 truncate text-base">
-              {name || "No name available"}
-            </p>
-          </div>
-          <div className="mt-0.5 flex items-center justify-between gap-2">
-            <span className="text-xs text-slate-500 truncate">
-              @{influencer_username || "username"}
-            </span>
-            <div className="flex items-center gap-1">
-              {country && (
-                <span className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 text-[11px] text-slate-700 max-w-full truncate">
-                  {country}
-                </span>
-              )}
-              {category && (
-                <span className="inline-flex items-center rounded-md bg-blue-100 px-2 py-0.5 text-[11px] text-blue-700 max-w-full truncate">
-                  {category}
-                </span>
-              )}
+      </div>
+
+      <div className="text-center mb-4">
+        <h3 className="text-lg font-semibold text-white">
+          <span
+            className="text-white hover:text-blue-600 hover:underline cursor-pointer"
+            onClick={() =>
+              window.open(
+                UsernameLink(
+                  influencer?.platform as PlatformType,
+                  influencer?.username
+                ),
+                "_blank"
+              )
+            }
+          >
+            {influencer?.username || "No name available"}
+          </span>
+        </h3>
+        <button
+          className="mt-2 flex items-center justify-center gap-2 mx-auto px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500 rounded-lg transition-colors"
+          onClick={() => {
+            handleMessage(
+              influencer?.platform as PlatformType,
+              influencer?.username
+            );
+          }}
+        >
+          <MessageCircle className="h-4 w-4 text-blue-400" />
+          <span className="text-sm text-blue-400">Message</span>
+        </button>
+      </div>
+
+      {actionSuccess === "approved" && (
+        <div className="mb-4 flex flex-row items-center gap-2 justify-center bg-green-500/20 border border-green-500 rounded-lg py-2">
+          <CircleCheck className="h-5 w-5 text-green-400" />
+          <span className="text-sm font-semibold text-green-400">Approved</span>
+        </div>
+      )}
+
+      {actionSuccess === "rejected" && (
+        <div className="mb-4 flex flex-row items-center gap-2 justify-center bg-red-500/20 border border-red-500 rounded-lg py-2">
+          <XCircle className="h-5 w-5 text-red-400" />
+          <span className="text-sm font-semibold text-red-400">Rejected</span>
+        </div>
+      )}
+
+      <div className="bg-gray-700/50 rounded-lg p-4 mb-4">
+        <div className="grid grid-cols-2 gap-4">
+          {/* Engagement Rate */}
+          <div className="text-center">
+            <div className="text-2xl font-bold text-white mb-1">
+              {engagementPercentage}%
             </div>
+            <div className="text-xs text-gray-400">Engagement rate</div>
+          </div>
+          {/* Followers */}
+          <div className="text-center">
+            <div className="text-2xl font-bold text-white mb-1">
+              {formatFollowers(influencer?.followers || 0)}
+            </div>
+            <div className="text-xs text-gray-400">Followers</div>
           </div>
         </div>
       </div>
 
-      {/* Bio */}
-      <p className="mt-3 text-sm text-slate-700 line-clamp-2 sm:line-clamp-3">
-        <span className="text-secondaryButton font-extrabold">Bio:</span>
-        <span className="text-secondaryText">{bio || "No bio available"}</span>
-      </p>
-
-      {/* Stats */}
-      <div className="mt-4 grid grid-cols-3 gap-2">
-        <div className="rounded-lg border border-slate-200 bg-slate-50/50 px-2 py-2 text-center">
-          <div className="text-[10px] uppercase tracking-wide text-slate-500">
-            Followers
-          </div>
-          <div className="text-xs font-semibold text-slate-800">
-            {(followers || 0).toLocaleString()}
-          </div>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-slate-50/50 px-2 py-2 text-center">
-          <div className="text-[10px] uppercase tracking-wide text-slate-500">
-            Engagement
-          </div>
-          <div className="text-xs font-semibold text-emerald-700">
-            {engagementRate ? `${(engagementRate * 100).toFixed(2)}%` : "N/A"}
-          </div>
-        </div>
-        <div className="rounded-lg border border-slate-200 bg-slate-50/50 px-2 py-2 text-center">
-          <div className="text-[10px] uppercase tracking-wide text-slate-500">
-            Platform
-          </div>
-          <div className="text-xs font-semibold text-slate-800 capitalize">
-            {platform || "N/A"}
-          </div>
+      <div className="mb-2 flex flex-row items-center gap-2 justify-center rounded-lg py-2">
+        <div className="flex items-center gap-0.5 text-sm text-white">
+          <CircleCheck className="h-4 w-4 text-amber-300" />
+          <span className="text-xs text-white">Brand Safety</span>
+          <CircleCheck className="h-4 w-4 text-amber-300" />
+          <span className="text-xs text-white">Content Performance</span>
         </div>
       </div>
+      <div className="mb-4 flex flex-row items-center gap-0.5 justify-center ">
+        <CircleCheck className="h-4 w-4 text-amber-300" />
+        <span className="text-xs text-white">Content Approved</span>
+      </div>
 
-      {/* Actions */}
-      {(showAccept || showReject || showDelete) && (
-        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
+      {/* Type of Content */}
+      <div className="mb-4 flex justify-center items-center">
+        <Badge
+          key={influencer?.platform}
+          className={` flex items-center gap-2 bg-transparent border text-xs ${
+            influencer?.platform === "instagram"
+              ? "bg-blue-100 text-blue-800"
+              : influencer?.platform === "tiktok"
+              ? "bg-red-100 text-red-800"
+              : "bg-green-100 text-green-800"
+          }`}
+        >
+          {influencer?.platform.charAt(0).toUpperCase() +
+            influencer?.platform.slice(1)}
+        </Badge>
+      </div>
+
+      {actionSuccess === null && (showAccept || showReject) && (
+        <div className="grid grid-cols-2 gap-3 mt-4">
           {showAccept && (
             <CustomButton
-              onClick={() => onAccept?.(influencer)}
-              className="bg-primaryButton hover:bg-primaryHover text-white text-xs px-3 py-1.5"
+              onClick={() => handleStatusChange("approved")}
+              className=" bg-black/10 hover:bg-black/20 border text-amber-300 text-sm font-medium py-2.5 rounded-lg transition-colors"
+              disabled={actionLoading !== null}
             >
-              Approve
+              {actionLoading === "approved" ? <Spinner size="sm" /> : "Approve"}
             </CustomButton>
           )}
           {showReject && (
             <CustomButton
-              onClick={() => {
-                const payload: MoreInfluencerReplacePayload = {
-                  replaceId: influencer._id,
-                  request: {
-                    platform: [platform],
-                    category: [category],
-                    followers: [followers.toString()],
-                    country: [country],
-                    limit: 1,
-                    more: 1,
-                    exclude_ids: [influencer._id],
-                  },
-                };
-                moreInfluencershook.mutate(payload);
-              }}
-              className="bg-secondaryButton hover:bg-secondaryHover text-white text-xs px-3 py-1.5"
+              onClick={() => handleStatusChange("rejected")}
+              className=" bg-black/10 hover:bg-black/20 border text-red-300 text-sm font-medium py-2.5 rounded-lg transition-colors"
+              disabled={actionLoading !== null}
             >
-              {moreInfluencershook.isPending ? <Spinner size="sm" /> : "Reject"}
+              {actionLoading === "rejected" ? <Spinner size="sm" /> : "Reject"}
             </CustomButton>
           )}
-          {showDelete && (
-            <CustomButton
-              onClick={() => onDelete(platform, influencer._id)}
-              className="col-span-2 sm:col-span-1 bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5"
-              disabled={deleteInfluencerhook.isPending}
-            >
-              {deleteInfluencerhook.isPending ? (
-                <Loader2Icon className="animate-spin h-3 w-3" />
-              ) : (
-                <Trash2Icon className="h-3 w-3" />
-              )}
-            </CustomButton>
-          )}
+        </div>
+      )}
+
+      {showDelete && (
+        <div className="mt-4">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() =>
+              onDelete(influencer?.platform as unknown as string, influencer.id)
+            }
+            className="w-full bg-red-600 hover:bg-red-700 text-white"
+            disabled={deleteInfluencerhook.isPending}
+          >
+            {deleteInfluencerhook.isPending ? (
+              <Loader2Icon className="animate-spin h-4 w-4" />
+            ) : (
+              <Trash2Icon className="h-4 w-4" />
+            )}
+          </Button>
         </div>
       )}
     </article>

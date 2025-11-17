@@ -1,66 +1,131 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import CountButton from "@/src/app/component/custom-component/countbutton";
+import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
+import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
+import Spinner from "@/src/app/component/custom-component/spinner";
 import TableComponent from "@/src/app/component/CustomTable";
-import React from "react";
+import ApprovedCampaignHook from "@/src/routes/Admin/Hooks/approvedCampaign-hook";
+import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
+import { Eye } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { PlatformType } from "@/src/types/readymadeinfluencers-type";
+
+interface PendingCampaignResponse {
+  _id: string;
+  campaign_id: string;
+  name: string;
+  platform: PlatformType;
+  limit: number;
+  status: string;
+  created_at: string;
+}
 
 const ApprovedCampaignPage = () => {
+  const { data, isLoading, error } = ApprovedCampaignHook();
+  const updateCampaignStatusHook = UpdateCampaignStatusHook();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-red-500 text-2xl font-bold">
+          Error: {error.message}
+        </div>
+      </div>
+    );
+  }
+  if (!data?.campaigns) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-primary-text text-2xl font-bold">
+          No data found
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <h1>Approved Campaigns</h1>
+    <>
       <TableComponent
         header={[
-          "#",
+          "#Campaign ID",
           "Campaign Name",
-          "Client Name",
-          "Requested Date",
+          "Platform",
+          "Requested ",
+          // "Approved ",
           "Status",
+          "Created At",
           "View",
-          "Delete",
         ]}
-        subheader={[
-          [
-            "1",
-            "Campaign Name",
-            "Client Name",
-            "Requested Date",
-            "Status",
-            "View",
-            "Delete",
-          ],
-          [
-            "2",
-            "Campaign Name",
-            "Client Name",
-            "Requested Date",
-            "Status",
-            "View",
-            "Delete",
-          ],
-          [
-            "3",
-            "Campaign Name",
-            "Client Name",
-            "Requested Date",
-            "Status",
-            "View",
-            "Delete",
-          ],
-          [
-            "4",
-            "Campaign Name",
-            "Client Name",
-            "Requested Date",
-            "Status",
-            "View",
-            "Delete",
-          ],
-        ]}
+        subheader={data?.campaigns?.map((campaign: PendingCampaignResponse) => [
+          campaign?.campaign_id,
+          <div key={`name-${campaign?.campaign_id}`} className="truncate">
+            {campaign?.name}
+          </div>,
+          // <div key={`company-name-${campaign._id}`} className="truncate">
+          //   {campaign.company_name}
+          // </div>,
+          <div key={`platform-${campaign._id}`} className="truncate">
+            <PlatformBadge platform={campaign?.platform} />
+          </div>,
+          <div key={`requested-${campaign._id}`} className="truncate">
+            <CountButton count={campaign?.limit} />
+          </div>,
+          // <div key={`approved-${campaign._id}`} className="truncate">
+          //   <CountButton count={campaign?.approved_influencers_count} />
+          // </div>,
+          // <div key={`rejected-${campaign._id}`} className="truncate">
+          //   <CountButton count={campaign?.rejected_influencers_count} />
+          // </div>,
+          <div key={`status-${campaign?._id}`} className="truncate">
+            <DropDownCustomStatus
+              status={campaign.status}
+              updateStatus={(status: string) => {
+                updateCampaignStatusHook.mutate({
+                  campaign_id: campaign?.campaign_id,
+                  status: status,
+                });
+              }}
+            />
+            {/* <StatusBadge status={campaign.status} /> */}
+          </div>,
+          <div key={`created-at-${campaign._id}`} className="truncate">
+            {new Date(campaign?.created_at).toLocaleDateString()}
+          </div>,
+          <div key={`view-${campaign._id}`} className="truncate">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() =>
+                router.push(`/Admin/approved-campaign/${campaign?.campaign_id}`)
+              }
+            >
+              <Eye className="w-4 h-4 text-primary-text cursor-pointer" />
+            </Button>
+          </div>,
+          // <div key={`delete-${campaign._id}`} className="truncate">
+          //   <Button variant="outline" size="icon">
+          //     <Download className="w-4 h-4 text-delete-text cursor-pointer" />
+          //   </Button>
+          // </div>,
+        ])}
         paginationstart={1}
         paginationend={10}
-        onPageChange={(page: number) => {
-          console.log(page);
-        }}
+        onPageChange={(page: number) => setCurrentPage(page)}
+        isLoading={isLoading}
       />
-    </div>
+    </>
   );
 };
 

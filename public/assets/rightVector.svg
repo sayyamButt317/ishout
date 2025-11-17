@@ -1,7 +1,7 @@
 <svg width="935" height="684" viewBox="0 0 935 684" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path opacity="0.43" d="M935.02 683.07V0L0 466.84V683.07H935.02Z" fill="url(#paint0_radial_128_1285)"/>
+<path d="M935.02 683.07V0L0 466.84V683.07H935.02Z" fill="url(#paint0_radial_128_102)"/>
 <defs>
-<radialGradient id="paint0_radial_128_1285" cx="0" cy="0" r="1" gradientTransform="matrix(517.035 0 43.5416 514.391 407.066 110.343)" gradientUnits="userSpaceOnUse">
+<radialGradient id="paint0_radial_128_102" cx="0" cy="0" r="1" gradientTransform="matrix(517.035 0 43.5416 514.391 407.066 110.343)" gradientUnits="userSpaceOnUse">
 <stop stop-color="#224084"/>
 <stop offset="0.1429" stop-color="#203B7B" stop-opacity="0.8571"/>
 <stop offset="0.3771" stop-color="#192F62" stop-opacity="0.6229"/>

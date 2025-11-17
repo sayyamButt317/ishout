@@ -4,6 +4,7 @@ import { persist, devtools, createJSONStorage } from "zustand/middleware";
 
 interface TemplateProps {
     _id: string[];
+    username: string[];
     platform: string[];
     category: string[];
     limit: string;
@@ -36,6 +37,7 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
         persist(
             (set, get) => ({
                 _id: [],
+                username: [],
                 category: [],
                 platform: [],
                 limit: "",
@@ -62,6 +64,7 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
                 setResults: (results: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest) => set({ results }),
                 clearTemplate: () => set({
                     _id: [],
+                    username: [],
                     campaign_id: "",
                     category: [],
                     platform: [],

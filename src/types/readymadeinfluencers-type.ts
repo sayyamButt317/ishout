@@ -6,7 +6,7 @@ export interface FindInfluencerRequestProps {
   followers: string[];
   country: string[];
 }
-export type PlatformType = "Instagram" | "YouTube" | "TikTok" | ""
+export type PlatformType = "instagram" | "youtube" | "tiktok" | ""
 export interface FoundedInfluencers {
   username: string;
   name: string;
@@ -20,17 +20,16 @@ export interface FoundedInfluencers {
 export interface ReadyMadeInfluencerResponse {
   _id: string;
   id: string;
-  userId: string | null;
+  userId: string;
   country: string;
   countryCode: string | null;
   followers: number;
   engagementRate: number;
   name: string;
-  influencer_username: string;
+  username: string;
   bio: string;
-  pic: string;
+  picture: string;
   page_content: string;
-  similarity_score: number;
   platform: string;
   category: string;
 }

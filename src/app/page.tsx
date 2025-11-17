@@ -4,6 +4,8 @@ import Header from "./component/header";
 import HowItWorks from "@/src/app/component/landingPage/howitswork";
 import Image from "next/image";
 import Video from "./component/video";
+import CaseStudies from "./component/landingPage/casestudies";
+import VideoCarousel from "./component/custom-component/video-carousel";
 
 export default function LandingPage() {
   return (
@@ -48,6 +50,7 @@ export default function LandingPage() {
       </section>
       <HowItWorks />
       {/* <CaseStudies /> */}
+      <VideoCarousel />
     </main>
   );
 }
