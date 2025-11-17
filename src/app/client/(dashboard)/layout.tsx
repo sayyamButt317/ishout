@@ -14,7 +14,7 @@ export default function ClientDashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const { getField } = useAuthStore();
+  const { getField, clearAuth } = useAuthStore();
 
   useEffect(() => {
     if (!getField("isAuthenticated")) {
@@ -23,7 +23,7 @@ export default function ClientDashboardLayout({
   }, [getField, router]);
 
   const handleLogout = () => {
-    useAuthStore().clearAuth();
+    clearAuth();
     router.replace("/auth/login");
   };
 
