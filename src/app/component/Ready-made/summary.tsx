@@ -2,9 +2,9 @@ import React from "react";
 import CustomButton from "../button";
 import Spinner from "../custom-component/spinner";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
-import FindInfluencerResponsehook from "@/src/routes/Company/api/Hooks/readymadeinfluencer.hook";
 import { X } from "lucide-react";
 import { toast } from "sonner";
+import CreateCampaignHook from "@/src/routes/Company/api/Hooks/create-campaign.hook";
 
 const Summary = () => {
   const {
@@ -16,8 +16,7 @@ const Summary = () => {
     clearTemplate,
     removeFromArray,
   } = useReadyMadeTemplateStore();
-  const { mutateAsync: findInfluencer, isPending } =
-    FindInfluencerResponsehook();
+  const { mutateAsync: findInfluencer, isPending } = CreateCampaignHook();
 
   const handleLaunchCampaign = async () => {
     if (!platform || !category || !followers || !country || !limit) {
@@ -193,8 +192,6 @@ const Summary = () => {
                 )}
               </div>
             </div>
-
-            {/* Country */}
             <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
               <div className="flex items-center gap-2 mb-3">
                 <div className="h-2 w-2 rounded-full bg-rose-400" />
@@ -222,8 +219,6 @@ const Summary = () => {
               </div>
             </div>
           </div>
-
-          {/* Action Buttons */}
           <div className="mt-8 space-y-4">
             <div className="flex gap-3">
               <CustomButton
@@ -251,8 +246,6 @@ const Summary = () => {
                 )}
               </CustomButton>
             </div>
-
-            {/* Status Message */}
             <div className="text-center">
               <p className="text-xs text-slate-400">
                 {isFormComplete

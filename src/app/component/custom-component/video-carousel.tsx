@@ -133,8 +133,6 @@ export default function VideoCarousel({
                   // autoPlay
                   poster={video.poster}
                   preload="auto"
-                  crossOrigin="anonymous"
-                  playsInline
                 />
                 {video.title && (
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-full bg-gradient-to-b from-transparent via-transparent to-black/50" />

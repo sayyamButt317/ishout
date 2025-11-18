@@ -78,7 +78,7 @@ export default function TableComponent({
                   Loading...
                 </TableCell>
               </TableRow>
-            ) : subheader.length === 0 ? (
+            ) : !subheader || subheader?.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={header.length + (showTrashIcon ? 1 : 0)}

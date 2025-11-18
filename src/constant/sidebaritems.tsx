@@ -1,31 +1,43 @@
 import {
   Bell,
   CircleCheck,
-  FileText,
+  // FileText,
   Hourglass,
   LayoutGrid,
   Plus,
+  UserCheck,
 } from "lucide-react";
 
 export const employeeSidebarLinks = [
   {
     //   img: '/images/community.png',
     label: "Create Campaign",
-    route: "/client/campaign",
+    route: "/client/create-campaign",
     icon: <Plus className="w-5 h-5" />,
   },
 
+  // {
+  //   //   img: '/images/users.png',
+  //   label: "Approved Campaigns",
+  //   route: "/client/approved-campaign",
+  //   icon: <CircleCheck className="w-5 h-5" />,
+  // },
   {
-    //   img: '/images/users.png',
-    label: "Approved Campaigns",
-    route: "/client/approved-campaign",
-    icon: <CircleCheck className="w-5 h-5" />,
+    label: "Review Influencer",
+    route: "/client/influencer-review",
+    icon: <UserCheck className="w-5 h-5" />,
   },
   {
-    label: "Contents",
-    route: "/client/content",
-    icon: <FileText className="w-5 h-5" />,
+    label: "All Campaigns",
+    route: "/client/all-campaign",
+    icon: <LayoutGrid className="w-5 h-5" />,
   },
+
+  // {
+  //   label: "Contents",
+  //   route: "/client/content",
+  //   icon: <FileText className="w-5 h-5" />,
+  // },
 ];
 
 export const adminSidebarLinks = [
@@ -43,6 +55,11 @@ export const adminSidebarLinks = [
     label: "All Campaigns",
     route: "/Admin/all-campaign",
     icon: <LayoutGrid className="w-5 h-5" />,
+  },
+  {
+    label: "OnBoarding",
+    route: "/Admin/onboarding",
+    icon: <UserCheck className="w-5 h-5" />,
   },
   {
     label: "Instagram Notifications",

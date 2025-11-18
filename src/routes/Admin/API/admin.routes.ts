@@ -76,6 +76,11 @@ export const ApprovedCampaignByIdApi = async (campaign_id: string) => {
     return response.data;
 }
 
+export const ApprovedOnBoardingInfluencers = async () => {
+    const response = await api.get(AdminENDPOINT.ADMIN_ONBOARDING_INFLUENCERS);
+    return response.data;
+}
+
 export const InfluencersCampaignByIdApi = async (campaign_id: string) => {
     const response = await api.get(AdminENDPOINT.INFLUENCERS_CAMPAIGN_BY_ID(campaign_id));
     return response.data;

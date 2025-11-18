@@ -98,7 +98,7 @@ const InfluencerCard = ({
     const actionFn = status === "approved" ? onAccept : onReject;
     if (!actionFn) return;
 
-    const payload = {
+    const payload: UpdateInfluencerStatusRequestProps = {
       campaign_id: Id ?? "",
       influencer_id: influencer.id,
       platform: influencer?.platform,
@@ -109,7 +109,7 @@ const InfluencerCard = ({
       picture: influencer?.picture,
       bio: influencer?.bio,
       country: influencer?.country,
-    } as UpdateInfluencerStatusRequestProps;
+    };
 
     setActionLoading(status);
     setActionSuccess(null);

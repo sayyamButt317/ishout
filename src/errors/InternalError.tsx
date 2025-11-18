@@ -1,5 +1,7 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
+import { useRouter } from "next/navigation";
 
 interface InternalErrorProps {
   message?: string;
@@ -10,7 +12,7 @@ const InternalError = ({
   message = "We're having some technical issues. Please try again later.",
   showBackButton = true,
 }: InternalErrorProps) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <div className="h-svh">
@@ -20,11 +22,11 @@ const InternalError = ({
         <p className="text-center text-muted-foreground">{message}</p>
         <div className="mt-6 flex gap-4">
           {showBackButton && (
-            <Button variant="outline" onClick={() => navigate(-1)}>
+            <Button variant="outline" onClick={() => router.back()}>
               Go Back
             </Button>
           )}
-          <Button onClick={() => navigate("/")}>Back to Home</Button>
+          <Button onClick={() => router.push("/")}>Back to Home</Button>
         </div>
       </div>
     </div>

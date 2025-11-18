@@ -51,8 +51,8 @@ export default function AllCampaignPage() {
           "Company Name",
           "Platform",
           "Requested Date",
-          "Approved Influencers",
-          "Rejected Influencers",
+          // "Approved Influencers",
+          // "Rejected Influencers",
           "Status",
           "View",
           "Share",
@@ -73,23 +73,22 @@ export default function AllCampaignPage() {
             <div key={`requested-date-${campaign._id}`} className="truncate">
               {new Date(campaign.created_at).toLocaleDateString()}
             </div>,
-            <div
-              key={`approved-influencers-${campaign._id}`}
-              className="truncate"
-            >
-              {campaign.approved_influencers_count}
-            </div>,
-            <div
-              key={`rejected-influencers-${campaign._id}`}
-              className="truncate"
-            >
-              {campaign.rejected_influencers_count}
-            </div>,
+            // <div
+            //   key={`approved-influencers-${campaign._id}`}
+            //   className="truncate"
+            // >
+            //   {campaign.approved_influencers_count}
+            // </div>,
+            // <div
+            //   key={`rejected-influencers-${campaign._id}`}
+            //   className="truncate"
+            // >
+            //   {campaign.rejected_influencers_count}
+            // </div>,
             <div key={`status-${campaign._id}`} className="truncate">
               <DropDownCustomStatus
                 status={campaign.status}
                 updateStatus={(status: string) => {
-                  console.log(status);
                   updateCampaignStatusHook.mutate({
                     campaign_id: campaign._id,
                     status: status,

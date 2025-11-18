@@ -74,7 +74,7 @@ export default function Login() {
                         <Input
                           type="email"
                           placeholder="name@company.com"
-                          className="text-black h-12 bg-background border-input focus:ring-2 focus:ring-ring focus:border-transparent"
+                          className="text-slate-100 h-12 bg-background border-input focus:ring-2 focus:ring-ring focus:border-transparent"
                           {...field}
                         />
                       </FormControl>
@@ -91,7 +91,7 @@ export default function Login() {
                           <Input
                             type={showPassword ? "text" : "password"}
                             placeholder="Your password"
-                            className="text-black h-12 bg-background border-input focus:ring-2 focus:ring-ring focus:border-transparent pr-10"
+                            className="textslate-100 h-12 bg-background border-input focus:ring-2 focus:ring-ring focus:border-transparent pr-10"
                             {...field}
                           />
                           <button
@@ -115,12 +115,12 @@ export default function Login() {
                 />
 
                 <div className="flex items-center justify-between">
-                  <Link
+                  {/* <Link
                     href="/forgot-password"
                     className="text-primary text-xs hover:underline"
                   >
                     Forgot password?
-                  </Link>
+                  </Link> */}
                 </div>
 
                 <CustomButton
@@ -151,12 +151,18 @@ export default function Login() {
 
         {/* Desktop - Login Card */}
         <Card className="hidden lg:block bg-slate-100 rounded-3xl w-full max-w-md text-card-foreground border border-border shadow-xl">
-          <div className="p-8">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-semibold text-slate-900">iShout</h2>
-              <p className="text-slate-600 text-sm">
-                Login to manage your campaigns
-              </p>
+          <div className="p-8 ">
+            <div className="mb-8 flex flex-row items-center justify-center gap-0">
+              <Image
+                src="/assets/favicon.png"
+                alt="ishout"
+                width={40}
+                height={40}
+              />
+              <h2 className="text-2xl font-bold text-slate-900">iShout</h2>
+              <span className="text-primarytext font-extrabold text-2xl">
+                .
+              </span>
             </div>
             <Form {...form}>
               <form
@@ -214,20 +220,17 @@ export default function Login() {
                 />
 
                 <div className="flex items-center justify-between">
-                  <label className="text-xs text-muted-foreground">
-                    Use your company email to sign in
-                  </label>
-                  <Link
+                  {/* <Link
                     href="/forgot-password"
                     className="text-primary text-xs hover:underline"
                   >
                     Forgot password?
-                  </Link>
+                  </Link> */}
                 </div>
 
                 <CustomButton
                   onClick={() => form.handleSubmit(onSubmit)}
-                  className="w-full h-12 bg-gradient-to-r from-secondaryButton to-secondaryHover hover:from-green-600 hover:to-emerald-700 text-white shadow-green-500/2 font-semibold rounded-lg  hover:opacity-90"
+                  className="w-full h-12 bg-gradient-to-r from-secondaryButton to-secondaryHover hover:secondarytext text-white shadow-green-500/2 font-semibold rounded-lg  hover:opacity-90"
                   disabled={SignInMutation.isPending}
                 >
                   {SignInMutation.isPending ? (

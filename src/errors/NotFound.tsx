@@ -1,8 +1,10 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router";
+import { useRouter } from "next/navigation";
 
 const NotFoundError = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   return (
     <div className="h-svh">
       <div className="m-auto flex h-full w-full flex-col items-center justify-center gap-2">
@@ -13,10 +15,10 @@ const NotFoundError = () => {
           does not exist or might have been removed.
         </p>
         <div className="mt-6 flex gap-4">
-          <Button variant="outline" onClick={() => navigate(-1)}>
+          <Button variant="outline" onClick={() => router.back()}>
             Go Back
           </Button>
-          <Button onClick={() => navigate("/")}>Back to Home</Button>
+          <Button onClick={() => router.push("/")}>Back to Home</Button>
         </div>
       </div>
     </div>

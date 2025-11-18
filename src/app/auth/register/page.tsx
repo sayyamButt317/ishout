@@ -24,6 +24,7 @@ import dynamic from "next/dynamic";
 const DomeGallery = dynamic(() => import("@/src/constant/Influencers-data"), {
   ssr: false,
 });
+import Image from "next/image";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -58,14 +59,21 @@ export default function Signup() {
       <div className="h-full">
         <DomeGallery />
       </div>
-
-      {/* Signup Form */}
       <div className="bg-slate-50 flex items-center justify-center p-6 lg:p-12">
         <Card className="bg-white w-full max-w-md text-card-foreground border border-border shadow-xl">
           <CardContent className="p-8">
-            <h1 className="text-2xl text-center font-semibold text-slate-900">
-              ishout
-            </h1>
+            <div className="mb-2 flex flex-row items-center justify-center gap-0">
+              <Image
+                src="/assets/favicon.png"
+                alt="ishout"
+                width={40}
+                height={40}
+              />
+              <h2 className="text-2xl font-bold text-slate-900">iShout</h2>
+              <span className="text-primarytext font-extrabold text-2xl">
+                .
+              </span>
+            </div>
             <p className="text-slate-600 text-sm text-center">
               Create your account to get started
             </p>
@@ -268,7 +276,7 @@ export default function Signup() {
                 {/* Submit Button */}
                 <CustomButton
                   onClick={() => form.handleSubmit(onSubmit)}
-                  className="w-full h-12 bg-gradient-to-r from-secondaryButton to-secondaryHover hover:from-green-600 hover:to-emerald-700 text-white shadow-green-500/2 font-semibold rounded-lg  hover:opacity-90"
+                  className="w-full h-12 bg-gradient-to-r from-secondaryButton to-secondaryHover hover:secondarytext text-white shadow-green-500/2 font-semibold rounded-lg  hover:opacity-90"
                   disabled={isPending}
                 >
                   {isPending ? (
