@@ -3,6 +3,8 @@ import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 
 interface AuthStore {
     isAuthenticated: boolean;
+    user_id: string;
+    setUserId: (user_id: string) => void;
     setIsAuthenticated: (isAuthenticated: boolean) => void;
     // role: string;
     // setRole: (role: string) => void;
@@ -21,6 +23,8 @@ const useAuthStore = create<AuthStore>()(
         persist(
             (set, get) => ({
                 isAuthenticated: false,
+                user_id: "",
+                setUserId: (user_id: string) => set({ user_id }),
                 setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
                 // role: "",
                 // setRole: (role: string) => set({ role }),

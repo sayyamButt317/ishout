@@ -6,13 +6,13 @@ import { FindInfluencerRequestProps, ReadyMadeInfluencersRequest } from "@/src/t
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
 
 
-export default function FindInfluencerResponsehook() {
+export default function CreateCampaignHook() {
   const queryClient = useQueryClient();
   const { setResults } = useReadyMadeTemplateStore();
   return useMutation({
     mutationFn: (influencerRequest: FindInfluencerRequestProps) => FindInfluencer(influencerRequest),
     onSuccess: async (data: ReadyMadeInfluencersRequest) => {
-      queryClient.invalidateQueries({ queryKey: ['all-campaign'] });
+      queryClient.invalidateQueries({ queryKey: ['create-campaign'] });
       setResults(data);
       toast.success('Influencers generated successfully', {
         description: 'You will be notified when the influencers are approved',

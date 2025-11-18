@@ -11,6 +11,7 @@ export const AdminENDPOINT = {
     ADMIN_PROCESSING_CAMPAIGN: `/admin/processing-campaigns`,
     ADMIN_APPROVED_CAMPAIGN: `/admin/approved-campaign`,
     ADMIN_APPROVED_CAMPAIGN_BY_ID: (campaign_id: string) => `/admin/approved-campaign/${campaign_id}`,
+    ADMIN_ONBOARDING_INFLUENCERS: `/admin/company-approved-influencers`,
 
     ADMIN_GENERATE_INFLUENCERS_BY_ID: (campaign_id: string) => `/admin/campaigns/generate-influencers/${campaign_id}`,
     UPDATE_CAMPAIGN_STATUS: () => `/admin/campaigns/update-status`,

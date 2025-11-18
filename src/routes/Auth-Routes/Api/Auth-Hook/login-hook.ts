@@ -9,14 +9,16 @@ import { toast } from "sonner";
 
 export default function LoginMutation() {
     const router = useRouter();
-    const { setIsAuthenticated } = useAuthStore();
+    const { setIsAuthenticated, setUserId } = useAuthStore();
     return useMutation({
         mutationFn: (data: LoginRequestProps) => LoginMutationApi(data),
         onSuccess: (data: LoginResponseProps) => {
             setIsAuthenticated(true);
             setAuthTokenProvider(data.access_token, data.user.role);
+            setUserId(data.user.user_id);
+            console.log(data.user.user_id);
             if (data.user.role === "company") {
-                router.replace('/client/campaign');
+                router.replace('/client/all-campaign');
                 toast.success('Login successful to client dashboard', {
                     description: 'You are now logged in',
                 });

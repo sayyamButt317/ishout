@@ -5,6 +5,7 @@ import { GuidedQuestionsType } from '@/src/types/guidedquestion-type';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import { toast } from 'sonner';
 import { getAuthTokenProvider } from '@/src/provider/auth-provide';
+import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from '@/src/types/Admin-Type/Campaign.type';
 
 
 const api = axios.create({
@@ -67,10 +68,18 @@ export const CampaignApprovedInfluencers = async () => {
   return response.data;
 }
 
+export const ApprovedCampaignById = async (user_id: string) => {
+  const response = await api.get(CompanyENDPOINT.APPROVED_CAMPAIGN_BY_ID(user_id))
+  return response.data;
+}
 
 export const QuestionGuided = async (guidedQuestion: GuidedQuestionsType) => {
   const response = await api.post<GuidedQuestionsType>(CompanyENDPOINT.QUESTION_GUIDED, guidedQuestion);
   return response.data;
 };
 
+export const CompanyUpdateInfluencerStatusApi = async (influencerRequest: UpdateInfluencerStatusRequestProps) => {
+  const response = await api.patch<UpdateInfluencerStatusResponseProps>(CompanyENDPOINT.COMPANY_UPDATE_INFLUENCER_STATUS, influencerRequest);
+  return response.data;
+}
 
