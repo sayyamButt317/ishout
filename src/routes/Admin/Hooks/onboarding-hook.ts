@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { ApprovedOnBoardingInfluencers } from "../API/admin.routes";
 
-export default function OnboardingHook() {
+export default function OnboardingHook(page: number = 1) {
     return useQuery({
-        queryKey: ['onboarding'],
-        queryFn: () => ApprovedOnBoardingInfluencers(),
+        queryKey: ['onboarding', page],
+        queryFn: () => ApprovedOnBoardingInfluencers(page),
     })
 }

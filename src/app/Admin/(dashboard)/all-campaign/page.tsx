@@ -6,17 +6,41 @@ import Spinner from "@/src/app/component/custom-component/spinner";
 import AllCampaignHook from "@/src/routes/Admin/Hooks/Allcampaign-hook";
 import { Eye, Share2, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 
+const STATUS_OPTIONS = [
+  { label: "All statuses", value: "all" },
+  { label: "Pending", value: "pending" },
+  { label: "Processing", value: "processing" },
+  { label: "Approved", value: "approved" },
+  { label: "Completed", value: "completed" },
+  { label: "Rejected", value: "rejected" },
+] as const;
+
 export default function AllCampaignPage() {
-  const { data, isLoading, error } = AllCampaignHook();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  const appliedStatus =
+    statusFilter === "all" ? undefined : statusFilter.toLowerCase();
+
+  const { data, isLoading, error } = AllCampaignHook(
+    currentPage,
+    appliedStatus
+  );
+
   const deleteCampaignHook = DeleteCampaignHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
   const router = useRouter();
+
+  const campaigns = (data?.campaigns ?? []) as AdminAllCampaignApiResponse[];
+  const totalPages = Math.max(data?.total_pages ?? 1, 1);
+  const totalCount = data?.total ?? campaigns.length;
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -33,33 +57,75 @@ export default function AllCampaignPage() {
       </div>
     );
   }
-  if (!data?.campaigns || data?.campaigns.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-primary-text text-2xl font-bold">
-          No data found
-        </div>
-      </div>
-    );
-  }
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusFilter(event.target.value);
+    setCurrentPage(1);
+  };
+
   return (
     <>
-      <TableComponent
-        header={[
-          "#",
-          "Campaign Name",
-          "Company Name",
-          "Platform",
-          "Requested Date",
-          // "Approved Influencers",
-          // "Rejected Influencers",
-          "Status",
-          "View",
-          "Share",
-          "Delete",
-        ]}
-        subheader={data?.campaigns.map(
-          (campaign: AdminAllCampaignApiResponse) => [
+      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-white">
+            Company Generated Campaigns
+          </h1>
+          <p className="text-sm text-white/70">
+            Showing {campaigns.length} of {totalCount} campaigns
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <label
+            htmlFor="campaign-status-filter"
+            className="text-sm text-white/80"
+          >
+            Filter by status
+          </label>
+          <select
+            id="campaign-status-filter"
+            value={statusFilter}
+            onChange={handleStatusChange}
+            className="rounded-lg border border-white/20 bg-transparent px-3 py-2 text-sm text-white outline-none focus:border-primaryButton"
+          >
+            {STATUS_OPTIONS.map((option) => (
+              <option
+                key={option.value}
+                value={option.value}
+                className="text-black"
+              >
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {campaigns.length === 0 ? (
+        <div className="flex min-h-[300px] items-center justify-center rounded-lg border border-dashed border-white/20 text-center text-white/70">
+          No campaigns found for the selected criteria.
+        </div>
+      ) : (
+        <TableComponent
+          header={[
+            "#",
+            "Campaign Name",
+            "Company Name",
+            "Platform",
+            "Requested Date",
+            // "Approved Influencers",
+            // "Rejected Influencers",
+            "Status",
+            "View",
+            "Share",
+            "Delete",
+          ]}
+          subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
             campaign._id,
             <div key={`name-${campaign._id}`} className="truncate">
               {campaign.name}
@@ -133,15 +199,13 @@ export default function AllCampaignPage() {
                 <Trash className="w-4 h-4 text-primary--text cursor-pointer" />
               </Button>
             </div>,
-          ]
-        )}
-        paginationstart={1}
-        paginationend={10}
-        onPageChange={(page: number) => {
-          console.log("page", page);
-        }}
-        isLoading={isLoading}
-      />
+          ])}
+          paginationstart={data?.page ?? currentPage}
+          paginationend={totalPages}
+          onPageChange={handlePageChange}
+          isLoading={isLoading}
+        />
+      )}
     </>
   );
 }

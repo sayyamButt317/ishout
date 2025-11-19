@@ -51,10 +51,27 @@ api.interceptors.response.use(
 );
 
 
-export const AdminAllCampaignApi = async () => {
-    const response = await api.get(AdminENDPOINT.ADMIN_ALL_CAMPAIGN,);
-    return response.data;
+interface AdminAllCampaignParams {
+    page?: number;
+    status?: string;
+    page_size?: number;
 }
+
+export const AdminAllCampaignApi = async ({
+    page = 1,
+    status,
+    page_size = 10,
+}: AdminAllCampaignParams = {}) => {
+    const params: Record<string, string | number> = { page, page_size };
+    if (status && status !== "all") {
+        params.status = status;
+    }
+
+    const response = await api.get(AdminENDPOINT.ADMIN_ALL_CAMPAIGN, {
+        params,
+    });
+    return response.data;
+};
 export const AdminGenerateInfluencersApi = async (campaign_id: string, limit: number) => {
     const response = await api.post(AdminENDPOINT.ADMIN_GENERATE_INFLUENCERS_BY_ID(campaign_id), {
         campaign_id,
@@ -76,8 +93,10 @@ export const ApprovedCampaignByIdApi = async (campaign_id: string) => {
     return response.data;
 }
 
-export const ApprovedOnBoardingInfluencers = async () => {
-    const response = await api.get(AdminENDPOINT.ADMIN_ONBOARDING_INFLUENCERS);
+export const ApprovedOnBoardingInfluencers = async (page: number = 1) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_ONBOARDING_INFLUENCERS, {
+        params: { page }
+    });
     return response.data;
 }
 
