@@ -5,10 +5,11 @@ import HowItWorks from "@/src/app/component/landingPage/howitswork";
 import Image from "next/image";
 import Video from "./component/video";
 import VideoCarousel from "./component/custom-component/video-carousel";
+import { CaseStudiesVideos, ReachGCCVideos } from "../helper/videoUrls";
 
 export default function LandingPage() {
   return (
-    <main className="relative min-h-screen w-full bg-black overflow-hidden text-white">
+    <div className="relative min-h-screen w-full bg-black overflow-hidden text-white">
       <Header />
       <section className="relative w-full min-h-screen flex flex-col items-center">
         <Image
@@ -49,7 +50,24 @@ export default function LandingPage() {
         </div>
       </section>
       <HowItWorks />
-      <VideoCarousel />
-    </main>
+      <div className="w-full h-full py-20">
+        <h2 className="italic text-center max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
+          Case Studies
+        </h2>
+        <p className="italic mt-4 text-center justify-center items-center text-neutral-600 dark:text-neutral-400 text-base md:text-md font-sans max-w-2xl mx-auto">
+          <span className="font-bold">Proven Results at Scale,</span>
+          <span className="font-thin justify-center items-center">
+            We &apos;ve helped over 600 brands amplify their reach and
+            performance with <span className="font-bold">AI-powered </span>
+            influencers. marketing
+          </span>
+        </p>
+      </div>
+      <VideoCarousel
+        heading="3x engagement in 2 weeks"
+        videos={CaseStudiesVideos}
+      />
+      <VideoCarousel heading="10M+ reach across GCC" videos={ReachGCCVideos} />
+    </div>
   );
 }
