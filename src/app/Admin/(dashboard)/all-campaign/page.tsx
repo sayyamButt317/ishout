@@ -1,10 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
-import { WhatsAppShareButton } from "@/src/app/component/custom-component/sharebutton";
+import { WhatsAppShareButton } from "@/src/app/component/custom-component/whatsappshare";
 import AllCampaignHook from "@/src/routes/Admin/Hooks/Allcampaign-hook";
-import { Eye, Share2, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Trash } from "lucide-react";
 import React, { useState } from "react";
 import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
@@ -33,7 +32,6 @@ export default function AllCampaignPage() {
 
   const deleteCampaignHook = DeleteCampaignHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
-  const router = useRouter();
 
   const campaigns = (data?.campaigns ?? []) as AdminAllCampaignApiResponse[];
   const totalPages = Math.max(data?.total_pages ?? 1, 1);
@@ -87,106 +85,91 @@ export default function AllCampaignPage() {
         </div>
       </div>
 
-      {campaigns.length === 0 ? (
-        <div className="flex min-h-[300px] items-center justify-center rounded-lg border border-dashed border-white/20 text-center text-white/70">
-          No campaigns found for the selected criteria.
-        </div>
-      ) : (
-        <TableComponent
-          header={[
-            "#Campaign ID",
-            "Category",
-            "Platform",
-            "Followers",
-            "Influencers",
-            "Requested At",
-            "Status",
-            "View",
-            "Share",
-            "Delete",
-          ]}
-          subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
-            campaign._id,
-            <div key={`category-${campaign._id}`} className="truncate">
-              {campaign?.category?.join(", ")}
-            </div>,
-            <div key={`platform-${campaign._id}`} className="truncate">
-              <PlatformBadge platform={campaign?.platform} />
-            </div>,
-            <div key={`followers-${campaign._id}`} className="truncate">
-              {campaign?.followers?.join(", ")}
-            </div>,
-            <div
-              key={`requested-influencers-${campaign._id}`}
-              className="flex items-center justify-center"
-            >
-              <CountButton count={campaign?.limit} />
-            </div>,
-            <div key={`requested-date-${campaign._id}`} className="truncate">
-              {new Date(campaign.created_at).toLocaleDateString()}
-            </div>,
+      <TableComponent
+        header={[
+          "#Campaign ID",
+          "Category",
+          "Platform",
+          "Followers",
+          "Influencers",
+          "Requested At",
+          "Status",
+          // "View",
+          "Share",
+          "Delete",
+        ]}
+        subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
+          campaign._id,
+          <div key={`category-${campaign._id}`} className="truncate">
+            {campaign?.category?.join(", ")}
+          </div>,
+          <div key={`platform-${campaign._id}`} className="truncate">
+            <PlatformBadge platform={campaign?.platform} />
+          </div>,
+          <div key={`followers-${campaign._id}`} className="truncate">
+            {campaign?.followers?.join(", ")}
+          </div>,
+          <div
+            key={`requested-influencers-${campaign._id}`}
+            className="flex items-center justify-center"
+          >
+            <CountButton count={campaign?.limit} />
+          </div>,
+          <div key={`requested-date-${campaign._id}`} className="truncate">
+            {new Date(campaign.created_at).toLocaleDateString()}
+          </div>,
 
-            // <div
-            //   key={`rejected-influencers-${campaign._id}`}
-            //   className="truncate"
-            // >
-            //   {campaign.rejected_influencers_count}
-            // </div>,
-            <div key={`status-${campaign._id}`} className="truncate">
-              <DropDownCustomStatus
-                status={campaign.status}
-                updateStatus={(status: string) => {
-                  updateCampaignStatusHook.mutate({
-                    campaign_id: campaign._id,
-                    status: status,
-                  });
-                }}
-              />
-            </div>,
-            <div key={`view-${campaign._id}`} className="truncate">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() =>
-                  router.push(`/Admin/all-campaign/${campaign._id}`)
-                }
-              >
-                <Eye className="w-4 h-4 text-primary-text cursor-pointer" />
-              </Button>
-            </div>,
-            <div key={`share-${campaign._id}`} className="truncate">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  WhatsAppShareButton({
-                    phone: campaign?.user_details?.phone,
-                    company_name: campaign?.user_details?.company_name,
-                  });
-                }}
-              >
-                <Share2 className="w-4 h-4 text-primary--text cursor-pointer" />
-              </Button>
-            </div>,
-            <div key={`delete-${campaign._id}`} className="truncate">
-              <Button
-                variant="outline"
-                size="icon"
-                disabled={deleteCampaignHook.isPending}
-                onClick={() => {
-                  deleteCampaignHook.mutate(campaign._id);
-                }}
-              >
-                <Trash className="w-4 h-4 text-primary--text cursor-pointer" />
-              </Button>
-            </div>,
-          ])}
-          paginationstart={data?.page ?? currentPage}
-          paginationend={totalPages}
-          onPageChange={handlePageChange}
-          isLoading={isLoading}
-        />
-      )}
+          // <div
+          //   key={`rejected-influencers-${campaign._id}`}
+          //   className="truncate"
+          // >
+          //   {campaign.rejected_influencers_count}
+          // </div>,
+          <div key={`status-${campaign._id}`} className="truncate">
+            <DropDownCustomStatus
+              status={campaign.status}
+              updateStatus={(status: string) => {
+                updateCampaignStatusHook.mutate({
+                  campaign_id: campaign._id,
+                  status: status,
+                });
+              }}
+            />
+          </div>,
+          // <div key={`view-${campaign._id}`} className="truncate">
+          //   <Button
+          //     className="cursor-pointer"
+          //     variant="outline"
+          //     size="icon"
+          //     onClick={() => router.push(`/Admin/all-campaign/${campaign._id}`)}
+          //   >
+          //     <Eye className="w-4 h-4 text-primary-text cursor-pointer" />
+          //   </Button>
+          // </div>,
+          <div
+            key={`share-${campaign._id}`}
+            className="truncate cursor-pointer"
+          >
+            <WhatsAppShareButton userId={campaign?.user_id ?? ""} />
+          </div>,
+          <div key={`delete-${campaign._id}`} className="truncate">
+            <Button
+              variant="outline"
+              size="icon"
+              disabled={deleteCampaignHook.isPending}
+              onClick={() => {
+                deleteCampaignHook.mutate(campaign._id);
+              }}
+            >
+              <Trash className="w-4 h-4 text-primary--text cursor-pointer" />
+            </Button>
+          </div>,
+        ])}
+        paginationstart={data?.page ?? currentPage}
+        paginationend={totalPages}
+        onPageChange={handlePageChange}
+        isLoading={isLoading}
+      />
     </>
   );
 }

@@ -18,4 +18,5 @@ export const AdminENDPOINT = {
     ADMIN_DELETE_CAMPAIGN: (campaign_id: string) => `/admin/delete-campaign/${campaign_id}`,
 
     ADMIN_INSTAGRAM_NOTIFICATION: `/meta/notifications`,
+    ADMIN_COMPANY_DETAILS_BY_ID: (user_id: string) => `/admin/company-data/${user_id}`,
 }

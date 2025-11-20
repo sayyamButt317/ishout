@@ -7,6 +7,6 @@ export default function OnboardingHook(page: number = 1) {
         queryFn: () => ApprovedOnBoardingInfluencers(page),
         refetchOnWindowFocus: false, // Don't refetch on window focus
         refetchOnReconnect: false,
-        refetchOnMount: (query) => !query.getObserversCount(),
+        // refetchOnMount: (query) => !query.getObserversCount(),
     })
 }

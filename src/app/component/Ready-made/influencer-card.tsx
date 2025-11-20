@@ -11,9 +11,9 @@ import {
   Trash2Icon,
   XCircle,
   MessageCircle,
+  Loader2,
 } from "lucide-react";
 import DeleteInfluencerhook from "@/src/routes/Admin/Hooks/deleteinfluencer-hook";
-import Spinner from "../custom-component/spinner";
 import { Button } from "@/components/ui/button";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";
 import { useParams } from "next/navigation";
@@ -131,7 +131,7 @@ const InfluencerCard = ({
     <article className="group relative w-full rounded-xl border bg-gray-800/50 backdrop-blur-sm text-white p-2 shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
       {actionLoading && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
-          <Spinner size="md" />
+          <Loader2 className="animate-spin text-white" />
           <p className="mt-2 text-sm font-medium">
             {actionLoading === "approved" ? "Approving..." : "Rejecting..."}
           </p>
@@ -249,7 +249,11 @@ const InfluencerCard = ({
               className=" bg-black/10 hover:bg-black/20 border text-amber-300 text-sm font-medium py-2.5 rounded-lg transition-colors"
               disabled={actionLoading !== null}
             >
-              {actionLoading === "approved" ? <Spinner size="sm" /> : "Approve"}
+              {actionLoading === "approved" ? (
+                <Loader2 className="animate-spin text-white" />
+              ) : (
+                "Approve"
+              )}
             </CustomButton>
           )}
           {showReject && (
@@ -258,7 +262,11 @@ const InfluencerCard = ({
               className=" bg-black/10 hover:bg-black/20 border text-red-300 text-sm font-medium py-2.5 rounded-lg transition-colors"
               disabled={actionLoading !== null}
             >
-              {actionLoading === "rejected" ? <Spinner size="sm" /> : "Reject"}
+              {actionLoading === "rejected" ? (
+                <Loader2 className="animate-spin text-white" />
+              ) : (
+                "Reject"
+              )}
             </CustomButton>
           )}
         </div>

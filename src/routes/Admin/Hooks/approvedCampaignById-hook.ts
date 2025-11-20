@@ -7,6 +7,6 @@ export default function ApprovedCampaignByIdHook(campaign_id: string) {
         queryKey: ['approved-campaign-by-id', campaign_id],
         queryFn: () => ApprovedCampaignByIdApi(campaign_id),
         enabled: !!campaign_id,
-        refetchOnMount: (query) => !query.getObserversCount(),
+        // refetchOnMount: (query) => !query.getObserversCount(),
     })
 }

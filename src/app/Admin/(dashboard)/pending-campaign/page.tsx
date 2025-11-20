@@ -16,7 +16,6 @@ import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.typ
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = usePendingCampaigns(currentPage);
-  console.log(data);
   const generateInfluencers = AdminGenerateInfluencersHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
@@ -115,11 +114,6 @@ export default function AdminPendingCampaigns() {
                 )}
               </Button>
             </div>,
-            // <div key={`delete-${campaign._id}`} className="truncate">
-            //   <Button variant="outline" size="icon">
-            //     <Download className="w-4 h-4 text-delete-text cursor-pointer" />
-            //   </Button>
-            // </div>,
           ]
         )}
         paginationstart={data?.page ?? 1}

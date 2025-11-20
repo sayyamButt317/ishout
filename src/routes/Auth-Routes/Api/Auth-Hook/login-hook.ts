@@ -18,7 +18,7 @@ export default function LoginMutation() {
             setUserId(data.user.user_id);
             console.log(data.user.user_id);
             if (data.user.role === "company") {
-                router.replace('/client/all-campaign');
+                router.replace('/client/create-campaign');
                 toast.success('Login successful to client dashboard', {
                     description: 'You are now logged in',
                 });

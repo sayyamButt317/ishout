@@ -133,3 +133,7 @@ export const AdminUpdateCampaignStatusApi = async (updateCampaignStatusRequest: 
     return response.data;
 }
 
+export const AdminCompanyDetailsByIdApi = async (user_id: string) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_COMPANY_DETAILS_BY_ID(user_id));
+    return response.data;
+}

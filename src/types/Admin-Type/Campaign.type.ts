@@ -42,14 +42,11 @@ export interface AdminAllCampaignApiResponse {
     limit: number;
     status: string;
     requested_date: string;
-    user_details: {
-        user_id: string;
-        name: string;
-        email: string;
-        phone: string;
-        company_name: string;
-        industry: string;
-    }
+    user_id: string;
+    // user_details: {
+    //     contact_person: string;
+    //     phone: string;
+    // }
     influencers_ids: number;
     influencer_references: {
         influencers_id: string;

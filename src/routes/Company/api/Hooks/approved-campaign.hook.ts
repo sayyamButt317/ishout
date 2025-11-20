@@ -8,6 +8,6 @@ export default function ApprovedCampaignHook(user_id: string) {
         enabled: !!user_id,
         refetchOnWindowFocus: false, // Don't refetch on window focus
         refetchOnReconnect: false,
-        refetchOnMount: (query) => !query.getObserversCount(),
+        // refetchOnMount: (query) => !query.getObserversCount(),
     });
 }
