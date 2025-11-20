@@ -15,18 +15,18 @@ export default function LandingPage() {
         <Image
           src="/assets/leftVector.svg"
           alt="leftVector"
+          loading="lazy"
           width={800}
           height={800}
           className="absolute left-0 top-0 h-full w-auto object-contain pointer-events-none opacity-70"
-          priority
         />
         <Image
           src="/assets/rightVector.svg"
           alt="rightVector"
+          loading="lazy"
           width={800}
           height={800}
           className="absolute right-0 top-0 h-full w-auto object-contain pointer-events-none opacity-70"
-          priority
         />
         {/* heading section */}
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between max-w-7xl w-full px-6 md:px-10 pt-20 pb-20 md:pt-24 md:pb-28 gap-12 mt-12 md:mt-0">

@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import Spinner from "@/src/app/component/custom-component/spinner";
 import TableComponent from "@/src/app/component/CustomTable";
 import ApprovedCampaignHook from "@/src/routes/Company/api/Hooks/approved-campaign.hook";
 import useAuthStore from "@/src/store/AuthStore/authStore";
@@ -18,28 +17,11 @@ import UpdateInfluencerStatusCompanyHook from "@/src/routes/Company/api/Hooks/up
 
 export default function InfluencerReviewPage() {
   const { user_id } = useAuthStore();
-  const { data, isLoading, error } = ApprovedCampaignHook(user_id ?? "");
+  const { data, isLoading } = ApprovedCampaignHook(user_id ?? "");
   const {
     mutate: updateInfluencerStatus,
     isPending: isUpdatingInfluencerStatus,
   } = UpdateInfluencerStatusCompanyHook();
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spinner />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-red-500 text-2xl font-bold">
-          Error: {error.message}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>

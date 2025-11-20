@@ -79,8 +79,10 @@ export const AdminGenerateInfluencersApi = async (campaign_id: string, limit: nu
     });
     return response.data;
 }
-export const AdminPendingCampaignApi = async () => {
-    const response = await api.get(AdminENDPOINT.ADMIN_PENDING_CAMPAIGN);
+export const AdminPendingCampaignApi = async (page: number = 1) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_PENDING_CAMPAIGN, {
+        params: { page }
+    });
     return response.data;
 }
 export const AdminApprovedCampaignApi = async () => {

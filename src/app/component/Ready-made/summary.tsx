@@ -238,7 +238,7 @@ const Summary = () => {
               >
                 {isPending ? (
                   <div className="flex items-center gap-2">
-                    <Spinner size="sm" />
+                    <Spinner size={20} />
                     Creating...
                   </div>
                 ) : (

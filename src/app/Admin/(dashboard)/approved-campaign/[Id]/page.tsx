@@ -46,7 +46,7 @@ export default function ApprovedInfluencerById() {
 
       {isLoading && (
         <div className="flex justify-center items-center min-h-[200px]">
-          <Spinner size="lg" />
+          <Spinner size={20} />
         </div>
       )}
 

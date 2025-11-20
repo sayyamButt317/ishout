@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-// import CountButton from "@/src/app/component/custom-component/countbutton";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import Spinner from "@/src/app/component/custom-component/spinner";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import TableComponent from "@/src/app/component/CustomTable";
 import ApprovedCampaignHook from "@/src/routes/Company/api/Hooks/approved-campaign.hook";
@@ -26,33 +24,8 @@ interface ApprovedCampaignResponse {
 
 export default function ApprovedCampaignPage() {
   const { user_id } = useAuthStore();
-  const { data, isLoading, error } = ApprovedCampaignHook(user_id ?? "");
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spinner />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-red-500 text-2xl font-bold">
-          Error: {error.message}
-        </div>
-      </div>
-    );
-  }
-  if (!data?.campaigns) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-primary-text text-2xl font-bold">
-          No data found
-        </div>
-      </div>
-    );
-  }
-  console.log("response data ", data?.campaigns);
+  const { data, isLoading } = ApprovedCampaignHook(user_id ?? "");
+
   return (
     <>
       <TableComponent

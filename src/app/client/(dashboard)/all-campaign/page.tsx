@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-// import CountButton from "@/src/app/component/custom-component/countbutton";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import Spinner from "@/src/app/component/custom-component/spinner";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import TableComponent from "@/src/app/component/CustomTable";
 import CompanyCampaignHook from "@/src/routes/Company/api/Hooks/companyCampaign.hook";
@@ -24,23 +22,7 @@ interface AllCampaignResponse {
 }
 
 export default function AllCampaign() {
-  const { data, isLoading, error } = CompanyCampaignHook();
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spinner />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-red-500 text-2xl font-bold">
-          Error: {error.message}
-        </div>
-      </div>
-    );
-  }
+  const { data, isLoading } = CompanyCampaignHook();
 
   return (
     <>

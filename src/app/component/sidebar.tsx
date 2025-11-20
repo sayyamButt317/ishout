@@ -41,11 +41,10 @@ export default function Sidebar({ links }: SidebarProps) {
         key={link.route}
         onClick={() => handleClick(link.route)}
         className={cn(
-          "group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out outline-none",
+          "group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out outline-none cursor-pointer",
           isSelected
-            ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-white shadow-lg shadow-blue-500/25"
-            : "text-slate-300 hover:bg-white/10 hover:text-white hover:border-white/20 border border-transparent",
-          "focus:ring-2 focus:ring-blue-400/50 focus:ring-offset-2 focus:ring-offset-slate-900"
+            ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-white"
+            : "text-slate-300 hover:bg-white/10 hover:text-white hover:border-white/20 border border-transparent"
         )}
         aria-current={isSelected ? "page" : undefined}
       >

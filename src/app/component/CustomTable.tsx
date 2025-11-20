@@ -8,6 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Eye, Trash } from "lucide-react";
+import Spinner from "./custom-component/spinner";
 
 interface TableProps {
   header: string[];
@@ -20,6 +21,9 @@ interface TableProps {
   onView?: (rowIndex: number) => void;
   onPageChange?: (page: number) => void;
   isLoading?: boolean;
+  error?: {
+    message: string;
+  };
 }
 
 export default function TableComponent({
@@ -33,6 +37,7 @@ export default function TableComponent({
   onView,
   onPageChange,
   isLoading = false,
+  error,
 }: TableProps) {
   const handlePreviousPage = () => {
     if (paginationstart > 1 && onPageChange) {
@@ -75,7 +80,8 @@ export default function TableComponent({
                   colSpan={header.length + (showTrashIcon ? 1 : 0)}
                   className="text-center py-8"
                 >
-                  Loading...
+                  <Spinner size={20} />
+                  {/* <Loader2 className="animate-spin text-white items-center" /> */}
                 </TableCell>
               </TableRow>
             ) : !subheader || subheader?.length === 0 ? (
@@ -85,6 +91,15 @@ export default function TableComponent({
                   className="text-center py-8"
                 >
                   No data available
+                </TableCell>
+              </TableRow>
+            ) : error ? (
+              <TableRow>
+                <TableCell
+                  colSpan={header.length + (showTrashIcon ? 1 : 0)}
+                  className="text-center py-8"
+                >
+                  Error: {error.message}
                 </TableCell>
               </TableRow>
             ) : (
@@ -123,6 +138,7 @@ export default function TableComponent({
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 py-4 border-t mt-6 gap-2 sm:gap-0">
           <div className="flex space-x-2">
             <Button
+              className="cursor-pointer"
               variant="outline"
               onClick={handlePreviousPage}
               disabled={paginationstart <= 1 || isLoading}
@@ -130,6 +146,7 @@ export default function TableComponent({
               Previous
             </Button>
             <Button
+              className="cursor-pointer"
               variant="outline"
               onClick={handleNextPage}
               disabled={paginationstart >= paginationend || isLoading}

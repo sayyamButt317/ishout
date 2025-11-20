@@ -2,7 +2,6 @@
 import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
 import { WhatsAppShareButton } from "@/src/app/component/custom-component/sharebutton";
-import Spinner from "@/src/app/component/custom-component/spinner";
 import AllCampaignHook from "@/src/routes/Admin/Hooks/Allcampaign-hook";
 import { Eye, Share2, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -30,11 +29,7 @@ export default function AllCampaignPage() {
   const appliedStatus =
     statusFilter === "all" ? undefined : statusFilter.toLowerCase();
 
-  const { data, isLoading, error } = AllCampaignHook(
-    currentPage,
-    appliedStatus
-  );
-  console.log("All Campaign", data);
+  const { data, isLoading } = AllCampaignHook(currentPage, appliedStatus);
 
   const deleteCampaignHook = DeleteCampaignHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
@@ -43,23 +38,6 @@ export default function AllCampaignPage() {
   const campaigns = (data?.campaigns ?? []) as AdminAllCampaignApiResponse[];
   const totalPages = Math.max(data?.total_pages ?? 1, 1);
   const totalCount = data?.total ?? campaigns.length;
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spinner />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-slate-50 text-sm font-thin text-center border border-red-500 rounded-md p-4 bg-red-500/10">
-          Error: {error.message}
-        </div>
-      </div>
-    );
-  }
 
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;

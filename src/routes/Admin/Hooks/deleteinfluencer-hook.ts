@@ -1,13 +1,13 @@
 import { toast } from "sonner";
 import { DeleteInfluencer } from "../API/admin.routes";
 import { useMutation } from "@tanstack/react-query";
-import { DeleterInfluenceerequest, ReadyMadeInfluencersApiResponse } from "../../../types/readymadeinfluencers-type";
+import { DeleterInfluenceerequest, ReadyMadeInfluencerResponse, ReadyMadeInfluencersApiResponse } from "../../../types/readymadeinfluencers-type";
 import { AxiosError } from "axios";
 import { useReadyMadeTemplateStore } from "../../../store/Campaign/campaign.store";
 
 
 export default function DeleteInfluencerhook() {
-    const { results, setResults, removeInfluencer } = useReadyMadeTemplateStore();
+    const { results, setResults } = useReadyMadeTemplateStore();
 
     return useMutation({
         mutationFn: (deleteInfluencerRequest: DeleterInfluenceerequest) => DeleteInfluencer(deleteInfluencerRequest),
@@ -15,8 +15,20 @@ export default function DeleteInfluencerhook() {
             // Store the previous state for rollback
             const previousResults = results;
 
-            if (deleteInfluencerRequest.influencer_id) {
-                removeInfluencer(deleteInfluencerRequest.influencer_id);
+            //  update the UI by removing the influencer from the store
+            if (results?.influencers) {
+                const updatedInfluencers = results.influencers.filter(
+                    (influencer: ReadyMadeInfluencerResponse) => influencer._id !== deleteInfluencerRequest.influencer_id
+                );
+
+                setResults({
+                    ...results,
+                    influencers: updatedInfluencers,
+                    notes: {
+                        ...(results as ReadyMadeInfluencersApiResponse).notes,
+                        returned: updatedInfluencers.length
+                    }
+                });
             }
 
             return { previousResults: previousResults as ReadyMadeInfluencersApiResponse };

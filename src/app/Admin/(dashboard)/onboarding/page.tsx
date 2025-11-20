@@ -1,6 +1,5 @@
 "use client";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import Spinner from "@/src/app/component/custom-component/spinner";
 import TableComponent from "@/src/app/component/CustomTable";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -14,25 +13,7 @@ import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influenc
 
 export default function OnboardingPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, error } = OnboardingHook(currentPage);
-  console.log("onboarding data", data);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spinner />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-red-500 text-2xl font-bold">
-          Error: {error.message}
-        </div>
-      </div>
-    );
-  }
+  const { data, isLoading } = OnboardingHook(currentPage);
 
   return (
     <>
@@ -101,7 +82,6 @@ export default function OnboardingPage() {
         paginationstart={data?.page ?? 1}
         paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => {
-          console.log(page);
           setCurrentPage(page);
         }}
         isLoading={isLoading}

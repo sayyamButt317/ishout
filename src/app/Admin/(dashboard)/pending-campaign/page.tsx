@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
-import Spinner from "@/src/app/component/custom-component/spinner";
 import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -15,40 +14,16 @@ import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignSta
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
 
 export default function AdminPendingCampaigns() {
-  const { data, isLoading, error } = usePendingCampaigns();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isLoading } = usePendingCampaigns(currentPage);
+  console.log(data);
   const generateInfluencers = AdminGenerateInfluencersHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
-  // const [currentPage, setCurrentPage] = useState(1);
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(
     null
   );
   const router = useRouter();
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Spinner />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-red-500 text-2xl font-bold">
-          Error: {error.message}
-        </div>
-      </div>
-    );
-  }
-  if (!data?.campaigns) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-primary-text text-2xl font-bold">
-          No data found
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -147,10 +122,10 @@ export default function AdminPendingCampaigns() {
             // </div>,
           ]
         )}
-        paginationstart={1}
-        paginationend={10}
+        paginationstart={data?.page ?? 1}
+        paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => {
-          console.log(page);
+          setCurrentPage(page);
         }}
         isLoading={isLoading}
       />

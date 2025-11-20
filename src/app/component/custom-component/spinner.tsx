@@ -2,60 +2,32 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 interface SpinnerProps {
+  size?: number;
   className?: string;
-  size?: "sm" | "md" | "lg";
-  colors?: [string, string, string]; // [start, mid, end]
 }
 
-// Default brand colors mentioned in code: #f7941D (orange), white, #1E4B8E (blue)
-const DEFAULT_COLORS: [string, string, string] = [
-  "#ff5e7e",
-  "#FFFFFF",
-  "#1E4B8E",
-];
-
-const Spinner = ({
-  className,
-  size = "md",
-  colors = DEFAULT_COLORS,
-}: SpinnerProps) => {
-  const sizeClasses: Record<typeof size, string> = {
-    sm: "w-5 h-5",
-    md: "w-7 h-7",
-    lg: "w-10 h-10",
-  } as const;
-
-  // Inner cutout thickness per size to form a clean ring
-  const insetBySize: Record<typeof size, string> = {
-    sm: "inset-[3px]",
-    md: "inset-[4px]",
-    lg: "inset-[6px]",
-  } as const;
-
-  const gradient = `conic-gradient(${colors[0]}, ${colors[1]}, ${colors[2]}, ${colors[0]})`;
-
+const Spinner = ({ size = 32, className }: SpinnerProps) => {
+  const borderSize = Math.max(2, Math.floor(size / 12));
   return (
     <div
       className={cn(
         "relative inline-flex items-center justify-center",
-        sizeClasses[size],
         className
       )}
+      aria-label="Loading"
     >
-      {/* Gradient ring */}
       <div
-        className="absolute inset-0 rounded-full animate-spin"
-        style={{ background: gradient }}
+        className="animate-spin rounded-full border border-transparent border-t-white border-r-white/80"
+        style={{
+          width: size,
+          height: size,
+          borderWidth: borderSize,
+          borderTopColor: "rgba(255,255,255,0.9)",
+          borderRightColor: "rgba(255,255,255,0.7)",
+          borderLeftColor: "transparent",
+          borderBottomColor: "transparent",
+        }}
       />
-      {/* Inner cutout to create donut shape */}
-      <div
-        className={cn(
-          "absolute rounded-full bg-transparent",
-          insetBySize[size]
-        )}
-      />
-      {/* Fallback center dot for alignment (invisible) */}
-      <span className="opacity-0">&nbsp;</span>
     </div>
   );
 };
