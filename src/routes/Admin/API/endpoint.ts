@@ -2,7 +2,7 @@ export const AdminENDPOINT = {
     INFLUENCERS_CAMPAIGN_BY_ID: (campaign_id: string) => `/admin/campaigns/${campaign_id}`,
     INFLUENCERS_LIST_BY_ID: (campaign_id: string) => `/admin/campaigns/${campaign_id}/generate-influencers`,
 
-    ADMIN_DELETE_INFLUENCER: `/delete-influencer`,
+    ADMIN_DELETE_INFLUENCER: `/admin/delete-influencer`,
     ADMIN_REJECTED_INFLUENCER: `/find-influencer/more`,
     ADMIN_UPDATE_INFLUENCER_STATUS: `/admin/campaigns/update-influencer-status`,
 

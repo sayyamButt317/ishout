@@ -2,7 +2,7 @@
 import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
 import CustomButton from "@/src/app/component/button";
 import { useParams, useRouter } from "next/navigation";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
 import UpdateInfluencerStatusHook from "@/src/routes/Admin/Hooks/updateinfluencerstatus-hook";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";

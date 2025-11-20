@@ -6,5 +6,8 @@ export default function ApprovedCampaignHook(user_id: string) {
         queryKey: ['approved-campaign', user_id],
         queryFn: () => CampaignApprovedInfluencers(),
         enabled: !!user_id,
+        refetchOnWindowFocus: false, // Don't refetch on window focus
+        refetchOnReconnect: false,
+        refetchOnMount: (query) => !query.getObserversCount(),
     });
 }

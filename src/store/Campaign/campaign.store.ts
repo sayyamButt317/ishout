@@ -15,12 +15,12 @@ interface TemplateProps {
     isSelected: boolean;
     results?: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest;
 
-    setField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray'>>(
+    setField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray' | 'clearTemplate' | 'setResults' | 'removeInfluencer'>>(
         field: K,
         value: TemplateProps[K]
     ) => void;
 
-    getField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray'>>(
+    getField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray' | 'clearTemplate' | 'setResults' | 'removeInfluencer'>>(
         field: K
     ) => TemplateProps[K];
 
@@ -29,6 +29,7 @@ interface TemplateProps {
     clearArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
     clearTemplate: () => void;
     setResults: (results: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest) => void;
+    removeInfluencer: (influencerId: string) => void;
 }
 
 
@@ -62,6 +63,32 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
                 clearArray: (field) => set((state) => ({ ...state, [field]: [] })),
 
                 setResults: (results: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest) => set({ results }),
+                removeInfluencer: (influencerId: string) =>
+                    set((state) => {
+                        const currentResults = state.results;
+
+                        if (!currentResults || !currentResults.influencers) {
+                            return {};
+                        }
+
+                        const updatedInfluencers = currentResults.influencers.filter(
+                            (influencer) => influencer._id !== influencerId
+                        );
+
+                        const nextResults: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest = {
+                            ...currentResults,
+                            influencers: updatedInfluencers,
+                        };
+
+                        if ('notes' in nextResults && nextResults.notes) {
+                            nextResults.notes = {
+                                ...nextResults.notes,
+                                returned: updatedInfluencers.length,
+                            };
+                        }
+
+                        return { results: nextResults };
+                    }),
                 clearTemplate: () => set({
                     _id: [],
                     username: [],

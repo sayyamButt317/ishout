@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { FindInfluencerRequestProps, ReadyMadeInfluencersRequest } from "@/src/types/readymadeinfluencers-type";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 
 
 export default function CreateCampaignHook() {

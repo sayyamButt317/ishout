@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminGenerateInfluencersApi } from "../API/admin.routes";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 
 export default function AdminGenerateInfluencersHook() {
     const queryClient = useQueryClient();
