@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
-import { IconArrowNarrowLeft, IconArrowNarrowRight } from "@tabler/icons-react";
+import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 
@@ -31,6 +30,33 @@ const defaultVideos: VideoItem[] = [
   {
     src: "https://ik.imagekit.io/2bm6zmhwk/Sukaina%20Final%20Video.mp4",
   },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/Final%20Draft.mp4",
+  },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/Ahmad%20version%203.mp4",
+  },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/Snapinsta.app_video_121208147_299905039231417_6247490752328145492_n.mp4",
+  },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/Snapins.ai_video_AQPdT4qx_wERTO_ojUxIEPYsPnkAar6GrpZnk1hup0rPzXNJAfabyGxLSb2gNPIxEf5tUkTqwmRD8fBF2fjJ4KbMDXPV9lfyCx4-u1Q.mp4",
+  },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/Bader.mp4",
+  },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/WhatsApp%20Video%202023-08-25%20at%206.51.54%20PM.mp4",
+  },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/WhatsApp%20Video%202023-12-14%20at%201.25.54%20PM.mp4",
+  },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/ssstik.io_@oshabra_1742902096198.mp4",
+  },
+  {
+    src: "https://ik.imagekit.io/t7jlwbkq7/Sukaina%20Final%20Video.mp4",
+  },
 ];
 
 export default function VideoCarousel({
@@ -38,35 +64,12 @@ export default function VideoCarousel({
   initialScroll = 0,
 }: VideoCarouselProps) {
   const carouselRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
 
   useEffect(() => {
     if (carouselRef.current) {
       carouselRef.current.scrollLeft = initialScroll;
-      checkScrollability();
     }
   }, [initialScroll]);
-
-  const checkScrollability = () => {
-    if (carouselRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
-    }
-  };
-
-  const scrollLeft = () => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -300, behavior: "smooth" });
-    }
-  };
-
-  const scrollRight = () => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
-    }
-  };
 
   return (
     <div className="relative w-full">
@@ -89,20 +92,13 @@ export default function VideoCarousel({
         </h1>
       </div>
       <div
-        className="flex w-full overflow-x-scroll overscroll-x-auto scroll-smooth py-10 [scrollbar-width:none] md:py-20"
+        className="flex w-full overflow-x-auto overscroll-x-contain scroll-smooth py-10 [scrollbar-width:none] md:py-20 snap-x snap-mandatory"
         ref={carouselRef}
-        onScroll={checkScrollability}
       >
         <div
           className={cn(
-            "absolute right-0 z-[1000] h-auto w-[5%] overflow-hidden bg-gradient-to-l"
-          )}
-        ></div>
-
-        <div
-          className={cn(
-            "flex flex-row justify-start gap-4 ",
-            "mx-auto max-w-7xl"
+            "flex flex-row justify-start gap-4 px-4 md:px-8",
+            "w-full "
           )}
         >
           {videos.map((video, index) => (
@@ -121,9 +117,9 @@ export default function VideoCarousel({
                 },
               }}
               key={`video-${index}`}
-              className="rounded-3xl last:pr-[5%] md:last:pr-[33%]"
+              className="rounded-3xl flex-shrink-0 snap-start"
             >
-              <div className="relative z-10 flex h-80 w-56 flex-col items-center justify-center overflow-hidden rounded-3xl bg-gray-100 md:h-[40rem] md:w-96 dark:bg-neutral-900">
+              <div className="relative z-10 flex h-64 w-[72vw] max-w-xs flex-col items-center justify-center overflow-hidden rounded-3xl bg-gray-100 sm:h-80 sm:w-64 md:h-[40rem] md:w-96 dark:bg-neutral-900">
                 <video
                   src={video.src}
                   className="h-full w-full object-cover rounded-3xl"
@@ -133,6 +129,8 @@ export default function VideoCarousel({
                   // autoPlay
                   poster={video.poster}
                   preload="auto"
+                  crossOrigin="anonymous"
+                  playsInline
                 />
                 {video.title && (
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-full bg-gradient-to-b from-transparent via-transparent to-black/50" />
@@ -148,22 +146,6 @@ export default function VideoCarousel({
             </motion.div>
           ))}
         </div>
-      </div>
-      <div className="mr-10 flex justify-end gap-2">
-        <button
-          className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 disabled:opacity-50"
-          onClick={scrollLeft}
-          disabled={!canScrollLeft}
-        >
-          <IconArrowNarrowLeft className="h-6 w-6 text-gray-500" />
-        </button>
-        <button
-          className="relative z-40 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 disabled:opacity-50"
-          onClick={scrollRight}
-          disabled={!canScrollRight}
-        >
-          <IconArrowNarrowRight className="h-6 w-6 text-gray-500" />
-        </button>
       </div>
     </div>
   );

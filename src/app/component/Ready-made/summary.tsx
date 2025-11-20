@@ -1,7 +1,7 @@
 import React from "react";
 import CustomButton from "../button";
 import Spinner from "../custom-component/spinner";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import CreateCampaignHook from "@/src/routes/Company/api/Hooks/create-campaign.hook";

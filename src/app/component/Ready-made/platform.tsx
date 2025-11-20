@@ -1,5 +1,5 @@
 import { Platforms } from "@/src/constant/platform";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { CheckIcon } from "lucide-react";
 
 export function ChoosePlatform() {

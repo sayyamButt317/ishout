@@ -3,7 +3,7 @@ import {
   midTierInfluencers,
   macroInfluencers,
 } from "@/src/constant/rangeoffollowers";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { influencerCategories } from "@/src/constant/rangeoffollowers";
 import React from "react";
 import { CheckIcon } from "lucide-react";

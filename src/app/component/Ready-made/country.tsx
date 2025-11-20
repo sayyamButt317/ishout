@@ -1,5 +1,5 @@
 import { INSTAGRAM_INFLUENCERS_COUNTRIES } from "@/src/constant/country";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { CheckIcon } from "lucide-react";
 import React from "react";
 

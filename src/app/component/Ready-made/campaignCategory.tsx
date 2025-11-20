@@ -1,6 +1,6 @@
 import React from "react";
 import { campaignNames, getCategoryIcon } from "@/src/constant/campaignname";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { CheckIcon } from "lucide-react";
 
 const CampaignCategoryComponent = () => {

@@ -26,7 +26,7 @@ export default function HowItWorks() {
             alt="briefing"
             width={500}
             height={500}
-            loading="lazy"
+            priority
             className="object-contain rounded-2xl w-full md:w-auto max-w-[300px] md:max-w-none"
           />
         </div>
@@ -46,7 +46,7 @@ export default function HowItWorks() {
             alt="matching"
             width={500}
             height={500}
-            loading="lazy"
+            priority
             className="object-contain rounded-2xl w-full md:w-auto max-w-[300px] md:max-w-none"
           />
         </div>
@@ -65,7 +65,7 @@ export default function HowItWorks() {
             alt="approval"
             width={500}
             height={500}
-            loading="lazy"
+            priority
             className="object-contain rounded-2xl w-full md:w-auto max-w-[300px] md:max-w-none"
           />
         </div>
@@ -85,7 +85,7 @@ export default function HowItWorks() {
             alt="campaign-launch"
             width={500}
             height={500}
-            loading="lazy"
+            priority
             className="object-contain rounded-2xl w-full md:w-auto max-w-[300px] md:max-w-none"
           />
         </div>
@@ -104,7 +104,7 @@ export default function HowItWorks() {
             alt="reporting"
             width={500}
             height={500}
-            loading="lazy"
+            priority
             className="object-contain rounded-2xl w-full md:w-auto max-w-[300px] md:max-w-none"
           />
         </div>

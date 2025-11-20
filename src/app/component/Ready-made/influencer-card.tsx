@@ -269,9 +269,7 @@ const InfluencerCard = ({
           <Button
             variant="outline"
             size="icon"
-            onClick={() =>
-              onDelete(influencer?.platform as unknown as string, influencer.id)
-            }
+            onClick={() => onDelete(influencer?.platform, influencer.id)}
             className="w-full bg-red-600 hover:bg-red-700 text-white"
             disabled={deleteInfluencerhook.isPending}
           >

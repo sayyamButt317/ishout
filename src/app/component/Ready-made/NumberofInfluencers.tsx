@@ -1,5 +1,5 @@
 import { NumberofFollowers } from "@/src/constant/numberofInfluencers";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/ready-made";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { CheckIcon } from "lucide-react";
 import React from "react";
 

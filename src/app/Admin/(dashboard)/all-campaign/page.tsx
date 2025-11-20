@@ -11,6 +11,8 @@ import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
+import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
+import CountButton from "@/src/app/component/custom-component/countbutton";
 
 const STATUS_OPTIONS = [
   { label: "All statuses", value: "all" },
@@ -32,6 +34,7 @@ export default function AllCampaignPage() {
     currentPage,
     appliedStatus
   );
+  console.log("All Campaign", data);
 
   const deleteCampaignHook = DeleteCampaignHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
@@ -72,7 +75,7 @@ export default function AllCampaignPage() {
     <>
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="italic text-2xl font-bold text-white">
             Company Generated Campaigns
           </h1>
           <p className="text-sm text-white/70">
@@ -113,13 +116,12 @@ export default function AllCampaignPage() {
       ) : (
         <TableComponent
           header={[
-            "#",
-            "Campaign Name",
-            "Company Name",
+            "#Campaign ID",
+            "Category",
             "Platform",
-            "Requested Date",
-            // "Approved Influencers",
-            // "Rejected Influencers",
+            "Followers",
+            "Influencers",
+            "Requested At",
             "Status",
             "View",
             "Share",
@@ -127,24 +129,25 @@ export default function AllCampaignPage() {
           ]}
           subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
             campaign._id,
-            <div key={`name-${campaign._id}`} className="truncate">
-              {campaign.name}
-            </div>,
-            <div key={`company-name-${campaign._id}`} className="truncate">
-              {campaign.user_details?.company_name}
+            <div key={`category-${campaign._id}`} className="truncate">
+              {campaign?.category?.join(", ")}
             </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
-              {campaign.platform}
+              <PlatformBadge platform={campaign?.platform} />
+            </div>,
+            <div key={`followers-${campaign._id}`} className="truncate">
+              {campaign?.followers?.join(", ")}
+            </div>,
+            <div
+              key={`requested-influencers-${campaign._id}`}
+              className="flex items-center justify-center"
+            >
+              <CountButton count={campaign?.limit} />
             </div>,
             <div key={`requested-date-${campaign._id}`} className="truncate">
               {new Date(campaign.created_at).toLocaleDateString()}
             </div>,
-            // <div
-            //   key={`approved-influencers-${campaign._id}`}
-            //   className="truncate"
-            // >
-            //   {campaign.approved_influencers_count}
-            // </div>,
+
             // <div
             //   key={`rejected-influencers-${campaign._id}`}
             //   className="truncate"
