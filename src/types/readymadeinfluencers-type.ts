@@ -45,12 +45,6 @@ export interface ReadyMadeInfluencersRequest {
 
 export interface ReadyMadeInfluencersApiResponse {
   influencers: ReadyMadeInfluencerResponse[];
-  notes: {
-    requested: number;
-    returned: number;
-    global_cap: number;
-    strategy: string;
-  };
 }
 
 export interface DeleterInfluenceerequest {
