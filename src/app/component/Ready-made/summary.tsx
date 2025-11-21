@@ -225,7 +225,7 @@ const Summary = () => {
                 onClick={() => clearTemplate()}
                 className="flex-1 bg-slate-600 hover:bg-slate-700 text-white px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105"
               >
-                Clear All
+                Clear
               </CustomButton>
               <CustomButton
                 onClick={() => handleLaunchCampaign()}

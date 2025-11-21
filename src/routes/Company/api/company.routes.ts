@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { CompanyENDPOINT } from './endpoint';
 import { FindInfluencerRequestProps } from '@/src/types/readymadeinfluencers-type';
-import { GuidedQuestionsType } from '@/src/types/guidedquestion-type';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import { toast } from 'sonner';
 import { getAuthTokenProvider } from '@/src/provider/auth-provide';
@@ -53,8 +52,13 @@ export const FindInfluencer = async (influencerRequest: FindInfluencerRequestPro
   return response.data;
 };
 
-export const CompanyCampaign = async () => {
-  const response = await api.get(CompanyENDPOINT.CAMPAIGN);
+export const CompanyCampaign = async (page: number = 1, page_size: number = 10) => {
+  const response = await api.get(CompanyENDPOINT.CAMPAIGN, {
+    params: {
+      page,
+      page_size,
+    },
+  });
   return response.data;
 }
 
@@ -63,20 +67,15 @@ export const CampaignRejectedInfluencers = async () => {
   return response.data;
 }
 
-export const CampaignApprovedInfluencers = async () => {
-  const response = await api.get(CompanyENDPOINT.CAMPAIGN_APPROVED_INFLUENCERS)
-  return response.data;
-}
+// export const CampaignApprovedInfluencers = async () => {
+//   const response = await api.get(CompanyENDPOINT.CAMPAIGN_APPROVED_INFLUENCERS)
+//   return response.data;
+// }
 
 export const ApprovedCampaignById = async (user_id: string) => {
   const response = await api.get(CompanyENDPOINT.APPROVED_CAMPAIGN_BY_ID(user_id))
   return response.data;
 }
-
-export const QuestionGuided = async (guidedQuestion: GuidedQuestionsType) => {
-  const response = await api.post<GuidedQuestionsType>(CompanyENDPOINT.QUESTION_GUIDED, guidedQuestion);
-  return response.data;
-};
 
 export const CompanyUpdateInfluencerStatusApi = async (influencerRequest: UpdateInfluencerStatusRequestProps) => {
   const response = await api.patch<UpdateInfluencerStatusResponseProps>(CompanyENDPOINT.COMPANY_UPDATE_INFLUENCER_STATUS, influencerRequest);

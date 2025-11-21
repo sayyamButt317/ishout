@@ -63,7 +63,8 @@ export default function VideoCarousel({
                   src={video.src}
                   className="h-full w-full object-cover rounded-3xl"
                   muted
-                  controls
+                  autoPlay
+                  loop
                   preload="auto"
                   crossOrigin="anonymous"
                   playsInline

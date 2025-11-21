@@ -18,7 +18,7 @@ export default function RegisterMutation() {
             toast.success('Registration successful', {
                 description: 'You can now login to your account',
             });
-            router.push('/client/dashboard');
+            router.push('/auth/login');
         },
         onError: (error) => {
             const axiosError = error as AxiosError<{ detail: string }>;

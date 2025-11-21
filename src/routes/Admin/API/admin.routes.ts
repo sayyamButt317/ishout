@@ -85,8 +85,10 @@ export const AdminPendingCampaignApi = async (page: number = 1) => {
     });
     return response.data;
 }
-export const AdminApprovedCampaignApi = async () => {
-    const response = await api.get(AdminENDPOINT.ADMIN_APPROVED_CAMPAIGN);
+export const AdminApprovedCampaignApi = async (page: number = 1) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_APPROVED_CAMPAIGN, {
+        params: { page }
+    });
     return response.data;
 }
 

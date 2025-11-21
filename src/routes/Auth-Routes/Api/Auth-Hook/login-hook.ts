@@ -19,12 +19,12 @@ export default function LoginMutation() {
             console.log(data.user.user_id);
             if (data.user.role === "company") {
                 router.replace('/client/create-campaign');
-                toast.success('Login successful to client dashboard', {
+                toast.success('Login successful to iShout', {
                     description: 'You are now logged in',
                 });
             } if (data.user.role === "admin") {
                 router.replace('/Admin/all-campaign');
-                toast.success('Login successful to admin dashboard', {
+                toast.success('Login successful to iShout Admin Panel', {
                     description: 'You are now logged in',
                 });
             }

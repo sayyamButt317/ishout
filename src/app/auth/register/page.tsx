@@ -36,8 +36,8 @@ export default function Signup() {
       company_name: "",
       contact_person: "",
       phone: "",
-      industry: "",
-      company_size: "",
+      // industry: "",
+      // company_size: "",
       email: "",
       password: "",
     },
@@ -47,11 +47,12 @@ export default function Signup() {
       company_name: data.company_name,
       contact_person: data.contact_person,
       phone: data.phone,
-      industry: data.industry,
-      company_size: data.company_size,
+      // industry: data.industry,
+      // company_size: data.company_size,
       email: data.email,
       password: data.password,
     });
+    form.reset();
   };
 
   return (
@@ -114,7 +115,7 @@ export default function Signup() {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="+91 9876543210"
+                            placeholder="971 9876543210"
                             className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             {...field}
                           />
@@ -126,28 +127,28 @@ export default function Signup() {
                 </div>
 
                 {/* Name Fields */}
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="company_name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-slate-700">
-                          Company Name
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Your Company Name"
-                            className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-xs" />
-                      </FormItem>
-                    )}
-                  />
+                {/* <div className="grid grid-cols-2 gap-4"> */}
+                <FormField
+                  control={form.control}
+                  name="company_name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-sm font-medium text-slate-700">
+                        Company Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Your Company Name"
+                          className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
+                {/* <FormField
                     control={form.control}
                     name="company_size"
                     render={({ field }) => (
@@ -165,9 +166,9 @@ export default function Signup() {
                         <FormMessage className="text-xs" />
                       </FormItem>
                     )}
-                  />
-                </div>
-                <FormField
+                  /> */}
+                {/* </div> */}
+                {/* <FormField
                   control={form.control}
                   name="industry"
                   render={({ field }) => (
@@ -186,7 +187,7 @@ export default function Signup() {
                       <FormMessage className="text-xs" />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 {/* Email */}
                 <FormField
