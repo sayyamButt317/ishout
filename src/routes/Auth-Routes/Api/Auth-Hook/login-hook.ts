@@ -24,7 +24,7 @@ export default function LoginMutation() {
                 });
             } if (data.user.role === "admin") {
                 router.replace('/Admin/all-campaign');
-                toast.success('Login successful to iShout Admin Panel', {
+                toast.success('Login successful to iShout Admin Panel ', {
                     description: 'You are now logged in',
                 });
             }
