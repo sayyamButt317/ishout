@@ -9,14 +9,14 @@ import { toast } from "sonner";
 
 export default function LoginMutation() {
     const router = useRouter();
-    const { setIsAuthenticated, setUserId } = useAuthStore();
+    const { setIsAuthenticated, setUserId, setCompanyName } = useAuthStore();
     return useMutation({
         mutationFn: (data: LoginRequestProps) => LoginMutationApi(data),
         onSuccess: (data: LoginResponseProps) => {
             setIsAuthenticated(true);
             setAuthTokenProvider(data.access_token, data.user.role);
             setUserId(data.user.user_id);
-            console.log(data.user.user_id);
+            setCompanyName(data.user.company_name);
             if (data.user.role === "company") {
                 router.replace('/client/create-campaign');
                 toast.success('Login successful to iShout', {

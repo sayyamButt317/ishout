@@ -12,9 +12,6 @@ export function middleware(request: NextRequest) {
     }
 
     if (accessToken) {
-        if (path.startsWith('/auth/register') && role === 'company') {
-            return NextResponse.redirect(new URL('/client/create-campaign', request.url));
-        }
         if (path.startsWith('/auth/login') && role === 'company') {
             return NextResponse.redirect(new URL('/client/create-campaign', request.url));
         }

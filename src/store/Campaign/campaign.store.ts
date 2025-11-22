@@ -1,4 +1,4 @@
-import { ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from "@/src/types/readymadeinfluencers-type";
+import { ReadyMadeInfluencersApiResponse } from "@/src/types/readymadeinfluencers-type";
 import { create } from "zustand";
 import { persist, devtools, createJSONStorage } from "zustand/middleware";
 
@@ -13,7 +13,7 @@ interface TemplateProps {
     campaign_id: string;
     iseditable: boolean;
     isSelected: boolean;
-    results?: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest;
+    results?: ReadyMadeInfluencersApiResponse[];
 
     setField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray'>>(
         field: K,
@@ -28,7 +28,7 @@ interface TemplateProps {
     removeFromArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
     clearArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
     clearTemplate: () => void;
-    setResults: (results: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest) => void;
+    setResults: (results: ReadyMadeInfluencersApiResponse[] | undefined) => void;
 }
 
 
@@ -61,7 +61,7 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
                 })),
                 clearArray: (field) => set((state) => ({ ...state, [field]: [] })),
 
-                setResults: (results: ReadyMadeInfluencersApiResponse | ReadyMadeInfluencersRequest) => set({ results }),
+                setResults: (results: ReadyMadeInfluencersApiResponse[] | undefined) => set({ results }),
                 clearTemplate: () => set({
                     _id: [],
                     username: [],

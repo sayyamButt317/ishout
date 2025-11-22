@@ -5,6 +5,7 @@ import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { X } from "lucide-react";
 import { toast } from "sonner";
 import CreateCampaignHook from "@/src/routes/Company/api/Hooks/create-campaign.hook";
+import useAuthStore from "@/src/store/AuthStore/authStore";
 
 const Summary = () => {
   const {
@@ -16,6 +17,8 @@ const Summary = () => {
     clearTemplate,
     removeFromArray,
   } = useReadyMadeTemplateStore();
+
+  const { company_name } = useAuthStore();
   const { mutateAsync: findInfluencer, isPending } = CreateCampaignHook();
 
   const handleLaunchCampaign = async () => {
@@ -29,6 +32,7 @@ const Summary = () => {
       limit: limit,
       followers: followers,
       country: country,
+      company_name: company_name,
     });
     clearTemplate();
   };

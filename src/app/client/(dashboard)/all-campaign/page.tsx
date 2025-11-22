@@ -1,61 +1,47 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import CountButton from "@/src/app/component/custom-component/countbutton";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import TableComponent from "@/src/app/component/CustomTable";
 import CompanyCampaignHook from "@/src/routes/Company/api/Hooks/companyCampaign.hook";
-import { PlatformType } from "@/src/types/readymadeinfluencers-type";
-import { Eye } from "lucide-react";
-import router from "next/router";
-import React from "react";
-
-interface AllCampaignResponse {
-  campaign_id: string;
-  name: string;
-  platform: PlatformType;
-  limit: number;
-  approved_influencers_count: number;
-  rejected_influencers_count: number;
-  status: string;
-  created_at: string;
-  updated_at: string;
-}
+import { CompanyCampaignResponse } from "@/src/types/Admin-Type/Campaign.type";
+import React, { useState } from "react";
 
 export default function AllCampaign() {
-  const { data, isLoading } = CompanyCampaignHook();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isLoading } = CompanyCampaignHook(currentPage);
   return (
     <>
       <TableComponent
         header={[
           "Campaign ID",
           "Campaign Name",
-          // "Company Name",
+          "followers",
           "Platform",
-          // "Requested ",
+          "Requested ",
           // "Approved ",
           // "Rejected ",
           "Status",
           "Created At",
-          "View",
+          //   "View",
         ]}
-        subheader={data?.campaigns?.map((campaign: AllCampaignResponse) => [
+        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
           campaign?.campaign_id,
           <div key={`name-${campaign?.campaign_id}`} className="truncate">
             {campaign?.name}
           </div>,
-          // <div key={`company-name-${campaign._id}`} className="truncate">
-          //   {campaign.company_name}
-          // </div>,
+          <div key={`followers-${campaign?.campaign_id}`} className="truncate">
+            {campaign?.followers?.join(", ")}
+          </div>,
           <div key={`platform-${campaign?.campaign_id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
           </div>,
-          // <div
-          //   key={`requested-${campaign?.campaign_id}`}
-          //   className="truncate"
-          // >
-          //   <CountButton count={campaign?.limit} />
-          // </div>,
+          <div
+            key={`requested-${campaign?.campaign_id}`}
+            className="truncate flex items-center "
+          >
+            <CountButton count={campaign?.limit ?? 0} />
+          </div>,
           // <div key={`approved-${campaign?.campaign_id}`} className="truncate">
           //   <CountButton count={campaign?.approved_influencers_count} />
           // </div>,
@@ -69,27 +55,28 @@ export default function AllCampaign() {
           <div key={`created-at-${campaign?.campaign_id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
-          <div key={`view-${campaign?.campaign_id}`} className="truncate">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() =>
-                router.push(`/Admin/pending-campaign/${campaign?.campaign_id}`)
-              }
-            >
-              <Eye className="w-4 h-4 text-primary-text cursor-pointer" />
-            </Button>
-          </div>,
+          //   <div key={`view-${campaign?.campaign_id}`} className="truncate">
+          //     <Button
+          //       className="cursor-pointer"
+          //       variant="outline"
+          //       size="icon"
+          //       onClick={() =>
+          //         router.push(`/Admin/pending-campaign/${campaign?.campaign_id}`)
+          //       }
+          //     >
+          //       <Eye className="w-4 h-4 text-primary-text cursor-pointer" />
+          //     </Button>
+          //   </div>,
           // <div key={`delete-${campaign._id}`} className="truncate">
           //   <Button variant="outline" size="icon">
           //     <Download className="w-4 h-4 text-delete-text cursor-pointer" />
           //   </Button>
           // </div>,
         ])}
-        paginationstart={1}
-        paginationend={10}
+        paginationstart={data?.page ?? 1}
+        paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => {
-          console.log(page);
+          setCurrentPage(page);
         }}
         isLoading={isLoading}
       />

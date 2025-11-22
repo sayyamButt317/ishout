@@ -40,6 +40,7 @@ export interface AdminAllCampaignApiResponse {
     country: string[];
     limit: number;
     status: string;
+    company_name: string;
     requested_date: string;
     user_id: string;
     influencers_ids: number;
@@ -56,6 +57,16 @@ export interface CreateCampaignRequest {
     country: string[];
 }
 
+export interface CompanyCampaignResponse {
+    campaign_id: string;
+    name: string;
+    platform: PlatformType;
+    followers: string[];
+    limit: number;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
 
 export interface CampaignResponse {
     _id: string;

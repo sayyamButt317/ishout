@@ -37,8 +37,8 @@ api.interceptors.response.use(
       } else if (error.response?.status === 500) {
         toast.error('Server error');
       } else {
-        toast.error('Session expired. Please login again.');
-        window.location.href = '/login';
+        toast.error('An error occurred. Please try again.');
+        window.location.href = '/auth/login';
       }
     }
     return Promise.reject(error);
@@ -52,12 +52,9 @@ export const FindInfluencer = async (influencerRequest: FindInfluencerRequestPro
   return response.data;
 };
 
-export const CompanyCampaign = async (page: number = 1, page_size: number = 10) => {
+export const CompanyCampaign = async (page: number = 1) => {
   const response = await api.get(CompanyENDPOINT.CAMPAIGN, {
-    params: {
-      page,
-      page_size,
-    },
+    params: { page },
   });
   return response.data;
 }

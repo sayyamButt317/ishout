@@ -1,15 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { CompanyCampaign } from "../company.routes";
 
-export default function CompanyCampaignHook() {
+export default function CompanyCampaignHook(page: number = 1) {
     return useQuery({
-        queryKey: ['company-campaign'],
-        queryFn: () => CompanyCampaign(),
+        queryKey: ['company-campaign', page],
+        queryFn: () => CompanyCampaign(page),
         refetchOnWindowFocus: false,
         refetchOnReconnect: false,
-        // staleTime: 1000 * 60 * 5,
-        // gcTime: 1000 * 60 * 5,
-        // refetchOnMount: false,
-        refetchOnMount: (query) => !query.getObserversCount(),
     });
 }
