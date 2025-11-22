@@ -5,6 +5,8 @@ import ApprovedCampaignByIdHook from "@/src/routes/Admin/Hooks/approvedCampaignB
 import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
 import { useMemo } from "react";
 import { useParams } from "next/navigation";
+import CustomButton from "@/src/app/component/button";
+import { useRouter } from "next/navigation";
 
 interface ApprovedCampaignResponse {
   approved_influencers?: ReadyMadeInfluencerResponse[];
@@ -18,6 +20,7 @@ interface ApprovedCampaignResponse {
 export default function ApprovedInfluencerById() {
   const { Id } = useParams<{ Id: string }>();
   const { data, isLoading, isError } = ApprovedCampaignByIdHook(Id ?? "");
+  const router = useRouter();
   const safeData = data as ApprovedCampaignResponse | undefined;
 
   const approvedInfluencers = useMemo(() => {
@@ -33,16 +36,13 @@ export default function ApprovedInfluencerById() {
 
   return (
     <section className="min-h-screen space-y-6">
-      <div className="text-center flex flex-col gap-1 text-white relative rounded-xl border border-white/20 backdrop-blur px-4 sm:px-6 py-8 sm:py-10">
-        <div className="hidden sm:block absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-sky-200/20 blur-3xl" />
-        <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
-          Approved Influencers
-        </h1>
-        <p className="italic text-xs text-slate-200 mt-2">
-          (Showing {totalApproved} approved influencer&apos;s request for this
-          campaign)
-        </p>
-      </div>
+      <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
+        Approved Influencers
+      </h1>
+      <p className="italic text-xs text-slate-200 mt-2">
+        Showing {approvedInfluencers.length} of {totalApproved} approved
+        influencers
+      </p>
 
       {isLoading && (
         <div className="flex justify-center items-center min-h-[200px]">
@@ -78,6 +78,18 @@ export default function ApprovedInfluencerById() {
             </div>
           )}
         </>
+      )}
+      {approvedInfluencers.length > 0 && (
+        <div className="flex flex-row items-center justify-center mt-4 px-4 sm:px-0 gap-3">
+          <CustomButton
+            className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer"
+            onClick={() => {
+              router.replace("/Admin/approved-campaign");
+            }}
+          >
+            Back to Approved Campaigns
+          </CustomButton>
+        </div>
       )}
     </section>
   );

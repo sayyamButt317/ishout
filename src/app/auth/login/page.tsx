@@ -1,6 +1,13 @@
 "use client";
 import { Card } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -34,7 +41,7 @@ export default function Login() {
   const ref = useRef<HTMLFormElement>(null);
 
   const onSubmit = async (data: LoginFormValidator) => {
-    SignInMutation.mutate({
+    await SignInMutation.mutateAsync({
       email: data.email,
       password: data.password,
     });
@@ -70,6 +77,9 @@ export default function Login() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-sm font-medium text-slate-700">
+                        Email
+                      </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
@@ -78,6 +88,7 @@ export default function Login() {
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
@@ -86,6 +97,9 @@ export default function Login() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-sm font-medium text-slate-700">
+                        Password
+                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
@@ -110,6 +124,7 @@ export default function Login() {
                           </button>
                         </div>
                       </FormControl>
+                      <FormMessage className="text-xs" />
                     </FormItem>
                   )}
                 />
@@ -183,6 +198,7 @@ export default function Login() {
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage className="text-xs text-red-500" />
                     </FormItem>
                   )}
                 />
@@ -215,6 +231,7 @@ export default function Login() {
                           </button>
                         </div>
                       </FormControl>
+                      <FormMessage className="text-xs text-red-500" />
                     </FormItem>
                   )}
                 />

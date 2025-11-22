@@ -11,6 +11,10 @@ import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
 import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
+import {
+  ReadyMadeInfluencerResponse,
+  ReadyMadeInfluencersApiResponse,
+} from "@/src/types/readymadeinfluencers-type";
 
 export default function PendingCampaignByIdPage() {
   const { results, clearTemplate } = useReadyMadeTemplateStore();
@@ -104,17 +108,23 @@ export default function PendingCampaignByIdPage() {
         <div className="space-y-8">
           <section className="bg-black/10 backdrop-blur rounded-2xl border border-white/20 p-4 sm:p-6 shadow-sm">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-              {results?.map((influencer, i) => (
-                <InfluencerCard
-                  key={`${influencer?.username}-${i}`}
-                  influencer={influencer}
-                  showAccept
-                  showReject
-                  showDelete
-                  onAccept={(payload) => handleUpdateInfluencerStatus(payload)}
-                  onReject={(payload) => handleUpdateInfluencerStatus(payload)}
-                />
-              ))}
+              {results?.map(
+                (influencer: ReadyMadeInfluencersApiResponse, i: number) => (
+                  <InfluencerCard
+                    key={`${influencer?.id}-${i}`}
+                    influencer={influencer as ReadyMadeInfluencerResponse}
+                    showAccept
+                    showReject
+                    showDelete
+                    onAccept={(payload) =>
+                      handleUpdateInfluencerStatus(payload)
+                    }
+                    onReject={(payload) =>
+                      handleUpdateInfluencerStatus(payload)
+                    }
+                  />
+                )
+              )}
             </div>
           </section>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
@@ -14,7 +14,8 @@ import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.typ
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading } = usePendingCampaigns(currentPage);
+  const { data, isLoading, refetch, isRefetching } =
+    usePendingCampaigns(currentPage);
 
   const generateInfluencers = AdminGenerateInfluencersHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
@@ -26,6 +27,29 @@ export default function AdminPendingCampaigns() {
 
   return (
     <>
+      <div className="flex flex-row ">
+        <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
+          Pending Campaigns
+        </h1>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            refetch();
+          }}
+          disabled={isRefetching}
+        >
+          <RefreshCcw
+            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+              isRefetching ? "animate-spin" : ""
+            }`}
+          />
+        </Button>
+      </div>
+      <p className="italic text-xs text-slate-200 mt-2">
+        Showing {data?.campaigns.length} of {data?.total_pages} pending
+        campaigns
+      </p>
       <TableComponent
         header={[
           "#Campaign ID",

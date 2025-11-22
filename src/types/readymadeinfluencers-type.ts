@@ -46,7 +46,19 @@ export interface ReadyMadeInfluencersRequest {
 }
 
 export interface ReadyMadeInfluencersApiResponse {
-  influencers: ReadyMadeInfluencerResponse[];
+  id: string;
+  name: string;
+  username: string;
+  picture: string;
+  platform: string;
+  category: string;
+  company_name: string;
+  followers: number;
+  engagementRate: number;
+  bio: string;
+  country: string;
+  countryCode: string | null;
+  page_content: string;
 }
 
 export interface DeleterInfluenceerequest {

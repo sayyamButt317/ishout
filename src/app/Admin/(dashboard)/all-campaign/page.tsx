@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
 import { WhatsAppShareButton } from "@/src/app/component/custom-component/whatsappshare";
 import AllCampaignHook from "@/src/routes/Admin/Hooks/Allcampaign-hook";
-import { Trash } from "lucide-react";
+import { RefreshCcw, Trash } from "lucide-react";
 import React, { useState } from "react";
 import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
@@ -28,7 +28,10 @@ export default function AllCampaignPage() {
   const appliedStatus =
     statusFilter === "all" ? undefined : statusFilter.toLowerCase();
 
-  const { data, isLoading } = AllCampaignHook(currentPage, appliedStatus);
+  const { data, isLoading, refetch, isRefetching } = AllCampaignHook(
+    currentPage,
+    appliedStatus
+  );
 
   const deleteCampaignHook = DeleteCampaignHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
@@ -51,9 +54,25 @@ export default function AllCampaignPage() {
     <>
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="italic text-2xl font-bold text-white">
-            Company Generated Campaigns
-          </h1>
+          <div className="flex flex-row items-center gap-2">
+            <h1 className="italic text-2xl font-bold text-white">
+              Company Generated Campaigns
+            </h1>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                refetch();
+              }}
+              disabled={isRefetching}
+            >
+              <RefreshCcw
+                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+                  isRefetching ? "animate-spin" : ""
+                }`}
+              />
+            </Button>
+          </div>
           <p className="text-sm text-white/70">
             Showing {campaigns.length} of {totalCount} campaigns
           </p>

@@ -14,6 +14,7 @@ import {
   Loader2,
 } from "lucide-react";
 import DeleteInfluencerhook from "@/src/routes/Admin/Hooks/deleteinfluencer-hook";
+
 import { Button } from "@/components/ui/button";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";
 import { useParams } from "next/navigation";
@@ -165,7 +166,7 @@ const InfluencerCard = ({
           </span>
         </h3>
         <button
-          className="mt-2 flex items-center justify-center gap-2 mx-auto px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500 rounded-lg transition-colors"
+          className="mt-2 flex items-center justify-center gap-2 mx-auto px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500 rounded-lg transition-colors cursor-pointer"
           onClick={() => {
             handleMessage(
               influencer?.platform as PlatformType,
@@ -173,7 +174,7 @@ const InfluencerCard = ({
             );
           }}
         >
-          <MessageCircle className="h-4 w-4 text-blue-400" />
+          <MessageCircle className="h-4 w-4cursor-pointer" />
           <span className="text-sm text-blue-400">Message</span>
         </button>
       </div>

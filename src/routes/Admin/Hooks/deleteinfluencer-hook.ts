@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { DeleteInfluencer } from "../API/admin.routes";
 import { useMutation } from "@tanstack/react-query";
-import { DeleterInfluenceerequest, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencerResponse } from "../../../types/readymadeinfluencers-type";
+import { DeleterInfluenceerequest, ReadyMadeInfluencersApiResponse } from "../../../types/readymadeinfluencers-type";
 import { AxiosError } from "axios";
 import { useReadyMadeTemplateStore } from "../../../store/Campaign/campaign.store";
 
@@ -25,16 +25,13 @@ export default function DeleteInfluencerhook() {
         },
         onSuccess: async (_, deleteInfluencerRequest) => {
             if (results && results.length > 0) {
-                // Filter out the deleted influencer from all response objects
                 const updatedResults = results.map((responseObj: ReadyMadeInfluencersApiResponse) => ({
                     ...responseObj,
-                    influencers: responseObj.influencers.filter(
-                        (inf: ReadyMadeInfluencerResponse) => inf._id !== deleteInfluencerRequest.influencer_id
-                    ),
+                    id: responseObj.id !== deleteInfluencerRequest.influencer_id
                 }));
-                setResults(updatedResults);
+                setResults(updatedResults as unknown as ReadyMadeInfluencersApiResponse[]);
+                toast.success('Influencer deleted successfully');
             }
-            toast.success('Influencer deleted successfully');
         },
         onError: (error: AxiosError<{ detail: string }>, _, context) => {
             if (context?.previousResults) {

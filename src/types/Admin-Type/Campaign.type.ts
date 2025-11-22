@@ -83,3 +83,13 @@ export interface CampaignResponse {
     platform: string;
     category: string;
 }
+
+export interface ApprovedCampaignResponse {
+    _id: string;
+    campaign_id: string;
+    name: string;
+    platform: PlatformType;
+    limit: number;
+    status: string;
+    created_at: string;
+}
