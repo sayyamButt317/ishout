@@ -9,13 +9,13 @@ import CountButton from "@/src/app/component/custom-component/countbutton";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 import { usePendingCampaigns } from "@/src/routes/Admin/Hooks/pendingCampaign-hook";
 import AdminGenerateInfluencersHook from "@/src/routes/Admin/Hooks/generateInfluencers-hook";
-import Image from "next/image";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = usePendingCampaigns(currentPage);
+
   const generateInfluencers = AdminGenerateInfluencersHook();
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
@@ -29,9 +29,9 @@ export default function AdminPendingCampaigns() {
       <TableComponent
         header={[
           "#Campaign ID",
-          "Company Logo",
-          "Campaign Name",
-          // "Company Name",
+          // "Company Logo",
+          // "Campaign Name",
+          "Company Name",
           "Platform",
           "Requested ",
           // "Approved ",
@@ -43,20 +43,20 @@ export default function AdminPendingCampaigns() {
         subheader={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => [
             campaign._id,
-            <div key={`company-logo-${campaign._id}`} className="truncate">
-              <Image
-                src="/assets/logo.svg"
-                alt="logo"
-                width={100}
-                height={100}
-              />
-            </div>,
-            <div key={`name-${campaign._id}`} className="truncate">
-              {campaign.name}
-            </div>,
-            // <div key={`company-name-${campaign._id}`} className="truncate">
-            //   {campaign.company_name}
+            // <div key={`company-logo-${campaign._id}`} className="truncate">
+            //   <Image
+            //     src="/assets/logo.svg"
+            //     alt="logo"
+            //     width={100}
+            //     height={100}
+            //   />
             // </div>,
+            // <div key={`name-${campaign._id}`} className="truncate">
+            //   {campaign.name}
+            // </div>,
+            <div key={`company-name-${campaign._id}`} className="truncate">
+              {campaign?.company_name}
+            </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
               <PlatformBadge platform={campaign.platform} />
             </div>,

@@ -1,43 +1,42 @@
 import { toast } from "sonner";
 import { DeleteInfluencer } from "../API/admin.routes";
 import { useMutation } from "@tanstack/react-query";
-import { DeleterInfluenceerequest, ReadyMadeInfluencerResponse, ReadyMadeInfluencersApiResponse } from "../../../types/readymadeinfluencers-type";
+import { DeleterInfluenceerequest, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencerResponse } from "../../../types/readymadeinfluencers-type";
 import { AxiosError } from "axios";
 import { useReadyMadeTemplateStore } from "../../../store/Campaign/campaign.store";
 
+interface DeleteInfluencerContext {
+    previousResults: ReadyMadeInfluencersApiResponse[] | undefined;
+}
 
 export default function DeleteInfluencerhook() {
     const { results, setResults } = useReadyMadeTemplateStore();
 
-    return useMutation({
+    return useMutation<
+        unknown,
+        AxiosError<{ detail: string }>,
+        DeleterInfluenceerequest,
+        DeleteInfluencerContext
+    >({
         mutationFn: (deleteInfluencerRequest: DeleterInfluenceerequest) => DeleteInfluencer(deleteInfluencerRequest),
-        onMutate: async (deleteInfluencerRequest: DeleterInfluenceerequest): Promise<{ previousResults: ReadyMadeInfluencersApiResponse | undefined }> => {
-            // Store the previous state for rollback
+        onMutate: async (): Promise<DeleteInfluencerContext> => {
             const previousResults = results;
-
-            //  update the UI by removing the influencer from the store
-            if (results?.influencers) {
-                const updatedInfluencers = results.influencers.filter(
-                    (influencer: ReadyMadeInfluencerResponse) => influencer._id !== deleteInfluencerRequest.influencer_id
-                );
-
-                setResults({
-                    ...results,
-                    influencers: updatedInfluencers,
-                    notes: {
-                        ...(results as ReadyMadeInfluencersApiResponse).notes,
-                        returned: updatedInfluencers.length
-                    }
-                });
-            }
-
-            return { previousResults: previousResults as ReadyMadeInfluencersApiResponse };
+            return { previousResults };
         },
-        onSuccess: async () => {
+        onSuccess: async (_, deleteInfluencerRequest) => {
+            if (results && results.length > 0) {
+                // Filter out the deleted influencer from all response objects
+                const updatedResults = results.map((responseObj: ReadyMadeInfluencersApiResponse) => ({
+                    ...responseObj,
+                    influencers: responseObj.influencers.filter(
+                        (inf: ReadyMadeInfluencerResponse) => inf._id !== deleteInfluencerRequest.influencer_id
+                    ),
+                }));
+                setResults(updatedResults);
+            }
             toast.success('Influencer deleted successfully');
         },
-        onError: (error: AxiosError<{ detail: string }>, variables: DeleterInfluenceerequest, context: { previousResults: ReadyMadeInfluencersApiResponse | undefined } | undefined) => {
-            // Revert the optimistic update to the previous state
+        onError: (error: AxiosError<{ detail: string }>, _, context) => {
             if (context?.previousResults) {
                 setResults(context.previousResults);
             }

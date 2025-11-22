@@ -5,6 +5,7 @@ export interface FindInfluencerRequestProps {
   limit: string;
   followers: string[];
   country: string[];
+  company_name: string;
 }
 export type PlatformType = "instagram" | "youtube" | "tiktok" | ""
 export interface FoundedInfluencers {
@@ -32,6 +33,7 @@ export interface ReadyMadeInfluencerResponse {
   page_content: string;
   platform: string;
   category: string;
+  company_name: string;
 }
 
 export interface ReadyMadeInfluencersRequest {

@@ -9,9 +9,12 @@ import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campa
 import { Download } from "lucide-react";
 import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
 import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
+import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
+import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 
 export default function PendingCampaignByIdPage() {
   const { results, clearTemplate } = useReadyMadeTemplateStore();
+
   const { clearApprovedInfluencers } = ApprovedInfluencersStore.getState();
   const { Id } = useParams<{ Id: string }>();
   const { data } = CampaignByIdHook(Id ?? "");
@@ -23,6 +26,7 @@ export default function PendingCampaignByIdPage() {
   ) => {
     await updateInfluencerStatus.mutateAsync(payload);
   };
+  const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
   return (
     <div className="min-h-screen ">
@@ -57,53 +61,68 @@ export default function PendingCampaignByIdPage() {
           </div>
         </div>
       </div>
-      <div className="flex justify-end mt-4">
-        {ApprovedInfluencersStore.getState().approvedInfluencers.length > 0 && (
-          <CustomButton
-            className=" bg-secondarytext text-white"
-            onClick={() => {
-              ExportToExcel();
-            }}
-          >
-            <Download className="h-4 w-4" />
-            Export Approved Influencers
-          </CustomButton>
-        )}
+
+      {/* Action Bar */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
+        <div className="bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl p-4 sm:p-5 shadow-lg">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            {/* Status Section */}
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <label className="text-sm font-medium text-slate-300 whitespace-nowrap">
+                Campaign Status:
+              </label>
+
+              <DropDownCustomStatus
+                status={data?.status}
+                updateStatus={(status: string) => {
+                  updateCampaignStatusHook.mutate({
+                    campaign_id: data?._id,
+                    status: status,
+                  });
+                }}
+              />
+            </div>
+
+            {/* Export Button */}
+            {ApprovedInfluencersStore.getState().approvedInfluencers.length >
+              0 && (
+              <CustomButton
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 border border-emerald-500/30"
+                onClick={() => {
+                  ExportToExcel();
+                }}
+              >
+                <Download className="h-4 w-4" />
+                <span>Export Approved Influencers</span>
+              </CustomButton>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
-        {Array.isArray(results) && results.length > 0 ? (
-          <div className="space-y-8">
-            <section className="bg-black/10 backdrop-blur rounded-2xl border border-white/20 p-4 sm:p-6 shadow-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-                {results.map((influencer, i) => (
-                  <InfluencerCard
-                    key={`${influencer?.username}-${i}`}
-                    influencer={influencer}
-                    showAccept
-                    showReject
-                    showDelete
-                    onAccept={(payload) =>
-                      handleUpdateInfluencerStatus(payload)
-                    }
-                    onReject={(payload) =>
-                      handleUpdateInfluencerStatus(payload)
-                    }
-                  />
-                ))}
-              </div>
-            </section>
-          </div>
-        ) : (
-          <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
-            No influencers generated yet. Go back and generate some influencers.
-          </div>
-        )}
+        <div className="space-y-8">
+          <section className="bg-black/10 backdrop-blur rounded-2xl border border-white/20 p-4 sm:p-6 shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+              {results?.map((influencer, i) => (
+                <InfluencerCard
+                  key={`${influencer?.username}-${i}`}
+                  influencer={influencer}
+                  showAccept
+                  showReject
+                  showDelete
+                  onAccept={(payload) => handleUpdateInfluencerStatus(payload)}
+                  onReject={(payload) => handleUpdateInfluencerStatus(payload)}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
 
       <div className="flex justify-center mt-4 px-4 sm:px-0 gap-3">
         <CustomButton
-          className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white"
+          className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer"
           onClick={() => {
             router.push("/Admin/pending-campaign");
             clearTemplate();

@@ -9,6 +9,7 @@ import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignSta
 import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
+import { useState } from "react";
 
 interface PendingCampaignResponse {
   _id: string;
@@ -21,10 +22,11 @@ interface PendingCampaignResponse {
 }
 
 const ApprovedCampaignPage = () => {
-  const { data, isLoading } = ApprovedCampaignHook();
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data, isLoading } = ApprovedCampaignHook(currentPage);
+
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
-  // const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
   return (
     <>
@@ -91,10 +93,10 @@ const ApprovedCampaignPage = () => {
           //   </Button>
           // </div>,
         ])}
-        paginationstart={1}
-        paginationend={10}
+        paginationstart={currentPage}
+        paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => {
-          console.log(page);
+          setCurrentPage(page);
         }}
         isLoading={isLoading}
       />
