@@ -32,8 +32,8 @@ export default function InfluencerReviewPage() {
           "Engagement",
           "Country",
           "Platform",
-          "Admin Review",
-          "Company Review",
+          "Admin",
+          "Company",
           "Campaign ID",
           "Action",
         ]}

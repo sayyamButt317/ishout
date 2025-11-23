@@ -1,12 +1,12 @@
 export const CaseStudiesVideos = [
     {
-        src: "https://ik.imagekit.io/2bm6zmhwk/Ahmad's%20video%20copy.mp4",
+        src: "https://ik.imagekit.io/2bm6zmhwk/Ahmadvideo.mp4?updatedAt=1763918464091",
     },
     {
         src: "https://ik.imagekit.io/2bm6zmhwk/pavillion.mp4",
     },
     {
-        src: "https://ik.imagekit.io/2bm6zmhwk/Jumana's%20video%20copy.MP4",
+        src: "https://ik.imagekit.io/2bm6zmhwk/Jumana.MP4?updatedAt=1763918507354",
     },
     {
         src: "https://ik.imagekit.io/2bm6zmhwk/alsaf.MOV",

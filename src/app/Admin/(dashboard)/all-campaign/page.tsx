@@ -61,6 +61,7 @@ export default function AllCampaignPage() {
               Company Generated Campaigns
             </h1>
             <Button
+              className="cursor-pointer"
               variant="ghost"
               size="icon"
               onClick={() => {
