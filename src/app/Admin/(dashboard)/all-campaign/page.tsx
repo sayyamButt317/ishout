@@ -11,6 +11,7 @@ import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropd
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import CountButton from "@/src/app/component/custom-component/countbutton";
+// import { useRouter } from "next/navigation";
 
 const STATUS_OPTIONS = [
   { label: "All statuses", value: "all" },
@@ -24,6 +25,7 @@ const STATUS_OPTIONS = [
 export default function AllCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  // const router = useRouter();
 
   const appliedStatus =
     statusFilter === "all" ? undefined : statusFilter.toLowerCase();
@@ -107,6 +109,7 @@ export default function AllCampaignPage() {
       <TableComponent
         header={[
           "#Campaign ID",
+          "Company",
           "Category",
           "Platform",
           "Followers",
@@ -119,6 +122,9 @@ export default function AllCampaignPage() {
         ]}
         subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
           campaign._id,
+          <div key={`company-name-${campaign._id}`} className="truncate">
+            {campaign?.company_name}
+          </div>,
           <div key={`category-${campaign._id}`} className="truncate">
             {campaign?.category?.join(", ")}
           </div>,

@@ -11,6 +11,7 @@ import { usePendingCampaigns } from "@/src/routes/Admin/Hooks/pendingCampaign-ho
 import AdminGenerateInfluencersHook from "@/src/routes/Admin/Hooks/generateInfluencers-hook";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
+import useAuthStore from "@/src/store/AuthStore/authStore";
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +19,8 @@ export default function AdminPendingCampaigns() {
     usePendingCampaigns(currentPage);
 
   const generateInfluencers = AdminGenerateInfluencersHook();
+  const { setCompanyUserId } = useAuthStore();
+
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(
@@ -120,6 +123,8 @@ export default function AdminPendingCampaigns() {
                     },
                     {
                       onSuccess: () => {
+                        setCompanyUserId(campaign.user_id);
+                        console.log("company user id", campaign.user_id);
                         setLoadingCampaignId(null);
                         router.push(`/Admin/pending-campaign/${campaign._id}`);
                       },

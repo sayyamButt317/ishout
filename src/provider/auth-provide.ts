@@ -11,14 +11,6 @@ export const setAuthTokenProvider = (token: string, role: string) => {
     useAuthStore.getState().setField('isAuthenticated', true);
 };
 
-export const clearAuthTokenProvider = () => {
-    if (typeof window !== 'undefined') {
-        document.cookie = 'access_token=; path=/; max-age=0';
-        document.cookie = 'role=; path=/; max-age=0';
-    }
-    useAuthStore.getState().clearAuth();
-};
-
 export const getAuthTokenProvider = () => {
     if (typeof window !== 'undefined') {
         return (
@@ -27,6 +19,14 @@ export const getAuthTokenProvider = () => {
 
     }
     return useAuthStore.getState().getField('isAuthenticated');
+};
+
+export const clearAuthTokenProvider = () => {
+    if (typeof window !== 'undefined') {
+        document.cookie = 'access_token=; path=/; max-age=0';
+        document.cookie = 'role=; path=/; max-age=0';
+    }
+    useAuthStore.getState().clearAuth();
 };
 
 export const getAuthRoleProvider = () => {
@@ -42,6 +42,14 @@ export const getAuthRoleProvider = () => {
 export const getAuthCookieProvider = () => {
     if (typeof document !== 'undefined') {
         const match = document.cookie.match(/(?:^|;\s*)access_token=([^;]*)/);
+        return match?.[1] ?? '';
+    }
+    return '';
+};
+
+export const getRoleProvider = () => {
+    if (typeof document !== 'undefined') {
+        const match = document.cookie.match(/(?:^|;\s*)role=([^;]*)/);
         return match?.[1] ?? '';
     }
     return '';

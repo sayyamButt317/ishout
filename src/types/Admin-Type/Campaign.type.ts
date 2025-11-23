@@ -15,6 +15,7 @@ export interface UpdateInfluencerStatusRequestProps {
     picture: string;
     bio: string;
     country: string;
+    company_user_id?: string;
 }
 export interface UpdateInfluencerStatusResponseProps {
     message: string;

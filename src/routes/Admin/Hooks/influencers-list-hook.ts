@@ -6,8 +6,7 @@ export default function InfluencersListHook(campaign_id: string) {
         queryKey: ['influencers-list', campaign_id],
         queryFn: () => (campaign_id ? InfluencersListApi(campaign_id) : Promise.reject(new Error('Campaign ID is required'))),
         enabled: !!campaign_id,
-        refetchOnWindowFocus: false, // Don't refetch on window focus
+        refetchOnWindowFocus: false,
         refetchOnReconnect: false,
-        refetchOnMount: (query) => !query.getObserversCount(),
     })
 }

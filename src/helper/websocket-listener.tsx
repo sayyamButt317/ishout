@@ -40,11 +40,9 @@ export default function WebSocketListener() {
       .replace("http://", "ws://");
 
     const fullWsUrl = `${wsUrl}${AdminENDPOINT.ADMIN_INSTAGRAM_NOTIFICATION}?token=${token}`;
-    console.log("🔌 Connecting to WebSocket:", fullWsUrl);
-
     const socket = new WebSocket(fullWsUrl);
     socket.onopen = () => {
-      console.log("WebSocket connected successfully");
+      console.info("info", "WebSocket connected successfully");
     };
 
     socket.onmessage = (event) => {

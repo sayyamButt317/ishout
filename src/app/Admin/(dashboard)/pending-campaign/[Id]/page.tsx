@@ -15,9 +15,11 @@ import {
   ReadyMadeInfluencerResponse,
   ReadyMadeInfluencersApiResponse,
 } from "@/src/types/readymadeinfluencers-type";
+import useAuthStore from "@/src/store/AuthStore/authStore";
 
 export default function PendingCampaignByIdPage() {
   const { results, clearTemplate } = useReadyMadeTemplateStore();
+  const { company_user_id } = useAuthStore();
 
   const { clearApprovedInfluencers } = ApprovedInfluencersStore.getState();
   const { Id } = useParams<{ Id: string }>();
@@ -28,8 +30,12 @@ export default function PendingCampaignByIdPage() {
   const handleUpdateInfluencerStatus = async (
     payload: UpdateInfluencerStatusRequestProps
   ) => {
-    await updateInfluencerStatus.mutateAsync(payload);
+    await updateInfluencerStatus.mutateAsync({
+      ...payload,
+      company_user_id: company_user_id,
+    });
   };
+
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
   return (
