@@ -41,6 +41,9 @@ const ApprovedCampaignPage = () => {
           />
         </Button>
       </div>
+      <p className="italic text-xs text-slate-200 mt-2 mb-2">
+        Showing {data?.campaigns.length} of {data?.total} approved campaigns
+      </p>
       <TableComponent
         header={[
           "#Campaign ID",
