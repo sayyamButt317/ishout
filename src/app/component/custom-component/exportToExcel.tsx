@@ -44,7 +44,7 @@ const ExportToExcel = () => {
     "Engagement Rate",
     "Country",
     // "Category",
-    "Bio",
+    // "Bio",
   ];
 
   // Add header row
@@ -77,7 +77,7 @@ const ExportToExcel = () => {
       `${(influencer.engagementRate * 100).toFixed(2)}%`,
       influencer.country,
       // influencer.category,
-      influencer.bio,
+      // influencer.bio,
     ];
 
     rowData.forEach((value, colIndex) => {

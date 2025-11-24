@@ -81,7 +81,6 @@ export default function PendingCampaignByIdPage() {
               <label className="text-sm font-medium text-slate-300 whitespace-nowrap">
                 Campaign Status:
               </label>
-
               <DropDownCustomStatus
                 status={data?.status}
                 updateStatus={(status: string) => {
