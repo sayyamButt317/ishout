@@ -10,13 +10,41 @@ import {
   formatFollowers,
 } from "@/src/helper/followersformat";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
+import { RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function OnboardingPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading } = OnboardingHook(currentPage);
+  const { data, isLoading, refetch, isRefetching } =
+    OnboardingHook(currentPage);
 
   return (
     <>
+      <div>
+        <div className="flex flex-row items-center gap-2">
+          <h1 className="italic text-2xl font-bold text-white">
+            Onboarding Influencers
+          </h1>
+          <Button
+            className="cursor-pointer"
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              refetch();
+            }}
+            disabled={isRefetching}
+          >
+            <RefreshCcw
+              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+                isRefetching ? "animate-spin" : ""
+              }`}
+            />
+          </Button>
+        </div>
+        <p className="text-sm text-white/70">
+          Showing {data?.influencers.length} of {data?.total} influencers
+        </p>
+      </div>
       <TableComponent
         header={[
           "Influencer",
@@ -27,7 +55,7 @@ export default function OnboardingPage() {
           "Admin Review",
           "Company Review",
           "Campaign ID",
-          "Action",
+          // "Action",
         ]}
         subheader={data?.influencers?.map(
           (influencer: ReviewInfluencerResponse) => [
@@ -71,12 +99,12 @@ export default function OnboardingPage() {
             >
               {influencer.campaign_id}
             </span>,
-            <div
-              key={`action-${influencer._id}`}
-              className="text-xs text-slate-400"
-            >
-              —
-            </div>,
+            // <div
+            //   key={`action-${influencer._id}`}
+            //   className="text-xs text-slate-400"
+            // >
+            //   —
+            // </div>,
           ]
         )}
         paginationstart={data?.page ?? 1}

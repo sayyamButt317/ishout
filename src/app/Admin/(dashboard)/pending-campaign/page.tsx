@@ -55,13 +55,9 @@ export default function AdminPendingCampaigns() {
       <TableComponent
         header={[
           "#Campaign ID",
-          // "Company Logo",
-          // "Campaign Name",
           "Company Name",
           "Platform",
           "Requested ",
-          // "Approved ",
-          // "Rejected ",
           "Status",
           "Created At",
           "Gnerate",
@@ -69,17 +65,6 @@ export default function AdminPendingCampaigns() {
         subheader={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => [
             campaign._id,
-            // <div key={`company-logo-${campaign._id}`} className="truncate">
-            //   <Image
-            //     src="/assets/logo.svg"
-            //     alt="logo"
-            //     width={100}
-            //     height={100}
-            //   />
-            // </div>,
-            // <div key={`name-${campaign._id}`} className="truncate">
-            //   {campaign.name}
-            // </div>,
             <div key={`company-name-${campaign._id}`} className="truncate">
               {campaign?.company_name}
             </div>,
@@ -89,12 +74,6 @@ export default function AdminPendingCampaigns() {
             <div key={`requested-${campaign._id}`} className="truncate">
               <CountButton count={campaign.limit} />
             </div>,
-            // <div key={`approved-${campaign._id}`} className="truncate">
-            //   <CountButton count={campaign.approved_influencers_count} />
-            // </div>,
-            // <div key={`rejected-${campaign._id}`} className="truncate">
-            //   <CountButton count={campaign.rejected_influencers_count} />
-            // </div>,
             <div key={`status-${campaign._id}`} className="truncate">
               <DropDownCustomStatus
                 status={campaign.status}
