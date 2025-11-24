@@ -19,4 +19,6 @@ export const AdminENDPOINT = {
 
     ADMIN_INSTAGRAM_NOTIFICATION: `/meta/notifications`,
     ADMIN_COMPANY_DETAILS_BY_ID: (user_id: string) => `/admin/company-data/${user_id}`,
+
+    ADMIN_REPLY_INSTAGRAM_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`,
 }

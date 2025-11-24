@@ -1,18 +1,10 @@
 export const CaseStudiesVideos = [
-    {
-        src: "https://ik.imagekit.io/2bm6zmhwk/Ahmadvideo.mp4?updatedAt=1763918464091",
-    },
+
     {
         src: "https://ik.imagekit.io/2bm6zmhwk/pavillion.mp4",
     },
     {
-        src: "https://ik.imagekit.io/2bm6zmhwk/Jumana.MP4?updatedAt=1763918507354",
-    },
-    {
         src: "https://ik.imagekit.io/2bm6zmhwk/alsaf.MOV",
-    },
-    {
-        src: "https://ik.imagekit.io/2bm6zmhwk/Sukaina%20Final%20Video.mp4",
     },
     {
         src: "https://ik.imagekit.io/t7jlwbkq7/Final%20Draft.mp4",
@@ -20,6 +12,18 @@ export const CaseStudiesVideos = [
     {
         src: "https://ik.imagekit.io/t7jlwbkq7/Ahmad%20version%203.mp4",
     },
+    {
+        src: "https://ik.imagekit.io/t7jlwbkq7/Sukaina%20Final%20Video.mp4",
+    },
+    // {
+    //     src: "https://ik.imagekit.io/2bm6zmhwk/Ahmadvideo.mp4?updatedAt=1763918464091",
+    // },
+    // {
+    //     src: "https://ik.imagekit.io/2bm6zmhwk/Jumana.MP4?updatedAt=1763918507354",
+    // },
+    // {
+    //     src: "https://ik.imagekit.io/2bm6zmhwk/Sukaina.mp4?updatedAt=1763919973782",
+    // },
 
 ];
 
@@ -41,8 +45,5 @@ export const ReachGCCVideos = [
     },
     {
         src: "https://ik.imagekit.io/t7jlwbkq7/ssstik.io_@oshabra_1742902096198.mp4",
-    },
-    {
-        src: "https://ik.imagekit.io/t7jlwbkq7/Sukaina%20Final%20Video.mp4",
     },
 ];

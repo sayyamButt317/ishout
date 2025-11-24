@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LogOut, Menu } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import CustomButton from "./button";
 import LogoutDialogue from "./logoutdialogue";
 import Image from "next/image";
@@ -25,40 +25,52 @@ export default function Sidebar({ links }: SidebarProps) {
   const router = useRouter();
   const [isLogout, setIsLogout] = useState(false);
 
-  const handleClick = (route: string) => {
-    if (pathname !== route) {
-      router.push(route);
-    }
-  };
+  const handleClick = useCallback(
+    (route: string) => {
+      if (pathname !== route) {
+        router.push(route);
+      }
+    },
+    [pathname, router]
+  );
 
-  const renderLink = (link: SidebarLink) => {
-    const isSelected =
-      link.route === pathname ||
-      (link.route !== "/auth/login" && pathname.includes(link.route));
+  const renderLink = useCallback(
+    (link: SidebarLink) => {
+      const isSelected =
+        link.route === pathname ||
+        (link.route !== "/auth/login" && pathname.includes(link.route));
 
-    return (
-      <button
-        key={link.route}
-        onClick={() => handleClick(link.route)}
-        className={cn(
-          "group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out outline-none cursor-pointer",
-          isSelected
-            ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-white"
-            : "text-slate-300 hover:bg-white/10 hover:text-white hover:border-white/20 border border-transparent"
-        )}
-        aria-current={isSelected ? "page" : undefined}
-      >
-        <div className="flex-shrink-0">{link.icon}</div>
-        <span className="font-medium text-sm">{link.label}</span>
+      return (
+        <button
+          key={link.route}
+          onClick={() => handleClick(link.route)}
+          className={cn(
+            "group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out outline-none cursor-pointer",
+            isSelected
+              ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-white"
+              : "text-slate-300 hover:bg-white/10 hover:text-white hover:border-white/20 border border-transparent"
+          )}
+          aria-current={isSelected ? "page" : undefined}
+        >
+          <div className="flex-shrink-0">{link.icon}</div>
+          <span className="font-medium text-sm">{link.label}</span>
 
-        {isSelected && (
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full shadow-lg" />
-        )}
+          {isSelected && (
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full shadow-lg" />
+          )}
 
-        <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-      </button>
-    );
-  };
+          <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
+        </button>
+      );
+    },
+    [pathname, handleClick]
+  );
+
+  // Memoize rendered links to prevent recreation on every render
+  const renderedLinks = useMemo(
+    () => links.map(renderLink),
+    [links, renderLink]
+  );
 
   return (
     <>
@@ -71,7 +83,7 @@ export default function Sidebar({ links }: SidebarProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col gap-2">{links.map(renderLink)}</nav>
+        <nav className="flex flex-col gap-2">{renderedLinks}</nav>
 
         {/* Footer */}
         <div className="mt-8 pt-6 border-t border-white/10">
@@ -119,7 +131,7 @@ export default function Sidebar({ links }: SidebarProps) {
             </div>
 
             {/* Mobile Navigation */}
-            <nav className="flex flex-col gap-2">{links.map(renderLink)}</nav>
+            <nav className="flex flex-col gap-2">{renderedLinks}</nav>
 
             {/* Mobile Footer */}
             <div className="mt-8 pt-6 border-t border-white/10">

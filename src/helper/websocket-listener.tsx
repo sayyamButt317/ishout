@@ -28,7 +28,10 @@ type Notification = {
 };
 
 export default function WebSocketListener() {
-  const { addNotification } = useNotificationStore();
+  // Use selector to prevent unnecessary re-renders
+  const addNotification = useNotificationStore(
+    (state) => state.addNotification
+  );
 
   useEffect(() => {
     const token = getAuthTokenProvider();
@@ -145,7 +148,8 @@ export default function WebSocketListener() {
     return () => {
       socket.close();
     };
-  }, [addNotification]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Remove addNotification from deps to prevent re-connections
 
   return null;
 }
