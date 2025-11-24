@@ -3,9 +3,9 @@ import { LoginMutationApi } from "@/src/routes/Auth-Routes/Api/auth.routes";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { LoginRequestProps, LoginResponseProps } from "@/src/types/Auth-Type/login-type";
 import { useMutation } from "@tanstack/react-query";
-import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import ApiError from "@/src/helper/api-error";
 
 export default function LoginMutation() {
     const router = useRouter();
@@ -30,11 +30,11 @@ export default function LoginMutation() {
             }
         },
         onError: (error) => {
-            const axiosError = error as AxiosError<{ detail: string }>;
+            const apiError = ApiError.fromUnknown(error);
             toast.error('Failed to login', {
-                description:
-                    axiosError.response?.data?.detail || 'An error occurred during login.',
+                description: apiError.message,
             });
+            console.error("Login error:", apiError);
         },
     });
 }

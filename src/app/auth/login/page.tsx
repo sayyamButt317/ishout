@@ -57,14 +57,17 @@ export default function Login() {
         {/* Mobile - Login Card */}
         <Card className="lg:hidden bg-black rounded-3xl w-full max-w-md text-card-foreground border-2 shadow-2xl">
           <div className="p-8">
-            <div className=" flex items-center justify-center mb-8  rounded-3xl p-4">
+            <div className="mb-2 flex flex-row items-center justify-center gap-0">
               <Image
-                src="/assets/logo.svg"
-                alt="iShout"
-                width={150}
-                height={150}
-                className="mx-auto"
+                src="/assets/favicon.png"
+                alt="ishout"
+                width={40}
+                height={40}
               />
+              <h2 className="text-2xl font-bold text-slate-100">iShout</h2>
+              <span className="text-primarytext font-extrabold text-2xl">
+                .
+              </span>
             </div>
             <Form {...form}>
               <form
@@ -167,7 +170,7 @@ export default function Login() {
         {/* Desktop - Login Card */}
         <Card className="hidden lg:block bg-slate-100 rounded-3xl w-full max-w-md text-card-foreground border border-border shadow-xl">
           <div className="p-8 ">
-            <div className="mb-8 flex flex-row items-center justify-center gap-0">
+            <div className="mb-2 flex flex-row items-center justify-center gap-0">
               <Image
                 src="/assets/favicon.png"
                 alt="ishout"

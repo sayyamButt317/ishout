@@ -78,8 +78,12 @@ export default function Sidebar({ links }: SidebarProps) {
       <aside className="hidden md:block w-[280px] p-6 bg-gradient-to-br from-slate-900/95 via-gray-900/95 to-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
         {/* Header */}
 
-        <div className="mb-8">
-          <Image src="/assets/logo.svg" alt="logo" width={100} height={100} />
+        <div className="mb-2 flex flex-row items-start gap-1">
+          <Image src="/assets/favicon.png" alt="logo" width={40} height={40} />
+          <h2 className="text-2xl font-bold text-slate-100 mt-1">iShout</h2>
+          <span className="text-primarytext font-extrabold text-2xl mt-1">
+            .
+          </span>
         </div>
 
         {/* Navigation */}

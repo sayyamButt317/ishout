@@ -1,11 +1,11 @@
 "use client";
 import { useNotificationStore } from "@/src/store/Campaign/notification.store";
-import React, { useState, useMemo, useCallback } from "react";
-import { MessageCircle, Send, X, Paperclip } from "lucide-react";
+import React, { useMemo, useCallback } from "react";
+import { MessageCircle, Paperclip } from "lucide-react";
 import { SiInstagram } from "react-icons/si";
 import Image from "next/image";
-import { toast } from "sonner";
-import axios from "axios";
+// import { toast } from "sonner";
+// import axios from "axios";
 
 type Attachment = {
   type: "image" | "video" | "audio" | "file";
@@ -28,16 +28,16 @@ type Notification = {
 const MessageItem = React.memo(
   ({
     msg,
-    messageId,
-    replyingTo,
-    replyText,
-    sending,
-    onToggleReply,
-    onSendReply,
-    onKeyPress,
+    // messageId,
+    // replyingTo,
+    // replyText,
+    // sending,
+    // onToggleReply,
+    // onSendReply,
+    // onKeyPress,
     onMessageClick,
-    onReplyTextChange,
-  }: {
+  }: // onReplyTextChange,
+  {
     msg: Notification;
     messageId: string;
     replyingTo: string | null;
@@ -81,7 +81,7 @@ const MessageItem = React.memo(
 
               {/* Action Buttons */}
               <div className="flex items-center gap-2 flex-shrink-0">
-                <button
+                {/* <button
                   onClick={() => onToggleReply(messageId)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
                     replyingTo === messageId
@@ -105,7 +105,7 @@ const MessageItem = React.memo(
                       </span>
                     </>
                   )}
-                </button>
+                </button> */}
                 <button
                   onClick={() => onMessageClick(msg.from_username)}
                   className="p-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-500/50 rounded-lg transition-colors"
@@ -126,7 +126,7 @@ const MessageItem = React.memo(
             )}
 
             {/* Attachments */}
-            {msg.attachments && msg.attachments.length > 0 && (
+            {/* {msg.attachments && msg.attachments.length > 0 && (
               <div className="space-y-3 mb-3">
                 {msg.attachments.map((attachment: Attachment, idx: number) => (
                   <div
@@ -186,10 +186,10 @@ const MessageItem = React.memo(
                   </div>
                 ))}
               </div>
-            )}
+            )} */}
 
             {/* Reply Input Section */}
-            {replyingTo === messageId && (
+            {/* {replyingTo === messageId && (
               <div className="mt-4 p-4 bg-gray-700/30 rounded-xl border border-purple-500/30 backdrop-blur-sm">
                 <div className="flex items-start gap-3">
                   <div className="flex-1">
@@ -228,7 +228,7 @@ const MessageItem = React.memo(
                   Press Enter to send, Shift+Enter for new line
                 </p>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
@@ -241,9 +241,9 @@ MessageItem.displayName = "MessageItem";
 export default function InstagramNotifications() {
   // Use selector to prevent unnecessary re-renders
   const notifications = useNotificationStore((state) => state.notifications);
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
-  const [sending, setSending] = useState<{ [key: string]: boolean }>({});
+  // const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  // const [replyText, setReplyText] = useState<{ [key: string]: string }>({});
+  // const [sending, setSending] = useState<{ [key: string]: boolean }>({});
 
   // Memoize message count to prevent recalculation
   const messageCount = useMemo(
@@ -257,89 +257,89 @@ export default function InstagramNotifications() {
     }
   }, []);
 
-  const toggleReply = useCallback(
-    (messageId: string) => {
-      if (replyingTo === messageId) {
-        setReplyingTo(null);
-        setReplyText((prev) => {
-          const newState = { ...prev };
-          delete newState[messageId];
-          return newState;
-        });
-      } else {
-        setReplyingTo(messageId);
-        if (!replyText[messageId]) {
-          setReplyText((prev) => ({ ...prev, [messageId]: "" }));
-        }
-      }
-    },
-    [replyingTo, replyText]
-  );
+  // const toggleReply = useCallback(
+  //   (messageId: string) => {
+  //     if (replyingTo === messageId) {
+  //       setReplyingTo(null);
+  //       setReplyText((prev) => {
+  //         const newState = { ...prev };
+  //         delete newState[messageId];
+  //         return newState;
+  //       });
+  //     } else {
+  //       setReplyingTo(messageId);
+  //       if (!replyText[messageId]) {
+  //         setReplyText((prev) => ({ ...prev, [messageId]: "" }));
+  //       }
+  //     }
+  //   },
+  //   [replyingTo, replyText]
+  // );
 
-  const handleSendReply = useCallback(
-    async (messageId: string, psid: string) => {
-      const message = replyText[messageId]?.trim();
-      if (!message) {
-        toast.error("Please enter a message");
-        return;
-      }
+  // const handleSendReply = useCallback(
+  //   async (messageId: string, psid: string) => {
+  //     const message = replyText[messageId]?.trim();
+  //     if (!message) {
+  //       toast.error("Please enter a message");
+  //       return;
+  //     }
 
-      setSending((prev) => ({ ...prev, [messageId]: true }));
+  //     setSending((prev) => ({ ...prev, [messageId]: true }));
 
-      try {
-        const PAGE_ACCESS_TOKEN =
-          process.env.NEXT_PUBLIC_PAGE_ACCESS_TOKEN ||
-          "EAAVTqVZBPnhYBQPpws4RTBzBGtxZARiAecMVFFvkftKgzRjjTCRkYMYqZBMuIg9pfCLy8ty9cp4JLnw4LKkKZAeqINE2tfz0glk4IgtTxt32dVDFQIAiHGm4JZAzKr4InGMoalsd5T0xFflZAgsYO5N4MOnz0g6vN7UvoZANHdyOEgNkoOXZC4FZAOXsH4WYK2is4VIDT";
-        const backendUrl = "https://graph.facebook.com/v23.0/me/messages";
-        const headers = {
-          Authorization: `Bearer ${PAGE_ACCESS_TOKEN}`,
-          "Content-Type": "application/json",
-        };
+  //     try {
+  //       const PAGE_ACCESS_TOKEN =
+  //         process.env.NEXT_PUBLIC_PAGE_ACCESS_TOKEN ||
+  //         "EAAVTqVZBPnhYBQPpws4RTBzBGtxZARiAecMVFFvkftKgzRjjTCRkYMYqZBMuIg9pfCLy8ty9cp4JLnw4LKkKZAeqINE2tfz0glk4IgtTxt32dVDFQIAiHGm4JZAzKr4InGMoalsd5T0xFflZAgsYO5N4MOnz0g6vN7UvoZANHdyOEgNkoOXZC4FZAOXsH4WYK2is4VIDT";
+  //       const backendUrl = "https://graph.facebook.com/v23.0/me/messages";
+  //       const headers = {
+  //         Authorization: `Bearer ${PAGE_ACCESS_TOKEN}`,
+  //         "Content-Type": "application/json",
+  //       };
 
-        await axios.post(
-          `${backendUrl}`,
-          {
-            recipient: { id: psid },
-            message: { text: message },
-          },
-          { headers }
-        );
+  //       await axios.post(
+  //         `${backendUrl}`,
+  //         {
+  //           recipient: { id: psid },
+  //           message: { text: message },
+  //         },
+  //         { headers }
+  //       );
 
-        // Clear the textarea and close reply field
-        setReplyText((prev) => {
-          const newState = { ...prev };
-          delete newState[messageId];
-          return newState;
-        });
-        setReplyingTo(null);
-        toast.success("Reply sent successfully!");
-      } catch (error) {
-        console.error("Error sending reply:", error);
-        const errorMessage =
-          axios.isAxiosError(error) && error.response?.data?.message
-            ? error.response.data.message
-            : "Failed to send reply. Please try again.";
-        toast.error(errorMessage);
-      } finally {
-        setSending((prev) => ({ ...prev, [messageId]: false }));
-      }
-    },
-    [replyText]
-  );
+  //       // Clear the textarea and close reply field
+  //       setReplyText((prev) => {
+  //         const newState = { ...prev };
+  //         delete newState[messageId];
+  //         return newState;
+  //       });
+  //       setReplyingTo(null);
+  //       toast.success("Reply sent successfully!");
+  //     } catch (error) {
+  //       console.error("Error sending reply:", error);
+  //       const errorMessage =
+  //         axios.isAxiosError(error) && error.response?.data?.message
+  //           ? error.response.data.message
+  //           : "Failed to send reply. Please try again.";
+  //       toast.error(errorMessage);
+  //     } finally {
+  //       setSending((prev) => ({ ...prev, [messageId]: false }));
+  //     }
+  //   },
+  //   [replyText]
+  // );
 
-  const handleKeyPress = useCallback(
-    (
-      e: React.KeyboardEvent<HTMLTextAreaElement>,
-      messageId: string,
-      psid: string
-    ) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        handleSendReply(messageId, psid);
-      }
-    },
-    [handleSendReply]
-  );
+  // const handleKeyPress = useCallback(
+  //   (
+  //     e: React.KeyboardEvent<HTMLTextAreaElement>,
+  //     messageId: string,
+  //     psid: string
+  //   ) => {
+  //     if (e.key === "Enter" && !e.shiftKey) {
+  //       e.preventDefault();
+  //       handleSendReply(messageId, psid);
+  //     }
+  //   },
+  //   [handleSendReply]
+  // );
 
   return (
     <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800">
@@ -419,7 +419,7 @@ export default function InstagramNotifications() {
 
                           {/* Action Buttons */}
                           <div className="flex items-center gap-2 flex-shrink-0">
-                            <button
+                            {/* <button
                               onClick={() => toggleReply(messageId)}
                               className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
                                 replyingTo === messageId
@@ -447,7 +447,7 @@ export default function InstagramNotifications() {
                                   </span>
                                 </>
                               )}
-                            </button>
+                            </button> */}
                             <button
                               onClick={() =>
                                 handleMessageClick(msg.from_username)
@@ -533,7 +533,7 @@ export default function InstagramNotifications() {
                         )}
 
                         {/* Reply Input Section */}
-                        {replyingTo === messageId && (
+                        {/* {replyingTo === messageId && (
                           <div className="mt-4 p-4 bg-gray-700/30 rounded-xl border border-purple-500/30 backdrop-blur-sm">
                             <div className="flex items-start gap-3">
                               <div className="flex-1">
@@ -580,7 +580,7 @@ export default function InstagramNotifications() {
                               Press Enter to send, Shift+Enter for new line
                             </p>
                           </div>
-                        )}
+                        )} */}
 
                         {/* Date and Time */}
                         {/* <div className="flex items-center gap-2 text-xs text-gray-500 mt-3 pt-3 border-t border-gray-700/50">

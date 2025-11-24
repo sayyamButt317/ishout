@@ -47,8 +47,6 @@ export default function Signup() {
       company_name: data.company_name,
       contact_person: data.contact_person,
       phone: data.phone,
-      // industry: data.industry,
-      // company_size: data.company_size,
       email: data.email,
       password: data.password,
     });
@@ -126,8 +124,6 @@ export default function Signup() {
                   />
                 </div>
 
-                {/* Name Fields */}
-                {/* <div className="grid grid-cols-2 gap-4"> */}
                 <FormField
                   control={form.control}
                   name="company_name"
@@ -147,47 +143,6 @@ export default function Signup() {
                     </FormItem>
                   )}
                 />
-
-                {/* <FormField
-                    control={form.control}
-                    name="company_size"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-slate-700">
-                          company_size
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="10-50"
-                            className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-xs" />
-                      </FormItem>
-                    )}
-                  /> */}
-                {/* </div> */}
-                {/* <FormField
-                  control={form.control}
-                  name="industry"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-slate-700">
-                        Industry
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          placeholder="Enter Your Industry"
-                          className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                /> */}
 
                 {/* Email */}
                 <FormField
