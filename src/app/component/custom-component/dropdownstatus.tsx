@@ -17,6 +17,9 @@ interface StatusProps {
 
 export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
   const [selectedStatus, setSelectedStatus] = React.useState(status);
+  React.useEffect(() => {
+    setSelectedStatus(status);
+  }, [status]);
 
   const handleStatusChange = (value: string) => {
     setSelectedStatus(value);
@@ -44,7 +47,7 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
           variant="outline"
           className={`capitalize ${getButtonStyle()} w-full cursor-pointer`}
         >
-          {selectedStatus}
+          {selectedStatus || "select status"}
         </Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 bg-amber-50 backdrop-blur">

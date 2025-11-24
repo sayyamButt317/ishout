@@ -49,7 +49,7 @@ export default function AdminPendingCampaigns() {
           />
         </Button>
       </div>
-      <p className="italic text-xs text-slate-200 mt-2">
+      <p className="italic text-xs text-slate-200 mt-2 mb-2">
         Showing {data?.campaigns.length} of {data?.total} pending campaigns
       </p>
       <TableComponent
