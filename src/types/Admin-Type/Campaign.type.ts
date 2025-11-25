@@ -60,6 +60,7 @@ export interface CreateCampaignRequest {
 
 export interface CompanyCampaignResponse {
     _id: string;
+    campaign_id: string;
     name: string;
     platform: PlatformType;
     followers: number[];
