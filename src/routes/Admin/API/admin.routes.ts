@@ -99,7 +99,7 @@ export const ApprovedCampaignByIdApi = async (campaign_id: string) => {
 
 export const ApprovedOnBoardingInfluencers = async (page: number = 1) => {
     const response = await api.get(AdminENDPOINT.ADMIN_ONBOARDING_INFLUENCERS, {
-        params: { page }
+        params: { page, page_size: 10 }
     });
     return response.data;
 }

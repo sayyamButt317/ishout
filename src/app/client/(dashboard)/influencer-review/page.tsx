@@ -1,131 +1,82 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import CountButton from "@/src/app/component/custom-component/countbutton";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import TableComponent from "@/src/app/component/CustomTable";
-import ApprovedCampaignHook from "@/src/routes/Company/api/Hooks/approved-campaign.hook";
-import useAuthStore from "@/src/store/AuthStore/authStore";
-import { CircleCheckIcon, CircleXIcon } from "lucide-react";
-import Image from "next/image";
-import React from "react";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
-import {
-  formatEngagementRate,
-  formatFollowers,
-} from "@/src/helper/followersformat";
-import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
-import UpdateInfluencerStatusCompanyHook from "@/src/routes/Company/api/Hooks/update-influencerstatus.hook";
+import TableComponent from "@/src/app/component/CustomTable";
+import CompanyApprovedCampaignHook from "@/src/routes/Company/api/Hooks/comanyapprovedCampaign.hook";
+import useAuthStore from "@/src/store/AuthStore/authStore";
+import { CompanyCampaignResponse } from "@/src/types/Admin-Type/Campaign.type";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 
-export default function InfluencerReviewPage() {
+export default function RevieInfluencer() {
+  const [currentPage, setCurrentPage] = useState(1);
+  // const { data, isLoading } = CompanyCampaignHook(currentPage);
   const { user_id } = useAuthStore();
-  const { data, isLoading } = ApprovedCampaignHook(user_id ?? "");
-  const {
-    mutate: updateInfluencerStatus,
-    isPending: isUpdatingInfluencerStatus,
-  } = UpdateInfluencerStatusCompanyHook();
-
+  const { data, isLoading } = CompanyApprovedCampaignHook(user_id, currentPage);
+  const router = useRouter();
   return (
     <>
       <TableComponent
         header={[
-          "Influencer",
-          "Followers",
-          "Engagement",
-          "Country",
-          "Platform",
-          "Admin",
-          "Company",
           "Campaign ID",
-          "Action",
+          "Campaign Name",
+          "followers",
+          "Platform",
+          "Requested ",
+          "Approval Required",
+          // "Rejected ",
+          "Status",
+          "Created At",
+          "Detail",
         ]}
-        subheader={data?.influencers?.map(
-          (influencer: ReviewInfluencerResponse) => [
-            <div
-              key={`profile-${influencer._id}`}
-              className="flex items-center gap-3"
+        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
+          campaign?._id,
+          <div key={`name-${campaign?._id}`} className="truncate">
+            {campaign?.name}
+          </div>,
+          <div key={`followers-${campaign?._id}`} className="truncate">
+            {campaign?.followers?.join(", ")}
+          </div>,
+          <div key={`platform-${campaign?._id}`} className="truncate">
+            <PlatformBadge platform={campaign?.platform} />
+          </div>,
+          <div
+            key={`requested-${campaign?._id}`}
+            className="truncate flex items-center "
+          >
+            <CountButton count={campaign?.limit ?? 0} />
+          </div>,
+          <div
+            key={`approved-${campaign?._id}`}
+            className="truncate flex items-center "
+          >
+            <CountButton count={campaign?.pending_influencers_count} />
+          </div>,
+          <div key={`status-${campaign?._id}`} className="truncate">
+            <StatusBadge status={campaign.status} />
+            {/* <StatusBadge status={campaign.status} /> */}
+          </div>,
+          <div key={`created-at-${campaign?._id}`} className="truncate">
+            {new Date(campaign?.created_at).toLocaleDateString()}
+          </div>,
+          <div key={`view-${campaign?._id}`} className="truncate">
+            <Button
+              className="cursor-pointer"
+              variant="outline"
+              onClick={() =>
+                router.push(`/client/influencer-review/${campaign?._id}`)
+              }
             >
-              <div className="relative h-12 w-12 rounded-full overflow-hidden border border-white/15">
-                <Image
-                  src={influencer.picture}
-                  alt={influencer.username}
-                  fill
-                  sizes="48px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="truncate max-w-[160px]">
-                <p className="font-semibold">{influencer?.username}</p>
-              </div>
-            </div>,
-            formatFollowers(influencer?.followers),
-            formatEngagementRate(influencer?.engagementRate),
-            influencer.country,
-            <div key={`platform-${influencer._id}`} className="truncate">
-              <PlatformBadge platform={influencer?.platform} />
-            </div>,
-            <StatusBadge
-              key={`status-${influencer._id}`}
-              status={influencer.admin_approved ? "approved" : "reject"}
-            />,
-            <StatusBadge
-              key={`status-${influencer._id}`}
-              status={influencer?.company_approved ? "approved" : "reject"}
-            />,
-            <span
-              key={`campaign-${influencer._id}`}
-              className="text-xs text-slate-300"
-            >
-              {influencer.campaign_id}
-            </span>,
-            <div key={`action-${influencer._id}`} className="gap-2 flex">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  updateInfluencerStatus({
-                    campaign_id: influencer.campaign_id,
-                    influencer_id: influencer.influencer_id,
-                    platform: influencer.platform,
-                    status: "approved",
-                    username: influencer.username,
-                    followers: influencer.followers,
-                    engagementRate: influencer.engagementRate,
-                    picture: influencer.picture,
-                    bio: influencer.bio,
-                    country: influencer.country,
-                    company_user_id: user_id,
-                  });
-                }}
-                disabled={isUpdatingInfluencerStatus}
-              >
-                <CircleCheckIcon className="text-emerald-500 hover:text-emerald-500/80" />
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  updateInfluencerStatus({
-                    campaign_id: influencer.campaign_id,
-                    influencer_id: influencer.influencer_id,
-                    platform: influencer.platform,
-                    status: "rejected",
-                    username: influencer.username,
-                    followers: influencer.followers,
-                    engagementRate: influencer.engagementRate,
-                    picture: influencer.picture,
-                    bio: influencer.bio,
-                    country: influencer.country,
-                    company_user_id: user_id,
-                  });
-                }}
-                disabled={isUpdatingInfluencerStatus}
-              >
-                <CircleXIcon className="text-destructive hover:text-destructive/80" />
-              </Button>
-            </div>,
-          ]
-        )}
+              Details
+            </Button>
+          </div>,
+        ])}
         paginationstart={data?.page ?? 1}
         paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => {
-          console.log(page);
+          setCurrentPage(page);
         }}
         isLoading={isLoading}
       />

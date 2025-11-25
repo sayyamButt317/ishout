@@ -12,11 +12,15 @@ import AdminGenerateInfluencersHook from "@/src/routes/Admin/Hooks/generateInflu
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
 import useAuthStore from "@/src/store/AuthStore/authStore";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
+import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } =
     usePendingCampaigns(currentPage);
+  const { clearTemplate } = useReadyMadeTemplateStore();
+  const { clearApprovedInfluencers } = ApprovedInfluencersStore.getState();
 
   const generateInfluencers = AdminGenerateInfluencersHook();
   const { setCompanyUserId } = useAuthStore();
@@ -93,6 +97,8 @@ export default function AdminPendingCampaigns() {
                 key={`generate-${campaign._id}`}
                 className="bg-primaryButton hover:bg-primaryHover text-white"
                 onClick={() => {
+                  clearTemplate();
+                  clearApprovedInfluencers();
                   setLoadingCampaignId(campaign._id);
                   generateInfluencers.mutate(
                     {
@@ -102,7 +108,6 @@ export default function AdminPendingCampaigns() {
                     {
                       onSuccess: () => {
                         setCompanyUserId(campaign.user_id);
-                        console.log("company user id", campaign.user_id);
                         setLoadingCampaignId(null);
                         router.push(`/Admin/pending-campaign/${campaign._id}`);
                       },

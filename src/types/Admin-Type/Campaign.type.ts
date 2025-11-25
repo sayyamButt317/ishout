@@ -59,12 +59,13 @@ export interface CreateCampaignRequest {
 }
 
 export interface CompanyCampaignResponse {
-    campaign_id: string;
+    _id: string;
     name: string;
     platform: PlatformType;
-    followers: string[];
+    followers: number[];
     limit: number;
     status: string;
+    pending_influencers_count: number;
     created_at: string;
     updated_at: string;
 }
