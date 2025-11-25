@@ -64,13 +64,24 @@ export const CampaignRejectedInfluencers = async () => {
   return response.data;
 }
 
-// export const CampaignApprovedInfluencers = async () => {
-//   const response = await api.get(CompanyENDPOINT.CAMPAIGN_APPROVED_INFLUENCERS)
-//   return response.data;
-// }
+export const CompanyApprovedCampaign = async (
+  user_id: string,
+  page: number = 1
+) => {
+  const response = await api.get(
+    CompanyENDPOINT.COMPNAY_APPROVED_CAMPAIGN(user_id),
+    {
+      params: { page }
+    }
+  );
+  return response.data;
+};
 
-export const ApprovedCampaignById = async (user_id: string) => {
-  const response = await api.get(CompanyENDPOINT.APPROVED_CAMPAIGN_BY_ID(user_id))
+
+export const ReviewPendingInfluencers = async (campaign_id: string, page: number = 1) => {
+  const response = await api.get(CompanyENDPOINT.REVIEW_PENDING_INFLUENCERS(campaign_id), {
+    params: { page },
+  })
   return response.data;
 }
 
