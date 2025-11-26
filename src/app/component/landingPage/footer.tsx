@@ -26,7 +26,7 @@ export default function Footer() {
         </div>
         <div className="z-10">
           <Image
-            src="https://ik.imagekit.io/dtdxnyskk/rightVector.svg"
+            src="https://ik.imagekit.io/dtdxnyskk/leftVector.svg"
             alt="leftVector"
             unoptimized={true}
             width={800}
