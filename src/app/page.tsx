@@ -14,16 +14,18 @@ export default function LandingPage() {
       <Header />
       <section className="relative w-full min-h-screen flex flex-col items-center">
         <Image
-          src="/assets/leftVector.svg"
+          src="https://ik.imagekit.io/dtdxnyskk/leftVector.svg"
           alt="leftVector"
+          unoptimized={true}
           loading="lazy"
           width={800}
           height={800}
           className="absolute left-0 top-0 h-full w-auto object-contain pointer-events-none opacity-70"
         />
         <Image
-          src="/assets/rightVector.svg"
+          src="https://ik.imagekit.io/dtdxnyskk/rightVector.svg"
           alt="rightVector"
+          unoptimized={true}
           loading="lazy"
           width={800}
           height={800}

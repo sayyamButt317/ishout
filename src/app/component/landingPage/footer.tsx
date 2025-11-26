@@ -26,16 +26,18 @@ export default function Footer() {
         </div>
         <div className="z-10">
           <Image
-            src="/assets/leftVector.svg"
+            src="https://ik.imagekit.io/dtdxnyskk/rightVector.svg"
             alt="leftVector"
+            unoptimized={true}
             width={800}
             height={800}
             className="absolute left-0 top-0 h-full w-auto object-contain pointer-events-none opacity-70 mt-20"
             priority
           />
           <Image
-            src="/assets/rightVector.svg"
+            src="https://ik.imagekit.io/dtdxnyskk/rightVector.svg"
             alt="rightVector"
+            unoptimized={true}
             width={800}
             height={800}
             className="absolute right-0 top-0 h-full w-auto object-contain pointer-events-none opacity- mt-2"

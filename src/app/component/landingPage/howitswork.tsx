@@ -22,8 +22,9 @@ export default function HowItWorks() {
           </div>
 
           <Image
-            src="/assets/briefing.svg"
+            src="https://ik.imagekit.io/dtdxnyskk/briefing.svg"
             alt="briefing"
+            unoptimized={true}
             width={500}
             height={500}
             priority
@@ -42,8 +43,9 @@ export default function HowItWorks() {
           </div>
 
           <Image
-            src="/assets/matching.svg"
+            src="https://ik.imagekit.io/dtdxnyskk/matching.svg"
             alt="matching"
+            unoptimized={true}
             width={500}
             height={500}
             priority
@@ -61,7 +63,7 @@ export default function HowItWorks() {
           </div>
 
           <Image
-            src="/assets/approval.svg"
+            src="https://ik.imagekit.io/dtdxnyskk/approval.svg"
             alt="approval"
             width={500}
             height={500}
@@ -81,8 +83,9 @@ export default function HowItWorks() {
           </div>
 
           <Image
-            src="/assets/campaign-launch.svg"
+            src="https://ik.imagekit.io/dtdxnyskk/campaign-launch.svg"
             alt="campaign-launch"
+            unoptimized={true}
             width={500}
             height={500}
             priority
@@ -100,8 +103,9 @@ export default function HowItWorks() {
           </div>
 
           <Image
-            src="/assets/reporting.svg"
+            src="https://ik.imagekit.io/dtdxnyskk/reporting.svg"
             alt="reporting"
+            unoptimized={true}
             width={500}
             height={500}
             priority
