@@ -105,9 +105,6 @@ export const AdminOnBoardingCampaigns = async (page: number = 1) => {
 }
 
 export const ApprovedOnBoardingInfluencers = async (campaign_id: string, page: number = 1) => {
-    if (!campaign_id) {
-        throw new Error("campaign_id is required to fetch onboarding influencers.");
-    }
     const response = await api.get(AdminENDPOINT.ADMIN_ONBOARDING_INFLUENCERS(campaign_id), {
         params: { page, page_size: 10, campaign_id }
     });
