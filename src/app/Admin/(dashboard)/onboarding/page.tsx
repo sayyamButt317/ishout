@@ -1,22 +1,20 @@
 "use client";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import TableComponent from "@/src/app/component/CustomTable";
-import Image from "next/image";
 import React, { useState } from "react";
-import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
-import {
-  formatEngagementRate,
-  formatFollowers,
-} from "@/src/helper/followersformat";
-import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
 import { RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import OnboardingCampaignHook from "@/src/routes/Admin/Hooks/onboardingCampaign-hook";
+import { CompanyCampaignResponse } from "@/src/types/Admin-Type/Campaign.type";
+import CountButton from "@/src/app/component/custom-component/countbutton";
+import { useRouter } from "next/navigation";
 
-export default function OnboardingPage() {
+export default function OnboardingCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } =
-    OnboardingHook(currentPage);
+    OnboardingCampaignHook(currentPage);
+  const router = useRouter();
 
   return (
     <>
@@ -42,76 +40,78 @@ export default function OnboardingPage() {
           </Button>
         </div>
         <p className="text-sm text-white/70">
-          Showing {data?.influencers.length} of {data?.total} influencers
+          Showing {data?.campaigns?.length} of {data?.total} influencers
         </p>
       </div>
       <TableComponent
         header={[
-          "Influencer",
-          "Followers",
-          "Engagement",
-          "Country",
+          "Company",
+          "Category",
           "Platform",
-          "Admin Review",
-          "Company Review",
-          "Campaign ID",
-          // "Action",
+          "Status",
+          "Requested",
+          "Onboarded",
+          "Created At",
+          "View",
         ]}
-        subheader={data?.influencers?.map(
-          (influencer: ReviewInfluencerResponse) => [
-            <div
-              key={`profile-${influencer._id}`}
-              className="flex items-center gap-3"
+        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
+          <div
+            key={`company-${campaign._id}`}
+            className="flex items-center gap-3"
+          >
+            <div className="truncate max-w-[160px]">
+              <p className="font-semibold">{campaign?.company_name}</p>
+            </div>
+          </div>,
+          <div
+            key={`category-${campaign._id}`}
+            className="truncate max-w-[160px]"
+          >
+            {campaign?.category?.join(", ")}
+          </div>,
+          <div
+            key={`platform-${campaign._id}`}
+            className="truncate max-w-[160px]"
+          >
+            <PlatformBadge platform={campaign?.platform} />
+          </div>,
+          <div
+            key={`status-${campaign._id}`}
+            className="truncate max-w-[160px]"
+          >
+            <StatusBadge status={campaign?.status} />
+          </div>,
+          <div
+            key={`requested-influencers-${campaign._id}`}
+            className="truncate flex items-center justify-center"
+          >
+            <CountButton count={campaign?.limit} />
+          </div>,
+          <div
+            key={`onboarding-influencers-${campaign._id}`}
+            className="truncate flex items-center justify-center"
+          >
+            <CountButton count={campaign?.approved_influencer_count} />
+          </div>,
+
+          <div key={`created-at-${campaign._id}`} className="truncate">
+            {new Date(campaign?.created_at).toLocaleDateString()}
+          </div>,
+          <div key={`view-${campaign._id}`} className="truncate">
+            <Button
+              className="cursor-pointer"
+              variant="outline"
+              onClick={() => {
+                router.push(`/Admin/onboarding/${campaign?._id}`);
+              }}
             >
-              <div className="relative h-12 w-12 rounded-full overflow-hidden border border-white/15">
-                <Image
-                  src={influencer.picture}
-                  alt={influencer.username}
-                  fill
-                  sizes="48px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="truncate max-w-[160px]">
-                <p className="font-semibold">{influencer.username}</p>
-                <p className="text-xs text-slate-400 truncate">
-                  {influencer.bio || "—"}
-                </p>
-              </div>
-            </div>,
-            formatFollowers(influencer.followers),
-            formatEngagementRate(influencer.engagementRate),
-            influencer.country,
-            <div key={`platform-${influencer._id}`} className="truncate">
-              <PlatformBadge platform={influencer.platform} />
-            </div>,
-            <StatusBadge
-              key={`status-${influencer._id}`}
-              status={influencer.admin_approved ? "approved" : "reject"}
-            />,
-            <StatusBadge
-              key={`status-${influencer._id}`}
-              status={influencer.company_approved ? "approved" : "reject"}
-            />,
-            <span
-              key={`campaign-${influencer._id}`}
-              className="text-xs text-slate-300"
-            >
-              {influencer.campaign_id}
-            </span>,
-            // <div
-            //   key={`action-${influencer._id}`}
-            //   className="text-xs text-slate-400"
-            // >
-            //   —
-            // </div>,
-          ]
-        )}
-        paginationstart={data?.page ?? 1}
+              View
+            </Button>
+          </div>,
+        ])}
+        paginationstart={currentPage}
         paginationend={data?.total_pages ?? 1}
-        onPageChange={(page: number) => {
-          setCurrentPage(page);
-        }}
+        onPageChange={(page: number) => setCurrentPage(page)}
         isLoading={isLoading}
       />
     </>

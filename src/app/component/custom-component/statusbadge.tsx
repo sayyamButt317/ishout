@@ -19,7 +19,7 @@ const StatusBadge = ({ status, className = "" }: StatusBadgeProps) => {
       case "processing":
         return "capitalize bg-yellow-100 text-yellow-800";
       case "rejected":
-        return "capitalize bg-gray-100 text-gray-800";
+        return "capitalize bg-red-100 text-red-800";
       default:
         return "capitalize bg-gray-100 text-gray-800";
     }

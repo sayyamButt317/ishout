@@ -97,9 +97,19 @@ export const ApprovedCampaignByIdApi = async (campaign_id: string) => {
     return response.data;
 }
 
-export const ApprovedOnBoardingInfluencers = async (page: number = 1) => {
-    const response = await api.get(AdminENDPOINT.ADMIN_ONBOARDING_INFLUENCERS, {
-        params: { page, page_size: 10 }
+export const AdminOnBoardingCampaigns = async (page: number = 1) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_ONBOARDING_CAMPAIGNS, {
+        params: { page }
+    });
+    return response.data;
+}
+
+export const ApprovedOnBoardingInfluencers = async (campaign_id: string, page: number = 1) => {
+    if (!campaign_id) {
+        throw new Error("campaign_id is required to fetch onboarding influencers.");
+    }
+    const response = await api.get(AdminENDPOINT.ADMIN_ONBOARDING_INFLUENCERS(campaign_id), {
+        params: { page, page_size: 10, campaign_id }
     });
     return response.data;
 }
@@ -139,3 +149,4 @@ export const AdminCompanyDetailsByIdApi = async (user_id: string) => {
     const response = await api.get(AdminENDPOINT.ADMIN_COMPANY_DETAILS_BY_ID(user_id));
     return response.data;
 }
+
