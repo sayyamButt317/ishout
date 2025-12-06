@@ -147,3 +147,43 @@ export const AdminCompanyDetailsByIdApi = async (user_id: string) => {
     return response.data;
 }
 
+interface MessageTemplate {
+    title: string;
+    subtitle: string;
+}
+
+export const SendOnboardingMessage = async (
+    psid: number,
+    messageTemplate: MessageTemplate
+) => {
+    const metaApi = axios.create({
+        baseURL: '',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PAGE_ACCESS_TOKEN}`,
+        },
+    });
+
+    const response = await metaApi.post(
+        AdminENDPOINT.META_MESSAGE,
+        {
+            recipient: { id: psid },
+            message: {
+                attachment: {
+                    type: 'template',
+                    payload: {
+                        template_type: 'generic',
+                        elements: [
+                            {
+                                title: messageTemplate.title,
+                                subtitle: messageTemplate.subtitle,
+                            },
+                        ],
+                    },
+                },
+            },
+        }
+    );
+
+    return response.data;
+};

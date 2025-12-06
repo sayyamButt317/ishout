@@ -14,6 +14,7 @@ export interface ReviewInfluencerResponse {
     campaign_id: string;
     influencer_id: string;
     platform: PlatformType;
+    psid?: number;
 }
 
 export interface InfluencerReviewApiResponse {

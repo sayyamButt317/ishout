@@ -16,6 +16,8 @@ import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
 import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
+import { SendOnboardingMessage } from "@/src/routes/Admin/API/admin.routes";
+import { toast } from "sonner";
 
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
@@ -26,19 +28,30 @@ export default function OnboardingInfluencerByCampaignId() {
     currentPage
   );
 
-  // const onboardingMessage = `
-  //   Hi!
-  //   Hope you’re doing well. We’re reaching out from [Agency Name] regarding an upcoming campaign.
+  const handleSendOnboardingMessage = async (psid: number) => {
+    try {
+      const messageTemplate = {
+        title: "Hey 👋",
+        subtitle:
+          "We're reaching out from iShout regarding an upcoming campaign.\n\n" +
+          "We'd love to move forward and would like to confirm a few details:\n\n" +
+          "1. Are you available?\n" +
+          "2. Please share your pricing.\n" +
+          "3. Kindly provide your WhatsApp / phone number.\n\n" +
+          "Looking forward to your response!\n— iShout Team",
+      };
 
-  //   We’d love to move forward and would like to confirm a few details:
-
-  //   1. Are you available?
-  //   2. Please share your rate card/pricing.
-  //   3. Kindly provide your WhatsApp / phone number.
-
-  //   Looking forward to your response!
-  //   — [Agency Name] Team
-  //   `;
+      await SendOnboardingMessage(psid, messageTemplate);
+      toast.success("Message sent successfully!");
+    } catch (error) {
+      console.error("Error sending reply:", error);
+      const errorMessage =
+        error instanceof Error && error.message
+          ? error.message
+          : "Failed to send message. Please try again.";
+      toast.error(errorMessage);
+    }
+  };
 
   const UsernameLink = (platform: PlatformType, username: string) => {
     if (platform === "instagram") {
@@ -169,12 +182,17 @@ export default function OnboardingInfluencerByCampaignId() {
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() => {
-                  //   handleMessage(influencer.platform, influencer.username);
-                  //   handleSendOnboardingMessage(influencer.psid);
+                  handleSendOnboardingMessage(1418366626577884);
+                  // if (influencer.psid) {
+                  //   17912793582092998
+                  //    handleSendOnboardingMessage(influencer.psid);
+                  // }
                 }}
               >
-                Send Message
-                <Send className="h-4 w-4" />
+                <span className="flex items-center gap-2">
+                  Send Message
+                  <Send className="h-4 w-4" />
+                </span>
               </Button>
             </div>,
           ]
