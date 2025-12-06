@@ -11,6 +11,7 @@ import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropd
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import CountButton from "@/src/app/component/custom-component/countbutton";
+import { Badge } from "@/components/ui/badge";
 // import { useRouter } from "next/navigation";
 
 const STATUS_OPTIONS = [
@@ -76,8 +77,8 @@ export default function AllCampaignPage() {
               />
             </Button>
           </div>
-          <p className="text-sm text-white/70">
-            Showing {campaigns.length} of {totalCount} campaigns
+          <p className="italic text-xs text-slate-200 mt-2 mb-2">
+            Showing {campaigns?.length} of {totalCount} campaigns
           </p>
         </div>
 
@@ -127,7 +128,7 @@ export default function AllCampaignPage() {
             {campaign?.company_name}
           </div>,
           <div key={`category-${campaign._id}`} className="truncate">
-            {campaign?.category?.join(", ")}
+            <Badge className="text-xs capitalize">{campaign?.category}</Badge>
           </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
