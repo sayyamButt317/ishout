@@ -44,7 +44,6 @@ export default function OnboardingInfluencerByCampaignId() {
       await SendOnboardingMessage(psid, messageTemplate);
       toast.success("Message sent successfully!");
     } catch (error) {
-      console.error("Error sending reply:", error);
       const errorMessage =
         error instanceof Error && error.message
           ? error.message
@@ -102,7 +101,6 @@ export default function OnboardingInfluencerByCampaignId() {
             className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
             onClick={() => {
               router.replace(`/Admin/onboarding`);
-              console.log("back to onboarding");
             }}
           >
             <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />

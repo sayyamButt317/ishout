@@ -59,12 +59,12 @@ export default function AdminPendingCampaigns() {
       <TableComponent
         header={[
           "#Campaign ID",
-          "Company Name",
+          "User Name",
           "Platform",
           "Requested ",
           "Status",
           "Created At",
-          "Gnerate",
+          "Generate",
         ]}
         subheader={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => [

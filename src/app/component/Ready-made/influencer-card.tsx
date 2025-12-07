@@ -13,6 +13,7 @@ import {
   MessageCircle,
   Loader2,
   DollarSign,
+  UserCheck,
 } from "lucide-react";
 import DeleteInfluencerhook from "@/src/routes/Admin/Hooks/deleteinfluencer-hook";
 
@@ -107,34 +108,21 @@ const InfluencerCard = ({
 
   const handleStatusChange = async (status: "approved" | "rejected") => {
     if (status === "approved" && !showPriceInputs) {
-      // Show price inputs when approve is clicked for the first time
       setShowPriceInputs(true);
       return;
     }
 
     const actionFn = status === "approved" ? onAccept : onReject;
     if (!actionFn) return;
-
-    // Validate price inputs for approval
     if (status === "approved") {
       const min = parseFloat(minAmount);
-      const max = parseFloat(maxAmount);
-
-      if (!minAmount || !maxAmount || isNaN(min) || isNaN(max)) {
-        toast.error("Please enter both minimum and maximum amounts");
-        return;
-      }
-
-      if (min < 0 || max < 0) {
+    
+      if (min < 0) {
         toast.error("Amounts cannot be negative");
         return;
       }
 
-      if (min >= max) {
-        toast.error("Maximum amount must be greater than minimum amount");
-        return;
       }
-    }
 
     const payload: UpdateInfluencerStatusRequestProps = {
       campaign_id: Id ?? "",
@@ -182,7 +170,7 @@ const InfluencerCard = ({
           </p>
         </div>
       )}
-      <div className="flex items-center justify-center mb-4">
+      <div className="flex items-center gap-2 mb-4">
         <Image
           src={influencer?.picture}
           alt={influencer?.username}
@@ -190,9 +178,6 @@ const InfluencerCard = ({
           height={80}
           className="h-20 w-20 rounded-full border-2 border-gray-600 object-cover"
         />
-      </div>
-
-      <div className="text-center mb-4">
         <h3 className="text-lg font-semibold text-white">
           <span
             className="text-white hover:text-blue-600 hover:underline cursor-pointer"
@@ -209,8 +194,11 @@ const InfluencerCard = ({
             {influencer?.username || "No name available"}
           </span>
         </h3>
+      </div>
+
+      <div className="text-center mb-4">
         <button
-          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-1.5 bg-blue-500/30 rounded-sm transition-colors cursor-pointer"
+          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-1.5 bg-gray-700/50 rounded-sm transition-colors cursor-pointer"
           onClick={() => {
             handleMessage(
               influencer?.platform as PlatformType,
@@ -230,14 +218,16 @@ const InfluencerCard = ({
             <div className="text-2xl font-bold text-white mb-1">
               {engagementPercentage}%
             </div>
-            <div className="text-xs text-gray-400">Engagement rate</div>
+            <div className="text-xs text-gray-400"> Engagement rate</div>
           </div>
           {/* Followers */}
           <div className="text-center">
             <div className="text-2xl font-bold text-white mb-1">
               {formatFollowers(influencer?.followers || 0)}
             </div>
-            <div className="text-xs text-gray-400">Followers</div>
+            <div className="text-xs text-gray-400">
+              <UserCheck className="h-4 w-4 text-white" /> Followers Count
+            </div>
           </div>
         </div>
       </div>
@@ -295,25 +285,21 @@ const InfluencerCard = ({
           </div>
           <StatusBadge status="reject" />
         </div>
-        // <div className="mb-4 flex flex-row items-center gap-2 justify-center bg-red-500/20 border border-red-500 rounded-lg py-2">
-        //   <XCircle className="h-5 w-5 text-red-400" />
-        //   <span className="text-sm font-semibold text-red-400">Rejected</span>
-        // </div>
       )}
 
-      {/* Price Input Section - Shows when approve is clicked */}
+      {/* Price Input Section*/}
       {showPriceInputs && actionSuccess === null && (
-        <div className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/30 rounded-lg p-4 mb-4">
+        <div className="bg-gray-700/50 rounded-lg p-4 mb-4">
           <div className="flex items-center gap-2 mb-3">
-            <DollarSign className="h-4 w-4 text-amber-400" />
-            <h4 className="text-sm font-semibold text-amber-300">
-              Set Pricing Range
+            <DollarSign className="h-4 w-4 text-white" />
+            <h4 className="text-sm font-semibold text-white">
+              Set Pricing
             </h4>
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1S gap-3">
             <div>
               <label className="text-xs text-gray-400 mb-1.5 block">
-                Min Amount (USD)
+                Amount (USD)
               </label>
               <Input
                 type="number"
@@ -325,23 +311,9 @@ const InfluencerCard = ({
                 step="0.01"
               />
             </div>
-            <div>
-              <label className="text-xs text-gray-400 mb-1.5 block">
-                Max Amount (USD)
-              </label>
-              <Input
-                type="number"
-                placeholder="0.00"
-                value={maxAmount}
-                onChange={(e) => setMaxAmount(e.target.value)}
-                className="bg-gray-700/50 border-gray-600 text-white placeholder:text-gray-500 focus:border-amber-500"
-                min="0"
-                step="0.01"
-              />
-            </div>
           </div>
           <p className="text-xs text-gray-400 mt-2 text-center">
-            Enter the price range for this influencer
+            Enter the price of the influencer
           </p>
         </div>
       )}
@@ -402,7 +374,6 @@ const InfluencerCard = ({
         </div>
       )}
 
-      {/* Cancel button when price inputs are shown */}
       {showPriceInputs && actionSuccess === null && (
         <CustomButton
           onClick={() => {
