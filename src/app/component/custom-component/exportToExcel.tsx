@@ -5,7 +5,6 @@ import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influenc
 
 const ExportToExcel = () => {
   const data = ApprovedInfluencersStore.getState().approvedInfluencers;
-  console.log("approved influencers data", data);
   if (!data || data.length === 0) {
     toast.error("No approved influencers found");
     return;

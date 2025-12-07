@@ -33,6 +33,7 @@ export interface ApiInfluencerResponse {
 
 export interface AdminAllCampaignApiResponse {
     _id: string;
+    user_type: string;
     name: string;
     description: string;
     platform: PlatformType;
