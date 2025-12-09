@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
 import { Loader2Icon, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import CountButton from "@/src/app/component/custom-component/countbutton";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";

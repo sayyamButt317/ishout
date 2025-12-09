@@ -7,12 +7,11 @@ import { RefreshCcw, Trash } from "lucide-react";
 import React, { useState } from "react";
 import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
-import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import CountButton from "@/src/app/component/custom-component/countbutton";
 import { Badge } from "@/components/ui/badge";
-// import { useRouter } from "next/navigation";
+import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 
 const STATUS_OPTIONS = [
   { label: "All statuses", value: "all" },
@@ -153,7 +152,8 @@ export default function AllCampaignPage() {
           //   {campaign.rejected_influencers_count}
           // </div>,
           <div key={`status-${campaign._id}`} className="truncate">
-            <DropDownCustomStatus
+            <StatusBadge status={campaign.status} />
+            {/* <DropDownCustomStatus
               status={campaign.status}
               updateStatus={(status: string) => {
                 updateCampaignStatusHook.mutate({
@@ -161,7 +161,7 @@ export default function AllCampaignPage() {
                   status: status,
                 });
               }}
-            />
+            /> */}
           </div>,
           // <div key={`view-${campaign._id}`} className="truncate">
           //   <Button

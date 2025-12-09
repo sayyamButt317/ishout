@@ -45,37 +45,37 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
       <DropdownMenuTrigger asChild>
         <Badge
           variant="outline"
-          className={`capitalize ${getButtonStyle()} w-full cursor-pointer`}
+          className={`capitalize ${getButtonStyle()} w-full cursor-pointer px-2 py-1 text-xs sm:text-sm leading-tight`}
         >
           {selectedStatus || "select status"}
         </Badge>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-amber-50 backdrop-blur">
+      <DropdownMenuContent className="w-40 sm:w-56 bg-amber-50 backdrop-blur">
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
           value={selectedStatus}
           onValueChange={handleStatusChange}
         >
           <DropdownMenuRadioItem
-            className=" text-green-800 border-green-400"
+            className="text-green-800 border-green-400 text-xs sm:text-sm"
             value="approved"
           >
             Approved
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
-            className=" text-red-800 border-red-400"
+            className="text-red-800 border-red-400 text-xs sm:text-sm"
             value="rejected"
           >
             Rejected
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
-            className=" text-yellow-800 border-yellow-400"
+            className="text-yellow-800 border-yellow-400 text-xs sm:text-sm"
             value="processing"
           >
             Processing
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
-            className=" text-gray-800 border-gray-400"
+            className="text-gray-800 border-gray-400 text-xs sm:text-sm"
             value="pending"
           >
             Pending

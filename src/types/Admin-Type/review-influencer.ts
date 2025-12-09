@@ -13,6 +13,7 @@ export interface ReviewInfluencerResponse {
     company_approved: boolean;
     campaign_id: string;
     influencer_id: string;
+    pricing: number;
     platform: PlatformType;
     psid?: number;
 }

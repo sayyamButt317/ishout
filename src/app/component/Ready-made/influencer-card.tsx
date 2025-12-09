@@ -25,6 +25,11 @@ import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influenc
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import StatusBadge from "../custom-component/statusbadge";
+import {
+  engagementPercentage,
+  formatFollowers,
+  UsernameLink,
+} from "@/src/helper/followersformat";
 
 export interface InfluencerCardProps {
   influencer: ReadyMadeInfluencerResponse;
@@ -59,7 +64,6 @@ const InfluencerCard = ({
     "approved" | "rejected" | null
   >(null);
   const [minAmount, setMinAmount] = useState<string>("");
-  const [maxAmount, setMaxAmount] = useState<string>("");
   const [showPriceInputs, setShowPriceInputs] = useState(false);
 
   const deleteInfluencerhook = DeleteInfluencerhook();
@@ -72,29 +76,6 @@ const InfluencerCard = ({
     });
   };
 
-  // Format followers number ( 195000 -> 195K)
-  const formatFollowers = (num: number) => {
-    if (num >= 1000000) {
-      return `${(num / 1000000).toFixed(1)}M`;
-    } else if (num >= 1000) {
-      return `${(num / 1000).toFixed(0)}K`;
-    }
-    return num.toString();
-  };
-
-  const engagementPercentage = influencer?.engagementRate
-    ? Math.round(influencer?.engagementRate * 100)
-    : 0;
-
-  const UsernameLink = (platform: PlatformType, username: string) => {
-    if (platform === "instagram") {
-      return `https://www.instagram.com/${username}`;
-    } else if (platform === "tiktok") {
-      return `https://www.tiktok.com/@${username}`;
-    } else if (platform === "youtube") {
-      return `https://www.youtube.com/@${username}`;
-    }
-  };
   const handleMessage = useCallback(
     (platform: PlatformType, username: string) => {
       if (platform === "instagram") {
@@ -116,15 +97,14 @@ const InfluencerCard = ({
     if (!actionFn) return;
     if (status === "approved") {
       const min = parseFloat(minAmount);
-    
+
       if (min < 0) {
         toast.error("Amounts cannot be negative");
         return;
       }
+    }
 
-      }
-
-    const payload: UpdateInfluencerStatusRequestProps = {
+    const basePayload: UpdateInfluencerStatusRequestProps = {
       campaign_id: Id ?? "",
       influencer_id: influencer.id,
       platform: influencer?.platform,
@@ -137,16 +117,17 @@ const InfluencerCard = ({
       country: influencer?.country,
     };
 
+    const payload: UpdateInfluencerStatusRequestProps =
+      status === "approved"
+        ? { ...basePayload, pricing: parseFloat(minAmount) }
+        : basePayload;
+
     setActionLoading(status);
     setActionSuccess(null);
 
     try {
       if (status === "approved" && onAccept) {
-        await onAccept({
-          ...payload,
-          minAmount: parseFloat(minAmount),
-          maxAmount: parseFloat(maxAmount),
-        });
+        await onAccept(payload);
         ApprovedInfluencersStore.getState().addApprovedInfluencer(influencer);
       } else if (status === "rejected" && onReject) {
         await onReject(payload);
@@ -216,7 +197,7 @@ const InfluencerCard = ({
           {/* Engagement Rate */}
           <div className="text-center">
             <div className="text-2xl font-bold text-white mb-1">
-              {engagementPercentage}%
+              {engagementPercentage(influencer?.engagementRate)}%
             </div>
             <div className="text-xs text-gray-400"> Engagement rate</div>
           </div>
@@ -247,7 +228,6 @@ const InfluencerCard = ({
         </div>
       </div>
 
-      {/* Type of Content */}
       <div className="mb-4 flex justify-center items-center">
         <Badge
           key={influencer?.platform}
@@ -292,9 +272,7 @@ const InfluencerCard = ({
         <div className="bg-gray-700/50 rounded-lg p-4 mb-4">
           <div className="flex items-center gap-2 mb-3">
             <DollarSign className="h-4 w-4 text-white" />
-            <h4 className="text-sm font-semibold text-white">
-              Set Pricing
-            </h4>
+            <h4 className="text-sm font-semibold text-white">Set Pricing</h4>
           </div>
           <div className="grid grid-cols-1S gap-3">
             <div>
@@ -319,24 +297,18 @@ const InfluencerCard = ({
       )}
 
       {/* Show saved prices after approval */}
-      {actionSuccess === "approved" && minAmount && maxAmount && (
-        <div className="bg-slate-700/50 rounded-lg p-4 mb-4">
-          <div className="grid grid-cols-2 gap-4">
+      {actionSuccess === "approved" &&
+        minAmount &&
+        parseFloat(minAmount) > 0 && (
+          <div className="bg-slate-700/50 rounded-lg p-4 mb-4">
             <div className="text-center">
               <div className="text-xl font-bold text-white mb-1">
                 ${parseFloat(minAmount).toFixed(2)}
               </div>
-              <div className="text-xs text-gray-400">Min Amount</div>
-            </div>
-            <div className="text-center">
-              <div className="text-xl font-bold text-white mb-1">
-                ${parseFloat(maxAmount).toFixed(2)}
-              </div>
-              <div className="text-xs text-gray-400">Max Amount</div>
+              <div className="text-xs text-gray-400">Influencer Pricing</div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       {actionSuccess === null && (showAccept || showReject) && (
         <div className="grid grid-cols-2 gap-3 mt-4">
@@ -379,7 +351,6 @@ const InfluencerCard = ({
           onClick={() => {
             setShowPriceInputs(false);
             setMinAmount("");
-            setMaxAmount("");
           }}
           className="w-full mt-2 bg-gray-700/50 hover:bg-gray-700 border border-gray-600 text-gray-300 text-sm font-medium py-2 rounded-lg transition-colors"
         >

@@ -18,7 +18,6 @@ export default function DeleteCampaignHook() {
             toast.success('Campaign deleted successfully');
         },
         onError: (error: AxiosError<{ message: string }>) => {
-            console.error('Error deleting campaign', error);
             toast.error('Failed to delete campaign', {
                 description: error.response?.data?.message,
             });

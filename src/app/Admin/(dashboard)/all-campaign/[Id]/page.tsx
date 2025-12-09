@@ -42,21 +42,6 @@ export default function CampaignByIdPage() {
           <Download className="w-4 h-4 text-primary--text cursor-pointer" />
         </Button>
       </div>
-      {/* <CustomButton
-        className="bg-primaryButton hover:bg-primaryHover text-white"
-        onClick={() => {
-          exportToExcel(data?.approved_influencers);
-        }}
-      >
-        Export to Excel
-      </CustomButton> */}
-
-      {/* <Download
-        className="w-4 h-4 text-primary--text cursor-pointer"
-        onClick={() => {
-          exportToExcel(data?.approved_influencers);
-        }}
-      /> */}
 
       {data?.approved_influencers?.length ? (
         <div className="w-full mx-auto mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">

@@ -8,16 +8,42 @@ import CompanyApprovedCampaignHook from "@/src/routes/Company/api/Hooks/comanyap
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { CompanyCampaignResponse } from "@/src/types/Admin-Type/Campaign.type";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
+import { RefreshCcw } from "lucide-react";
 
 export default function RevieInfluencer() {
   const [currentPage, setCurrentPage] = useState(1);
   // const { data, isLoading } = CompanyCampaignHook(currentPage);
   const { user_id } = useAuthStore();
-  const { data, isLoading } = CompanyApprovedCampaignHook(user_id, currentPage);
+  const { data, isLoading, refetch, isRefetching } =
+    CompanyApprovedCampaignHook(user_id, currentPage);
   const router = useRouter();
   return (
     <>
+      <div className="flex flex-row ">
+        <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
+          Review Onboarded Influencers
+        </h1>
+        <Button
+          className="cursor-pointer"
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            refetch();
+          }}
+          disabled={isRefetching}
+        >
+          <RefreshCcw
+            className={`mt-2 w-2 h-2 text-primary-text cursor-pointer ${
+              isRefetching ? "animate-spin" : ""
+            }`}
+          />
+        </Button>
+      </div>
+      <p className="italic text-xs text-slate-200 mt-2 mb-2">
+        Showing {data?.campaigns?.length} campaigns have onboarded influencers
+        that need to be reviewed
+      </p>
       <TableComponent
         header={[
           "Campaign ID",
@@ -25,10 +51,10 @@ export default function RevieInfluencer() {
           "followers",
           "Platform",
           "Requested ",
-          "Approval Required",
+          "Waiting for Approval",
           // "Rejected ",
           "Status",
-          "Created At",
+          "Approved At",
           "Detail",
         ]}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
@@ -50,15 +76,14 @@ export default function RevieInfluencer() {
           </div>,
           <div
             key={`approved-${campaign?._id}`}
-            className="truncate flex items-center "
+            className="truncate flex items-center justify-center "
           >
             <CountButton count={campaign?.pending_influencers_count} />
           </div>,
           <div key={`status-${campaign?._id}`} className="truncate">
             <StatusBadge status={campaign.status} />
-            {/* <StatusBadge status={campaign.status} /> */}
           </div>,
-          <div key={`created-at-${campaign?._id}`} className="truncate">
+          <div key={`approved-at-${campaign?._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
           <div key={`view-${campaign?._id}`} className="truncate">

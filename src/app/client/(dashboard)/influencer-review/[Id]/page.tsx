@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import TableComponent from "@/src/app/component/CustomTable";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { CircleCheckIcon, CircleXIcon } from "lucide-react";
@@ -10,6 +9,7 @@ import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import {
   formatEngagementRate,
   formatFollowers,
+  UsernameLink,
 } from "@/src/helper/followersformat";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
 import UpdateInfluencerStatusCompanyHook from "@/src/routes/Company/api/Hooks/update-influencerstatus.hook";
@@ -24,6 +24,7 @@ export default function InfluencerReviewPage() {
     currentPage,
     Id ?? ""
   );
+  console.log("review-influencer", data);
   const {
     mutate: updateInfluencerStatus,
     isPending: isUpdatingInfluencerStatus,
@@ -38,6 +39,7 @@ export default function InfluencerReviewPage() {
           "Engagement",
           "Country",
           "Platform",
+          "Pricing",
           "Admin",
           "Company",
           // "Campaign ID",
@@ -59,14 +61,36 @@ export default function InfluencerReviewPage() {
                 />
               </div>
               <div className="truncate max-w-[160px]">
-                <p className="font-semibold">{influencer?.username}</p>
+                <p className="font-semibold">
+                  <span
+                    className="text-white hover:text-blue-600 hover:underline cursor-pointer"
+                    onClick={() =>
+                      window.open(
+                        UsernameLink(influencer.platform, influencer.username),
+                        "_blank"
+                      )
+                    }
+                  >
+                    {influencer.username}
+                  </span>
+                </p>
               </div>
             </div>,
             formatFollowers(influencer?.followers),
             formatEngagementRate(influencer?.engagementRate),
             influencer.country,
-            <div key={`platform-${influencer._id}`} className="truncate">
-              <PlatformBadge platform={influencer?.platform} />
+            <div
+              key={`platform-${influencer._id}`}
+              className="truncate text-xs sm:text-sm"
+            >
+              {influencer?.platform.charAt(0).toUpperCase() +
+                influencer?.platform.slice(1)}
+            </div>,
+            <div
+              key={`pricing-${influencer._id}`}
+              className="truncate text-xs sm:text-sm"
+            >
+              ${influencer?.pricing}
             </div>,
             <StatusBadge
               key={`status-${influencer._id}`}
@@ -74,14 +98,8 @@ export default function InfluencerReviewPage() {
             />,
             <StatusBadge
               key={`status-${influencer._id}`}
-              status={influencer?.company_approved ? "approved" : "reject"}
+              status={influencer?.company_approved ? "approved" : "pending"}
             />,
-            <span
-              key={`campaign-${influencer._id}`}
-              className="text-xs text-slate-300"
-            >
-              {influencer.campaign_id}
-            </span>,
             <div key={`action-${influencer._id}`} className="gap-2 flex">
               <Button
                 variant="outline"

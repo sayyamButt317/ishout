@@ -39,8 +39,9 @@ export default function OnboardingCampaignPage() {
             />
           </Button>
         </div>
-        <p className="text-sm text-white/70">
-          Showing {data?.campaigns?.length} of {data?.total} influencers
+        <p className="italic text-xs text-slate-200 mt-2 mb-2">
+          Showing {data?.campaigns?.length} onboarding campaigns that have
+          waiting for influencers to be onboarded
         </p>
       </div>
       <TableComponent

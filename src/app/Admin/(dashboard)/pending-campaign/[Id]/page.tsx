@@ -61,8 +61,8 @@ export default function PendingCampaignByIdPage() {
                 in the category of{" "}
                 <span className="font-bold">{data?.category.join(", ")}</span>{" "}
                 and platform of{" "}
-                <span className="font-bold">{data?.platform}</span> with the
-                followers Range of{" "}
+                <span className="font-bold">{data?.platform.join(", ")}</span>{" "}
+                with the followers Range of{" "}
                 <span className="font-bold">{data?.followers.join(", ")}</span>{" "}
                 and country in{" "}
                 <span className="font-bold">{data?.country.join(", ")}</span>
@@ -71,7 +71,6 @@ export default function PendingCampaignByIdPage() {
           </div>
         </div>
       </div>
-
       {/* Action Bar */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
         <div className="bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl p-4 sm:p-5 shadow-lg">
@@ -92,8 +91,6 @@ export default function PendingCampaignByIdPage() {
               />
             </div>
 
-       
-
             {/* Export Button */}
             {ApprovedInfluencersStore.getState().approvedInfluencers.length >
               0 && (
@@ -110,7 +107,6 @@ export default function PendingCampaignByIdPage() {
           </div>
         </div>
       </div>
-      
 
       <div className="w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
         <div className="space-y-8">

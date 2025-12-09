@@ -61,9 +61,6 @@ const ApprovedCampaignPage = () => {
             <div key={`name-${campaign?.campaign_id}`} className="truncate">
               {campaign?.name}
             </div>,
-            // <div key={`company-name-${campaign._id}`} className="truncate">
-            //   {campaign.company_name}
-            // </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
               <PlatformBadge platform={campaign?.platform} />
             </div>,

@@ -16,6 +16,7 @@ export interface UpdateInfluencerStatusRequestProps {
     bio: string;
     country: string;
     company_user_id?: string;
+    pricing?: number;
 }
 export interface UpdateInfluencerStatusResponseProps {
     message: string;
@@ -94,6 +95,7 @@ export interface CampaignResponse {
 export interface ApprovedCampaignResponse {
     _id: string;
     campaign_id: string;
+    user_type: string;
     name: string;
     platform: PlatformType;
     limit: number;

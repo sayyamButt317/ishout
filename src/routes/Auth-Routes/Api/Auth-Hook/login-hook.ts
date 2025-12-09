@@ -34,7 +34,6 @@ export default function LoginMutation() {
             toast.error('Failed to login', {
                 description: apiError.message,
             });
-            console.error("Login error:", apiError);
         },
     });
 }
