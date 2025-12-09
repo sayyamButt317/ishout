@@ -59,7 +59,7 @@ export default function AdminPendingCampaigns() {
       <TableComponent
         header={[
           "#Campaign ID",
-          "User Name",
+          "User",
           "Source",
           "Platform",
           "Requested ",
@@ -77,7 +77,7 @@ export default function AdminPendingCampaigns() {
               {campaign?.user_type}
             </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
-              <PlatformBadge platform={campaign.platform} />
+              <PlatformBadge platform={[campaign.platform]} />
             </div>,
             <div key={`requested-${campaign._id}`} className="truncate">
               <CountButton count={campaign.limit} />
@@ -90,6 +90,9 @@ export default function AdminPendingCampaigns() {
                     campaign_id: campaign._id,
                     status: status,
                   });
+                  // updateCampaignStatusHook.onSuccess(() => {
+                  //   router.replace(`/Admin/pending-campaign`);
+                  // });
                 }}
               />
             </div>,

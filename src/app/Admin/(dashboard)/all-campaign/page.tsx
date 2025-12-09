@@ -130,7 +130,7 @@ export default function AllCampaignPage() {
             <Badge className="text-xs capitalize">{campaign?.category}</Badge>
           </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
-            <PlatformBadge platform={campaign?.platform} />
+            <PlatformBadge platform={[campaign?.platform]} />
           </div>,
           <div key={`followers-${campaign._id}`} className="truncate">
             {campaign?.followers?.join(", ")}

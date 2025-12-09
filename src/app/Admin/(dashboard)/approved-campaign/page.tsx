@@ -62,7 +62,7 @@ const ApprovedCampaignPage = () => {
               {campaign?.name}
             </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
-              <PlatformBadge platform={campaign?.platform} />
+              <PlatformBadge platform={[campaign?.platform]} />
             </div>,
             <div key={`requested-${campaign._id}`} className="truncate">
               <CountButton count={campaign?.limit} />

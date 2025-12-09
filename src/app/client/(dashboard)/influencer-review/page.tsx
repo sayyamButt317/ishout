@@ -52,7 +52,6 @@ export default function RevieInfluencer() {
           "Platform",
           "Requested ",
           "Waiting for Approval",
-          // "Rejected ",
           "Status",
           "Approved At",
           "Detail",
@@ -66,7 +65,7 @@ export default function RevieInfluencer() {
             {campaign?.followers?.join(", ")}
           </div>,
           <div key={`platform-${campaign?._id}`} className="truncate">
-            <PlatformBadge platform={campaign?.platform} />
+            <PlatformBadge platform={[campaign?.platform]} />
           </div>,
           <div
             key={`requested-${campaign?._id}`}

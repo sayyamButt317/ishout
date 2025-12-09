@@ -8,6 +8,7 @@ import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import {
   formatEngagementRate,
   formatFollowers,
+  UsernameLink,
 } from "@/src/helper/followersformat";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
 import { ArrowLeft, RefreshCcw, Send } from "lucide-react";
@@ -49,16 +50,6 @@ export default function OnboardingInfluencerByCampaignId() {
           ? error.message
           : "Failed to send message. Please try again.";
       toast.error(errorMessage);
-    }
-  };
-
-  const UsernameLink = (platform: PlatformType, username: string) => {
-    if (platform === "instagram") {
-      return `https://www.instagram.com/${username}`;
-    } else if (platform === "tiktok") {
-      return `https://www.tiktok.com/@${username}`;
-    } else if (platform === "youtube") {
-      return `https://www.youtube.com/@${username}`;
     }
   };
 
@@ -119,10 +110,11 @@ export default function OnboardingInfluencerByCampaignId() {
           "Followers",
           "Engagement",
           "Country",
+          "Pricing",
           "Platform",
           "Admin",
           "Company",
-          "Message",
+          "Send Message",
         ]}
         subheader={data?.influencers?.map(
           (influencer: ReviewInfluencerResponse) => [
@@ -159,10 +151,18 @@ export default function OnboardingInfluencerByCampaignId() {
               </div>
             </div>,
             formatFollowers(influencer.followers),
-            formatEngagementRate(influencer.engagementRate),
+            <div
+              key={`engagement-${influencer._id}`}
+              className="truncate text-xs sm:text-sm flex items-center"
+            >
+              {formatEngagementRate(influencer.engagementRate)}
+            </div>,
             influencer.country,
+            <div key={`pricing-${influencer._id}`} className="truncate">
+              ${influencer.pricing}
+            </div>,
             <div key={`platform-${influencer._id}`} className="truncate">
-              <PlatformBadge platform={influencer.platform} />
+              <PlatformBadge platform={[influencer.platform]} />
             </div>,
             <StatusBadge
               key={`status-${influencer._id}`}

@@ -74,7 +74,7 @@ export default function OnboardingCampaignPage() {
             key={`platform-${campaign._id}`}
             className="truncate max-w-[160px]"
           >
-            <PlatformBadge platform={campaign?.platform} />
+            <PlatformBadge platform={[campaign?.platform]} />
           </div>,
           <div
             key={`status-${campaign._id}`}
@@ -84,13 +84,13 @@ export default function OnboardingCampaignPage() {
           </div>,
           <div
             key={`requested-influencers-${campaign._id}`}
-            className="truncate flex items-center justify-center"
+            className="truncate flex items-center"
           >
             <CountButton count={campaign?.limit} />
           </div>,
           <div
             key={`onboarding-influencers-${campaign._id}`}
-            className="truncate flex items-center justify-center"
+            className="truncate flex items-center "
           >
             <CountButton count={campaign?.approved_influencer_count} />
           </div>,
