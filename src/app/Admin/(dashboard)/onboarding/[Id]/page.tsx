@@ -169,8 +169,7 @@ export default function OnboardingInfluencerByCampaignId() {
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() => {
-                  handleSendOnboardingMessage(815950297869644);
-                  // handleSendOnboardingMessage(1565041078267027);
+                  handleSendOnboardingMessage(1565041078267027);
                   // if (influencer.psid) {
                   //   17912793582092998
                   //    handleSendOnboardingMessage(influencer.psid);
