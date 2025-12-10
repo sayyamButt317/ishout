@@ -37,6 +37,13 @@ export default function PendingCampaignByIdPage() {
   };
 
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
+  const handleUpdateCampaignStatus = async (status: string) => {
+    await updateCampaignStatusHook.mutateAsync({
+      campaign_id: data?._id,
+      status,
+    });
+    router.replace("/Admin/pending-campaign");
+  };
 
   return (
     <div className="min-h-screen ">
@@ -83,10 +90,7 @@ export default function PendingCampaignByIdPage() {
               <DropDownCustomStatus
                 status={data?.status}
                 updateStatus={(status: string) => {
-                  updateCampaignStatusHook.mutate({
-                    campaign_id: data?._id,
-                    status: status,
-                  });
+                  handleUpdateCampaignStatus(status);
                 }}
               />
             </div>

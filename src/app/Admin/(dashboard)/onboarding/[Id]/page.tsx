@@ -88,7 +88,7 @@ export default function OnboardingInfluencerByCampaignId() {
             <span className="sm:hidden">Back</span>
           </CustomButton>
         </div>
-        <p className="text-sm text-white/70">
+        <p className="italic text-xs text-slate-200 mt-2 mb-2">
           Showing {data?.influencers.length} of {data?.total} influencers
         </p>
       </div>
@@ -169,8 +169,7 @@ export default function OnboardingInfluencerByCampaignId() {
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() => {
-                  handleSendOnboardingMessage(815950297869644);
-                  // handleSendOnboardingMessage(1565041078267027);
+                  handleSendOnboardingMessage(1565041078267027);
                   // if (influencer.psid) {
                   //   17912793582092998
                   //    handleSendOnboardingMessage(influencer.psid);

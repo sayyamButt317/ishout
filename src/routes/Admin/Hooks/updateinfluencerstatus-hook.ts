@@ -1,14 +1,16 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { UpdateInfluencerStatusApi } from '../API/admin.routes';
 import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from '@/src/types/Admin-Type/Campaign.type';
 
 export default function UpdateInfluencerStatusHook() {
+    const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (influencerRequest: UpdateInfluencerStatusRequestProps) => UpdateInfluencerStatusApi(influencerRequest),
         onSuccess: async (data: UpdateInfluencerStatusResponseProps) => {
             toast.success(data.message);
+            await queryClient.invalidateQueries({ queryKey: ['pending-campaign'] });
         },
         onError: (error) => {
             const axiosError = error as AxiosError<{ detail: string }>;

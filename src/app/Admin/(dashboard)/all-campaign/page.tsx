@@ -118,7 +118,6 @@ export default function AllCampaignPage() {
           "Influencers",
           "Requested At",
           "Status",
-          // "View",
           "Share",
           "Delete",
         ]}
