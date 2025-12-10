@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import axios, { AxiosResponse } from "axios";
 import { getAuthTokenProvider } from "@/src/provider/auth-provide";
 import { UpdateCampaignStatusRequestProps, UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from "@/src/types/Admin-Type/Campaign.type";
+import { MessageTemplate } from "@/src/types/meta.type";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -120,6 +121,11 @@ export const UpdateInfluencerStatusApi = async (influencerRequest: UpdateInfluen
     return response;
 }
 
+export const UpdateStatusApi = async ({ campaign_id, status }: { campaign_id: string, status: string }) => {
+    const response = await api.patch<UpdateInfluencerStatusResponseProps>(AdminENDPOINT.STATUS_UPDATE, { campaign_id, status });
+    return response.data;
+}
+
 export const RejectedInfluencer = async (influencerRequest: MoreInfluencerRequest) => {
     const response = await api.post<ReadyMadeInfluencersRequest>(AdminENDPOINT.ADMIN_REJECTED_INFLUENCER, influencerRequest);
     return response.data;
@@ -145,11 +151,6 @@ export const AdminUpdateCampaignStatusApi = async (updateCampaignStatusRequest: 
 export const AdminCompanyDetailsByIdApi = async (user_id: string) => {
     const response = await api.get(AdminENDPOINT.ADMIN_COMPANY_DETAILS_BY_ID(user_id));
     return response.data;
-}
-
-interface MessageTemplate {
-    title: string;
-    subtitle: string;
 }
 
 export const SendOnboardingMessage = async (

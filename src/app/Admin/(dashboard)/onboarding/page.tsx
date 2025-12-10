@@ -18,32 +18,31 @@ export default function OnboardingCampaignPage() {
 
   return (
     <>
-      <div>
-        <div className="flex flex-row items-center gap-2">
-          <h1 className="italic text-2xl font-bold text-white">
-            Onboarding Influencers
-          </h1>
-          <Button
-            className="cursor-pointer"
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              refetch();
-            }}
-            disabled={isRefetching}
-          >
-            <RefreshCcw
-              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                isRefetching ? "animate-spin" : ""
-              }`}
-            />
-          </Button>
-        </div>
-        <p className="italic text-xs text-slate-200 mt-2 mb-2">
-          Showing {data?.campaigns?.length} onboarding campaigns that have
-          waiting for influencers to be onboarded
-        </p>
+      <div className="flex flex-row items-center gap-2">
+        <h1 className="italic text-2xl font-bold text-white">
+          Onboarding Influencers
+        </h1>
+        <Button
+          className="cursor-pointer"
+          variant="ghost"
+          size="icon"
+          onClick={() => {
+            refetch();
+          }}
+          disabled={isRefetching}
+        >
+          <RefreshCcw
+            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+              isRefetching ? "animate-spin" : ""
+            }`}
+          />
+        </Button>
       </div>
+      <p className="italic text-xs text-slate-200 mt-2 mb-2">
+        Showing {data?.campaigns?.length} onboarding campaigns that have waiting
+        for influencers to be onboarded
+      </p>
+
       <TableComponent
         header={[
           "Company",

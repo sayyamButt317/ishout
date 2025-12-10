@@ -53,17 +53,6 @@ export default function OnboardingInfluencerByCampaignId() {
     }
   };
 
-  //   const handleMessage = useCallback(
-  //     async (platform: PlatformType, username: string) => {
-  //       if (platform === "instagram") {
-  //         window.open(`https://ig.me/m/${username}`, "_blank");
-  //       } else if (platform === "tiktok") {
-  //         window.open(`https://www.tiktok.com/@${username}`, "_blank");
-  //       }
-  //     },
-  //     []
-  //   );
-
   return (
     <>
       <div>
@@ -180,7 +169,8 @@ export default function OnboardingInfluencerByCampaignId() {
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() => {
-                  handleSendOnboardingMessage(1418366626577884);
+                  handleSendOnboardingMessage(815950297869644);
+                  // handleSendOnboardingMessage(1565041078267027);
                   // if (influencer.psid) {
                   //   17912793582092998
                   //    handleSendOnboardingMessage(influencer.psid);

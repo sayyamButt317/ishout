@@ -15,7 +15,10 @@ export const AdminENDPOINT = {
     ADMIN_ONBOARDING_CAMPAIGNS: `/admin/onboarding-campaigns`,
 
     ADMIN_GENERATE_INFLUENCERS_BY_ID: (campaign_id: string) => `/admin/campaigns/generate-influencers/${campaign_id}`,
+    // update campaign status with background task for whatsapp users
     UPDATE_CAMPAIGN_STATUS: () => `/admin/campaigns/update-status`,
+    // update campaign status without background task for all users
+    STATUS_UPDATE: `/admin/campaigns/status-update`,
     ADMIN_DELETE_CAMPAIGN: (campaign_id: string) => `/admin/delete-campaign/${campaign_id}`,
 
     ADMIN_INSTAGRAM_NOTIFICATION: `/meta/notifications`,

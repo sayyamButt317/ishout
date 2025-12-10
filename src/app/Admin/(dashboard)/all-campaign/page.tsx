@@ -7,11 +7,11 @@ import { RefreshCcw, Trash } from "lucide-react";
 import React, { useState } from "react";
 import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
-import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import CountButton from "@/src/app/component/custom-component/countbutton";
 import { Badge } from "@/components/ui/badge";
-import StatusBadge from "@/src/app/component/custom-component/statusbadge";
+import UpdateStatusHook from "@/src/routes/Admin/Hooks/updateStatus-hook";
+import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 
 const STATUS_OPTIONS = [
   { label: "All statuses", value: "all" },
@@ -36,7 +36,7 @@ export default function AllCampaignPage() {
   );
 
   const deleteCampaignHook = DeleteCampaignHook();
-  const updateCampaignStatusHook = UpdateCampaignStatusHook();
+  const updateStatusHook = UpdateStatusHook();
 
   const campaigns = (data?.campaigns ?? []) as AdminAllCampaignApiResponse[];
   const totalPages = Math.max(data?.total_pages ?? 1, 1);
@@ -54,7 +54,7 @@ export default function AllCampaignPage() {
 
   return (
     <>
-      <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex flex-row items-center gap-2">
             <h1 className="italic text-2xl font-bold text-white">
@@ -76,7 +76,7 @@ export default function AllCampaignPage() {
               />
             </Button>
           </div>
-          <p className="italic text-xs text-slate-200 mt-2 mb-2">
+          <p className="italic text-xs text-slate-200 mt-2">
             Showing {campaigns?.length} of {totalCount} campaigns
           </p>
         </div>
@@ -114,6 +114,7 @@ export default function AllCampaignPage() {
           "Category",
           "Platform",
           "Followers",
+          "Source",
           "Influencers",
           "Requested At",
           "Status",
@@ -130,10 +131,13 @@ export default function AllCampaignPage() {
             <Badge className="text-xs capitalize">{campaign?.category}</Badge>
           </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
-            <PlatformBadge platform={[campaign?.platform]} />
+            <PlatformBadge platform={campaign?.platform} />
           </div>,
           <div key={`followers-${campaign._id}`} className="truncate">
             {campaign?.followers?.join(", ")}
+          </div>,
+          <div key={`source-${campaign._id}`} className="truncate">
+            {campaign?.user_type}
           </div>,
           <div
             key={`requested-influencers-${campaign._id}`}
@@ -152,16 +156,16 @@ export default function AllCampaignPage() {
           //   {campaign.rejected_influencers_count}
           // </div>,
           <div key={`status-${campaign._id}`} className="truncate">
-            <StatusBadge status={campaign.status} />
-            {/* <DropDownCustomStatus
+            {/* <StatusBadge status={campaign.status} /> */}
+            <DropDownCustomStatus
               status={campaign.status}
               updateStatus={(status: string) => {
-                updateCampaignStatusHook.mutate({
+                updateStatusHook.mutate({
                   campaign_id: campaign._id,
                   status: status,
                 });
               }}
-            /> */}
+            />
           </div>,
           // <div key={`view-${campaign._id}`} className="truncate">
           //   <Button
@@ -177,7 +181,11 @@ export default function AllCampaignPage() {
             key={`share-${campaign._id}`}
             className="truncate cursor-pointer"
           >
-            <WhatsAppShareButton userId={campaign?.user_id ?? ""} />
+            {campaign?.user_type === "Website" ? (
+              <WhatsAppShareButton userId={campaign?.user_id ?? ""} />
+            ) : (
+              <WhatsAppShareButton userId={campaign?.user_id ?? ""} />
+            )}
           </div>,
           <div key={`delete-${campaign._id}`} className="truncate">
             <Button

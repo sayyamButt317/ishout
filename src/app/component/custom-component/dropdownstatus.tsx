@@ -45,12 +45,12 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
       <DropdownMenuTrigger asChild>
         <Badge
           variant="outline"
-          className={`capitalize ${getButtonStyle()} w-full cursor-pointer px-2 py-1 text-xs sm:text-sm leading-tight`}
+          className={`capitalize ${getButtonStyle()} w-full cursor-pointer text-xs sm:text-sm`}
         >
           {selectedStatus || "select status"}
         </Badge>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40 sm:w-56 bg-amber-50 backdrop-blur">
+      <DropdownMenuContent className="w-32 sm:w-56 bg-amber-50 backdrop-blur">
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup
           value={selectedStatus}
