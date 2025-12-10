@@ -88,7 +88,7 @@ export default function OnboardingInfluencerByCampaignId() {
             <span className="sm:hidden">Back</span>
           </CustomButton>
         </div>
-        <p className="text-sm text-white/70">
+        <p className="italic text-xs text-slate-200 mt-2 mb-2">
           Showing {data?.influencers.length} of {data?.total} influencers
         </p>
       </div>
