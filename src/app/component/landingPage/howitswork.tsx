@@ -1,8 +1,11 @@
 import Image from "next/image";
-export default function HowItWorks() {
+export default function HowItWorks({ id }: { id: string }) {
   return (
     <>
-      <h1 className="italic text-3xl sm:text-4xl md:text-5xl text-center font-extrabold ">
+      <h1
+        id={id}
+        className="italic text-3xl sm:text-4xl md:text-5xl text-center font-extrabold "
+      >
         How It Works
       </h1>
 

@@ -8,12 +8,14 @@ interface VideoCarouselProps {
   videos?: typeof CaseStudiesVideos;
   initialScroll?: number;
   heading?: string;
+  id?: string;
 }
 
 export default function VideoCarousel({
   videos = CaseStudiesVideos,
   initialScroll = 0,
   heading = "3x engagment in 2 weeks",
+  id = "case-studies",
 }: VideoCarouselProps) {
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -24,7 +26,7 @@ export default function VideoCarousel({
   }, [initialScroll]);
 
   return (
-    <div className="relative w-full">
+    <div id={id} className="relative w-full">
       {heading && (
         <h1 className="italic text-center md:text-md font-thin text-3xl text-neutral-800 dark:text-neutral-200 font-sans">
           {heading}
@@ -42,6 +44,7 @@ export default function VideoCarousel({
         >
           {videos.map((video, index) => (
             <motion.div
+              id={`video-${index}`}
               initial={{
                 opacity: 0,
                 y: 20,

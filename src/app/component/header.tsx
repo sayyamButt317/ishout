@@ -46,25 +46,26 @@ const Header = () => {
               justifyContent: "center",
             }}
           >
-            <Link
-              href="/"
+            <a
+              href="#about-us"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
-              About US
-            </Link>
-            <Link
+              About Us
+            </a>
+            <a
               href="#how-it-works"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               How It Works
-            </Link>
-            <Link
+            </a>
+            <a
               href="#case-studies"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               Case Studies
-            </Link>
+            </a>
           </div>
+
           {!token ? (
             <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
               <Link href="/auth/login">

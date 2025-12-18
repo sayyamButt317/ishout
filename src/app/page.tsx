@@ -52,8 +52,8 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <HowItWorks />
-      <div className="w-full h-full py-20">
+      <HowItWorks id="how-it-works" />
+      <div id="case-studies" className="w-full h-full py-20">
         <h2 className="italic text-center max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans">
           Case Studies
         </h2>
@@ -67,6 +67,7 @@ export default function LandingPage() {
         </p>
       </div>
       <VideoCarousel
+        id="case-studies"
         heading="3x engagement in 2 weeks"
         videos={CaseStudiesVideos}
       />
