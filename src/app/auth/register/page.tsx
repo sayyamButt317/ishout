@@ -36,8 +36,6 @@ export default function Signup() {
       company_name: "",
       contact_person: "",
       phone: "",
-      // industry: "",
-      // company_size: "",
       email: "",
       password: "",
     },
@@ -200,34 +198,6 @@ export default function Signup() {
                     </FormItem>
                   )}
                 />
-
-                {/* Terms and Conditions */}
-                {/* <div className="flex items-start space-x-3 pt-2">
-                    <CustomCheckbox
-                      checked={termsAccepted}
-                      onChange={setTermsAccepted}
-                      className="mt-1"
-                    />
-                    <label
-                      className="text-sm text-slate-600 leading-relaxed cursor-pointer"
-                      onClick={() => setTermsAccepted(!termsAccepted)}
-                    >
-                      I agree to the{" "}
-                      <Link
-                        href="/terms"
-                        className="text-blue-600 hover:text-blue-700 underline"
-                      >
-                        Terms of Service
-                      </Link>{" "}
-                      and{" "}
-                      <Link
-                        href="/privacy"
-                        className="text-blue-600 hover:text-blue-700 underline"
-                      >
-                        Privacy Policy
-                      </Link>
-                    </label>
-                  </div> */}
 
                 {/* Submit Button */}
                 <CustomButton

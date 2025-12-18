@@ -26,7 +26,7 @@ const Header = () => {
 
   return (
     <>
-      <nav className="absolute top-0 left-0 right-0 z-20 px-4 sm:px-6 py-4 justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur px-4 sm:px-6 py-4 justify-between">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex flex-row gap-2">
             <Image
@@ -34,7 +34,7 @@ const Header = () => {
               alt="logo"
               width={155}
               height={155}
-              className="w-[155px] h-auto object-cover"
+              className="w-[155px] h-[40px]"
             />
           </div>
 
@@ -46,25 +46,26 @@ const Header = () => {
               justifyContent: "center",
             }}
           >
-            <Link
-              href="/"
+            <a
+              href="#about-us"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
-              About US
-            </Link>
-            <Link
+              About Us
+            </a>
+            <a
               href="#how-it-works"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               How It Works
-            </Link>
-            <Link
+            </a>
+            <a
               href="#case-studies"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               Case Studies
-            </Link>
+            </a>
           </div>
+
           {!token ? (
             <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
               <Link href="/auth/login">
