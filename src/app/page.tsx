@@ -12,7 +12,7 @@ export default function LandingPage() {
   return (
     <div className="relative min-h-screen w-full bg-black overflow-hidden text-white">
       <Header />
-      <section className="relative w-full min-h-screen flex flex-col items-center">
+      <section className="relative w-full min-h-screen flex flex-col items-center pt-24">
         <Image
           src="https://ik.imagekit.io/dtdxnyskk/leftVector.svg"
           alt="leftVector"

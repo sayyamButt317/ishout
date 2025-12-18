@@ -26,7 +26,7 @@ const Header = () => {
 
   return (
     <>
-      <nav className="absolute top-0 left-0 right-0 z-20 px-4 sm:px-6 py-4 justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur px-4 sm:px-6 py-4 justify-between">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex flex-row gap-2">
             <Image
@@ -34,7 +34,7 @@ const Header = () => {
               alt="logo"
               width={155}
               height={155}
-              className="w-[155px] h-auto object-cover"
+              className="w-[155px] h-[40px]"
             />
           </div>
 
