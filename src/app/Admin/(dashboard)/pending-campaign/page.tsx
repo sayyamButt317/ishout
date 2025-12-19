@@ -24,14 +24,11 @@ export default function AdminPendingCampaigns() {
 
   const generateInfluencers = AdminGenerateInfluencersHook();
   const { setCompanyUserId } = useAuthStore();
-
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
-
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(
     null
   );
   const router = useRouter();
-
   return (
     <>
       <div className="flex flex-row ">
@@ -59,7 +56,7 @@ export default function AdminPendingCampaigns() {
       <TableComponent
         header={[
           "#Campaign ID",
-          "User",
+          "User/Company ",
           "Source",
           "Platform",
           "Requested ",
