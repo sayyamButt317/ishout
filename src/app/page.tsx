@@ -5,7 +5,7 @@ import HowItWorks from "@/src/app/component/landingPage/howitswork";
 import Image from "next/image";
 import Video from "./component/video";
 import VideoCarousel from "./component/custom-component/video-carousel";
-import { CaseStudiesVideos, ReachGCCVideos } from "../helper/videoUrls";
+import { CaseStudiesVideos, ReachGCCVideos } from "../constant/videoUrls";
 import Footer from "./component/landingPage/footer";
 
 export default function LandingPage() {

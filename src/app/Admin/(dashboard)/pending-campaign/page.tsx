@@ -55,7 +55,6 @@ export default function AdminPendingCampaigns() {
       </p>
       <TableComponent
         header={[
-          "#Campaign ID",
           "User/Company ",
           "Source",
           "Platform",
@@ -87,9 +86,6 @@ export default function AdminPendingCampaigns() {
                     campaign_id: campaign._id,
                     status: status,
                   });
-                  // updateCampaignStatusHook.onSuccess(() => {
-                  //   router.replace(`/Admin/pending-campaign`);
-                  // });
                 }}
               />
             </div>,

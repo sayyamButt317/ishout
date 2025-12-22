@@ -25,7 +25,6 @@ const STATUS_OPTIONS = [
 export default function AllCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("all");
-  // const router = useRouter();
 
   const appliedStatus =
     statusFilter === "all" ? undefined : statusFilter.toLowerCase();
