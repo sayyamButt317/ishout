@@ -79,9 +79,6 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
             {
                 name: "campaign-store",
                 storage: createJSONStorage(() => localStorage),
-                // partialize: (state) => ({
-                //     results: state.results,
-                // }),
             }
         )
     )

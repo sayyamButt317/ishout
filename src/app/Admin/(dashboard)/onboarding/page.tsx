@@ -73,7 +73,7 @@ export default function OnboardingCampaignPage() {
             key={`platform-${campaign._id}`}
             className="truncate max-w-[160px]"
           >
-            <PlatformBadge platform={[campaign?.platform]} />
+            <PlatformBadge platform={campaign?.platform} />
           </div>,
           <div
             key={`status-${campaign._id}`}

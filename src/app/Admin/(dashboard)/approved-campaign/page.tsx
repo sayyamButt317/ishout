@@ -16,7 +16,6 @@ const ApprovedCampaignPage = () => {
 
   const { data, isLoading, refetch, isRefetching } =
     ApprovedCampaignHook(currentPage);
-
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
   const router = useRouter();
@@ -56,12 +55,11 @@ const ApprovedCampaignPage = () => {
         ]}
         subheader={data?.campaigns?.map(
           (campaign: ApprovedCampaignResponse) => [
-            campaign?.campaign_id,
             <div key={`name-${campaign?.campaign_id}`} className="truncate">
               {campaign?.name}
             </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
-              <PlatformBadge platform={[campaign?.platform]} />
+              <PlatformBadge platform={campaign?.platform} />
             </div>,
             <div key={`requested-${campaign._id}`} className="truncate">
               <CountButton count={campaign?.limit} />
@@ -74,7 +72,7 @@ const ApprovedCampaignPage = () => {
             // </div>,
             <div key={`status-${campaign?._id}`} className="truncate">
               <DropDownCustomStatus
-                status={campaign.status}
+                status={campaign?.status}
                 updateStatus={(status: string) => {
                   updateCampaignStatusHook.mutate({
                     campaign_id: campaign?.campaign_id,

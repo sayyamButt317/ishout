@@ -55,7 +55,7 @@ export default function AdminPendingCampaigns() {
       </p>
       <TableComponent
         header={[
-          "User/Company ",
+          "Company Name",
           "Source",
           "Platform",
           "Requested ",
@@ -65,7 +65,6 @@ export default function AdminPendingCampaigns() {
         ]}
         subheader={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => [
-            campaign._id,
             <div key={`company-name-${campaign._id}`} className="truncate">
               {campaign?.company_name}
             </div>,
@@ -73,14 +72,14 @@ export default function AdminPendingCampaigns() {
               {campaign?.user_type}
             </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
-              <PlatformBadge platform={[campaign.platform]} />
+              <PlatformBadge platform={campaign?.platform} />
             </div>,
             <div key={`requested-${campaign._id}`} className="truncate">
-              <CountButton count={campaign.limit} />
+              <CountButton count={campaign?.limit} />
             </div>,
             <div key={`status-${campaign._id}`} className="truncate">
               <DropDownCustomStatus
-                status={campaign.status}
+                status={campaign?.status}
                 updateStatus={(status: string) => {
                   updateCampaignStatusHook.mutate({
                     campaign_id: campaign._id,
@@ -90,7 +89,7 @@ export default function AdminPendingCampaigns() {
               />
             </div>,
             <div key={`created-at-${campaign._id}`} className="truncate">
-              {new Date(campaign.created_at).toLocaleDateString()}
+              {new Date(campaign?.created_at).toLocaleDateString()}
             </div>,
             <div key={`view-${campaign._id}`} className="truncate">
               <Button

@@ -7,7 +7,7 @@ export interface FindInfluencerRequestProps {
   country: string[];
   company_name: string;
 }
-export type PlatformType = "instagram" | "youtube" | "tiktok" | ""
+export type PlatformType = "instagram" | "youtube" | "tiktok" | "all" | "Instagram" | "YouTube" | "TikTok"
 export interface FoundedInfluencers {
   username: string;
   name: string;
