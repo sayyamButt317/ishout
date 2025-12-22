@@ -24,14 +24,11 @@ export default function AdminPendingCampaigns() {
 
   const generateInfluencers = AdminGenerateInfluencersHook();
   const { setCompanyUserId } = useAuthStore();
-
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
-
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(
     null
   );
   const router = useRouter();
-
   return (
     <>
       <div className="flex flex-row ">
@@ -58,8 +55,7 @@ export default function AdminPendingCampaigns() {
       </p>
       <TableComponent
         header={[
-          "#Campaign ID",
-          "User",
+          "User/Company ",
           "Source",
           "Platform",
           "Requested ",
@@ -90,9 +86,6 @@ export default function AdminPendingCampaigns() {
                     campaign_id: campaign._id,
                     status: status,
                   });
-                  // updateCampaignStatusHook.onSuccess(() => {
-                  //   router.replace(`/Admin/pending-campaign`);
-                  // });
                 }}
               />
             </div>,

@@ -5,6 +5,7 @@ import useAuthStore from '@/src/store/AuthStore/authStore';
 import { toast } from 'sonner';
 import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from '@/src/types/Admin-Type/Campaign.type';
+import { CompanyProfileDetailsResponseProps, UpdateProfileRequestProps, UpdateProfileResponseProps } from '@/src/types/Compnay/profile-type';
 
 
 const api = axios.create({
@@ -90,3 +91,12 @@ export const CompanyUpdateInfluencerStatusApi = async (influencerRequest: Update
   return response.data;
 }
 
+export const CompanyProfileDetailsApi = async (user_id: string) => {
+  const response = await api.get<CompanyProfileDetailsResponseProps>(CompanyENDPOINT.PROFILE_DETAILS(user_id));
+  return response.data;
+}
+
+export const CompanyUpdateProfileApi = async (user_id: string, profileRequest: UpdateProfileRequestProps) => {
+  const response = await api.patch<UpdateProfileResponseProps>(CompanyENDPOINT.PROFILE_UPDATE(user_id), profileRequest);
+  return response.data;
+}

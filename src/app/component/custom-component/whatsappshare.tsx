@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/src/app/component/custom-component/spinner";
-import { getPhoneCodeByCountry } from "@/src/helper/phoneCodes";
+import { getPhoneCodeByCountry } from "@/src/constant/phoneCodes";
 import { AdminCompanyDetailsByIdApi } from "@/src/routes/Admin/API/admin.routes";
 import { useMutation } from "@tanstack/react-query";
 import { SiWhatsapp } from "react-icons/si";

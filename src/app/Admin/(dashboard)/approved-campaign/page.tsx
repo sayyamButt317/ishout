@@ -46,7 +46,6 @@ const ApprovedCampaignPage = () => {
       </p>
       <TableComponent
         header={[
-          "#Campaign ID",
           "Campaign Name",
           "Platform",
           "Requested ",

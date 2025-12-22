@@ -5,6 +5,7 @@ import {
   Hourglass,
   LayoutGrid,
   Plus,
+  User,
   UserCheck,
 } from "lucide-react";
 
@@ -31,6 +32,11 @@ export const employeeSidebarLinks = [
     label: "All Campaigns",
     route: "/client/all-campaign",
     icon: <LayoutGrid className="w-5 h-5" />,
+  },
+  {
+    label: "Profile",
+    route: "/client/profile",
+    icon: <User className="w-5 h-5" />,
   },
 
   // {
