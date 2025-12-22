@@ -87,10 +87,9 @@ export function ChoosePlatform() {
                     {platform?.name}
                   </div>
                   <div className="text-xs text-white/70 group-hover:text-white/90 transition-colors duration-200 mt-1">
-                    {platform?.name === "Instagram" &&
-                      "Visual content & stories"}
-                    {platform?.name === "TikTok" && "Short-form videos"}
-                    {platform?.name === "YouTube" && "Long-form content"}
+                    {platform?.name === "Instagram"}
+                    {platform?.name === "TikTok"}
+                    {platform?.name === "YouTube"}
                   </div>
                 </div>
 

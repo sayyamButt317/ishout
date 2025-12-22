@@ -108,7 +108,6 @@ export default function AllCampaignPage() {
 
       <TableComponent
         header={[
-          "#Campaign ID",
           "Company",
           "Category",
           "Platform",
@@ -121,7 +120,6 @@ export default function AllCampaignPage() {
           "Delete",
         ]}
         subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
-          campaign._id,
           <div key={`company-name-${campaign._id}`} className="truncate">
             {campaign?.company_name}
           </div>,
