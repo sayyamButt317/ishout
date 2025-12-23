@@ -36,16 +36,10 @@ export default function AllCampaign() {
           </div>,
           <div
             key={`requested-${campaign?.campaign_id}`}
-            className="truncate flex items-center "
+            className="truncate items-center justify-center"
           >
-            <CountButton count={campaign?.limit ?? 0} />
+            {campaign?.limit}
           </div>,
-          // <div key={`approved-${campaign?.campaign_id}`} className="truncate">
-          //   <CountButton count={campaign?.approved_influencers_count} />
-          // </div>,
-          // <div key={`rejected-${campaign?.campaign_id}`} className="truncate">
-          //   <CountButton count={campaign?.rejected_influencers_count} />
-          // </div>,
           <div key={`status-${campaign?.campaign_id}`} className="truncate">
             <StatusBadge status={campaign.status} />
             {/* <StatusBadge status={campaign.status} /> */}

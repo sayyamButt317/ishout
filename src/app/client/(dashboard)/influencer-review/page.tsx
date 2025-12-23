@@ -50,7 +50,7 @@ export default function RevieInfluencer() {
           "followers",
           "Platform",
           "Requested ",
-          "Waiting for Approval",
+          "Unapproved",
           "Status",
           "Approved At",
           "Detail",
@@ -67,15 +67,15 @@ export default function RevieInfluencer() {
           </div>,
           <div
             key={`requested-${campaign?._id}`}
-            className="truncate flex items-center "
+            className="truncate text-center text-xs sm:text-sm"
           >
-            <CountButton count={campaign?.limit ?? 0} />
+            {campaign?.limit}
           </div>,
           <div
             key={`approved-${campaign?._id}`}
-            className="truncate flex items-center justify-center "
+            className="truncate text-center text-xs sm:text-sm"
           >
-            <CountButton count={campaign?.pending_influencers_count} />
+            {campaign?.pending_influencers_count}
           </div>,
           <div key={`status-${campaign?._id}`} className="truncate">
             <StatusBadge status={campaign.status} />

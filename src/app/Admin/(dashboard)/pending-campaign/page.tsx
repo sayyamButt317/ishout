@@ -23,7 +23,6 @@ export default function AdminPendingCampaigns() {
 
   const generateInfluencers = AdminGenerateInfluencersHook();
   const { setCompanyUserId } = useAuthStore();
-
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(
     null
   );

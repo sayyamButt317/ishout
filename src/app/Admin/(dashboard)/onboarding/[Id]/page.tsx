@@ -2,7 +2,7 @@
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import TableComponent from "@/src/app/component/CustomTable";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import {
@@ -11,7 +11,7 @@ import {
   UsernameLink,
 } from "@/src/helper/followersformat";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
-import { ArrowLeft, RefreshCcw, Send } from "lucide-react";
+import { ArrowLeft, MessageCircle, RefreshCcw, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
@@ -29,29 +29,40 @@ export default function OnboardingInfluencerByCampaignId() {
     currentPage
   );
 
-  const handleSendOnboardingMessage = async (psid: number) => {
-    try {
-      const messageTemplate = {
-        title: "Hey 👋",
-        subtitle:
-          "We're reaching out from iShout regarding an upcoming campaign.\n\n" +
-          "We'd love to move forward and would like to confirm a few details:\n\n" +
-          "1. Are you available?\n" +
-          "2. Please share your pricing.\n" +
-          "3. Kindly provide your WhatsApp / phone number.\n\n" +
-          "Looking forward to your response!\n— iShout Team",
-      };
+  const handleMessage = useCallback(
+    (platform: PlatformType, username: string) => {
+      if (platform === "instagram") {
+        window.open(`https://ig.me/m/${username}`, "_blank");
+      } else if (platform === "tiktok") {
+        window.open(`https://www.tiktok.com/@${username}`, "_blank");
+      }
+    },
+    []
+  );
 
-      await SendOnboardingMessage(psid, messageTemplate);
-      toast.success("Message sent successfully!");
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error && error.message
-          ? error.message
-          : "Failed to send message. Please try again.";
-      toast.error(errorMessage);
-    }
-  };
+  // const handleSendOnboardingMessage = async (psid: number) => {
+  //   try {
+  //     const messageTemplate = {
+  //       title: "Hey 👋",
+  //       subtitle:
+  //         "We're reaching out from iShout regarding an upcoming campaign.\n\n" +
+  //         "We'd love to move forward and would like to confirm a few details:\n\n" +
+  //         "1. Are you available?\n" +
+  //         "2. Please share your pricing.\n" +
+  //         "3. Kindly provide your WhatsApp / phone number.\n\n" +
+  //         "Looking forward to your response!\n— iShout Team",
+  //     };
+
+  //     await SendOnboardingMessage(psid, messageTemplate);
+  //     toast.success("Message sent successfully!");
+  //   } catch (error) {
+  //     const errorMessage =
+  //       error instanceof Error && error.message
+  //         ? error.message
+  //         : "Failed to send message. Please try again.";
+  //     toast.error(errorMessage);
+  //   }
+  // };
 
   return (
     <>
@@ -169,16 +180,12 @@ export default function OnboardingInfluencerByCampaignId() {
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() => {
-                  handleSendOnboardingMessage(1565041078267027);
-                  // if (influencer.psid) {
-                  //   17912793582092998
-                  //    handleSendOnboardingMessage(influencer.psid);
-                  // }
+                  handleMessage(influencer.platform, influencer.username);
+                  // handleSendOnboardingMessage(1565041078267027);
                 }}
               >
                 <span className="flex items-center gap-2">
-                  Send Message
-                  <Send className="h-4 w-4" />
+                  Message <MessageCircle className="h-4 w-4" />
                 </span>
               </Button>
             </div>,
