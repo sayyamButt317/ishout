@@ -14,7 +14,6 @@ export default function AllCampaign() {
     <>
       <TableComponent
         header={[
-          "Campaign ID",
           "Campaign Name",
           "followers",
           "Platform",
@@ -26,7 +25,6 @@ export default function AllCampaign() {
           //   "View",
         ]}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
-          campaign?.campaign_id,
           <div key={`name-${campaign?.campaign_id}`} className="truncate">
             {campaign?.name}
           </div>,

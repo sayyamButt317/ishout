@@ -6,6 +6,7 @@ import axios, { AxiosResponse } from "axios";
 import { getAuthTokenProvider } from "@/src/provider/auth-provide";
 import { UpdateCampaignStatusRequestProps, UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from "@/src/types/Admin-Type/Campaign.type";
 import { MessageTemplate } from "@/src/types/meta.type";
+import { UpdateUserStatusResponse } from "@/src/types/Admin-Type/usermanagment.type";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -153,6 +154,16 @@ export const AdminCompanyDetailsByIdApi = async (user_id: string) => {
     return response.data;
 }
 
+export const AdminUserManagementApi = async (page: number = 1) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_USER_MANAGEMENT, {
+        params: { page }
+    });
+    return response.data;
+}
+export const AdminUpdateUserStatusApi = async (user_id: string, status: string) => {
+    const response = await api.patch<UpdateUserStatusResponse>(AdminENDPOINT.ADMIN_USER_MANAGEMENT_BY_ID(user_id), {}, { params: { status } });
+    return response;
+}
 export const SendOnboardingMessage = async (
     psid: number,
     messageTemplate: MessageTemplate

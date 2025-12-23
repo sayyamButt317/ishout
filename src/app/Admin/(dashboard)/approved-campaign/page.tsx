@@ -84,18 +84,20 @@ const ApprovedCampaignPage = () => {
             <div key={`created-at-${campaign._id}`} className="truncate">
               {new Date(campaign?.created_at).toLocaleDateString()}
             </div>,
-            <div key={`view-${campaign._id}`} className="truncate">
+            <div
+              key={`view-${campaign._id}`}
+              className="truncate flex items-center justify-center"
+            >
               <Button
                 className="cursor-pointer"
                 variant="outline"
-                size="icon"
-                onClick={() =>
+                onClick={() => {
                   router.push(
                     `/Admin/approved-campaign/${campaign?.campaign_id}`
-                  )
-                }
+                  );
+                }}
               >
-                <Eye className="w-4 h-4 text-primary-text cursor-pointer" />
+                View
               </Button>
             </div>,
             // <div key={`delete-${campaign._id}`} className="truncate">

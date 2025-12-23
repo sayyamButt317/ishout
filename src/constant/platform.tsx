@@ -1,5 +1,4 @@
 import { SiTiktok, SiInstagram, SiYoutube } from "react-icons/si";
-import { PlatformType } from "../types/readymadeinfluencers-type";
 
 export const Platforms = [
   {
