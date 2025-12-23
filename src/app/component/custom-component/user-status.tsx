@@ -15,7 +15,7 @@ interface StatusProps {
   updateStatus: (status: string) => void;
 }
 
-export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
+export function UserStatus({ status, updateStatus }: StatusProps) {
   const [selectedStatus, setSelectedStatus] = React.useState(status);
   React.useEffect(() => {
     setSelectedStatus(status);
@@ -27,14 +27,12 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
   };
   const getButtonStyle = () => {
     switch (selectedStatus) {
-      case "rejected":
+      case "inactive":
         return "bg-[#f3004020] text-[#fa1c57]";
-      case "approved":
+      case "active":
         return "bg-[#25e76620] text-[#25e766]";
-      case "processing":
+      case "suspended":
         return "bg-[#e2c11b20] text-[#e2a513]";
-      case "pending":
-        return "bg-[#366ffe20] text-[#7199ff]";
       default:
         return "bg-gray-100 text-gray-800 border-gray-400";
     }
@@ -58,27 +56,21 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
         >
           <DropdownMenuRadioItem
             className="text-[#25e766] border-green-400 text-xs sm:text-sm"
-            value="approved"
+            value="active"
           >
-            Approved
+            Active
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
             className="text-[#fa1c57] border-red-400 text-xs sm:text-sm"
-            value="rejected"
+            value="inactive"
           >
-            Rejected
+            Inactive
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
             className="text-[#e2a513] border-yellow-400 text-xs sm:text-sm"
-            value="processing"
+            value="suspended"
           >
-            Processing
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem
-            className="text-[#5481f4] border-gray-400 text-xs sm:text-sm"
-            value="pending"
-          >
-            Pending
+            Suspended
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

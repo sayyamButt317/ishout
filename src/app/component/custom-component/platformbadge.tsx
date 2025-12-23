@@ -22,7 +22,6 @@ export default function PlatformBadge({
             className={`flex items-center gap-1 ${config.color}`}
           >
             {config.icon}
-            <span className="capitalize">{normalized}</span>
           </span>
         );
       })}

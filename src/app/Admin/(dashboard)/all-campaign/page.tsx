@@ -5,13 +5,15 @@ import { WhatsAppShareButton } from "@/src/app/component/custom-component/whatsa
 import AllCampaignHook from "@/src/routes/Admin/Hooks/Allcampaign-hook";
 import { RefreshCcw, Trash } from "lucide-react";
 import React, { useState } from "react";
-import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import CountButton from "@/src/app/component/custom-component/countbutton";
 import { Badge } from "@/components/ui/badge";
 import UpdateStatusHook from "@/src/routes/Admin/Hooks/updateStatus-hook";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
+import { DropdownMenuAction } from "@/src/app/component/custom-component/action";
+import StatusBadge from "@/src/app/component/custom-component/statusbadge";
+import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
 
 const STATUS_OPTIONS = [
   { label: "All statuses", value: "all" },
@@ -25,7 +27,7 @@ const STATUS_OPTIONS = [
 export default function AllCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("all");
-
+  const deleteCampaignHook = DeleteCampaignHook();
   const appliedStatus =
     statusFilter === "all" ? undefined : statusFilter.toLowerCase();
 
@@ -34,7 +36,6 @@ export default function AllCampaignPage() {
     appliedStatus
   );
 
-  const deleteCampaignHook = DeleteCampaignHook();
   const updateStatusHook = UpdateStatusHook();
 
   const campaigns = (data?.campaigns ?? []) as AdminAllCampaignApiResponse[];
@@ -83,7 +84,7 @@ export default function AllCampaignPage() {
         <div className="flex items-center gap-3">
           <label
             htmlFor="campaign-status-filter"
-            className="text-sm text-white/80"
+            className="italic text-sm text-white/80"
           >
             Filter by status
           </label>
@@ -114,17 +115,19 @@ export default function AllCampaignPage() {
           "Followers",
           "Source",
           "Influencers",
-          "Requested At",
+          "Requested",
           "Status",
-          "Share",
-          "Delete",
+          "Chat",
+          "Action",
         ]}
         subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
           <div key={`company-name-${campaign._id}`} className="truncate">
             {campaign?.company_name}
           </div>,
           <div key={`category-${campaign._id}`} className="truncate">
-            <Badge className="text-xs capitalize">{campaign?.category}</Badge>
+            <Badge className="text-xs capitalize bg-slate-800 text-white border border-white/20">
+              {campaign?.category.join(", ")}
+            </Badge>
           </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
@@ -137,22 +140,14 @@ export default function AllCampaignPage() {
           </div>,
           <div
             key={`requested-influencers-${campaign._id}`}
-            className="flex items-center justify-center"
+            className="truncate"
           >
             <CountButton count={campaign?.limit} />
           </div>,
           <div key={`requested-date-${campaign._id}`} className="truncate">
             {new Date(campaign.created_at).toLocaleDateString()}
           </div>,
-
-          // <div
-          //   key={`rejected-influencers-${campaign._id}`}
-          //   className="truncate"
-          // >
-          //   {campaign.rejected_influencers_count}
-          // </div>,
           <div key={`status-${campaign._id}`} className="truncate">
-            {/* <StatusBadge status={campaign.status} /> */}
             <DropDownCustomStatus
               status={campaign.status}
               updateStatus={(status: string) => {
@@ -163,16 +158,6 @@ export default function AllCampaignPage() {
               }}
             />
           </div>,
-          // <div key={`view-${campaign._id}`} className="truncate">
-          //   <Button
-          //     className="cursor-pointer"
-          //     variant="outline"
-          //     size="icon"
-          //     onClick={() => router.push(`/Admin/all-campaign/${campaign._id}`)}
-          //   >
-          //     <Eye className="w-4 h-4 text-primary-text cursor-pointer" />
-          //   </Button>
-          // </div>,
           <div
             key={`share-${campaign._id}`}
             className="truncate cursor-pointer"

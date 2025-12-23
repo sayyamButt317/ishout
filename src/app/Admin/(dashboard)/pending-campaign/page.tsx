@@ -6,14 +6,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import CountButton from "@/src/app/component/custom-component/countbutton";
-import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 import { usePendingCampaigns } from "@/src/routes/Admin/Hooks/pendingCampaign-hook";
 import AdminGenerateInfluencersHook from "@/src/routes/Admin/Hooks/generateInfluencers-hook";
-import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
+import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,7 +23,7 @@ export default function AdminPendingCampaigns() {
 
   const generateInfluencers = AdminGenerateInfluencersHook();
   const { setCompanyUserId } = useAuthStore();
-  const updateCampaignStatusHook = UpdateCampaignStatusHook();
+
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(
     null
   );
@@ -60,7 +59,7 @@ export default function AdminPendingCampaigns() {
           "Platform",
           "Requested ",
           "Status",
-          "Created At",
+          "Created",
           "Generate",
         ]}
         subheader={data?.campaigns.map(
@@ -78,15 +77,7 @@ export default function AdminPendingCampaigns() {
               <CountButton count={campaign?.limit} />
             </div>,
             <div key={`status-${campaign._id}`} className="truncate">
-              <DropDownCustomStatus
-                status={campaign?.status}
-                updateStatus={(status: string) => {
-                  updateCampaignStatusHook.mutate({
-                    campaign_id: campaign._id,
-                    status: status,
-                  });
-                }}
-              />
+              <StatusBadge status={campaign?.status} />
             </div>,
             <div key={`created-at-${campaign._id}`} className="truncate">
               {new Date(campaign?.created_at).toLocaleDateString()}
