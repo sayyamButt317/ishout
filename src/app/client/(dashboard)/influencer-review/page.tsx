@@ -46,7 +46,6 @@ export default function RevieInfluencer() {
       </p>
       <TableComponent
         header={[
-          "Campaign ID",
           "Campaign Name",
           "followers",
           "Platform",
@@ -57,7 +56,6 @@ export default function RevieInfluencer() {
           "Detail",
         ]}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
-          campaign?._id,
           <div key={`name-${campaign?._id}`} className="truncate">
             {campaign?.name}
           </div>,
