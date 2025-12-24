@@ -167,7 +167,7 @@ const InfluencerCard = ({
         <div className="flex flex-col gap-2 justify-center">
           <h3 className="text-lg font-semibold text-black">
             <span
-              className="text-sm font-medium hover:text-blue-600 hover:underline cursor-pointer"
+              className="text-sm font-medium hover:text-blue-600 hover:underline cursor-pointer truncate"
               onClick={() =>
                 window.open(
                   UsernameLink(
@@ -180,11 +180,8 @@ const InfluencerCard = ({
             >
               @{influencer?.username || "No name available"}
             </span>
-            <div className="mb-4 flex ">
-              <Badge
-                key={influencer?.platform}
-                className=" flex items-center gap-2 bg-transparent border text-xs"
-              >
+            <div className="mb-4 flex justify-between">
+              <Badge className=" flex items-center gap-2 bg-transparent border text-xs">
                 {influencer?.platform === "instagram" ? (
                   <SiInstagram className="h-4 w-4 text-red-800" />
                 ) : influencer?.platform === "tiktok" ? (
@@ -192,6 +189,9 @@ const InfluencerCard = ({
                 ) : (
                   <SiYoutube className="h-4 w-4 text-red-800" />
                 )}
+              </Badge>
+              <Badge className=" flex items-center gap-2 border text-xs">
+                {influencer?.country.toUpperCase()}
               </Badge>
             </div>
           </h3>
