@@ -1,7 +1,7 @@
 "use client";
 import ExcelJs from "exceljs";
 import { toast } from "sonner";
-import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
+import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
 
 const ExportToExcel = () => {
   const data = ApprovedInfluencersStore.getState().approvedInfluencers;

@@ -8,7 +8,7 @@ import UpdateInfluencerStatusHook from "@/src/routes/Admin/Hooks/updateinfluence
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";
 import { Download } from "lucide-react";
 import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
-import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
+import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 import {
@@ -16,15 +16,16 @@ import {
   ReadyMadeInfluencersApiResponse,
 } from "@/src/types/readymadeinfluencers-type";
 import useAuthStore from "@/src/store/AuthStore/authStore";
+import GeneratedInfluencersByIdHook from "@/src/routes/Admin/Hooks/generated-influencers-hook";
+// import { useRejectedInfluencersStore } from "@/src/store/Campaign/reject-influencer.store";
 
 export default function PendingCampaignByIdPage() {
-  const { results, clearTemplate } = useReadyMadeTemplateStore();
   const { company_user_id } = useAuthStore();
-
   const { clearApprovedInfluencers } = ApprovedInfluencersStore.getState();
   const { Id } = useParams<{ Id: string }>();
   const { data } = CampaignByIdHook(Id ?? "");
   const updateInfluencerStatus = UpdateInfluencerStatusHook();
+  const { data: generatedInfluencers } = GeneratedInfluencersByIdHook(Id ?? "");
   const router = useRouter();
 
   const handleUpdateInfluencerStatus = async (
@@ -45,6 +46,18 @@ export default function PendingCampaignByIdPage() {
     router.replace("/Admin/pending-campaign");
   };
 
+  // const { setField, addToArray } = useRejectedInfluencersStore.getState();
+
+  // setField("platform", data?.platform.join(", ") ?? "");
+  // setField("category", data?.category.join(", ") ?? "");
+  // setField("followers", data?.followers.join(", ") ?? "");
+  // setField("country", data?.country.join(", ") ?? "");
+  // setField("campaign_id", data?._id ?? "");
+
+  // results?.forEach((inf) => {
+  //   addToArray("generated_influencers_id", inf.id);
+  // });
+
   return (
     <div className="min-h-screen ">
       <div className="relative rounded-xl border border-white/20 backdrop-blur">
@@ -61,7 +74,7 @@ export default function PendingCampaignByIdPage() {
               (with all the possible combination according to the user&apos;s
               request)
             </p>
-            <div className="text-white flex flex-col gap-2 mt-4 items-start">
+            <div className="text-white flex flex-col gap-2 mt-4 items-center justify center">
               <p className="text-sm">
                 User has requested{" "}
                 <span className="font-bold"> {data?.limit} </span> influencers
@@ -116,11 +129,11 @@ export default function PendingCampaignByIdPage() {
         <div className="space-y-8">
           <section className="bg-black/10 backdrop-blur rounded-2xl border border-white/20 p-4 sm:p-6 shadow-sm">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-              {results?.map(
-                (influencer: ReadyMadeInfluencersApiResponse, i: number) => (
+              {generatedInfluencers?.map(
+                (influencer: ReadyMadeInfluencerResponse) => (
                   <InfluencerCard
-                    key={`${influencer?.id}-${i}`}
-                    influencer={influencer as ReadyMadeInfluencerResponse}
+                    key={influencer?._id}
+                    influencer={influencer}
                     showAccept
                     showReject
                     showDelete
@@ -143,7 +156,6 @@ export default function PendingCampaignByIdPage() {
           className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer"
           onClick={() => {
             router.push("/Admin/pending-campaign");
-            clearTemplate();
             clearApprovedInfluencers();
           }}
         >

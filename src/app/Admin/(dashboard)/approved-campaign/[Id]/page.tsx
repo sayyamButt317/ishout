@@ -21,18 +21,9 @@ interface ApprovedCampaignResponse {
 export default function ApprovedInfluencerById() {
   const { Id } = useParams<{ Id: string }>();
   const { data, isLoading, isError } = ApprovedCampaignByIdHook(Id ?? "");
+
   const { data: campaignData } = CampaignByIdHook(Id ?? "");
   const router = useRouter();
-  const safeData = data as ApprovedCampaignResponse | undefined;
-
-  const approvedInfluencers = useMemo(() => {
-    const influencers =
-      safeData?.approved_influencers ??
-      safeData?.data?.approved_influencers ??
-      safeData?.data?.influencers ??
-      [];
-    return (influencers as ReadyMadeInfluencerResponse[]) ?? [];
-  }, [safeData]);
 
   return (
     <section className="min-h-screen space-y-4">
@@ -86,17 +77,23 @@ export default function ApprovedInfluencerById() {
 
       {!isLoading && !isError && (
         <>
-          {approvedInfluencers.length ? (
+          {data?.approved_influencers?.length ? (
             <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-              {approvedInfluencers.map((influencer) => (
-                <InfluencerCard
-                  key={influencer._id ?? influencer.id ?? influencer.username}
-                  influencer={influencer}
-                  showAccept={false}
-                  showReject={false}
-                  showDelete={false}
-                />
-              ))}
+              {data?.approved_influencers?.map(
+                (influencer: ReadyMadeInfluencerResponse) => (
+                  <InfluencerCard
+                    key={
+                      influencer._id ??
+                      influencer.influencer_id ??
+                      influencer.username
+                    }
+                    influencer={influencer}
+                    showAccept={false}
+                    showReject={false}
+                    showDelete={false}
+                  />
+                )
+              )}
             </div>
           ) : (
             <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
@@ -105,7 +102,7 @@ export default function ApprovedInfluencerById() {
           )}
         </>
       )}
-      {approvedInfluencers.length > 0 && (
+      {data?.approved_influencers?.length > 0 && (
         <div className="flex flex-row items-center justify-center mt-4 px-4 sm:px-0 gap-3">
           <CustomButton
             className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer"

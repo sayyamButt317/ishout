@@ -10,16 +10,13 @@ import { usePendingCampaigns } from "@/src/routes/Admin/Hooks/pendingCampaign-ho
 import AdminGenerateInfluencersHook from "@/src/routes/Admin/Hooks/generateInfluencers-hook";
 import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
 import useAuthStore from "@/src/store/AuthStore/authStore";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
-import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
+import CustomButton from "@/src/app/component/button";
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } =
     usePendingCampaigns(currentPage);
-  const { clearTemplate } = useReadyMadeTemplateStore();
-  const { clearApprovedInfluencers } = ApprovedInfluencersStore.getState();
 
   const generateInfluencers = AdminGenerateInfluencersHook();
   const { setCompanyUserId } = useAuthStore();
@@ -58,7 +55,7 @@ export default function AdminPendingCampaigns() {
           "Platform",
           "Requested ",
           "Status",
-          "Created",
+          "Created At",
           "Generate",
         ]}
         subheader={data?.campaigns.map(
@@ -82,38 +79,50 @@ export default function AdminPendingCampaigns() {
               {new Date(campaign?.created_at).toLocaleDateString()}
             </div>,
             <div key={`view-${campaign._id}`} className="truncate">
-              <Button
-                key={`generate-${campaign._id}`}
-                className="bg-primaryButton hover:bg-primaryHover text-white"
-                onClick={() => {
-                  clearTemplate();
-                  clearApprovedInfluencers();
-                  setLoadingCampaignId(campaign._id);
-                  generateInfluencers.mutate(
-                    {
-                      campaign_id: campaign._id,
-                      limit: campaign.limit,
-                    },
-                    {
-                      onSuccess: () => {
-                        setCompanyUserId(campaign.user_id);
-                        setLoadingCampaignId(null);
-                        router.push(`/Admin/pending-campaign/${campaign._id}`);
+              {campaign?.generated === false ? (
+                <CustomButton
+                  key={`generate-${campaign._id}`}
+                  className="bg-primaryButton hover:bg-primaryHover text-white"
+                  onClick={() => {
+                    setLoadingCampaignId(campaign._id);
+
+                    generateInfluencers.mutate(
+                      {
+                        campaign_id: campaign._id,
+                        limit: campaign.limit,
                       },
-                      onError: () => {
-                        setLoadingCampaignId(null);
-                      },
-                    }
-                  );
-                }}
-                disabled={loadingCampaignId === campaign._id}
-              >
-                {loadingCampaignId === campaign._id ? (
-                  <Loader2Icon className="w-4 h-4 animate-spin" />
-                ) : (
-                  "Generate"
-                )}
-              </Button>
+                      {
+                        onSuccess: () => {
+                          setCompanyUserId(campaign.user_id);
+                          setLoadingCampaignId(null);
+                          router.push(
+                            `/Admin/pending-campaign/${campaign._id}`
+                          );
+                        },
+                        onError: () => {
+                          setLoadingCampaignId(null);
+                        },
+                      }
+                    );
+                  }}
+                  disabled={loadingCampaignId === campaign._id}
+                >
+                  {loadingCampaignId === campaign._id ? (
+                    <Loader2Icon className="w-4 h-4 animate-spin" />
+                  ) : (
+                    "Generate"
+                  )}
+                </CustomButton>
+              ) : (
+                <CustomButton
+                  className="bg-secondaryButton hover:bg-secondaryHover text-white"
+                  onClick={() => {
+                    router.push(`/Admin/pending-campaign/${campaign._id}`);
+                  }}
+                >
+                  View
+                </CustomButton>
+              )}
             </div>,
           ]
         )}
