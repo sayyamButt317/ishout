@@ -21,6 +21,7 @@ import GeneratedInfluencersByIdHook from "@/src/routes/Admin/Hooks/generated-inf
 
 export default function PendingCampaignByIdPage() {
   const { company_user_id } = useAuthStore();
+  const { clearTemplate } = useReadyMadeTemplateStore();
   const { clearApprovedInfluencers } = ApprovedInfluencersStore.getState();
   const { Id } = useParams<{ Id: string }>();
   const { data } = CampaignByIdHook(Id ?? "");
@@ -107,6 +108,16 @@ export default function PendingCampaignByIdPage() {
                 }}
               />
             </div>
+            <h1 className="text-xs font-normal text-slate-300 whitespace-nowrap">
+              Generated Influencers:{" "}
+              <span className="font-bold">{generatedInfluencers?.length}</span>
+            </h1>
+            <h1 className="text-xs font-normal text-slate-300 whitespace-nowrap">
+              Approved Influencers:{" "}
+              <span className="font-bold">
+                {ApprovedInfluencersStore.getState().approvedInfluencers.length}
+              </span>
+            </h1>
 
             {/* Export Button */}
             {ApprovedInfluencersStore.getState().approvedInfluencers.length >
@@ -157,6 +168,7 @@ export default function PendingCampaignByIdPage() {
           onClick={() => {
             router.push("/Admin/pending-campaign");
             clearApprovedInfluencers();
+            clearTemplate();
           }}
         >
           Back to Dashboard

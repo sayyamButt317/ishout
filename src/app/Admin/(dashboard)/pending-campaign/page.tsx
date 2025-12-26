@@ -12,12 +12,15 @@ import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.typ
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import CustomButton from "@/src/app/component/button";
+import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
+import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } =
     usePendingCampaigns(currentPage);
-
+  const { clearTemplate } = useReadyMadeTemplateStore();
+  const { clearApprovedInfluencers } = ApprovedInfluencersStore();
   const generateInfluencers = AdminGenerateInfluencersHook();
   const { setCompanyUserId } = useAuthStore();
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(
@@ -56,7 +59,7 @@ export default function AdminPendingCampaigns() {
           "Requested ",
           "Status",
           "Created At",
-          "Generate",
+          "Generate/View-Generated",
         ]}
         subheader={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => [
@@ -84,6 +87,8 @@ export default function AdminPendingCampaigns() {
                   key={`generate-${campaign._id}`}
                   className="bg-primaryButton hover:bg-primaryHover text-white"
                   onClick={() => {
+                    clearTemplate();
+                    clearApprovedInfluencers();
                     setLoadingCampaignId(campaign._id);
 
                     generateInfluencers.mutate(
@@ -120,7 +125,7 @@ export default function AdminPendingCampaigns() {
                     router.push(`/Admin/pending-campaign/${campaign._id}`);
                   }}
                 >
-                  View
+                  View Generated
                 </CustomButton>
               )}
             </div>,
