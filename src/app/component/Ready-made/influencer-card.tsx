@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
+import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import StatusBadge from "../custom-component/statusbadge";
@@ -107,7 +107,7 @@ const InfluencerCard = ({
 
     const basePayload: UpdateInfluencerStatusRequestProps = {
       campaign_id: Id ?? "",
-      influencer_id: influencer.id,
+      influencer_id: influencer.influencer_id,
       platform: influencer?.platform,
       status,
       username: influencer?.username,
@@ -148,6 +148,19 @@ const InfluencerCard = ({
 
   return (
     <article className="group relative w-full rounded-xl border bg-white backdrop-blur-sm text-white p-2 shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
+      <div className="absolute top-0 right-0">
+        <Badge className=" flex items-center gap-2 border text-xs">
+          {influencer?.admin_approved === true ? (
+            <span className="flex items-center gap-2">
+              Approved <CircleCheck className="h-4 w-4 text-green-400" />
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              Pending <Loader2 className="h-4 w-4 text-red-400" />
+            </span>
+          )}
+        </Badge>
+      </div>
       {actionLoading && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
           <Loader2 className="animate-spin text-white" />
@@ -167,7 +180,7 @@ const InfluencerCard = ({
         <div className="flex flex-col gap-2 justify-center">
           <h3 className="text-lg font-semibold text-black">
             <span
-              className="text-sm font-medium hover:text-blue-600 hover:underline cursor-pointer"
+              className="text-sm font-medium hover:text-blue-600 hover:underline cursor-pointer truncate"
               onClick={() =>
                 window.open(
                   UsernameLink(
@@ -180,27 +193,32 @@ const InfluencerCard = ({
             >
               @{influencer?.username || "No name available"}
             </span>
-            <div className="mb-4 flex ">
-              <Badge
-                key={influencer?.platform}
-                className=" flex items-center gap-2 bg-transparent border text-xs"
-              >
-                {influencer?.platform === "instagram" ? (
-                  <SiInstagram className="h-4 w-4 text-red-800" />
-                ) : influencer?.platform === "tiktok" ? (
-                  <SiTiktok className="h-4 w-4 text-red-800" />
-                ) : (
-                  <SiYoutube className="h-4 w-4 text-red-800" />
-                )}
-              </Badge>
+            <div className="line-clamp-2 w-40">
+              <p className="text-xs font-normal text-gray-500 truncate">
+                {influencer?.bio || "No bio available"}
+              </p>
             </div>
           </h3>
         </div>
       </div>
+      <div className="mb-4 flex justify-between">
+        <Badge className=" flex items-center gap-2 border text-xs">
+          {influencer?.country.toUpperCase()}
+        </Badge>
+        <Badge className=" flex items-center gap-2 bg-transparent border text-xs">
+          {influencer?.platform === "instagram" ? (
+            <SiInstagram className="h-4 w-4 text-red-800" />
+          ) : influencer?.platform === "tiktok" ? (
+            <SiTiktok className="h-4 w-4 text-red-800" />
+          ) : (
+            <SiYoutube className="h-4 w-4 text-red-800" />
+          )}
+        </Badge>
+      </div>
 
       <div className="text-center mb-4">
         <button
-          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-1.5 bg-black rounded-full transition-colors cursor-pointer"
+          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-1.5 bg-black rounded-full transition-colors cursor-pointer hover:bg-gray-800 shadow-2xl"
           onClick={() => {
             handleMessage(
               influencer?.platform as PlatformType,
@@ -310,7 +328,9 @@ const InfluencerCard = ({
             <CustomButton
               onClick={() => handleStatusChange("approved")}
               className=" bg-black border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
-              disabled={actionLoading !== null}
+              disabled={
+                actionLoading !== null || influencer?.admin_approved === true
+              }
             >
               {actionLoading === "approved" ? (
                 <Loader2 className="animate-spin text-white" />
@@ -357,7 +377,9 @@ const InfluencerCard = ({
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => onDelete(influencer?.platform, influencer.id)}
+            onClick={() =>
+              onDelete(influencer?.platform, influencer.influencer_id)
+            }
             className="cursor-pointer"
             disabled={deleteInfluencerhook.isPending}
           >

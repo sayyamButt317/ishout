@@ -7,6 +7,7 @@ import { getAuthTokenProvider } from "@/src/provider/auth-provide";
 import { UpdateCampaignStatusRequestProps, UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from "@/src/types/Admin-Type/Campaign.type";
 import { MessageTemplate } from "@/src/types/meta.type";
 import { UpdateUserStatusResponse } from "@/src/types/Admin-Type/usermanagment.type";
+import { RejectandRegenerateInfluencerRequest } from "@/src/types/Admin-Type/reject-influencers.type";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -79,6 +80,10 @@ export const AdminGenerateInfluencersApi = async (campaign_id: string, limit: nu
         campaign_id,
         limit
     });
+    return response.data;
+}
+export const AdminGeneratedInfluencersByIdApi = async (campaign_id: string) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_GENERATED_INFLUENCERS_BY_ID(campaign_id));
     return response.data;
 }
 export const AdminPendingCampaignApi = async (page: number = 1) => {
@@ -163,6 +168,11 @@ export const AdminUserManagementApi = async (page: number = 1) => {
 export const AdminUpdateUserStatusApi = async (user_id: string, status: string) => {
     const response = await api.patch<UpdateUserStatusResponse>(AdminENDPOINT.ADMIN_USER_MANAGEMENT_BY_ID(user_id), {}, { params: { status } });
     return response;
+}
+
+export const AdminRejectandRegenerateInfluencerApi = async (rejectInfluencerRequest: RejectandRegenerateInfluencerRequest) => {
+    const response = await api.post(AdminENDPOINT.ADMIN_REJECT_INFLUENCER, rejectInfluencerRequest);
+    return response.data;
 }
 export const SendOnboardingMessage = async (
     psid: number,

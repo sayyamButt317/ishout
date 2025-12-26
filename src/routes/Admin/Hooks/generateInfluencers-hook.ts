@@ -12,6 +12,7 @@ export default function AdminGenerateInfluencersHook() {
         onSuccess: async (data) => {
             setResults(data);
             await queryClient.invalidateQueries({ queryKey: ['pending-campaign'] });
+            await queryClient.invalidateQueries({ queryKey: ['generated-influencers'] });
         },
         onError: (error) => {
             const axiosError = error as AxiosError<{ detail: string }>;

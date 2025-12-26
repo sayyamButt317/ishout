@@ -13,9 +13,9 @@ import { useState } from "react";
 
 const ApprovedCampaignPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-
   const { data, isLoading, refetch, isRefetching } =
     ApprovedCampaignHook(currentPage);
+
   const updateCampaignStatusHook = UpdateCampaignStatusHook();
 
   const router = useRouter();
@@ -48,7 +48,6 @@ const ApprovedCampaignPage = () => {
           "Campaign Name",
           "Platform",
           "Requested ",
-          // "Approved ",
           "Status",
           "Created At",
           "View",
@@ -84,10 +83,7 @@ const ApprovedCampaignPage = () => {
             <div key={`created-at-${campaign._id}`} className="truncate">
               {new Date(campaign?.created_at).toLocaleDateString()}
             </div>,
-            <div
-              key={`view-${campaign._id}`}
-              className="truncate flex items-center justify-center"
-            >
+            <div key={`view-${campaign._id}`} className="truncate">
               <Button
                 className="cursor-pointer"
                 variant="outline"

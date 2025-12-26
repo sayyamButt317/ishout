@@ -20,20 +20,19 @@ export interface FoundedInfluencers {
 
 export interface ReadyMadeInfluencerResponse {
   _id: string;
-  id: string;
-  userId: string;
+  campaign_id: string;
+  influencer_id: string;
   country: string;
-  countryCode: string | null;
   followers: number;
   engagementRate: number;
-  name: string;
-  username: string;
   bio: string;
   picture: string;
-  page_content: string;
-  platform: string;
-  category: string;
-  company_name: string;
+  username: string;
+  platform: PlatformType;
+  status: string;
+  admin_approved: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ReadyMadeInfluencersRequest {

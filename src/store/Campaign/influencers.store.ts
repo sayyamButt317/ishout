@@ -5,7 +5,12 @@ import { persist, devtools, createJSONStorage } from "zustand/middleware";
 
 interface ApprovedInfluencersProps {
     approvedInfluencers: ReadyMadeInfluencerResponse[];
+    RejectedInfluencerId: string[];
+
     addApprovedInfluencer: (influencer: ReadyMadeInfluencerResponse) => void;
+    addRejectedInfluencerId: (influencerId: string) => void;
+    removeRejectedInfluencerId: (influencerId: string) => void;
+    clearRejectedInfluencerId: () => void;
     clearApprovedInfluencers: () => void;
 }
 
@@ -14,12 +19,20 @@ export const ApprovedInfluencersStore = create<ApprovedInfluencersProps>()(
         persist(
             (set, get) => ({
                 approvedInfluencers: [],
+                RejectedInfluencerId: [],
+
+                addRejectedInfluencerId: (influencerId: string) =>
+                    set({ RejectedInfluencerId: [...get().RejectedInfluencerId, influencerId] }),
+                removeRejectedInfluencerId: (influencerId: string) =>
+                    set({ RejectedInfluencerId: get().RejectedInfluencerId.filter((id) => id !== influencerId) }),
+
+                clearRejectedInfluencerId: () => set({ RejectedInfluencerId: [] }),
                 addApprovedInfluencer: (influencer: ReadyMadeInfluencerResponse) =>
                     set({ approvedInfluencers: [...get().approvedInfluencers, influencer] }),
                 clearApprovedInfluencers: () => set({ approvedInfluencers: [] }),
             }),
             {
-                name: "approved-influencers-store",
+                name: "InfluencersStore",
                 storage: createJSONStorage(() => localStorage),
             }
         )

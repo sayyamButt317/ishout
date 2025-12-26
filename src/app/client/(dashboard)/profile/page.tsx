@@ -84,7 +84,6 @@ export default function CompanyProfilePage() {
                     setIsEditing(false);
                   }
                 }}
-                // disabled={isEditing && !isPending ? true : false}
               >
                 {isEditing ? (
                   isPending ? (
