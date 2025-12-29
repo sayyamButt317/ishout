@@ -255,7 +255,7 @@ const InfluencerCard = ({
         <div className="grid grid-cols-2">
           {/* Followers */}
           <div className="text-center pr-4 border-r border-gray-300">
-            <div className="text-sm font-medium text-gray-950 flex items-center justify-center gap-1">
+            <div className="text-xs font-medium text-gray-950 flex items-center justify-center gap-1">
               FOLLOWERS
             </div>
             <div className="text-2xl font-bold text-gray-950 mb-1">
@@ -265,7 +265,7 @@ const InfluencerCard = ({
 
           {/* Engagement Rate */}
           <div className="text-center pl-4">
-            <div className="text-sm font-medium text-gray-400 flex items-center justify-center gap-1">
+            <div className="text-xs font-medium text-gray-400 flex items-center justify-center gap-1">
               ENGAGEMENT
             </div>
             <div className="text-2xl font-bold text-gray-950 mb-1">
