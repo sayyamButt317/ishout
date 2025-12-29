@@ -13,7 +13,7 @@ export const employeeSidebarLinks = [
   {
     //   img: '/images/community.png',
     label: "Create Campaign",
-    route: "/client/create-campaign",
+    route: "/client/choose-campaign",
     icon: <Plus className="w-5 h-5" />,
   },
 
