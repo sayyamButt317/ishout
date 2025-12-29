@@ -12,7 +12,8 @@ import {
   XCircle,
   Loader2,
   DollarSign,
-  UserCheck,
+  MapPin,
+  MessageCircleIcon,
 } from "lucide-react";
 import DeleteInfluencerhook from "@/src/routes/Admin/Hooks/deleteinfluencer-hook";
 
@@ -146,8 +147,21 @@ const InfluencerCard = ({
     }
   };
 
+  const handleViewProfile = () => {
+    if (influencer?.platform === "instagram") {
+      window.open(`https://ig.me/m/${influencer?.username}`, "_blank");
+    } else if (influencer?.platform === "tiktok") {
+      window.open(`https://www.tiktok.com/@${influencer?.username}`, "_blank");
+    } else if (influencer?.platform === "youtube") {
+      window.open(`https://www.youtube.com/@${influencer?.username}`, "_blank");
+    }
+  };
+
   return (
-    <article className="group relative w-full rounded-xl border bg-white backdrop-blur-sm text-white p-2 shadow-lg hover:shadow-xl transition-shadow overflow-hidden">
+    <article
+      className="group relative w-full max-w-5xl mx-auto rounded-xl border bg-white backdrop-blur-sm text-white p-4 shadow-lg hover:shadow-xl transition-shadow overflow-hidden
+"
+    >
       <div className="absolute top-0 right-0">
         <Badge className=" flex items-center gap-2 border text-xs">
           {influencer?.admin_approved === true ? (
@@ -173,14 +187,14 @@ const InfluencerCard = ({
         <Image
           src={influencer?.picture}
           alt={influencer?.username}
-          width={60}
-          height={60}
-          className="h-16 w-16 rounded-full object-cover"
+          width={80}
+          height={80}
+          className="h-20 w-20 rounded-full object-cover p-1 bg-gray-100"
         />
         <div className="flex flex-col gap-2 justify-center">
           <h3 className="text-lg font-semibold text-black">
             <span
-              className="text-sm font-medium hover:text-blue-600 hover:underline cursor-pointer truncate"
+              className="text-xs font-semibold hover:text-blue-600 hover:underline cursor-pointer truncate"
               onClick={() =>
                 window.open(
                   UsernameLink(
@@ -195,16 +209,14 @@ const InfluencerCard = ({
             </span>
             <div className="line-clamp-2 w-40">
               <p className="text-xs font-normal text-gray-500 truncate">
-                {influencer?.bio || "No bio available"}
+                <MapPin className="h-4 w-4 text-gray-500 inline-block mr-1" />
+                {influencer?.country}
               </p>
             </div>
           </h3>
         </div>
       </div>
-      <div className="mb-4 flex justify-between">
-        <Badge className=" flex items-center gap-2 border text-xs">
-          {influencer?.country.toUpperCase()}
-        </Badge>
+      <div className="mb-4 flex justify-end">
         <Badge className=" flex items-center gap-2 bg-transparent border text-xs">
           {influencer?.platform === "instagram" ? (
             <SiInstagram className="h-4 w-4 text-red-800" />
@@ -216,9 +228,17 @@ const InfluencerCard = ({
         </Badge>
       </div>
 
-      <div className="text-center mb-4">
-        <button
-          className="mt-2 w-full flex items-center justify-center gap-2 px-3 py-1.5 bg-black rounded-full transition-colors cursor-pointer hover:bg-gray-800 shadow-2xl"
+      <div className="items-center justify-center text-center mb-4 flex flex-row gap-0.5 w-full">
+        <CustomButton
+          onClick={() => {
+            handleViewProfile();
+          }}
+          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-gray-800 text-gray-950 rounded-full transition-colors cursor-pointer shadow-2xl"
+        >
+          View Profile
+        </CustomButton>
+        <CustomButton
+          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-gray-800 text-gray-950 rounded-full transition-colors cursor-pointer shadow-2xl"
           onClick={() => {
             handleMessage(
               influencer?.platform as PlatformType,
@@ -226,29 +246,30 @@ const InfluencerCard = ({
             );
           }}
         >
-          {/* <MessageCircle className="h-4 w-4cursor-pointer" /> */}
-          <span className="text-sm text-white">Message</span>
-        </button>
+          <MessageCircleIcon className="h-4 w-4cursor-pointer" />
+          <span className="text-sm font-medium text-gray-950">Message</span>
+        </CustomButton>
       </div>
 
-      <div className="bg-white rounded-lg p-4 mb-4 shadow-2xl">
-        <div className="grid grid-cols-2 gap-4">
-          {/* Engagement Rate */}
-          <div className="text-center">
-            <div className="text-2xl font-bold text-black mb-1">
-              {engagementPercentage(influencer?.engagementRate)}%
-            </div>
-            <div className="text-xs text-gray-400 flex items-center justify-center gap-1">
-              <CircleCheck className="h-4 w-4 text-black" /> Engagement
-            </div>
-          </div>
+      <div className="bg-gray-100 p-4 mb-4 shadow-2xl border-2 border-gray-200 rounded-2xl">
+        <div className="grid grid-cols-2">
           {/* Followers */}
-          <div className="text-center">
-            <div className="text-2xl font-bold text-black mb-1">
+          <div className="text-center pr-4 border-r border-gray-300">
+            <div className="text-sm font-medium text-gray-950 flex items-center justify-center gap-1">
+              FOLLOWERS
+            </div>
+            <div className="text-2xl font-bold text-gray-950 mb-1">
               {formatFollowers(influencer?.followers || 0)}
             </div>
-            <div className="text-xs text-gray-400 flex items-center justify-center gap-1">
-              <UserCheck className="h-4 w-4 text-black" /> Followers
+          </div>
+
+          {/* Engagement Rate */}
+          <div className="text-center pl-4">
+            <div className="text-sm font-medium text-gray-400 flex items-center justify-center gap-1">
+              ENGAGEMENT
+            </div>
+            <div className="text-2xl font-bold text-gray-950 mb-1">
+              {engagementPercentage(influencer?.engagementRate)}%
             </div>
           </div>
         </div>
@@ -327,7 +348,7 @@ const InfluencerCard = ({
           {showAccept && (
             <CustomButton
               onClick={() => handleStatusChange("approved")}
-              className=" bg-black border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className=" bg-secondaryButton border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
               disabled={
                 actionLoading !== null || influencer?.admin_approved === true
               }
@@ -347,7 +368,7 @@ const InfluencerCard = ({
                 setShowPriceInputs(false);
                 handleStatusChange("rejected");
               }}
-              className=" bg-black/10 hover:bg-black/20 border text-red-500 text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className=" bg-primaryButton hover:bg-black/20 border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
               disabled={actionLoading !== null}
             >
               {actionLoading === "rejected" ? (
@@ -380,7 +401,7 @@ const InfluencerCard = ({
             onClick={() =>
               onDelete(influencer?.platform, influencer.influencer_id)
             }
-            className="cursor-pointer"
+            className="cursor-pointer border border-primaryButton text-primaryButton hover:bg-primaryButton hover:text-white text-sm font-medium py-2.5 rounded-lg "
             disabled={deleteInfluencerhook.isPending}
           >
             {deleteInfluencerhook.isPending ? (

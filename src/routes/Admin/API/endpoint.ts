@@ -28,6 +28,7 @@ export const AdminENDPOINT = {
     ADMIN_USER_MANAGEMENT: `/admin/user-management`,
     ADMIN_USER_MANAGEMENT_BY_ID: (user_id: string) => `/admin/user-management/${user_id}`,
     ADMIN_REJECT_INFLUENCER: `/admin/campaigns/reject-and-regenerate`,
+    ADMIN_MORE_INFLUENCER: `/admin/more-influencers`,
 
     ADMIN_REPLY_INSTAGRAM_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`,
     META_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`
