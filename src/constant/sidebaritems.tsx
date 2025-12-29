@@ -17,12 +17,6 @@ export const employeeSidebarLinks = [
     icon: <Plus className="w-5 h-5" />,
   },
 
-  // {
-  //   //   img: '/images/users.png',
-  //   label: "Approved Campaigns",
-  //   route: "/client/approved-campaign",
-  //   icon: <CircleCheck className="w-5 h-5" />,
-  // },
   {
     label: "Review Influencer",
     route: "/client/influencer-review",

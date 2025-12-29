@@ -6,17 +6,15 @@ import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
 import UpdateInfluencerStatusHook from "@/src/routes/Admin/Hooks/updateinfluencerstatus-hook";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";
-import { Download } from "lucide-react";
+import { Download, Loader2Icon } from "lucide-react";
 import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
 import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
-import {
-  ReadyMadeInfluencerResponse,
-  ReadyMadeInfluencersApiResponse,
-} from "@/src/types/readymadeinfluencers-type";
+import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import GeneratedInfluencersByIdHook from "@/src/routes/Admin/Hooks/generated-influencers-hook";
+import GenerateMoreInfluencersHook from "@/src/routes/Admin/Hooks/generatemore-influencers-hook";
 // import { useRejectedInfluencersStore } from "@/src/store/Campaign/reject-influencer.store";
 
 export default function PendingCampaignByIdPage() {
@@ -27,6 +25,7 @@ export default function PendingCampaignByIdPage() {
   const { data } = CampaignByIdHook(Id ?? "");
   const updateInfluencerStatus = UpdateInfluencerStatusHook();
   const { data: generatedInfluencers } = GeneratedInfluencersByIdHook(Id ?? "");
+  const generateMoreInfluencers = GenerateMoreInfluencersHook();
   const router = useRouter();
 
   const handleUpdateInfluencerStatus = async (
@@ -93,26 +92,42 @@ export default function PendingCampaignByIdPage() {
         </div>
       </div>
       {/* Action Bar */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
+      <div className="w-full mx-auto px-4 sm:px-6 mt-6">
         <div className="bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl p-4 sm:p-5 shadow-lg">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-wrap">
             {/* Status Section */}
-            <div className="flex items-center gap-3 w-full sm:w-auto">
-              <label className="text-sm font-medium text-slate-300 whitespace-nowrap">
-                Campaign Status:
+            <div className="flex items-center gap-3 flex-shrink-0 w-full sm:w-auto">
+              <label className="text-sm font-semibold text-white whitespace-nowrap">
+                Status:
               </label>
               <DropDownCustomStatus
                 status={data?.status}
-                updateStatus={(status: string) => {
-                  handleUpdateCampaignStatus(status);
-                }}
+                updateStatus={(status: string) =>
+                  handleUpdateCampaignStatus(status)
+                }
               />
             </div>
-            <h1 className="text-xs font-normal text-slate-300 whitespace-nowrap">
+
+            {/* Generate More Influencers Button */}
+            <CustomButton
+              className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
+              onClick={() =>
+                generateMoreInfluencers.mutate({ campaign_id: Id ?? "" })
+              }
+            >
+              {generateMoreInfluencers.isPending ? (
+                <Loader2Icon className="w-4 h-4 animate-spin" />
+              ) : (
+                "Generate More Influencers"
+              )}
+            </CustomButton>
+
+            {/* Approved Influencers Count */}
+            <h1 className="text-sm font-normal text-slate-300 whitespace-nowrap w-full sm:w-auto text-center sm:text-left">
               Generated Influencers:{" "}
               <span className="font-bold">{generatedInfluencers?.length}</span>
             </h1>
-            <h1 className="text-xs font-normal text-slate-300 whitespace-nowrap">
+            <h1 className="text-sm font-normal text-slate-300 whitespace-nowrap w-full sm:w-auto text-center sm:text-left">
               Approved Influencers:{" "}
               <span className="font-bold">
                 {ApprovedInfluencersStore.getState().approvedInfluencers.length}
@@ -123,10 +138,8 @@ export default function PendingCampaignByIdPage() {
             {ApprovedInfluencersStore.getState().approvedInfluencers.length >
               0 && (
               <CustomButton
-                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 border border-emerald-500/30"
-                onClick={() => {
-                  ExportToExcel();
-                }}
+                className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
+                onClick={() => ExportToExcel()}
               >
                 <Download className="h-4 w-4" />
                 <span>Export Approved Influencers</span>

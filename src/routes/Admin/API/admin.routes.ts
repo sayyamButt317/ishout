@@ -1,4 +1,4 @@
-import { DeleterInfluenceerequest, MoreInfluencerRequest, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from "@/src/types/readymadeinfluencers-type";
+import { DeleterInfluenceerequest, GeneratedMoreInfluencerRequest, MoreInfluencerRequest, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from "@/src/types/readymadeinfluencers-type";
 import { AdminENDPOINT } from "./endpoint";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { toast } from "sonner";
@@ -174,6 +174,13 @@ export const AdminRejectandRegenerateInfluencerApi = async (rejectInfluencerRequ
     const response = await api.post(AdminENDPOINT.ADMIN_REJECT_INFLUENCER, rejectInfluencerRequest);
     return response.data;
 }
+export const AdminMoreInfluencerApi = async (moreInfluencerRequest: GeneratedMoreInfluencerRequest) => {
+    const response = await api.post(AdminENDPOINT.ADMIN_MORE_INFLUENCER, {
+        campaign_id: moreInfluencerRequest.campaign_id
+    });
+    return response.data;
+}
+
 export const SendOnboardingMessage = async (
     psid: number,
     messageTemplate: MessageTemplate

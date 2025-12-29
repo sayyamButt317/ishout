@@ -75,6 +75,10 @@ export interface MoreInfluencerRequest {
   exclude_ids: string[];
 }
 
+export interface GeneratedMoreInfluencerRequest {
+  campaign_id: string;
+}
+
 export interface MoreInfluencerReplacePayload {
   request: MoreInfluencerRequest;
   replaceId: string;
@@ -96,3 +100,33 @@ export interface ApprovedInfluencersResponse {
     strategy: string;
   };
 }
+
+interface TemplateProps {
+  _id: string[];
+  username: string[];
+  platform: string[];
+  category: string[];
+  limit: string;
+  followers: string[];
+  country: string[];
+  campaign_id: string;
+  iseditable: boolean;
+  isSelected: boolean;
+  results?: ReadyMadeInfluencersApiResponse[];
+
+  setField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray'>>(
+    field: K,
+    value: TemplateProps[K]
+  ) => void;
+
+  getField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray'>>(
+    field: K
+  ) => TemplateProps[K];
+
+  addToArray: (field: "platform" | "category" | "followers" | "country", value: string) => void;
+  removeFromArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
+  clearArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
+  clearTemplate: () => void;
+  setResults: (results: ReadyMadeInfluencersApiResponse[] | undefined) => void;
+}
+
