@@ -5,7 +5,7 @@ export interface UserManagementResponse {
     email: string;
     phone: string;
     status: string;
-    created_at: string;
+    role: string;
 }
 
 
