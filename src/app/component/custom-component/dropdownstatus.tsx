@@ -17,6 +17,7 @@ interface StatusProps {
 
 export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
   const [selectedStatus, setSelectedStatus] = React.useState(status);
+
   React.useEffect(() => {
     setSelectedStatus(status);
   }, [status]);
@@ -25,6 +26,7 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
     setSelectedStatus(value);
     updateStatus(value);
   };
+
   const getButtonStyle = () => {
     switch (selectedStatus) {
       case "rejected":
@@ -45,13 +47,20 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
       <DropdownMenuTrigger asChild>
         <Badge
           variant="outline"
-          className={`capitalize ${getButtonStyle()} w-full cursor-pointer text-xs sm:text-sm`}
+          className={`
+            capitalize ${getButtonStyle()} 
+            w-full max-w-[200px] sm:w-auto 
+            cursor-pointer text-xs sm:text-sm
+            truncate
+          `}
         >
-          {selectedStatus || "select status"}
+          {selectedStatus || "Select status"}
         </Badge>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-30 sm:w-56 bg-amber-50 backdrop-blur">
+
+      <DropdownMenuContent className="bg-amber-50 backdrop-blur min-w-full sm:min-w-[14rem]">
         <DropdownMenuSeparator />
+
         <DropdownMenuRadioGroup
           value={selectedStatus}
           onValueChange={handleStatusChange}

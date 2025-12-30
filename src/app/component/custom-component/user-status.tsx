@@ -27,8 +27,8 @@ export function UserStatus({ status, updateStatus }: StatusProps) {
   };
   const getButtonStyle = () => {
     switch (selectedStatus) {
-      case "inactive":
-        return "bg-[#f3004020] text-[#fa1c57]";
+      // case "inactive":
+      //   return "bg-[#f3004020] text-[#fa1c57]";
       case "active":
         return "bg-[#25e76620] text-[#25e766]";
       case "suspended":
@@ -60,12 +60,12 @@ export function UserStatus({ status, updateStatus }: StatusProps) {
           >
             Active
           </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem
+          {/* <DropdownMenuRadioItem
             className="text-[#fa1c57] border-red-400 text-xs sm:text-sm"
             value="inactive"
           >
             Inactive
-          </DropdownMenuRadioItem>
+          </DropdownMenuRadioItem> */}
           <DropdownMenuRadioItem
             className="text-[#e2a513] border-yellow-400 text-xs sm:text-sm"
             value="suspended"

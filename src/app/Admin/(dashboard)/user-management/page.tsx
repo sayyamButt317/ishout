@@ -12,7 +12,6 @@ export default function UserManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } = AllUsersHook(currentPage);
   const updateUserStatus = UpdateUserStatusHook();
-  console.log(data);
 
   return (
     <>
@@ -75,8 +74,8 @@ export default function UserManagementPage() {
           "contact Person",
           "Email",
           "Phone",
+          "Role",
           "Status",
-          "Created At",
         ]}
         subheader={data?.users?.map((user: UserManagementResponse) => [
           <div key={`company-name-${user.user_id}`} className="truncate">
@@ -91,8 +90,8 @@ export default function UserManagementPage() {
           <div key={`phone-${user.user_id}`} className="truncate">
             {user?.phone}
           </div>,
-          <div key={`created-at-${user.user_id}`} className="truncate">
-            {new Date(user.created_at).toLocaleDateString()}
+          <div key={`role-${user.user_id}`} className="truncate">
+            {user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1)}
           </div>,
           <div
             key={`status-${user.user_id}`}
