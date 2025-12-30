@@ -18,7 +18,7 @@ export default function LoginMutation() {
             setUserId(data.user.user_id);
             setCompanyName(data.user.company_name);
             if (data.user.role === "company") {
-                router.replace('/client/create-campaign');
+                router.replace('/client/choose-campaign');
                 toast.success('Login successful to iShout', {
                     description: 'You are now logged in',
                 });
