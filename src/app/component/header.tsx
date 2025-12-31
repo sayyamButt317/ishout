@@ -69,13 +69,13 @@ const Header = () => {
           {!token ? (
             <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
               <Link href="/auth/login">
-                <CustomButton className="px-3 sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap">
+                <CustomButton className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap">
                   Login
                 </CustomButton>
               </Link>
 
               <Link href="/auth/register">
-                <CustomButton className="px-3 sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap">
+                <CustomButton className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap">
                   Register
                 </CustomButton>
               </Link>

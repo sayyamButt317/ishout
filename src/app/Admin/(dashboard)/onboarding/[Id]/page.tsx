@@ -11,14 +11,13 @@ import {
   UsernameLink,
 } from "@/src/helper/followersformat";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
-import { ArrowLeft, MessageCircle, RefreshCcw, Send } from "lucide-react";
+import { ArrowLeft, MessageCircle, Phone, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
 import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
-import { SendOnboardingMessage } from "@/src/routes/Admin/API/admin.routes";
-import { toast } from "sonner";
+import ChooseOptionDialog from "@/src/app/component/custom-component/choseoptionDialogue";
 
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
@@ -28,6 +27,14 @@ export default function OnboardingInfluencerByCampaignId() {
     Id,
     currentPage
   );
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedInfluencer, setSelectedInfluencer] = useState<{
+    username: string;
+    platform: string;
+    picture: string;
+    influencer_id: string;
+  } | null>(null);
 
   const handleMessage = useCallback(
     (platform: PlatformType, username: string) => {
@@ -114,6 +121,7 @@ export default function OnboardingInfluencerByCampaignId() {
           "Platform",
           "Admin",
           "Company",
+          "Phone",
           "Send Message",
         ]}
         subheader={data?.influencers?.map(
@@ -177,6 +185,29 @@ export default function OnboardingInfluencerByCampaignId() {
               className="text-xs text-slate-400"
             >
               <Button
+                variant="outline"
+                onClick={() => {
+                  setSelectedInfluencer({
+                    username: influencer.username,
+                    platform: influencer.platform,
+                    picture: influencer.picture,
+                    influencer_id: influencer._id,
+                  });
+
+                  setDialogOpen(true);
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  Add
+                  <Phone className="h-4 w-4" />
+                </span>
+              </Button>
+            </div>,
+            <div
+              key={`action-${influencer._id}`}
+              className="text-xs text-slate-400"
+            >
+              <Button
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() => {
@@ -195,6 +226,11 @@ export default function OnboardingInfluencerByCampaignId() {
         paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => setCurrentPage(page)}
         isLoading={isLoading}
+      />
+      <ChooseOptionDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        influencer={selectedInfluencer}
       />
     </>
   );

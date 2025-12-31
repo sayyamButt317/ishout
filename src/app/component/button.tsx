@@ -19,17 +19,17 @@ const CustomButton = ({
   style,
 }: CustomButtonProps) => {
   return (
-    <>
-      <Button
-        disabled={disabled}
-        onClick={onClick}
-        style={style}
-        className={`italic text-sm  font-sm flex-none text-white text-center justify-center flex gap-2 items-center rounded-md group relative overflow-hidden duration-75 z-20 px-6 h-9 transition-all cursor-pointer lg:pl-7 lg:pr-4 
-        ${className}`}
-      >
-        {children}
-      </Button>
-    </>
+    <Button
+      disabled={disabled}
+      onClick={onClick}
+      style={style}
+      className={`
+        italic text-white text-sm font-sm flex-nonetext-white flex items-center justify-center gap-2 rounded-md px-6 h-9 cursor-pointer transition-all duration-75 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0
+        ${className}
+      `}
+    >
+      {children}
+    </Button>
   );
 };
 

@@ -29,3 +29,8 @@ export interface InfluencerReviewApiResponse {
     influencers?: ReviewInfluencerResponse[];
 }
 
+export interface AddInfluencersNumberRequest {
+    influencer_id: string;
+    phone_number: string;
+    platform: string;
+}
