@@ -8,6 +8,7 @@ import { UpdateCampaignStatusRequestProps, UpdateInfluencerStatusRequestProps, U
 import { MessageTemplate } from "@/src/types/meta.type";
 import { UpdateUserStatusResponse } from "@/src/types/Admin-Type/usermanagment.type";
 import { RejectandRegenerateInfluencerRequest } from "@/src/types/Admin-Type/reject-influencers.type";
+import { AddInfluencersNumberRequest } from "@/src/types/Admin-Type/review-influencer";
 
 const api = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -177,6 +178,15 @@ export const AdminRejectandRegenerateInfluencerApi = async (rejectInfluencerRequ
 export const AdminMoreInfluencerApi = async (moreInfluencerRequest: GeneratedMoreInfluencerRequest) => {
     const response = await api.post(AdminENDPOINT.ADMIN_MORE_INFLUENCER, {
         campaign_id: moreInfluencerRequest.campaign_id
+    });
+    return response.data;
+}
+
+export const AdminAddInfluencersNumberApi = async (addInfluencersNumberRequest: AddInfluencersNumberRequest) => {
+    const response = await api.post(AdminENDPOINT.ADMIN_ADD_INFLUENCERS_NUMBER, {
+        influencer_id: addInfluencersNumberRequest.influencer_id,
+        phone_number: addInfluencersNumberRequest.phone_number,
+        platform: addInfluencersNumberRequest.platform,
     });
     return response.data;
 }

@@ -133,12 +133,12 @@ export default function Login() {
                 />
 
                 <div className="flex items-center justify-between">
-                  {/* <Link
+                  <Link
                     href="/forgot-password"
                     className="text-primary text-xs hover:underline"
                   >
-                    Forgot password?
-                  </Link> */}
+                    Forget password?
+                  </Link>
                 </div>
 
                 <CustomButton
