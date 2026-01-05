@@ -1,9 +1,11 @@
 import {
   Bell,
+  ChartBar,
   CircleCheck,
   // FileText,
   Hourglass,
   LayoutGrid,
+  MessageCircle,
   Plus,
   User,
   UserCheck,
@@ -67,8 +69,18 @@ export const adminSidebarLinks = [
     icon: <UserCheck className="w-5 h-5" />,
   },
   {
+    label: "WhatsApp Chat",
+    route: "/Admin/whatsapp-chat",
+    icon: <MessageCircle className="w-5 h-5" />,
+  },
+  {
     label: "Instagram Notifications",
     route: "/Admin/messages",
     icon: <Bell className="w-5 h-5" />,
+  },
+  {
+    label: "Analytics",
+    route: "/Admin/analytics",
+    icon: <ChartBar className="w-5 h-5" />,
   },
 ];

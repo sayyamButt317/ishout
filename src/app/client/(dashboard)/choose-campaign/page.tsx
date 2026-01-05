@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import CustomButton from "@/src/app/component/button";
 import openWhatsApp from "@/src/app/component/custom-component/companywhastapp";
-import { Sparkles, MessageCircle } from "lucide-react";
+import { Sparkles, MessageCircle, Wand2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const options = [
@@ -20,6 +20,13 @@ const options = [
     description: "Create and manage a full WhatsApp outreach campaign.",
     icon: MessageCircle,
   },
+  // {
+  //   id: "guided",
+  //   title: "Guided Questions",
+  //   description: "Answer a few questions and we’ll tailor everything for you.",
+  //   icon: Wand2,
+  //   route: "/client/answer-guided",
+  // },
 ];
 
 export default function ChooseCampaign() {
