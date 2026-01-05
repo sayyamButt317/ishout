@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import WhatsAppMessagesHook from "@/src/routes/Admin/Hooks/whatsappmessages-hook";
 import { MessageBubble } from "@/src/app/component/custom-component/messgaeBubble";
 import { AdminTakeoverToggle } from "@/src/app/component/custom-component/admintoggle";
@@ -8,48 +8,68 @@ import { ChatInput } from "@/src/app/component/custom-component/inputbar";
 import Spinner from "@/src/app/component/custom-component/spinner";
 import SendWhatsappMessageHook from "@/src/routes/Admin/Hooks/sendwhatsappmessage-hook";
 import HumanTakeoverHook from "@/src/routes/Admin/Hooks/humantakeover-hook";
-
-interface MessageProps {
-  _id: string;
-  username?: string;
-  sender: "AI" | "USER" | "ADMIN";
-  message: string;
-  timestamp: string;
-}
+import ToogleStatusHook from "@/src/routes/Admin/Hooks/tooglestatus-hook";
+import {
+  ChatMessage,
+  useWhatsAppChatStore,
+} from "@/src/store/Campaign/chat.store";
 
 export default function WhatsAppChatById() {
   const { Id } = useParams<{ Id: string }>();
-  const { data, isPending, refetch } = WhatsAppMessagesHook(Id ?? "", 1, 50);
+  const { data, isPending } = WhatsAppMessagesHook(Id ?? "", 1, 50);
+  const [message, setMessage] = useState<string>("");
 
-  const [adminTakeover, setAdminTakeover] = useState(false);
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<MessageProps[]>([]);
+  const [adminTakeover, setAdminTakeover] = useState<boolean | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  const messages = useWhatsAppChatStore((s) => s.chats[Id ?? ""] || []);
+  const addMessage = useWhatsAppChatStore((s) => s.addMessage);
+  const setMessages = useWhatsAppChatStore((s) => s.setMessages);
 
   const sendMessage = SendWhatsappMessageHook(Id ?? "");
   const humantakeover = HumanTakeoverHook(Id ?? "");
+  const toogleStatus = ToogleStatusHook(Id ?? "");
 
   useEffect(() => {
-    if (data?.messages) {
-      setMessages(data.messages);
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length]);
+
+  useEffect(() => {
+    if (data?.messages && Id) {
+      setMessages(Id, data.messages);
     }
-  }, [data]);
+  }, [data?.messages, Id, setMessages]);
+
+  useEffect(() => {
+    if (!toogleStatus.data) return;
+    setAdminTakeover(toogleStatus.data.mode === "HUMAN_TAKEOVER");
+  }, [toogleStatus.data]);
 
   const handleAdminToggle = (enabled: boolean) => {
     setAdminTakeover(enabled);
-    humantakeover.mutate(enabled);
+    humantakeover.mutate(enabled, {
+      onError: () => {
+        setAdminTakeover((prev) => !prev);
+      },
+      onSuccess: () => {
+        toogleStatus.refetch();
+      },
+    });
   };
 
-  const handleSend = (message: string) => {
-    if (!message.trim() || !adminTakeover) return;
+  const handleSend = (msg: string) => {
+    if (!msg.trim() || !adminTakeover) return;
 
-    const newMessage: MessageProps = {
-      _id: Date.now().toString(),
+    const newMessage: ChatMessage = {
+      _id: crypto.randomUUID(),
+      thread_id: Id ?? "",
       sender: "ADMIN",
-      message,
+      message: msg,
       timestamp: new Date().toISOString(),
     };
-    setMessages((prev) => [...prev, newMessage]);
-    sendMessage.mutate(message);
+
+    addMessage(Id!, newMessage);
+    sendMessage.mutate(msg);
     setMessage("");
   };
 
@@ -64,10 +84,15 @@ export default function WhatsAppChatById() {
             {adminTakeover ? "Human takeover active" : "AI agent active"}
           </p>
         </div>
-        <AdminTakeoverToggle
-          enabled={adminTakeover}
-          onChange={handleAdminToggle}
-        />
+        {adminTakeover === null ? (
+          <Spinner />
+        ) : (
+          <AdminTakeoverToggle
+            enabled={adminTakeover}
+            onChange={handleAdminToggle}
+            disabled={humantakeover.isPending || toogleStatus.isFetching}
+          />
+        )}
       </div>
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
         {isPending ? (
@@ -75,19 +100,22 @@ export default function WhatsAppChatById() {
             <Spinner />
           </div>
         ) : (
-          messages.map((msg) => (
-            <MessageBubble
-              key={msg._id}
-              message={msg.message}
-              sender={msg.sender}
-              timestamp={msg.timestamp}
-            />
-          ))
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
+            {messages.map((msg) => (
+              <MessageBubble
+                key={msg._id || `${msg.timestamp}-${msg.sender}`}
+                message={msg.message}
+                sender={msg.sender}
+                timestamp={msg.timestamp}
+              />
+            ))}
+            <div ref={bottomRef} />
+          </div>
         )}
       </div>
 
       <ChatInput
-        enabled={adminTakeover}
+        enabled={!!adminTakeover && !humantakeover.isPending}
         value={message}
         onChange={setMessage}
         onSend={() => handleSend(message)}

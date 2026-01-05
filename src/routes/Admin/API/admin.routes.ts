@@ -232,6 +232,10 @@ export const SendWhatsappMessageApi = async (thread_id: string, message: string)
     return response.data;
 }
 
+export const ToogleStatusApi = async (thread_id: string) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_TAKEOVER_TOGGLE(thread_id));
+    return response.data;
+}
 export const SendOnboardingMessage = async (
     psid: number,
     messageTemplate: MessageTemplate

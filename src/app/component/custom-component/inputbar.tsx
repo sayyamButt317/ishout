@@ -30,9 +30,9 @@ export function ChatInput({
       <Button
         disabled={!enabled || !value.trim()}
         onClick={onSend}
-        className="bg-green-600 hover:bg-green-700"
+        className="bg-green-600 text-white hover:bg-green-700"
       >
-        <Send className="h-4 w-4" />
+        <Send className="h-4 w-4 text-white" />
       </Button>
     </div>
   );

@@ -3,7 +3,6 @@ import Spinner from "@/src/app/component/custom-component/spinner";
 import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
 import ApprovedCampaignByIdHook from "@/src/routes/Admin/Hooks/approvedCampaignById-hook";
 import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
-import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";

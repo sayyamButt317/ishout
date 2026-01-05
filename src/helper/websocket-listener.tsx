@@ -1,155 +1,134 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { AdminENDPOINT } from "@/src/routes/Admin/API/endpoint";
 import { getAuthTokenProvider } from "@/src/provider/auth-provide";
-import { useNotificationStore } from "@/src/store/Campaign/notification.store";
+import { useWhatsAppSessionStore } from "../store/Campaign/whatsappSession.store";
 import {
-  Attachment,
-  InstagramWebhookData,
-  InstagramWebhookEntry,
-  InstagramWebhookMessage,
-} from "../types/Admin-Type/websocket.type";
-
-type LegacyData = {
-  from_psid: string;
-  from_username: string;
-  text: string;
-  timestamp: number;
-  attachments: Attachment[];
-};
-type Notification = {
-  type: string;
-  from_psid: string;
-  from_username: string;
-  text: string;
-  timestamp: number;
-  attachments: Attachment[];
-};
+  ChatMessage,
+  useWhatsAppChatStore,
+} from "../store/Campaign/chat.store";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { WhatsAppSession } from "../types/whatsapp-type";
 
 export default function WebSocketListener() {
-  // Use selector to prevent unnecessary re-renders
-  const addNotification = useNotificationStore(
-    (state) => state.addNotification
-  );
+  const router = useRouter();
+  const pathname = usePathname();
+  const toastQueueRef = useRef<Record<string, boolean>>({});
+  const { Id: currentThreadId } = useParams<{ Id: string }>();
+  const addMessage = useWhatsAppChatStore((s) => s.addMessage);
+  const updateSession = useWhatsAppSessionStore((s) => s.updateSession);
+
+  const socketRef = useRef<WebSocket | null>(null);
+  const hasConnectedOnce = useRef(false);
 
   useEffect(() => {
     const token = getAuthTokenProvider();
-    if (!token) return;
+    if (!token) {
+      console.warn("❌ WS: No auth token found");
+      return;
+    }
 
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
     const wsUrl = backendUrl
       .replace("https://", "wss://")
       .replace("http://", "ws://");
 
-    const fullWsUrl = `${wsUrl}${AdminENDPOINT.ADMIN_INSTAGRAM_NOTIFICATION}?token=${token}`;
+    const fullWsUrl = `${wsUrl}${AdminENDPOINT.ADMIN_NOTIFICATION}?token=${token}`;
+    console.log("🔌 WS connecting →", fullWsUrl);
     const socket = new WebSocket(fullWsUrl);
+
+    socketRef.current = socket;
     socket.onopen = () => {
-      console.info("info", "WebSocket connected successfully");
-    };
+      console.log("✅ WS connected");
 
-    socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data) as InstagramWebhookData;
-        if (data.object === "instagram" && data.entry) {
-          data.entry.forEach((entry: InstagramWebhookEntry) => {
-            entry.messaging?.forEach(
-              (messagingEvent: InstagramWebhookMessage) => {
-                const message = messagingEvent.message;
-                const sender = messagingEvent.sender;
-                const timestamp = messagingEvent.timestamp;
-
-                if (message) {
-                  const notification = {
-                    type: "ig_reply",
-                    from_psid: sender.id,
-                    from_username:
-                      sender.username || `User_${sender.id.slice(-6)}`,
-                    text: message.text || "",
-                    attachments: (message.attachments || []).map((att) => ({
-                      type: att.type as "image" | "video" | "audio" | "file",
-                      payload: att.payload,
-                    })),
-                    timestamp: timestamp,
-                    mid: message.mid,
-                  };
-
-                  addNotification(notification);
-
-                  let description = "";
-                  if (message.text) {
-                    description =
-                      message.text.substring(0, 50) +
-                      (message.text.length > 50 ? "..." : "");
-                  } else if (
-                    message.attachments &&
-                    message.attachments.length > 0
-                  ) {
-                    const attachmentType = message.attachments[0].type;
-                    description = `Sent a ${attachmentType}`;
-                  }
-
-                  toast.success(
-                    `New message from ${notification.from_username}`,
-
-                    {
-                      description: description,
-                    }
-                  );
-                }
-              }
-            );
-          });
-        }
-        // Legacy format support (if backend sends processed data)
-        else if (data.type === "ig_reply" && data.from_username) {
-          // Convert legacy attachments format to new format
-          const legacyData = data as LegacyData;
-          const notification: Notification = {
-            type: "ig_reply",
-            from_psid: legacyData.from_psid,
-            from_username: legacyData.from_username,
-            text: legacyData.text || "",
-            timestamp: legacyData.timestamp,
-            attachments: (legacyData.attachments || []).map(
-              (att: Attachment) => ({
-                type: att.type as "image" | "video" | "audio" | "file",
-                payload: {
-                  url: att.url || att.payload?.url || "",
-                },
-              })
-            ),
-          };
-
-          addNotification(notification);
-
-          let description = "";
-          if (notification.text) {
-            description =
-              notification.text.substring(0, 50) +
-              (notification.text.length > 50 ? "..." : "");
-          } else if (
-            notification.attachments &&
-            notification.attachments.length > 0
-          ) {
-            const attachmentType = notification.attachments[0].type;
-            description = `Sent a ${attachmentType}`;
-          }
-
-          toast.success(`New message from ${data.from_username}`, {
-            description: description,
-          });
-        }
-      } catch {
-        toast.error("Error parsing WebSocket message");
+      if (!hasConnectedOnce.current) {
+        toast.success("Live updates connected");
+        hasConnectedOnce.current = true;
       }
     };
 
+    socket.onmessage = (event) => {
+      console.group("📩 WS message received");
+      console.log("Raw event:", event.data);
+
+      try {
+        const { type, payload } = JSON.parse(event.data);
+        switch (type) {
+          case "whatsapp.message": {
+            const message: ChatMessage = {
+              _id: payload._id,
+              thread_id: payload.thread_id,
+              sender: payload.sender,
+              username: payload.username,
+              message: payload.message,
+              timestamp: payload.timestamp,
+            };
+
+            addMessage(payload.thread_id, message);
+            const isInChatPage = pathname?.includes(
+              `/Admin/whatsapp-chat/${payload.thread_id}`
+            );
+            if (!isInChatPage && !toastQueueRef.current[message._id ?? ""]) {
+              toastQueueRef.current[message._id ?? ""] = true;
+              toast.success(`${message.username}`, {
+                description: message.message.slice(0, 80),
+                duration: 5000,
+                action: {
+                  label: "View",
+                  onClick: () => {
+                    router.push(`/Admin/whatsapp-chat/${payload.thread_id}`);
+                  },
+                },
+              });
+              setTimeout(
+                () => delete toastQueueRef.current[message._id ?? ""],
+                6000
+              );
+            }
+            break;
+          }
+          case "CONTROL_UPDATE": {
+            const session: WhatsAppSession = {
+              thread_id: payload.thread_id,
+              last_message: payload.last_message,
+              last_active: payload.last_active,
+            };
+            updateSession(payload.thread_id, session);
+            toast.info(
+              payload.human_takeover
+                ? "Human takeover enabled"
+                : "AI agent resumed"
+            );
+            break;
+          }
+          case "notification": {
+            toast(payload.title || "Notification", {
+              description: payload.message,
+            });
+            break;
+          }
+          default: {
+            console.warn("⚠️ Unhandled WS event:", type);
+            break;
+          }
+        }
+      } catch (err) {
+        console.error("❌ WS parse error", err);
+        toast.error("WebSocket message error");
+      }
+      console.groupEnd();
+    };
+
+    socket.onerror = (err) => {
+      console.error("❌ WS error", err);
+      toast.error("Live updates connection error");
+    };
     return () => {
+      console.log("🧹 WS cleanup: closing connection");
       socket.close();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Remove addNotification from deps to prevent re-connections
+  }, [currentThreadId, addMessage, updateSession]);
 
   return null;
 }

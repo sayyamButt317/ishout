@@ -27,3 +27,29 @@ export type InstagramWebhookData = {
     from_username?: string;
     text?: string;
 };
+
+export type WSMessage =
+    | {
+        type: "whatsapp.message";
+        payload: {
+            thread_id: string;
+            sender: "AI" | "HUMAN" | "SYSTEM";
+            message: string;
+            timestamp: string;
+        };
+    }
+    | {
+        type: "CONTROL_UPDATE";
+        payload: {
+            thread_id: string;
+            human_takeover: boolean;
+            agent_paused: boolean;
+        };
+    }
+    | {
+        type: "notification";
+        payload: {
+            title?: string;
+            message: string;
+        };
+    };
