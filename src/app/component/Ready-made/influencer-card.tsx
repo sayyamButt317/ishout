@@ -32,24 +32,7 @@ import {
 } from "@/src/helper/followersformat";
 import { AxiosError } from "axios";
 import { SiInstagram, SiTiktok, SiYoutube } from "react-icons/si";
-
-export interface InfluencerCardProps {
-  influencer: ReadyMadeInfluencerResponse;
-
-  onAccept?: (
-    payload: UpdateInfluencerStatusRequestProps & {
-      minAmount?: number;
-      maxAmount?: number;
-    }
-  ) => Promise<void> | void;
-  onReject?: (
-    payload: UpdateInfluencerStatusRequestProps
-  ) => Promise<void> | void;
-
-  showAccept?: boolean;
-  showReject?: boolean;
-  showDelete?: boolean;
-}
+import { InfluencerCardProps } from "@/src/types/Admin-Type/influencercard-type";
 
 const InfluencerCard = ({
   influencer,
@@ -99,7 +82,6 @@ const InfluencerCard = ({
     if (!actionFn) return;
     if (status === "approved") {
       const min = parseFloat(minAmount);
-
       if (min < 0) {
         toast.error("Amounts cannot be negative");
         return;
@@ -107,8 +89,8 @@ const InfluencerCard = ({
     }
 
     const basePayload: UpdateInfluencerStatusRequestProps = {
-      campaign_id: Id ?? "",
-      influencer_id: influencer.influencer_id,
+      campaign_id: Id,
+      influencer_id: influencer?.influencer_id,
       platform: influencer?.platform,
       status,
       username: influencer?.username,
@@ -137,7 +119,6 @@ const InfluencerCard = ({
       setActionSuccess(status);
       setShowPriceInputs(false);
     } catch (error) {
-      console.error("Failed to update influencer status", error);
       const axiosError = error as AxiosError<{ detail: string }>;
       toast.error("Failed to update influencer status", {
         description: axiosError.response?.data?.detail as string,
@@ -164,22 +145,29 @@ const InfluencerCard = ({
     >
       <div className="absolute top-0 right-0">
         <Badge className=" flex items-center gap-2 border text-xs">
-          {influencer?.admin_approved === true ? (
-            <span className="flex items-center gap-2">
-              Approved <CircleCheck className="h-4 w-4 text-green-400" />
-            </span>
+          {influencer?.admin_approved ? (
+            <CircleCheck className="h-4 w-4 text-green-400" />
           ) : (
-            <span className="flex items-center gap-2">
-              Pending <Loader2 className="h-4 w-4 text-red-400" />
-            </span>
+            <XCircle className="h-4 w-4 text-red-400" />
           )}
+          {influencer?.admin_approved
+            ? "Approved"
+            : influencer?.admin_approved === false
+            ? "Rejected"
+            : "Pending"}
         </Badge>
       </div>
       {actionLoading && (
         <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
           <Loader2 className="animate-spin text-white" />
           <p className="mt-2 text-sm font-medium">
-            {actionLoading === "approved" ? "Approving..." : "Rejecting..."}
+            {actionLoading === "approved"
+              ? "Approving..."
+              : actionLoading === "rejected"
+              ? "Rejecting..."
+              : actionLoading === "pending"
+              ? "Pending..."
+              : "Loading..."}
           </p>
         </div>
       )}

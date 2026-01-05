@@ -1,35 +1,23 @@
-// import { AxiosError } from "axios";
-// import { toast } from "sonner";
-// import { MoreInfluencerReplacePayload, ReadyMadeInfluencersApiResponse, ReadyMadeInfluencersRequest } from "../../../types/readymadeinfluencers-type";
-// import { useMutation } from "@tanstack/react-query";
-// import { useReadyMadeTemplateStore } from "../../../store/Campaign/campaign.store";
-// import { RejectedInfluencer } from "../API/admin.routes";
+import { AxiosError } from "axios";
+import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AdminRejectandRegenerateInfluencerApi } from "../API/admin.routes";
+import { RejectandRegenerateInfluencerRequest } from "@/src/types/Admin-Type/reject-influencers.type";
 
-// export default function RejectedInfluencershook() {
-//     const { results, setResults } = useReadyMadeTemplateStore();
-//     return useMutation({
-//         mutationFn: (payload: MoreInfluencerReplacePayload) => RejectedInfluencer(payload.request),
-//         onSuccess: async (data: ReadyMadeInfluencersRequest, variables: MoreInfluencerReplacePayload) => {
-//             // Replace the rejected influencer with the first returned suggestion
-//             const replacement = data?.influencers?.[0];
-//             if (!replacement || !results?.influencers) {
-//                 return;
-//             }
-//             const updated = results.influencers.map((infuencer) =>
-//                 infuencer._id === variables.replaceId ? replacement : infuencer
-//             );
-
-//             setResults({
-//                 ...results as ReadyMadeInfluencersApiResponse,
-//                 influencers: updated,
-//             });
-//         },
-//         onError: (error) => {
-//             const axiosError = error as AxiosError<{ detail: string }>;
-//             toast.error('Failed to find more influencers', {
-//                 description:
-//                     axiosError.response?.data?.detail || 'An error occurred during influencer finding.',
-//             });
-//         },
-//     });
-// }
+export default function RejectedandRegenerateInfluencershook() {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: (payload: RejectandRegenerateInfluencerRequest) => AdminRejectandRegenerateInfluencerApi(payload),
+        onSuccess: async (data: { message: string }) => {
+            toast.success(data.message);
+            await queryClient.invalidateQueries({ queryKey: ['campaign-influencers'] });
+        },
+        onError: (error) => {
+            const axiosError = error as AxiosError<{ detail: string }>;
+            toast.error('Failed to find more influencers', {
+                description:
+                    axiosError.response?.data?.detail || 'An error occurred during influencer finding.',
+            });
+        },
+    });
+}
