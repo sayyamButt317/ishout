@@ -39,6 +39,7 @@ export default function RootLayout({
           <Analytics />
           <SpeedInsights />
           <ErrorBoundary>{children}</ErrorBoundary>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryProvider>
       </body>
     </html>
