@@ -191,6 +191,47 @@ export const AdminAddInfluencersNumberApi = async (addInfluencersNumberRequest: 
     return response.data;
 }
 
+export const WhatsAppuserSessionApi = async ({ page, page_size }: { page: number, page_size: number }) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_WHATSAPP_USERSESSION, {
+        params: {
+            page,
+            page_size
+        }
+    })
+    return response.data;
+}
+
+export const WhatsAppUserMessagesApi = async (thread_id: string, { page, page_size }: { page: number, page_size: number }) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_WHATSAPP_USERMESSAGE_BY_ID(thread_id), {
+        params: {
+            page,
+            page_size
+        }
+    })
+    return response.data;
+}
+
+export const HumanTakeoverApi = async (
+    thread_id: string,
+    enabled: boolean
+) => {
+    const response = await api.post(
+        AdminENDPOINT.ADMIN_HUMAN_TAKEOVER(thread_id),
+        {
+            enabled,
+        }
+    );
+    return response.data;
+};
+
+
+export const SendWhatsappMessageApi = async (thread_id: string, message: string) => {
+    const response = await api.post(AdminENDPOINT.ADMIN_SEND_WHATSAPP_MESSAGEl(thread_id), {
+        message: message
+    });
+    return response.data;
+}
+
 export const SendOnboardingMessage = async (
     psid: number,
     messageTemplate: MessageTemplate

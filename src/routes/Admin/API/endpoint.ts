@@ -31,6 +31,12 @@ export const AdminENDPOINT = {
     ADMIN_MORE_INFLUENCER: `/admin/more-influencers`,
     ADMIN_ADD_INFLUENCERS_NUMBER: `/admin/add-influencer-number`,
 
+    ADMIN_WHATSAPP_USERSESSION: `/admin/whatsapp-users-sessions`,
+    ADMIN_WHATSAPP_USERMESSAGE_BY_ID: (thread_id: string) => `/admin/whatsapp-messages/${thread_id}`,
+
+    ADMIN_HUMAN_TAKEOVER: (thread_id: string) => `/admin/whatsapp/toggle-takeover/${thread_id}`,
+    ADMIN_SEND_WHATSAPP_MESSAGEl: (thread_id: string) => `/admin/whatsapp/send-human-message/${thread_id}`,
+
     ADMIN_REPLY_INSTAGRAM_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`,
     META_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`
 }
