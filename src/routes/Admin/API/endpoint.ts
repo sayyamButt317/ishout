@@ -22,7 +22,7 @@ export const AdminENDPOINT = {
     STATUS_UPDATE: `/admin/campaigns/status-update`,
     ADMIN_DELETE_CAMPAIGN: (campaign_id: string) => `/admin/delete-campaign/${campaign_id}`,
 
-    ADMIN_INSTAGRAM_NOTIFICATION: `/meta/notifications`,
+    ADMIN_NOTIFICATION: `/ws/admin`,
     ADMIN_COMPANY_DETAILS_BY_ID: (user_id: string) => `/admin/company-data/${user_id}`,
 
     ADMIN_USER_MANAGEMENT: `/admin/user-management`,
@@ -36,6 +36,7 @@ export const AdminENDPOINT = {
 
     ADMIN_HUMAN_TAKEOVER: (thread_id: string) => `/admin/whatsapp/toggle-takeover/${thread_id}`,
     ADMIN_SEND_WHATSAPP_MESSAGEl: (thread_id: string) => `/admin/whatsapp/send-human-message/${thread_id}`,
+    ADMIN_TAKEOVER_TOGGLE: (thread_id: string) => `/admin/whatsapp/takeover-value/${thread_id}`,
 
     ADMIN_REPLY_INSTAGRAM_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`,
     META_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`

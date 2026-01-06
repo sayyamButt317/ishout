@@ -1,6 +1,6 @@
 interface MessageBubbleProps {
   message: string;
-  sender: "AI" | "USER" | "ADMIN";
+  sender: "AI" | "USER" | "ADMIN" | "SYSTEM";
   timestamp: string;
 }
 
@@ -9,7 +9,7 @@ export function MessageBubble({
   sender,
   timestamp,
 }: MessageBubbleProps) {
-  const isRight = sender === "USER" || sender === "ADMIN";
+  const isRight = sender === "AI" || sender === "SYSTEM" || sender === "ADMIN";
 
   return (
     <div
@@ -23,8 +23,10 @@ export function MessageBubble({
             sender === "AI"
               ? "bg-white text-gray-900 rounded-bl-none"
               : sender === "ADMIN"
-              ? "bg-blue-500 text-white rounded-br-none"
-              : "bg-green-500 text-white rounded-br-none"
+              ? "bg-[#e73347] text-white rounded-br-none"
+              : sender === "USER"
+              ? "bg-secondaryButton text-white rounded-bl-none"
+              : "bg-slate-500 text-white rounded-br-none"
           }`}
       >
         <p className="whitespace-pre-line">{message}</p>

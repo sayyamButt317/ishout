@@ -47,9 +47,7 @@ export default function WhatsAppChat() {
           "User Name",
           "Phone Number",
           "Acknowledged",
-          "Conversation Round",
           "Last Message",
-          "Last Active",
           "Campaign Created",
           "Status",
           "Action",
@@ -68,18 +66,13 @@ export default function WhatsAppChat() {
             >
               {userSession?.acknowledged ? "Yes" : "No"}
             </div>,
-            <div key={`user-session-${userSession._id}`} className="truncate">
-              {userSession?.conversation_round}
-            </div>,
             <div key={`last-message-${userSession._id}`} className="truncate">
               {userSession?.last_message
                 ?.toLocaleString()
                 .split(" ")[0]
                 .slice(0, 5)}
             </div>,
-            <div key={`last-active-${userSession._id}`} className="truncate">
-              {userSession?.last_active}
-            </div>,
+
             <div
               key={`campaign-created-${userSession._id}`}
               className="truncate"
