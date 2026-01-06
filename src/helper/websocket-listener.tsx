@@ -10,7 +10,7 @@ import {
 } from "../store/Campaign/chat.store";
 import { usePathname, useRouter } from "next/navigation";
 import { WhatsAppSession } from "../types/whatsapp-type";
-import { playNotificationSound } from "./notificationSound";
+// import { playNotificationSound } from "./notificationSound";
 
 export default function WebSocketListener() {
   const router = useRouter();
@@ -66,9 +66,9 @@ export default function WebSocketListener() {
             const isInChatPage = pathname?.includes(
               `/Admin/whatsapp-chat/${payload.thread_id}`
             );
-            if (!isInChatPage) {
-              playNotificationSound();
-            }
+            // if (!isInChatPage) {
+            //   playNotificationSound();
+            // }
             if (!isInChatPage && !toastQueueRef.current[message._id ?? ""]) {
               toastQueueRef.current[message._id ?? ""] = true;
               toast.success(`${message.username}`, {
