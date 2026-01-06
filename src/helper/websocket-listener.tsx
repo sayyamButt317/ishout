@@ -8,14 +8,14 @@ import {
   ChatMessage,
   useWhatsAppChatStore,
 } from "../store/Campaign/chat.store";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { WhatsAppSession } from "../types/whatsapp-type";
 
 export default function WebSocketListener() {
   const router = useRouter();
   const pathname = usePathname();
   const toastQueueRef = useRef<Record<string, boolean>>({});
-  const { Id: currentThreadId } = useParams<{ Id: string }>();
+  // const { Id: currentThreadId } = useParams<{ Id: string }>();
   const addMessage = useWhatsAppChatStore((s) => s.addMessage);
   const updateSession = useWhatsAppSessionStore((s) => s.updateSession);
 
@@ -47,11 +47,9 @@ export default function WebSocketListener() {
         hasConnectedOnce.current = true;
       }
     };
-
     socket.onmessage = (event) => {
       console.group("📩 WS message received");
       console.log("Raw event:", event.data);
-
       try {
         const { type, payload } = JSON.parse(event.data);
         switch (type) {
@@ -64,7 +62,6 @@ export default function WebSocketListener() {
               message: payload.message,
               timestamp: payload.timestamp,
             };
-
             addMessage(payload.thread_id, message);
             const isInChatPage = pathname?.includes(
               `/Admin/whatsapp-chat/${payload.thread_id}`
@@ -119,7 +116,6 @@ export default function WebSocketListener() {
       }
       console.groupEnd();
     };
-
     socket.onerror = (err) => {
       console.error("❌ WS error", err);
       toast.error("Live updates connection error");
@@ -128,7 +124,7 @@ export default function WebSocketListener() {
       console.log("🧹 WS cleanup: closing connection");
       socket.close();
     };
-  }, [currentThreadId, addMessage, updateSession]);
+  }, [addMessage, updateSession, pathname, router]);
 
   return null;
 }

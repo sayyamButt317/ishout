@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import WhatsAppMessagesHook from "@/src/routes/Admin/Hooks/whatsappmessages-hook";
+import { useEffect, useRef, useState, useCallback } from "react";
+import useWhatsAppMessagesHook from "@/src/routes/Admin/Hooks/whatsappmessages-hook";
 import { MessageBubble } from "@/src/app/component/custom-component/messgaeBubble";
 import { AdminTakeoverToggle } from "@/src/app/component/custom-component/admintoggle";
 import { ChatInput } from "@/src/app/component/custom-component/inputbar";
@@ -13,14 +13,16 @@ import {
   ChatMessage,
   useWhatsAppChatStore,
 } from "@/src/store/Campaign/chat.store";
+import { RefreshCcw } from "lucide-react";
 
 export default function WhatsAppChatById() {
   const { Id } = useParams<{ Id: string }>();
-  const { data, isPending } = WhatsAppMessagesHook(Id ?? "", 1, 50);
-  const [message, setMessage] = useState<string>("");
-
-  const [adminTakeover, setAdminTakeover] = useState<boolean | null>(null);
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const { data, isPending, isRefetching, refetch } = useWhatsAppMessagesHook(
+    Id ?? "",
+    1,
+    100
+  );
+  console.log("data", data);
 
   const messages = useWhatsAppChatStore((s) => s.chats[Id ?? ""] || []);
   const addMessage = useWhatsAppChatStore((s) => s.addMessage);
@@ -30,55 +32,65 @@ export default function WhatsAppChatById() {
   const humantakeover = HumanTakeoverHook(Id ?? "");
   const toogleStatus = ToogleStatusHook(Id ?? "");
 
+  const [adminTakeover, setAdminTakeover] = useState<boolean | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
   useEffect(() => {
-    if (data?.messages && Id) {
-      setMessages(Id, data.messages);
-    }
-  }, [data?.messages, Id, setMessages]);
-
-  useEffect(() => {
     if (!toogleStatus.data) return;
-    setAdminTakeover(toogleStatus.data.mode === "HUMAN_TAKEOVER");
+    const isHuman = toogleStatus.data.mode === "HUMAN_TAKEOVER";
+    setAdminTakeover(isHuman);
   }, [toogleStatus.data]);
 
-  const handleAdminToggle = (enabled: boolean) => {
-    setAdminTakeover(enabled);
-    humantakeover.mutate(enabled, {
-      onError: () => {
-        setAdminTakeover((prev) => !prev);
-      },
-      onSuccess: () => {
-        toogleStatus.refetch();
-      },
-    });
-  };
+  useEffect(() => {
+    if (!Id) return;
+    setMessages(Id, data?.messages ?? []);
+  }, [Id, data, setMessages]);
 
-  const handleSend = (msg: string) => {
-    if (!msg.trim() || !adminTakeover) return;
+  console.log("messages", messages);
+  const handleAdminToggle = useCallback(
+    (enabled: boolean) => {
+      setAdminTakeover(enabled);
+      humantakeover.mutate(enabled, {
+        onError: () => setAdminTakeover((prev) => !prev),
+        onSuccess: () => toogleStatus.refetch(),
+      });
+    },
+    [humantakeover, toogleStatus]
+  );
+  const handleSend = useCallback(
+    (msg: string) => {
+      if (!msg.trim() || !adminTakeover) return;
+      const newMessage: ChatMessage = {
+        _id: crypto.randomUUID(),
+        thread_id: Id!,
+        sender: "ADMIN",
+        message: msg,
+        timestamp: new Date().toISOString(),
+      };
 
-    const newMessage: ChatMessage = {
-      _id: crypto.randomUUID(),
-      thread_id: Id ?? "",
-      sender: "ADMIN",
-      message: msg,
-      timestamp: new Date().toISOString(),
-    };
-
-    addMessage(Id!, newMessage);
-    sendMessage.mutate(msg);
-    setMessage("");
-  };
-
+      addMessage(Id!, newMessage);
+      sendMessage.mutate(msg);
+    },
+    [Id, addMessage, adminTakeover, sendMessage]
+  );
   return (
     <div className="flex flex-col h-[90vh] rounded-xl overflow-hidden bg-[#0b141a] border border-white/10">
       <div className="flex items-center justify-between px-4 py-3 bg-[#202c33]">
         <div>
-          <p className="text-white font-semibold">
-            {messages?.[0]?.username ?? "WhatsApp Chat"}
+          <p className="text-white font-semibold flex flex-row items-center gap-2">
+            {messages?.[0]?.username ?? "WhatsApp Chat"}{" "}
+            <RefreshCcw
+              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+                isRefetching ? "animate-spin" : ""
+              }`}
+              onClick={() => {
+                refetch();
+              }}
+            />
           </p>
           <p className="text-xs text-gray-400">
             {adminTakeover ? "Human takeover active" : "AI agent active"}
@@ -95,30 +107,25 @@ export default function WhatsAppChatById() {
         )}
       </div>
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
-        {isPending ? (
+        {isPending && messages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <Spinner />
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
-            {messages.map((msg) => (
-              <MessageBubble
-                key={msg._id || `${msg.timestamp}-${msg.sender}`}
-                message={msg.message}
-                sender={msg.sender}
-                timestamp={msg.timestamp}
-              />
-            ))}
-            <div ref={bottomRef} />
-          </div>
+          messages.map((msg) => (
+            <MessageBubble
+              key={msg._id || `${msg.timestamp}-${msg.sender}`}
+              message={msg.message}
+              sender={msg.sender}
+              timestamp={msg.timestamp}
+            />
+          ))
         )}
+        <div ref={bottomRef} />
       </div>
-
       <ChatInput
         enabled={!!adminTakeover && !humantakeover.isPending}
-        value={message}
-        onChange={setMessage}
-        onSend={() => handleSend(message)}
+        onSend={handleSend}
       />
     </div>
   );
