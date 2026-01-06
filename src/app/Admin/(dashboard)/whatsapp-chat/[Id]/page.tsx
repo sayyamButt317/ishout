@@ -22,7 +22,6 @@ export default function WhatsAppChatById() {
     1,
     100
   );
-  console.log("data", data);
 
   const messages = useWhatsAppChatStore((s) => s.chats[Id ?? ""] || []);
   const addMessage = useWhatsAppChatStore((s) => s.addMessage);
@@ -50,7 +49,6 @@ export default function WhatsAppChatById() {
     setMessages(Id, data?.messages ?? []);
   }, [Id, data, setMessages]);
 
-  console.log("messages", messages);
   const handleAdminToggle = useCallback(
     (enabled: boolean) => {
       setAdminTakeover(enabled);
@@ -64,6 +62,7 @@ export default function WhatsAppChatById() {
   const handleSend = useCallback(
     (msg: string) => {
       if (!msg.trim() || !adminTakeover) return;
+
       const newMessage: ChatMessage = {
         _id: crypto.randomUUID(),
         thread_id: Id!,
@@ -71,30 +70,50 @@ export default function WhatsAppChatById() {
         message: msg,
         timestamp: new Date().toISOString(),
       };
-
       addMessage(Id!, newMessage);
       sendMessage.mutate(msg);
     },
-    [Id, addMessage, adminTakeover, sendMessage]
+    [Id, adminTakeover, addMessage, sendMessage]
   );
+
+  const name =
+    messages.filter((msg) => msg.sender === "USER")[0]?.username ?? "";
   return (
     <div className="flex flex-col h-[90vh] rounded-xl overflow-hidden bg-[#0b141a] border border-white/10">
       <div className="flex items-center justify-between px-4 py-3 bg-[#202c33]">
         <div>
-          <p className="text-white font-semibold flex flex-row items-center gap-2">
-            {messages?.[0]?.username ?? "WhatsApp Chat"}{" "}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-[#25D366] flex items-center justify-center text-white font-semibold">
+              {name
+                ?.split(" ")
+                .map((n) => n[0])
+                .slice(0, 2)
+                .join("")
+                .toUpperCase()}
+            </div>
+
+            <div className="flex flex-col">
+              <p className="text-white font-semibold leading-none">
+                {name || "Whatsapp User"}
+              </p>
+              <p className="text-xs text-gray-400">
+                {adminTakeover ? "Human takeover active" : "AI agent active"}
+              </p>
+            </div>
+
+            {/* Refresh */}
             <RefreshCcw
-              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+              className={`ml-2 w-4 h-4 text-primary-text cursor-pointer ${
                 isRefetching ? "animate-spin" : ""
               }`}
-              onClick={() => {
-                refetch();
-              }}
+              onClick={() =>
+                refetch().then(() => {
+                  const newMessages = data?.messages ?? [];
+                  setMessages(Id!, newMessages);
+                })
+              }
             />
-          </p>
-          <p className="text-xs text-gray-400">
-            {adminTakeover ? "Human takeover active" : "AI agent active"}
-          </p>
+          </div>
         </div>
         {adminTakeover === null ? (
           <Spinner />

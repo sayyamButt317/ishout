@@ -8,6 +8,7 @@ import { WhatsAppUserSessionResponse } from "@/src/types/Admin-Type/whatsapp-typ
 import { RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useWhatsAppChatStore } from "@/src/store/Campaign/chat.store";
 
 export default function WhatsAppChat() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export default function WhatsAppChat() {
     currentPage,
     pageSize
   );
+
+  const unreadMap = useWhatsAppChatStore((s) => s.unread);
 
   return (
     <>
@@ -87,11 +90,14 @@ export default function WhatsAppChat() {
               onClick={() => {
                 router.push(`/Admin/whatsapp-chat/${userSession.thread_id}`);
               }}
-              className="bg-primaryButton hover:bg-primaryHover text-white"
-              disabled={false}
-              loading={false}
+              className="relative bg-primaryButton hover:bg-primaryHover text-white"
             >
               View Chat
+              {unreadMap?.[userSession.thread_id] > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                  {unreadMap[userSession.thread_id]}
+                </span>
+              )}
             </CustomButton>,
           ]
         )}

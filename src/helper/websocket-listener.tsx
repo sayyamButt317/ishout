@@ -10,12 +10,13 @@ import {
 } from "../store/Campaign/chat.store";
 import { usePathname, useRouter } from "next/navigation";
 import { WhatsAppSession } from "../types/whatsapp-type";
+import { playNotificationSound } from "./notificationSound";
 
 export default function WebSocketListener() {
   const router = useRouter();
   const pathname = usePathname();
   const toastQueueRef = useRef<Record<string, boolean>>({});
-  // const { Id: currentThreadId } = useParams<{ Id: string }>();
+
   const addMessage = useWhatsAppChatStore((s) => s.addMessage);
   const updateSession = useWhatsAppSessionStore((s) => s.updateSession);
 
@@ -24,10 +25,7 @@ export default function WebSocketListener() {
 
   useEffect(() => {
     const token = getAuthTokenProvider();
-    if (!token) {
-      console.warn("❌ WS: No auth token found");
-      return;
-    }
+    if (!token) return;
 
     const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
     const wsUrl = backendUrl
@@ -54,6 +52,8 @@ export default function WebSocketListener() {
         const { type, payload } = JSON.parse(event.data);
         switch (type) {
           case "whatsapp.message": {
+            if (payload.sender === "ADMIN") return;
+
             const message: ChatMessage = {
               _id: payload._id,
               thread_id: payload.thread_id,
@@ -66,6 +66,9 @@ export default function WebSocketListener() {
             const isInChatPage = pathname?.includes(
               `/Admin/whatsapp-chat/${payload.thread_id}`
             );
+            if (!isInChatPage) {
+              playNotificationSound();
+            }
             if (!isInChatPage && !toastQueueRef.current[message._id ?? ""]) {
               toastQueueRef.current[message._id ?? ""] = true;
               toast.success(`${message.username}`, {
