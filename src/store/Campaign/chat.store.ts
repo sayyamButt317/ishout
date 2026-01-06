@@ -11,41 +11,42 @@ export interface ChatMessage {
 
 interface WhatsAppChatState {
     chats: Record<string, ChatMessage[]>;
+    unread: Record<string, number>;
     setMessages: (threadId: string, messages: ChatMessage[]) => void;
-    addMessage: (threadId: string, msg: ChatMessage) => void;
+    addMessage: (threadId: string, msg: ChatMessage, active?: boolean) => void;
+    markRead: (threadId: string) => void;
 }
-
 export const useWhatsAppChatStore = create<WhatsAppChatState>((set) => ({
     chats: {},
+    unread: {},
 
     setMessages: (threadId, messages) =>
         set((state) => ({
-            chats: {
-                ...state.chats,
-                [threadId]: messages,
-            },
+            chats: { ...state.chats, [threadId]: messages },
+            unread: { ...state.unread, [threadId]: 0 },
         })),
 
-    addMessage: (threadId, msg) =>
+    addMessage: (threadId, msg, active = false) =>
         set((state) => {
             const existing = state.chats[threadId] || [];
 
-            if (existing.some((m) => m._id === msg._id)) {
-                return state;
-            }
-
-            const next = [...existing, msg].sort(
-                (a, b) =>
-                    new Date(a.timestamp).getTime() -
-                    new Date(b.timestamp).getTime()
-            );
+            const unreadInc =
+                msg.sender === "USER" && !active ? 1 : 0;
 
             return {
                 chats: {
                     ...state.chats,
-                    [threadId]: next,
+                    [threadId]: [...existing, msg],
+                },
+                unread: {
+                    ...state.unread,
+                    [threadId]: (state.unread[threadId] || 0) + unreadInc,
                 },
             };
         }),
 
+    markRead: (threadId) =>
+        set((state) => ({
+            unread: { ...state.unread, [threadId]: 0 },
+        })),
 }));
