@@ -16,7 +16,7 @@ export default function RegisterMutation() {
             setIsAuthenticated(true);
             setAuthTokenProvider(data.access_token, data.user.role);
             toast.success('Registration successful');
-            router.replace('/client/create-campaign');
+            router.replace('/client/choose-campaign');
         },
         onError: (error) => {
             const axiosError = error as AxiosError<{ detail: string }>;
