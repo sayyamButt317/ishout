@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 
-export const openWhatsApp = () => {
+const openWhatsApp = () => {
   try {
     const phoneNumber = "15551602992";
     const message = encodeURIComponent("Hello ishout create campaign for me.");
@@ -17,3 +17,5 @@ export const openWhatsApp = () => {
     });
   }
 };
+
+export default openWhatsApp;
