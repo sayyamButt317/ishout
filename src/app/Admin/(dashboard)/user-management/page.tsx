@@ -19,7 +19,7 @@ export default function UserManagementPage() {
         <div>
           <div className="flex flex-row items-center gap-2">
             <h1 className="italic text-2xl font-bold text-white">
-              Company Generated Campaigns
+              User Management
             </h1>
             <Button
               className="cursor-pointer"
@@ -38,34 +38,9 @@ export default function UserManagementPage() {
             </Button>
           </div>
           <p className="italic text-xs text-slate-200 mt-2">
-            {/* Showing {campaigns?.length} of {totalCount} campaigns */}
+            Showing {data?.users?.length} of {data?.total} users
           </p>
         </div>
-
-        {/* <div className="flex items-center gap-3">
-              <label
-                htmlFor="campaign-status-filter"
-                className="text-sm text-white/80"
-              >
-                Filter by status
-              </label>
-              <select
-                id="campaign-status-filter"
-                value={statusFilter}
-                onChange={handleStatusChange}
-                className="rounded-lg border border-white/20 bg-transparent px-3 py-2 text-sm text-white outline-none focus:border-primaryButton"
-              >
-                {STATUS_OPTIONS.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                    className="text-black"
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div> */}
       </div>
 
       <TableComponent

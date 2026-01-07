@@ -3,6 +3,7 @@ import QueryProvider from "@/src/context/QueryProvider";
 import Sidebar from "../../component/sidebar";
 import { adminSidebarLinks } from "@/src/constant/sidebaritems";
 import WebSocketListener from "@/src/helper/websocket-listener";
+import NotificationBootstrap from "@/src/helper/NotificationBootstrap";
 
 export default function AdminDashboardLayout({
   children,
@@ -12,6 +13,7 @@ export default function AdminDashboardLayout({
   return (
     <>
       <QueryProvider>
+        <NotificationBootstrap />
         <WebSocketListener />
         <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pl-6 mt-8">
           <Sidebar links={adminSidebarLinks} />

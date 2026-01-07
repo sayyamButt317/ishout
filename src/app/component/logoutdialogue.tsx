@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { clearAuthTokenProvider } from "@/src/provider/auth-provide";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface LogoutDialogueProps {
   open: boolean;
@@ -33,7 +34,15 @@ export default function LogoutDialogue({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className=" text-center">Logout?</AlertDialogTitle>
+          <AlertDialogTitle className=" text-center flex flex-row items-center justify-center gap-2">
+            <Image
+              src="/assets/favicon.png"
+              alt="logo"
+              width={40}
+              height={40}
+            />
+            Logout?
+          </AlertDialogTitle>
           <hr className="my-4 w-full bg-[#1E4B8E] h-[1px]" />
           <AlertDialogDescription className=" font-open-sans font-normal text-base text-center text-white">
             Are you sure you want to Logout?
