@@ -10,12 +10,13 @@ import {
 } from "../store/Campaign/chat.store";
 import { usePathname, useRouter } from "next/navigation";
 import { WhatsAppSession } from "../types/whatsapp-type";
-// import { playNotificationSound } from "./notificationSound";
+import { useNotificationSound } from "./notificationSound";
 
 export default function WebSocketListener() {
   const router = useRouter();
   const pathname = usePathname();
   const toastQueueRef = useRef<Record<string, boolean>>({});
+  const { playSound } = useNotificationSound();
 
   const addMessage = useWhatsAppChatStore((s) => s.addMessage);
   const updateSession = useWhatsAppSessionStore((s) => s.updateSession);
@@ -53,7 +54,6 @@ export default function WebSocketListener() {
         switch (type) {
           case "whatsapp.message": {
             if (payload.sender === "ADMIN") return;
-
             const message: ChatMessage = {
               _id: payload._id,
               thread_id: payload.thread_id,
@@ -62,16 +62,18 @@ export default function WebSocketListener() {
               message: payload.message,
               timestamp: payload.timestamp,
             };
+            console.log("🔔 Message received:", message);
             addMessage(payload.thread_id, message);
             const isInChatPage = pathname?.includes(
               `/Admin/whatsapp-chat/${payload.thread_id}`
             );
-            // if (!isInChatPage) {
-            //   playNotificationSound();
-            // }
+            if (!isInChatPage) {
+              playSound();
+            }
+            console.log("Thread ID:", message.thread_id);
             if (!isInChatPage && !toastQueueRef.current[message._id ?? ""]) {
               toastQueueRef.current[message._id ?? ""] = true;
-              toast.success(`${message.username}`, {
+              toast.success(`${message.thread_id}`, {
                 description: message.message.slice(0, 80),
                 duration: 5000,
                 action: {
@@ -88,6 +90,35 @@ export default function WebSocketListener() {
             }
             break;
           }
+          case "instagram.message": {
+            const message: ChatMessage = {
+              _id: crypto.randomUUID(),
+              thread_id: payload.thread_id,
+              sender: "USER",
+              username: payload.username,
+              message: payload.message,
+              timestamp: payload.timestamp,
+            };
+            addMessage(payload.thread_id, message);
+            const isInChatPage = pathname?.includes(
+              `/Admin/instagram-chat/${payload.thread_id}`
+            );
+
+            if (!isInChatPage) {
+              playSound();
+              toast.success(payload.username || "Instagram User", {
+                description: payload.message.slice(0, 80),
+                action: {
+                  label: "View",
+                  onClick: () =>
+                    router.push(`/Admin/instagram-chat/${payload.thread_id}`),
+                },
+              });
+            }
+
+            break;
+          }
+
           case "CONTROL_UPDATE": {
             const session: WhatsAppSession = {
               thread_id: payload.thread_id,
@@ -102,6 +133,7 @@ export default function WebSocketListener() {
             );
             break;
           }
+
           case "notification": {
             toast(payload.title || "Notification", {
               description: payload.message,

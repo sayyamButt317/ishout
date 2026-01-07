@@ -23,6 +23,7 @@ export interface SidebarProps {
 export default function Sidebar({ links }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isLogout, setIsLogout] = useState(false);
 
   const handleClick = useCallback(
@@ -30,6 +31,7 @@ export default function Sidebar({ links }: SidebarProps) {
       if (pathname !== route) {
         router.push(route);
       }
+      setMobileSidebarOpen(false);
     },
     [pathname, router]
   );
@@ -66,7 +68,6 @@ export default function Sidebar({ links }: SidebarProps) {
     [pathname, handleClick]
   );
 
-  // Memoize rendered links to prevent recreation on every render
   const renderedLinks = useMemo(
     () => links.map(renderLink),
     [links, renderLink]
@@ -104,47 +105,51 @@ export default function Sidebar({ links }: SidebarProps) {
 
       {/* Mobile Sidebar */}
       <div className="md:hidden">
-        <Sheet>
+        <Sheet open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
           <SheetTrigger asChild>
             <Button
               variant="outline"
               size="icon"
+              onClick={() => setMobileSidebarOpen(true)}
               className="shrink-0 bg-white/10 border-white/20 text-white hover:bg-white/20"
             >
               <Menu className="w-5 h-5" />
             </Button>
           </SheetTrigger>
+
           <SheetContent
             side="left"
             className="flex flex-col w-[280px] p-6 bg-gradient-to-br from-slate-900/95 via-gray-900/95 to-zinc-900/95 backdrop-blur-xl border-white/10"
           >
             {/* Mobile Header */}
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-sm opacity-75" />
-                  <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-bold shadow-lg">
-                    iS
-                  </div>
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">iShout</h2>
-                  <p className="text-slate-400 text-xs">Influencer Platform</p>
-                </div>
-              </div>
+            <div className="mb-2 flex flex-row items-start gap-1">
+              <Image
+                src="/assets/favicon.png"
+                alt="logo"
+                width={40}
+                height={40}
+              />
+              <h2 className="text-2xl font-bold text-slate-100 mt-1">iShout</h2>
+              <span className="text-primarytext font-extrabold text-2xl mt-1">
+                .
+              </span>
             </div>
 
             {/* Mobile Navigation */}
             <nav className="flex flex-col gap-2">{renderedLinks}</nav>
-
             {/* Mobile Footer */}
             <div className="mt-8 pt-6 border-t border-white/10">
               <CustomButton
-                onClick={() => setIsLogout(true)}
+                onClick={() => {
+                  setMobileSidebarOpen(false);
+                  setIsLogout(true);
+                }}
                 className="group flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-red-500/20 hover:text-red-300 hover:border-red-400/30 border border-transparent transition-all duration-300 ease-out w-full"
               >
                 <LogOut className="w-5 h-5" />
-                <span className="font-medium text-sm">Logout</span>
+                <span className="font-medium text-sm text-primarytext hover:text-primaryHover">
+                  Logout
+                </span>
                 <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
               </CustomButton>
             </div>
