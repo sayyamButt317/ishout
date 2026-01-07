@@ -97,11 +97,6 @@ export default function ChooseOptionDialog({
                 phone_number: phoneNumber,
                 platform: influencer.platform as PlatformType,
               });
-              console.log({
-                influencer_id: influencer.influencer_id,
-                phone_number: phoneNumber,
-                platform: influencer.platform as PlatformType,
-              });
               onClose();
             }}
           >

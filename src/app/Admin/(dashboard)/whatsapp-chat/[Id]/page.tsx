@@ -14,6 +14,7 @@ import {
   useWhatsAppChatStore,
 } from "@/src/store/Campaign/chat.store";
 import { RefreshCcw } from "lucide-react";
+import { useNotificationSound } from "@/src/helper/notificationSound";
 
 export default function WhatsAppChatById() {
   const { Id } = useParams<{ Id: string }>();
@@ -26,6 +27,7 @@ export default function WhatsAppChatById() {
   const messages = useWhatsAppChatStore((s) => s.chats[Id ?? ""] || []);
   const addMessage = useWhatsAppChatStore((s) => s.addMessage);
   const setMessages = useWhatsAppChatStore((s) => s.setMessages);
+  const { playMessageSentSound } = useNotificationSound();
 
   const sendMessage = SendWhatsappMessageHook(Id ?? "");
   const humantakeover = HumanTakeoverHook(Id ?? "");
@@ -62,7 +64,6 @@ export default function WhatsAppChatById() {
   const handleSend = useCallback(
     (msg: string) => {
       if (!msg.trim() || !adminTakeover) return;
-
       const newMessage: ChatMessage = {
         _id: crypto.randomUUID(),
         thread_id: Id!,
@@ -71,9 +72,10 @@ export default function WhatsAppChatById() {
         timestamp: new Date().toISOString(),
       };
       addMessage(Id!, newMessage);
+      playMessageSentSound();
       sendMessage.mutate(msg);
     },
-    [Id, adminTakeover, addMessage, sendMessage]
+    [adminTakeover, playMessageSentSound, Id, addMessage, sendMessage]
   );
 
   const name =

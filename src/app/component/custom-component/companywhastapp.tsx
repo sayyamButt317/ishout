@@ -1,4 +1,6 @@
-const openWhatsApp = () => {
+import { toast } from "sonner";
+
+export const openWhatsApp = () => {
   try {
     const phoneNumber = "15551602992";
     const message = encodeURIComponent("Hello ishout create campaign for me.");
@@ -10,8 +12,8 @@ const openWhatsApp = () => {
 
     window.open(whatsappURL, "ishout_whatsapp", "width=1024,height=768");
   } catch (error) {
-    console.error(error);
+    toast.error("Error opening WhatsApp", {
+      description: error as string,
+    });
   }
 };
-
-export default openWhatsApp;

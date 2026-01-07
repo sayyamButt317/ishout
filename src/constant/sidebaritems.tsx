@@ -13,7 +13,6 @@ import {
 
 export const employeeSidebarLinks = [
   {
-    //   img: '/images/community.png',
     label: "Create Campaign",
     route: "/client/choose-campaign",
     icon: <Plus className="w-5 h-5" />,

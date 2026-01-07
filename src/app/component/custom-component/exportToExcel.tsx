@@ -115,8 +115,9 @@ const ExportToExcel = () => {
       URL.revokeObjectURL(link.href);
     })
     .catch((error) => {
-      console.error("Error creating Excel file:", error);
-      toast.error("Error creating Excel file. Please try again.");
+      toast.error("Error creating Excel file. Please try again.", {
+        description: error as string,
+      });
     });
 };
 
