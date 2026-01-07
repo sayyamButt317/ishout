@@ -1,7 +1,6 @@
 "use client";
-
+import { toast } from "sonner";
 import useSound from "use-sound";
-import { useRef } from "react";
 
 let unlocked = false;
 
@@ -16,9 +15,8 @@ export function useNotificationSound() {
             try {
                 play();
                 unlocked = true;
-                console.log("🔓 Audio unlocked");
             } catch {
-                console.warn("🔇 Audio still locked");
+                toast.error("Audio still not enabled. Please refresh the page and try again.");
             }
         }
     };

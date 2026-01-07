@@ -24,7 +24,7 @@ export default function InfluencerReviewPage() {
     currentPage,
     Id ?? ""
   );
-  console.log("review-influencer", data);
+
   const {
     mutate: updateInfluencerStatus,
     isPending: isUpdatingInfluencerStatus,

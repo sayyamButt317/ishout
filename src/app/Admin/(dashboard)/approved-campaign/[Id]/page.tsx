@@ -8,14 +8,14 @@ import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
 
-interface ApprovedCampaignResponse {
-  approved_influencers?: ReadyMadeInfluencerResponse[];
-  data?: {
-    approved_influencers?: ReadyMadeInfluencerResponse[];
-    influencers?: ReadyMadeInfluencerResponse[];
-  };
-  total?: number;
-}
+// interface ApprovedCampaignResponse {
+//   approved_influencers?: ReadyMadeInfluencerResponse[];
+//   data?: {
+//     approved_influencers?: ReadyMadeInfluencerResponse[];
+//     influencers?: ReadyMadeInfluencerResponse[];
+//   };
+//   total?: number;
+// }
 
 export default function ApprovedInfluencerById() {
   const { Id } = useParams<{ Id: string }>();

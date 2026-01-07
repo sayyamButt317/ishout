@@ -34,21 +34,16 @@ export default function WebSocketListener() {
       .replace("http://", "ws://");
 
     const fullWsUrl = `${wsUrl}${AdminENDPOINT.ADMIN_NOTIFICATION}?token=${token}`;
-    console.log("🔌 WS connecting →", fullWsUrl);
     const socket = new WebSocket(fullWsUrl);
 
     socketRef.current = socket;
     socket.onopen = () => {
-      console.log("✅ WS connected");
-
       if (!hasConnectedOnce.current) {
         toast.success("Live updates connected");
         hasConnectedOnce.current = true;
       }
     };
     socket.onmessage = (event) => {
-      console.group("📩 WS message received");
-      console.log("Raw event:", event.data);
       try {
         const { type, payload } = JSON.parse(event.data);
         switch (type) {
@@ -62,7 +57,6 @@ export default function WebSocketListener() {
               message: payload.message,
               timestamp: payload.timestamp,
             };
-            console.log("🔔 Message received:", message);
             addMessage(payload.thread_id, message);
             const isInChatPage = pathname?.includes(
               `/Admin/whatsapp-chat/${payload.thread_id}`
@@ -70,7 +64,6 @@ export default function WebSocketListener() {
             if (!isInChatPage) {
               playSound();
             }
-            console.log("Thread ID:", message.thread_id);
             if (!isInChatPage && !toastQueueRef.current[message._id ?? ""]) {
               toastQueueRef.current[message._id ?? ""] = true;
               toast.success(`${message.thread_id}`, {
@@ -118,7 +111,6 @@ export default function WebSocketListener() {
 
             break;
           }
-
           case "CONTROL_UPDATE": {
             const session: WhatsAppSession = {
               thread_id: payload.thread_id,
@@ -141,25 +133,19 @@ export default function WebSocketListener() {
             break;
           }
           default: {
-            console.warn("⚠️ Unhandled WS event:", type);
             break;
           }
         }
       } catch (err) {
-        console.error("❌ WS parse error", err);
-        toast.error("WebSocket message error");
+        toast.error("WebSocket message error", {
+          description: err as string,
+        });
       }
-      console.groupEnd();
-    };
-    socket.onerror = (err) => {
-      console.error("❌ WS error", err);
-      toast.error("Live updates connection error");
     };
     return () => {
-      console.log("🧹 WS cleanup: closing connection");
       socket.close();
     };
-  }, [addMessage, updateSession, pathname, router]);
+  }, [addMessage, updateSession, pathname, router, playSound]);
 
   return null;
 }
