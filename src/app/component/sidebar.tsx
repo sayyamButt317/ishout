@@ -1,11 +1,12 @@
 "use client";
+
 import { cn } from "@/lib/utils";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LogOut, Menu } from "lucide-react";
-import { useState, useCallback, useMemo } from "react";
-import CustomButton from "./button";
+import { useState, useMemo } from "react";
 import LogoutDialogue from "./logoutdialogue";
 import Image from "next/image";
 
@@ -17,87 +18,60 @@ export interface SidebarLink {
 
 export interface SidebarProps {
   links: SidebarLink[];
-  onLogout?: () => void;
 }
 
 export default function Sidebar({ links }: SidebarProps) {
   const pathname = usePathname();
-  const router = useRouter();
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [isLogout, setIsLogout] = useState(false);
 
-  const handleClick = useCallback(
-    (route: string) => {
-      if (pathname !== route) {
-        router.push(route);
-      }
-      setMobileSidebarOpen(false);
-    },
-    [pathname, router]
-  );
-
-  const renderLink = useCallback(
-    (link: SidebarLink) => {
-      const isSelected =
-        link.route === pathname ||
-        (link.route !== "/auth/login" && pathname.includes(link.route));
-
-      return (
-        <button
-          key={link.route}
-          onClick={() => handleClick(link.route)}
-          className={cn(
-            "group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out outline-none cursor-pointer",
-            isSelected
-              ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-white"
-              : "text-slate-300 hover:bg-white/10 hover:text-white hover:border-white/20 border border-transparent"
-          )}
-          aria-current={isSelected ? "page" : undefined}
-        >
-          <div className="flex-shrink-0">{link.icon}</div>
-          <span className="font-medium text-sm">{link.label}</span>
-
-          {isSelected && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full shadow-lg" />
-          )}
-
-          <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-        </button>
-      );
-    },
-    [pathname, handleClick]
-  );
-
   const renderedLinks = useMemo(
-    () => links.map(renderLink),
-    [links, renderLink]
+    () =>
+      links.map((link) => {
+        const isSelected =
+          pathname === link.route ||
+          (link.route !== "/auth/login" && pathname.startsWith(link.route));
+
+        return (
+          <Link
+            key={link.route}
+            href={link.route}
+            onClick={() => setMobileOpen(false)}
+            className={cn(
+              "group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+              isSelected
+                ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-white"
+                : "text-slate-300 hover:bg-white/10 hover:text-white border border-transparent"
+            )}
+          >
+            {link.icon}
+            <span className="text-sm font-medium">{link.label}</span>
+
+            {isSelected && (
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full" />
+            )}
+          </Link>
+        );
+      }),
+    [links, pathname]
   );
 
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-[280px] p-6 bg-gradient-to-br from-slate-900/95 via-gray-900/95 to-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
-        {/* Header */}
-
-        <div className="mb-2 flex flex-row items-start gap-1">
-          <Image src="/assets/favicon.png" alt="logo" width={40} height={40} />
-          <h2 className="text-2xl font-bold text-slate-100 mt-1">iShout</h2>
-          <span className="text-primarytext font-extrabold text-2xl mt-1">
-            .
-          </span>
-        </div>
-
-        {/* Navigation */}
+      <aside className="hidden md:block w-[280px] p-6 bg-slate-900 border border-white/10 rounded-2xl">
+        <Header />
         <nav className="flex flex-col gap-2">{renderedLinks}</nav>
 
-        {/* Footer */}
         <div className="mt-8 pt-6 border-t border-white/10">
-          <CustomButton
+          <Button
+            variant="ghost"
+            className="w-full text-red-400 hover:bg-red-500/10"
             onClick={() => setIsLogout(true)}
-            className="group flex items-center gap-3 px-4 py-3 rounded-xl text-primaryButton hover:bg-red-500/20 hover:text-red-300 hover:border-red-400/30 border border-transparent transition-all duration-300 ease-out w-full"
           >
-            <LogOut className="w-5 h-5" /> Logout
-          </CustomButton>
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
         </div>
       </aside>
 
@@ -105,57 +79,47 @@ export default function Sidebar({ links }: SidebarProps) {
 
       {/* Mobile Sidebar */}
       <div className="md:hidden">
-        <Sheet open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setMobileSidebarOpen(true)}
-              className="shrink-0 bg-white/10 border-white/20 text-white hover:bg-white/20"
-            >
-              <Menu className="w-5 h-5" />
+            <Button size="icon" variant="outline">
+              <Menu />
             </Button>
           </SheetTrigger>
 
           <SheetContent
             side="left"
-            className="flex flex-col w-[280px] p-6 bg-gradient-to-br from-slate-900/95 via-gray-900/95 to-zinc-900/95 backdrop-blur-xl border-white/10"
+            onCloseAutoFocus={(e) => e.preventDefault()}
+            className="w-[280px] p-6 bg-slate-900"
           >
-            {/* Mobile Header */}
-            <div className="mb-2 flex flex-row items-start gap-1">
-              <Image
-                src="/assets/favicon.png"
-                alt="logo"
-                width={40}
-                height={40}
-              />
-              <h2 className="text-2xl font-bold text-slate-100 mt-1">iShout</h2>
-              <span className="text-primarytext font-extrabold text-2xl mt-1">
-                .
-              </span>
-            </div>
+            <Header />
 
-            {/* Mobile Navigation */}
             <nav className="flex flex-col gap-2">{renderedLinks}</nav>
-            {/* Mobile Footer */}
-            <div className="mt-8 pt-6 border-t border-white/10">
-              <CustomButton
+
+            <div className="mt-auto pt-6 border-t border-white/10">
+              <Button
+                variant="ghost"
+                className="w-full text-red-400 hover:bg-red-500/10"
                 onClick={() => {
-                  setMobileSidebarOpen(false);
+                  setMobileOpen(false);
                   setIsLogout(true);
                 }}
-                className="group flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-red-500/20 hover:text-red-300 hover:border-red-400/30 border border-transparent transition-all duration-300 ease-out w-full"
               >
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium text-sm text-primarytext hover:text-primaryHover">
-                  Logout
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-              </CustomButton>
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </Button>
             </div>
           </SheetContent>
         </Sheet>
       </div>
     </>
+  );
+}
+
+function Header() {
+  return (
+    <div className="mb-4 flex items-center gap-2">
+      <Image src="/assets/favicon.png" alt="logo" width={36} height={36} />
+      <h2 className="text-xl font-bold text-white">iShout</h2>
+    </div>
   );
 }

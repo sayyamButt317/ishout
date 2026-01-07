@@ -29,14 +29,13 @@ export const useWhatsAppChatStore = create<WhatsAppChatState>((set) => ({
     addMessage: (threadId, msg, active = false) =>
         set((state) => {
             const existing = state.chats[threadId] || [];
-
             const unreadInc =
                 msg.sender === "USER" && !active ? 1 : 0;
-
             return {
                 chats: {
                     ...state.chats,
                     [threadId]: [...existing, msg],
+
                 },
                 unread: {
                     ...state.unread,

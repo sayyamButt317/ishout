@@ -10,6 +10,11 @@ export function useNotificationSound() {
         interrupt: true,
     });
 
+    const [messagesendNotification] = useSound("/sounds/message_sent.wav", {
+        volume: 0.7,
+        interrupt: true,
+    });
+
     const unlockOnce = () => {
         if (!unlocked) {
             try {
@@ -25,6 +30,10 @@ export function useNotificationSound() {
         if (!unlocked) return;
         play();
     };
+    const playMessageSentSound = () => {
+        if (!unlocked) return;
+        messagesendNotification();
+    };
 
-    return { playSound, unlockOnce };
+    return { playSound, unlockOnce, playMessageSentSound };
 }
