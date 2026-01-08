@@ -90,16 +90,16 @@ export default function WebSocketListener() {
             break;
           }
           case "instagram.message": {
-            console.log("Instagram message received");
+            if (payload.sender === "ADMIN") return;
             const message: ChatMessage = {
               _id: crypto.randomUUID(),
               thread_id: payload.thread_id,
-              sender: "USER",
+              sender: payload.sender,
               username: payload.username,
               message: payload.message,
               timestamp: payload.timestamp,
             };
-            console.log("Instagram message added", message);
+
             addMessage(payload.thread_id, message);
             const isInChatPage = pathname?.includes(
               `/Admin/instagram-chat/${payload.thread_id}`
@@ -107,13 +107,16 @@ export default function WebSocketListener() {
 
             if (!isInChatPage) {
               playSound();
+              if (!toastQueueRef.current[message._id ?? ""]) {
+                toastQueueRef.current[message._id ?? ""] = true;
+              }
               toast.success(payload.username || "Instagram User", {
                 description: payload.message.slice(0, 80),
-                action: {
-                  label: "View",
-                  onClick: () =>
-                    router.push(`/Admin/instagram-chat/${payload.thread_id}`),
-                },
+                // action: {
+                //   label: "View",
+                //   onClick: () =>
+                //     router.push(`/Admin/instagram-chat/${payload.thread_id}`),
+                // },
               });
             }
 
