@@ -38,6 +38,9 @@ export const AdminENDPOINT = {
     ADMIN_SEND_WHATSAPP_MESSAGEl: (thread_id: string) => `/admin/whatsapp/send-human-message/${thread_id}`,
     ADMIN_TAKEOVER_TOGGLE: (thread_id: string) => `/admin/whatsapp/takeover-value/${thread_id}`,
 
+    ADMIN_INSTA_CONVERSATION_LIST: `/admin/instagram/conversations-list`,
+    ADMIN_INSTA_CONVERSATION_BY_ID: `/admin/instagram/conversation-with-user`,
+
     ADMIN_REPLY_INSTAGRAM_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`,
     META_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`
 }

@@ -236,6 +236,19 @@ export const ToogleStatusApi = async (thread_id: string) => {
     const response = await api.get(AdminENDPOINT.ADMIN_TAKEOVER_TOGGLE(thread_id));
     return response.data;
 }
+
+export const AdminInstaConversationListApi = async () => {
+    const response = await api.get(AdminENDPOINT.ADMIN_INSTA_CONVERSATION_LIST);
+    return response.data;
+}
+export const AdminInstaConversationByIdApi = async (conversation_id: string) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_INSTA_CONVERSATION_BY_ID, {
+        params: {
+            conversation_id
+        }
+    });
+    return response.data;
+}
 export const SendOnboardingMessage = async (
     psid: number,
     messageTemplate: MessageTemplate
