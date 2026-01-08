@@ -103,9 +103,9 @@ export default function InstagramInbox() {
               <p className="text-xs text-gray-400">Direct messages</p>
               <RefreshCcw
                 className={`w-4 h-4 text-primary-text cursor-pointer ${
-                  isRefetching ? "animate-spin" : ""
+                  isRefetchingConversations ? "animate-spin" : ""
                 }`}
-                onClick={() => refetch()}
+                onClick={() => refetchConversations()}
               />
             </div>
           </div>
@@ -147,9 +147,9 @@ export default function InstagramInbox() {
 
                 <RefreshCcw
                   className={`w-4 h-4 text-primary-text cursor-pointer ${
-                    isRefetchingConversations ? "animate-spin" : ""
+                    isRefetching ? "animate-spin" : ""
                   }`}
-                  onClick={() => refetchConversations()}
+                  onClick={() => refetch()}
                 />
               </div>
             </header>
