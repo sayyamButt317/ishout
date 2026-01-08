@@ -90,7 +90,6 @@ export default function WebSocketListener() {
             break;
           }
           case "instagram.message": {
-            console.log("Instagram message received");
             const message: ChatMessage = {
               _id: crypto.randomUUID(),
               thread_id: payload.thread_id,
@@ -99,7 +98,7 @@ export default function WebSocketListener() {
               message: payload.message,
               timestamp: payload.timestamp,
             };
-            console.log("Instagram message added", message);
+
             addMessage(payload.thread_id, message);
             const isInChatPage = pathname?.includes(
               `/Admin/instagram-chat/${payload.thread_id}`
@@ -109,11 +108,11 @@ export default function WebSocketListener() {
               playSound();
               toast.success(payload.username || "Instagram User", {
                 description: payload.message.slice(0, 80),
-                action: {
-                  label: "View",
-                  onClick: () =>
-                    router.push(`/Admin/instagram-chat/${payload.thread_id}`),
-                },
+                // action: {
+                //   label: "View",
+                //   onClick: () =>
+                //     router.push(`/Admin/instagram-chat/${payload.thread_id}`),
+                // },
               });
             }
 
