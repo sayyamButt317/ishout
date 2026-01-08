@@ -90,10 +90,11 @@ export default function WebSocketListener() {
             break;
           }
           case "instagram.message": {
+            if (payload.sender === "ADMIN") return;
             const message: ChatMessage = {
               _id: crypto.randomUUID(),
               thread_id: payload.thread_id,
-              sender: "USER",
+              sender: payload.sender,
               username: payload.username,
               message: payload.message,
               timestamp: payload.timestamp,
@@ -106,6 +107,9 @@ export default function WebSocketListener() {
 
             if (!isInChatPage) {
               playSound();
+              if (!toastQueueRef.current[message._id ?? ""]) {
+                toastQueueRef.current[message._id ?? ""] = true;
+              }
               toast.success(payload.username || "Instagram User", {
                 description: payload.message.slice(0, 80),
                 // action: {
