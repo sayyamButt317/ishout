@@ -15,7 +15,7 @@ const Header = () => {
   const role = getRoleProvider();
 
   const dashboardRoute = useMemo(() => {
-    if (token && role === "company") return "/client/create-campaign";
+    if (token && role === "company") return "/client/choose-campaign";
     if (token && role === "admin") return "/Admin/all-campaign";
     return "/auth/login";
   }, [token, role]);

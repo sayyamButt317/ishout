@@ -48,9 +48,14 @@ export const adminSidebarLinks = [
     icon: <Hourglass className="w-5 h-5" />,
   },
   {
-    label: "Approved Campaign",
+    label: "Approved Influencers",
     route: "/Admin/approved-campaign",
     icon: <CircleCheck className="w-5 h-5" />,
+  },
+  {
+    label: "OnBoarding",
+    route: "/Admin/onboarding",
+    icon: <UserCheck className="w-5 h-5" />,
   },
   {
     label: "All Campaigns",
@@ -61,11 +66,6 @@ export const adminSidebarLinks = [
     label: "User Management",
     route: "/Admin/user-management",
     icon: <User className="w-5 h-5" />,
-  },
-  {
-    label: "OnBoarding",
-    route: "/Admin/onboarding",
-    icon: <UserCheck className="w-5 h-5" />,
   },
   {
     label: "WhatsApp Chat",
