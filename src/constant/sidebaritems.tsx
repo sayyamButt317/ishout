@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   Bell,
   ChartBar,
   CircleCheck,
@@ -9,7 +10,9 @@ import {
   Plus,
   User,
   UserCheck,
+  Users,
 } from "lucide-react";
+import { SiAbstract, SiInstagram, SiWhatsapp } from "react-icons/si";
 
 export const employeeSidebarLinks = [
   {
@@ -45,41 +48,73 @@ export const adminSidebarLinks = [
   {
     label: "Pending Campaign",
     route: "/Admin/pending-campaign",
-    icon: <Hourglass className="w-5 h-5" />,
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
+        <Hourglass className="text-2xl text-white" />
+      </div>
+    ),
   },
   {
     label: "Approved Influencers",
     route: "/Admin/approved-campaign",
-    icon: <CircleCheck className="w-5 h-5" />,
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
+        <CircleCheck className="text-2xl text-white" />
+      </div>
+    ),
   },
   {
     label: "OnBoarding",
     route: "/Admin/onboarding",
-    icon: <UserCheck className="w-5 h-5" />,
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
+        <UserCheck className="text-2xl text-white" />
+      </div>
+    ),
   },
   {
     label: "All Campaigns",
     route: "/Admin/all-campaign",
-    icon: <LayoutGrid className="w-5 h-5" />,
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
+        <LayoutGrid className="text-2xl text-white" />
+      </div>
+    ),
   },
   {
     label: "User Management",
     route: "/Admin/user-management",
-    icon: <User className="w-5 h-5" />,
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
+        <Users className="text-2xl text-white" />
+      </div>
+    ),
   },
   {
-    label: "WhatsApp Chat",
+    label: "WhatsApp",
     route: "/Admin/whatsapp-chat",
-    icon: <MessageCircle className="w-5 h-5" />,
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
+        <SiWhatsapp className="text-2xl text-white" />
+      </div>
+    ),
   },
   {
-    label: "Instagram Notifications",
+    label: "Instagram",
     route: "/Admin/messages",
-    icon: <Bell className="w-5 h-5" />,
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
+        <SiInstagram className="text-2xl text-white" />
+      </div>
+    ),
   },
   {
     label: "Analytics",
     route: "/Admin/analytics",
-    icon: <ChartBar className="w-5 h-5" />,
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
+        <BarChart3 className="text-2xl text-white" />
+      </div>
+    ),
   },
 ];
