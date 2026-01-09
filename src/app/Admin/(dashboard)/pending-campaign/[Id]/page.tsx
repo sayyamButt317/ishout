@@ -46,18 +46,6 @@ export default function PendingCampaignByIdPage() {
     router.replace("/Admin/pending-campaign");
   };
 
-  // const { setField, addToArray } = useRejectedInfluencersStore.getState();
-
-  // setField("platform", data?.platform.join(", ") ?? "");
-  // setField("category", data?.category.join(", ") ?? "");
-  // setField("followers", data?.followers.join(", ") ?? "");
-  // setField("country", data?.country.join(", ") ?? "");
-  // setField("campaign_id", data?._id ?? "");
-
-  // results?.forEach((inf) => {
-  //   addToArray("generated_influencers_id", inf.id);
-  // });
-
   return (
     <div className="min-h-screen ">
       <div className="relative rounded-xl border border-white/20 backdrop-blur">
