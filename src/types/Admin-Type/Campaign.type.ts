@@ -17,6 +17,7 @@ export interface UpdateInfluencerStatusRequestProps {
     country: string;
     company_user_id?: string;
     pricing?: number;
+    admin_approved?: boolean;
 }
 export interface UpdateInfluencerStatusResponseProps {
     message: string;

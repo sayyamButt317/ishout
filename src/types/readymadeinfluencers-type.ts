@@ -27,6 +27,7 @@ export interface ReadyMadeInfluencerResponse {
   engagementRate: number;
   bio: string;
   picture: string;
+  pricing?: number;
   username: string;
   platform: PlatformType;
   status: string;
