@@ -1,18 +1,15 @@
 import {
   BarChart3,
-  Bell,
-  ChartBar,
   CircleCheck,
   // FileText,
   Hourglass,
   LayoutGrid,
-  MessageCircle,
   Plus,
   User,
   UserCheck,
   Users,
 } from "lucide-react";
-import { SiAbstract, SiInstagram, SiWhatsapp } from "react-icons/si";
+import { SiInstagram, SiWhatsapp } from "react-icons/si";
 
 export const employeeSidebarLinks = [
   {
