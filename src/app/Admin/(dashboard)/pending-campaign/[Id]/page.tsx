@@ -96,26 +96,14 @@ export default function PendingCampaignByIdPage() {
               />
             </div>
 
-            {/* Generate More Influencers Button */}
-            <CustomButton
-              className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
-              onClick={() =>
-                generateMoreInfluencers.mutate({ campaign_id: Id ?? "" })
-              }
-            >
-              {generateMoreInfluencers.isPending ? (
-                <Loader2Icon className="w-4 h-4 animate-spin" />
-              ) : (
-                "Generate More Influencers"
-              )}
-            </CustomButton>
-
             {/* Approved Influencers Count */}
             <h1 className="text-sm font-normal text-slate-300 whitespace-nowrap w-full sm:w-auto text-center sm:text-left">
               Generated Influencers:{" "}
               <span className="font-bold">{generatedInfluencers?.length}</span>
             </h1>
-
+            {/* <h1 className="text-sm font-normal text-slate-300 whitespace-nowrap w-full sm:w-auto text-center sm:text-left">
+              Approved Infleucers {}
+            </h1> */}
             {/* Export Button */}
             {ApprovedInfluencersStore.getState().approvedInfluencers.length >
               0 && (
@@ -128,6 +116,19 @@ export default function PendingCampaignByIdPage() {
               </CustomButton>
             )}
           </div>
+          {/* Generate More Influencers Button */}
+          <CustomButton
+            className="w-full mt-2 sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
+            onClick={() =>
+              generateMoreInfluencers.mutate({ campaign_id: Id ?? "" })
+            }
+          >
+            {generateMoreInfluencers.isPending ? (
+              <Loader2Icon className="w-4 h-4 animate-spin" />
+            ) : (
+              "Generate More Influencers"
+            )}
+          </CustomButton>
         </div>
       </div>
 
