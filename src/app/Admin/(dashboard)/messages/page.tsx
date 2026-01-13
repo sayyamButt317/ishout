@@ -23,6 +23,7 @@ export default function InstagramInbox() {
     isRefetching,
     refetch,
   } = InstagramConversationByIdHook(activeConversationId ?? "");
+
   const {
     data: conversations,
     isRefetching: isRefetchingConversations,
@@ -105,7 +106,10 @@ export default function InstagramInbox() {
                 className={`w-4 h-4 text-primary-text cursor-pointer ${
                   isRefetchingConversations ? "animate-spin" : ""
                 }`}
-                onClick={() => refetchConversations()}
+                onClick={() => {
+                  refetchConversations();
+                  refetch();
+                }}
               />
             </div>
           </div>
