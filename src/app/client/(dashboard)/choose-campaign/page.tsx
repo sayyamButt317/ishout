@@ -1,5 +1,4 @@
 "use client";
-
 import { Card, CardContent } from "@/components/ui/card";
 import CustomButton from "@/src/app/component/button";
 import openWhatsApp from "@/src/app/component/custom-component/companywhastapp";

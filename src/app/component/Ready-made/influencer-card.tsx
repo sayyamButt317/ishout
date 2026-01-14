@@ -10,12 +10,9 @@ import {
   Loader2,
   DollarSign,
   MapPin,
-  MessageCircleIcon,
   Circle,
 } from "lucide-react";
 import DeleteInfluencerhook from "@/src/routes/Admin/Hooks/deleteinfluencer-hook";
-
-import { Button } from "@/components/ui/button";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";
 import { useParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
@@ -212,7 +209,7 @@ const InfluencerCard = ({
           }}
           className="mt-2 flex items-center justify-center text-sm bg-transparent border border-gray-800 text-gray-950 rounded-full transition-colors cursor-pointer shadow-2xl"
         >
-          View Profile
+          Profile
         </CustomButton>
         <CustomButton
           className="mt-2 flex items-center justify-center text-sm bg-transparent border border-gray-800 text-gray-950 rounded-full transition-colors cursor-pointer shadow-2xl"
@@ -223,9 +220,7 @@ const InfluencerCard = ({
             );
           }}
         >
-          <span className="text-sm font-medium text-gray-950">
-            Send Message
-          </span>
+          <span className="text-sm font-medium text-gray-950">Message</span>
         </CustomButton>
       </div>
 

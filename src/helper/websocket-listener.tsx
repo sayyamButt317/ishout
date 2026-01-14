@@ -44,16 +44,11 @@ export default function WebSocketListener() {
       }
     };
     socket.onmessage = (event) => {
-      console.log("WebSocket message received", event.data);
       console.group("📩 WS message received");
-      console.log("Raw event:", event.data);
       try {
         const { type, payload } = JSON.parse(event.data);
-        console.log("Parsed event:", { type, payload });
-        console.groupEnd();
         switch (type) {
           case "whatsapp.message": {
-            console.log("WhatsApp message received");
             if (payload.sender === "ADMIN") return;
             const message: ChatMessage = {
               _id: payload._id,
@@ -104,7 +99,6 @@ export default function WebSocketListener() {
             const isInChatPage = pathname?.includes(
               `/Admin/instagram-chat/${payload.thread_id}`
             );
-
             if (!isInChatPage) {
               playSound();
               if (!toastQueueRef.current[message._id ?? ""]) {
