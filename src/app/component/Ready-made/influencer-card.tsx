@@ -182,7 +182,7 @@ const InfluencerCard = ({
               @{influencer?.username || "No name available"}
             </span>
             <div className="line-clamp-2 w-40">
-              <p className="text-sm text-gray-500 flex items-center gap-1">
+              <p className="text-xs text-gray-500 flex items-center gap-1">
                 <MapPin className="h-4 w-4" /> {influencer?.country}
               </p>
             </div>
@@ -201,7 +201,7 @@ const InfluencerCard = ({
           )}
         </Badge>
       </div>
-      {/* VIEW PROFILE AND SEND MESSAGE BUTTONS */}
+      {/*  PROFILE AND SEND MESSAGE BUTTONS */}
       <div className="items-center justify-center text-center mb-4 flex flex-row gap-0.5 w-full">
         <CustomButton
           onClick={() => {
@@ -209,7 +209,7 @@ const InfluencerCard = ({
           }}
           className="mt-2 flex items-center justify-center text-sm bg-transparent border border-gray-800 text-gray-950 rounded-full transition-colors cursor-pointer shadow-2xl"
         >
-          Profile
+          View-Profile
         </CustomButton>
         <CustomButton
           className="mt-2 flex items-center justify-center text-sm bg-transparent border border-gray-800 text-gray-950 rounded-full transition-colors cursor-pointer shadow-2xl"

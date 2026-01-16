@@ -16,6 +16,9 @@ export interface ReviewInfluencerResponse {
     pricing: number;
     platform: PlatformType;
     psid?: number;
+    phone_number?: string;
+    min_price?: number;
+    max_price?: number;
 }
 
 export interface InfluencerReviewApiResponse {
@@ -33,4 +36,6 @@ export interface AddInfluencersNumberRequest {
     influencer_id: string;
     phone_number: string;
     platform: string;
+    max_price: number;
+    min_price: number;
 }
