@@ -11,7 +11,7 @@ import {
   UsernameLink,
 } from "@/src/helper/followersformat";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
-import { ArrowLeft, MessageCircle, Phone, RefreshCcw } from "lucide-react";
+import { ArrowLeft, MessageCircle, Pencil, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
@@ -121,8 +121,8 @@ export default function OnboardingInfluencerByCampaignId() {
           "Platform",
           "Admin",
           "Company",
-          "Phone",
-          "Send Message",
+          "Message",
+          "Add details",
         ]}
         subheader={data?.influencers?.map(
           (influencer: ReviewInfluencerResponse) => [
@@ -159,15 +159,23 @@ export default function OnboardingInfluencerByCampaignId() {
               </div>
             </div>,
             formatFollowers(influencer.followers),
-            <div
-              key={`engagement-${influencer._id}`}
-              className="truncate text-xs sm:text-sm flex items-center"
-            >
+            <div key={`engagement-${influencer._id}`} className="truncate">
               {formatEngagementRate(influencer.engagementRate)}
             </div>,
-            influencer.country,
+            <div key={`country-${influencer._id}`} className="truncate">
+              {influencer.country}
+            </div>,
             <div key={`pricing-${influencer._id}`} className="truncate">
               ${influencer.pricing}
+            </div>,
+            <div key={`phone-number-${influencer._id}`} className="truncate">
+              {influencer?.phone_number || "—"}
+            </div>,
+            <div key={`min-price-${influencer._id}`} className="truncate">
+              ${influencer?.min_price || Number(0)}
+            </div>,
+            <div key={`max-price-${influencer._id}`} className="truncate">
+              ${influencer?.max_price || Number(0)}
             </div>,
             <div key={`platform-${influencer._id}`} className="truncate">
               <PlatformBadge platform={[influencer.platform]} />
@@ -185,29 +193,6 @@ export default function OnboardingInfluencerByCampaignId() {
               className="text-xs text-slate-400"
             >
               <Button
-                variant="outline"
-                onClick={() => {
-                  setSelectedInfluencer({
-                    username: influencer.username,
-                    platform: influencer.platform,
-                    picture: influencer.picture,
-                    influencer_id: influencer._id,
-                  });
-
-                  setDialogOpen(true);
-                }}
-              >
-                <span className="flex items-center gap-2">
-                  Add
-                  <Phone className="h-4 w-4" />
-                </span>
-              </Button>
-            </div>,
-            <div
-              key={`action-${influencer._id}`}
-              className="text-xs text-slate-400"
-            >
-              <Button
                 className="cursor-pointer"
                 variant="outline"
                 onClick={() => {
@@ -217,6 +202,28 @@ export default function OnboardingInfluencerByCampaignId() {
               >
                 <span className="flex items-center gap-2">
                   Message <MessageCircle className="h-4 w-4" />
+                </span>
+              </Button>
+            </div>,
+            <div
+              key={`action-${influencer._id}`}
+              className="text-xs text-slate-400"
+            >
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSelectedInfluencer({
+                    username: influencer.username,
+                    platform: influencer.platform,
+                    picture: influencer.picture,
+                    influencer_id: influencer.influencer_id,
+                  });
+
+                  setDialogOpen(true);
+                }}
+              >
+                <span className="flex items-center gap-2">
+                  <Pencil className="h-4 w-4" />
                 </span>
               </Button>
             </div>,

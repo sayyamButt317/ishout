@@ -28,6 +28,8 @@ export default function ChooseOptionDialog({
   influencer,
 }: ChooseOptionDialogProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [maxPricing, setMaxPricing] = useState("");
+  const [minPricing, setMinPricing] = useState("");
   const { mutate: addInfluencerNumber, isPending } = AddInfluencerNumberHook();
 
   if (!influencer) return null;
@@ -78,6 +80,32 @@ export default function ChooseOptionDialog({
             className="border-1 border-[#E0E0E0] rounded-md p-2 text-black"
             disabled={isPending}
           />
+          <Label className="text-sm font-medium text-[#0B0B17]">
+            Max Pricing
+          </Label>
+          <Input
+            type="number"
+            required
+            placeholder="Enter max pricing"
+            value={maxPricing}
+            onChange={(e) => setMaxPricing(e.target.value)}
+            className="border-1 border-[#E0E0E0] rounded-md p-2 text-black"
+            disabled={isPending}
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label className="text-sm font-medium text-[#0B0B17]">
+            Min Pricing
+          </Label>
+          <Input
+            type="number"
+            required
+            placeholder="Enter min pricing"
+            value={minPricing}
+            onChange={(e) => setMinPricing(e.target.value)}
+            className="border-1 border-[#E0E0E0] rounded-md p-2 text-black"
+            disabled={isPending}
+          />
         </div>
 
         {/* Actions */}
@@ -96,6 +124,8 @@ export default function ChooseOptionDialog({
                 influencer_id: influencer.influencer_id,
                 phone_number: phoneNumber,
                 platform: influencer.platform as PlatformType,
+                max_price: parseFloat(maxPricing || "0"),
+                min_price: parseFloat(minPricing || "0"),
               });
               onClose();
             }}
