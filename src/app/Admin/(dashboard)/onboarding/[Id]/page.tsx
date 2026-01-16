@@ -118,11 +118,14 @@ export default function OnboardingInfluencerByCampaignId() {
           "Engagement",
           "Country",
           "Pricing",
+          "Phone Number",
+          "Min Price",
+          "Max Price",
           "Platform",
           "Admin",
           "Company",
           "Message",
-          "Add details",
+          "Edit",
         ]}
         subheader={data?.influencers?.map(
           (influencer: ReviewInfluencerResponse) => [
