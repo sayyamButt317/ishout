@@ -29,8 +29,9 @@ export default function InstagramInbox() {
     isRefetching: isRefetchingConversations,
     refetch: refetchConversations,
   } = InstagramConversationListHook();
-  console.log("Conversations", conversations);
-  console.log("username", conversations?.participants?.data?.[1]?.username);
+
+  const participant2Name =
+    conversations?.data?.[0]?.participants?.data?.[1]?.username;
 
   const [replyText, setReplyText] = useState<Record<string, string>>({});
   const [sending, setSending] = useState<Record<string, boolean>>({});
@@ -126,10 +127,10 @@ export default function InstagramInbox() {
               `}
             >
               <h1 className=" font-bold text-lg truncate flex items-center gap-2 justify-between">
-                {/* {conv.participants.data[1].username} */}
-                <span className="text-xs text-gray-400">
+                {participant2Name || "Unknown user"}
+                {/* <span className="text-xs text-gray-400">
                   {new Date(conv.updated_time).toLocaleString()}
-                </span>
+                </span> */}
               </h1>
             </div>
           ))}
