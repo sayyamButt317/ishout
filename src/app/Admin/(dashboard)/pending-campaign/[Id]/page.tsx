@@ -80,7 +80,7 @@ export default function PendingCampaignByIdPage() {
         </div>
       </div>
       {/* Action Bar */}
-      <div className="w-full mx-auto px-4 sm:px-6 mt-6">
+      <div className="w-full mx-auto mt-6">
         <div className="bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl p-4 sm:p-5 shadow-lg">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-wrap">
             {/* Status Section */}
@@ -132,10 +132,10 @@ export default function PendingCampaignByIdPage() {
         </div>
       </div>
 
-      <div className="w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
+      <div className="w-full mx-auto p sm:py-10">
         <div className="space-y-8">
-          <section className="bg-black/10 backdrop-blur rounded-2xl border border-white/20 p-4 sm:p-6 shadow-sm">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+          <section className="bg-black/10 backdrop-blur rounded-2xl shadow-sm">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4">
               {generatedInfluencers?.map(
                 (influencer: ReadyMadeInfluencerResponse) => (
                   <InfluencerCard

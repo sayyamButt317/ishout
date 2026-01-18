@@ -132,9 +132,9 @@ export default function Login() {
                   )}
                 />
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-end">
                   <Link
-                    href="/forgot-password"
+                    href="/auth/forgot-password"
                     className="text-primary text-xs hover:underline"
                   >
                     Forget password?
@@ -239,13 +239,13 @@ export default function Login() {
                   )}
                 />
 
-                <div className="flex items-center justify-between">
-                  {/* <Link
-                    href="/forgot-password"
-                    className="text-primary text-xs hover:underline"
+                <div className="flex items-center justify-end">
+                  <Link
+                    href="/auth/forgot-password"
+                    className="text-blue-600 font-medium text-xs hover:underline"
                   >
                     Forgot password?
-                  </Link> */}
+                  </Link>
                 </div>
 
                 <CustomButton

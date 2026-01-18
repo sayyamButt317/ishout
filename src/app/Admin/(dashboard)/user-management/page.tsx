@@ -13,6 +13,7 @@ export default function UserManagementPage() {
   const { data, isLoading, refetch, isRefetching } = AllUsersHook(currentPage);
   const updateUserStatus = UpdateUserStatusHook();
 
+
   return (
     <>
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
@@ -31,9 +32,8 @@ export default function UserManagementPage() {
               disabled={isRefetching}
             >
               <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                  isRefetching ? "animate-spin" : ""
-                }`}
+                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                  }`}
               />
             </Button>
           </div>

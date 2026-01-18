@@ -11,7 +11,7 @@ import {
   getOtherUsername,
 } from "@/src/app/component/custom-component/username";
 import axios from "axios";
-import { RefreshCcw, Send } from "lucide-react";
+import { RefreshCcw, Send, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import CustomButton from "@/src/app/component/button";
 
@@ -106,9 +106,8 @@ export default function InstagramInbox() {
             <div className="flex flex-row items-center gap-2">
               <p className="text-xs text-gray-400">Direct messages</p>
               <RefreshCcw
-                className={`w-4 h-4 text-primary-text cursor-pointer ${
-                  isRefetchingConversations ? "animate-spin" : ""
-                }`}
+                className={`w-4 h-4 text-primary-text cursor-pointer ${isRefetchingConversations ? "animate-spin" : ""
+                  }`}
                 onClick={() => {
                   refetchConversations();
                   refetch();
@@ -122,15 +121,16 @@ export default function InstagramInbox() {
             <div
               key={conv.id}
               onClick={() => setActiveConversationId(conv.id)}
-              className={`w-full px-4 py-3 text-left hover:bg-gray-800 transition cursor-pointer border-b border-gray-700
+              className={`w-full px-4 py-6 text-left hover:bg-gray-800 transition cursor-pointer
                 ${activeConversationId === conv.id ? "bg-gray-800" : ""}
               `}
             >
-              <h1 className=" font-bold text-lg truncate flex items-center gap-2 justify-between">
+
+              <h1 className=" font-bold text-lg truncate flex items-center gap-2 ">
+                <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
+                  <User size={16} />
+                </div>
                 {participant2Name || "Unknown user"}
-                {/* <span className="text-xs text-gray-400">
-                  {new Date(conv.updated_time).toLocaleString()}
-                </span> */}
               </h1>
             </div>
           ))}
@@ -147,15 +147,14 @@ export default function InstagramInbox() {
           <>
             <header className="p-4 flex items-center gap-3 border-b border-gray-700">
               <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
-                <SiInstagram className="text-2xl" />
+                <User size={16} />
               </div>
               <div className="flex flex-row items-center gap-2 justify-between w-full">
                 <h2 className="font-bold text-lg">{otherUsername}</h2>
 
                 <RefreshCcw
-                  className={`w-4 h-4 text-primary-text cursor-pointer ${
-                    isRefetching ? "animate-spin" : ""
-                  }`}
+                  className={`w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                    }`}
                   onClick={() => refetch()}
                 />
               </div>
