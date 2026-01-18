@@ -59,11 +59,13 @@ export default function Sidebar({ links }: SidebarProps) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-[280px] p-6 bg-slate-900 border border-white/10 rounded-2xl">
-        <Header />
+      <aside className="hidden md:block w-[280px] h-4/4 p-6 bg-slate-900 border border-white/10 rounded-2xl">
+        <div className="mb-4 flex items-center gap-2">
+          <Image src="/assets/favicon.png" alt="logo" width={36} height={36} />
+          <h2 className="text-xl font-bold text-white">iShout</h2>
+        </div>
         <nav className="flex flex-col gap-2">{renderedLinks}</nav>
-
-        <div className="mt-8 pt-6 border-t border-white/10">
+        <div className="mt-4 pt-4 border-t border-white/10">
           <Button
             variant="ghost"
             className="w-full text-red-400 hover:bg-red-500/10"
@@ -91,10 +93,11 @@ export default function Sidebar({ links }: SidebarProps) {
             onCloseAutoFocus={(e) => e.preventDefault()}
             className="w-[280px] p-6 bg-slate-900"
           >
-            <Header />
-
+            <div className="mb-4 flex items-center gap-2">
+              <Image src="/assets/favicon.png" alt="logo" width={36} height={36} />
+              <h2 className="text-xl font-bold text-white">iShout</h2>
+            </div>
             <nav className="flex flex-col gap-2">{renderedLinks}</nav>
-
             <div className="mt-auto pt-6 border-t border-white/10">
               <Button
                 variant="ghost"
@@ -112,14 +115,5 @@ export default function Sidebar({ links }: SidebarProps) {
         </Sheet>
       </div>
     </>
-  );
-}
-
-function Header() {
-  return (
-    <div className="mb-4 flex items-center gap-2">
-      <Image src="/assets/favicon.png" alt="logo" width={36} height={36} />
-      <h2 className="text-xl font-bold text-white">iShout</h2>
-    </div>
   );
 }

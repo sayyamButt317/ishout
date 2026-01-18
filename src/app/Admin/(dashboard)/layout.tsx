@@ -15,9 +15,9 @@ export default function AdminDashboardLayout({
       <QueryProvider>
         <NotificationBootstrap />
         <WebSocketListener />
-        <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pl-6 mt-8">
+        <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pl-2 mt-2">
           <Sidebar links={adminSidebarLinks} />
-          <div className="main-content-area px-4 md:px-6 py-4 overflow-x-hidden">
+          <div className="main-content-area px-2 md:px-4 py-2 overflow-x-hidden">
             {children}
           </div>
         </div>

@@ -105,13 +105,13 @@ export const adminSidebarLinks = [
       </div>
     ),
   },
-  {
-    label: "Analytics",
-    route: "/Admin/analytics",
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-        <BarChart3 className="text-2xl text-white" />
-      </div>
-    ),
-  },
+  // {
+  //   label: "Analytics",
+  //   route: "/Admin/analytics",
+  //   icon: (
+  //     <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
+  //       <BarChart3 className="text-2xl text-white" />
+  //     </div>
+  //   ),
+  // },
 ];

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -55,6 +55,7 @@ export default function Signup() {
       <div className="h-full">
         <DomeGallery />
       </div>
+      
       <div className="bg-slate-50 flex items-center justify-center p-6 lg:p-12">
         <Card className="bg-white w-full max-w-md text-card-foreground border border-border shadow-xl">
           <CardContent className="p-8">

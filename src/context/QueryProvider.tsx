@@ -11,18 +11,17 @@ let browserQueryClient: QueryClient | undefined = undefined;
 
 function getQueryClient() {
   if (typeof window === "undefined") {
-    // Server: always make a new query client
     return new QueryClient({
       defaultOptions: {
         queries: {
-          staleTime: 60 * 1000, // 1 minute
+          staleTime: 60 * 1000,
           refetchOnWindowFocus: false,
           refetchOnReconnect: false,
         },
       },
     });
   }
-  // Browser: use singleton pattern to keep the same query client
+  // singleton pattern to keep same query client
   if (!browserQueryClient) {
     browserQueryClient = new QueryClient({
       defaultOptions: {
