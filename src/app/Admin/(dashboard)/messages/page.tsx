@@ -121,7 +121,7 @@ export default function InstagramInbox() {
             <div
               key={conv.id}
               onClick={() => setActiveConversationId(conv.id)}
-              className={`w-full px-4 py-3 text-left hover:bg-gray-800 transition cursor-pointer border-b border-gray-700
+              className={`w-full px-4 py-6 text-left hover:bg-gray-800 transition cursor-pointer
                 ${activeConversationId === conv.id ? "bg-gray-800" : ""}
               `}
             >

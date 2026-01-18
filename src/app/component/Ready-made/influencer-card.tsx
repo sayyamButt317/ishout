@@ -28,6 +28,8 @@ import {
 import { AxiosError } from "axios";
 import { SiInstagram, SiTiktok, SiYoutube } from "react-icons/si";
 import { InfluencerCardProps } from "@/src/types/Admin-Type/influencercard-type";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const InfluencerCard = ({
   influencer,
@@ -135,8 +137,8 @@ const InfluencerCard = ({
   };
 
   return (
-    <article
-      className="group relative w-full max-w-5xl mx-auto rounded-xl border bg-white backdrop-blur-sm text-white p-4 shadow-lg hover:shadow-xl transition-shadow overflow-hidden
+    <Card
+      className="group relative w-full max-w-5xl mx-auto rounded-xl border bg-[#131313] backdrop-blur-sm text-white p-4 shadow-lg hover:shadow-xl transition-shadow overflow-hidden
 "
     >
       {/* STATUS BADGE */}
@@ -151,7 +153,7 @@ const InfluencerCard = ({
           </Badge>
         ) : (
           <Badge className="bg-yellow-100 text-yellow-700 gap-1">
-            <Circle className="h-4 w-4" /> Pending
+            <Circle className="h-2 w-4" /> Pending
           </Badge>
         )}
       </div>
@@ -166,7 +168,7 @@ const InfluencerCard = ({
           className="h-20 w-20 rounded-full object-cover p-1 bg-gray-100"
         />
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-md font-medium text-white">
             <span
               className="text-xs font-semibold hover:text-blue-600 hover:underline cursor-pointer truncate"
               onClick={() =>
@@ -181,38 +183,46 @@ const InfluencerCard = ({
             >
               @{influencer?.username || "No name available"}
             </span>
-            <div className="line-clamp-2 w-40">
+            <div className="line-clamp-2 w-full">
               <p className="text-xs text-gray-500 flex items-center gap-1">
-                <MapPin className="h-4 w-4" /> {influencer?.country}
+                <MapPin className="" size={16} /> {influencer?.country} |{" "}
+                <Badge className=" flex items-center gap-2 bg-transparent border text-xs">
+                  {influencer?.platform === "instagram" ? (
+                    <>
+                      <SiInstagram className=" text-pink-600" size={16} />
+                      <span className="text-xs text-gray-500 font-thin">
+                        Instagram
+                      </span>
+                    </>
+                  ) : influencer?.platform === "tiktok" ? (
+                    <>
+                      <SiTiktok
+                        className=" text-black dark:text-white"
+                        size={16}
+                      />
+                      <span className="text-xs text-gray-500 font-thin">
+                        TikTok
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <SiYoutube className=" text-red-500" size={16} />
+                      <span className="text-xs text-gray-500 font-thin">
+                        YouTube
+                      </span>
+                    </>
+                  )}
+                </Badge>
               </p>
             </div>
           </h3>
         </div>
       </div>
-      {/* PLATFORM BADGE */}
-      <div className="mb-4 flex justify-end">
-        <Badge className=" flex items-center gap-2 bg-transparent border text-xs">
-          {influencer?.platform === "instagram" ? (
-            <SiInstagram className="h-4 w-4 text-red-800" />
-          ) : influencer?.platform === "tiktok" ? (
-            <SiTiktok className="h-4 w-4 text-red-800" />
-          ) : (
-            <SiYoutube className="h-4 w-4 text-red-800" />
-          )}
-        </Badge>
-      </div>
+
       {/*  PROFILE AND SEND MESSAGE BUTTONS */}
-      <div className="items-center justify-center text-center mb-4 flex flex-row gap-0.5 w-full">
+      <div className="items-center justify-center text-center mb-4 flex flex-row w-full gap-2">
         <CustomButton
-          onClick={() => {
-            handleViewProfile();
-          }}
-          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-gray-800 text-gray-950 rounded-full transition-colors cursor-pointer shadow-2xl"
-        >
-          View-Profile
-        </CustomButton>
-        <CustomButton
-          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-gray-800 text-gray-950 rounded-full transition-colors cursor-pointer shadow-2xl"
+          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-white text-white rounded-full transition-colors cursor-pointer shadow-2xl"
           onClick={() => {
             handleMessage(
               influencer?.platform as PlatformType,
@@ -220,22 +230,30 @@ const InfluencerCard = ({
             );
           }}
         >
-          <span className="text-sm font-medium text-gray-950">Message</span>
+          <span className="text-sm font-poppins text-white">Send Message</span>
+        </CustomButton>
+        <CustomButton
+          onClick={() => {
+            handleViewProfile();
+          }}
+          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-white text-white rounded-full transition-colors cursor-pointer shadow-2xl"
+        >
+          <span className="text-md font-regular text-white">View Profile</span>
         </CustomButton>
       </div>
 
       {/* STATS */}
-      <div className="mt-5 grid grid-cols-2 text-center bg-gray-50 rounded-xl p-3">
+      <div className="mt-5 grid grid-cols-2 text-center bg-[#1C1C1C] rounded-xl p-3">
         <div>
-          <p className="text-xs text-gray-400">Followers</p>
-          <p className="text-lg font-bold text-gray-900">
+          <p className="text-xs text-white">Followers</p>
+          <p className="italic text-lg font-bold text-white">
             {formatFollowers(influencer?.followers || 0)}
           </p>
         </div>
 
         <div>
-          <p className="text-xs text-gray-400">Engagement</p>
-          <p className="text-lg font-bold text-gray-900">
+          <p className="text-xs text-white">Engagement</p>
+          <p className="italic text-lg font-bold text-white">
             {engagementPercentage(influencer?.engagementRate)}%
           </p>
         </div>
@@ -267,14 +285,14 @@ const InfluencerCard = ({
 
       {/* Price Input Section*/}
       {showPriceInputs && actionSuccess === null && (
-        <div className="bg-white rounded-lg p-4 mb-4 shadow-2xl">
+        <div className="bg-[#131313] rounded-lg p-4 mb-4 shadow-2xl border border-gray-700">
           <div className="flex items-center gap-2 mb-3">
-            <DollarSign className="h-4 w-4 text-black" />
-            <h4 className="text-sm font-semibold text-black">Set Pricing</h4>
+            <DollarSign className="h-4 w-4 text-white" />
+            <h4 className="text-sm font-semibold text-white">Set Pricing</h4>
           </div>
           <div className="grid grid-cols-1S gap-3">
             <div>
-              <label className="text-xs text-gray-400 mb-1.5 block">
+              <label className="text-xs text-white mb-1.5 block">
                 Amount (USD)
               </label>
               <Input
@@ -282,7 +300,7 @@ const InfluencerCard = ({
                 placeholder="0.00"
                 value={minAmount}
                 onChange={(e) => setMinAmount(e.target.value)}
-                className="bg-gray-700/50 border-gray-600 text-black placeholder:text-gray-500 focus:border-amber-500"
+                className="bg-[#131313]  text-white placeholder:text-white focus:border-amber-500"
                 min="0"
               />
             </div>
@@ -326,11 +344,11 @@ const InfluencerCard = ({
         )}
 
       {actionSuccess === null && (showAccept || showReject) && (
-        <div className="grid grid-cols-2 gap-3 mt-4">
+        <div className="flex flex-col sm:flex-row gap-2 justify-center items-center w-full mt-4">
           {showAccept && (
             <CustomButton
               onClick={() => handleStatusChange("approved")}
-              className=" bg-secondaryButton border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className="w-full sm:w-auto bg-secondaryButton border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
               disabled={
                 actionLoading !== null || influencer?.admin_approved === true
               }
@@ -340,7 +358,7 @@ const InfluencerCard = ({
               ) : showPriceInputs ? (
                 "Confirm"
               ) : (
-                "Approve"
+                "Approve Influencer"
               )}
             </CustomButton>
           )}
@@ -350,17 +368,35 @@ const InfluencerCard = ({
                 setShowPriceInputs(false);
                 handleStatusChange("rejected");
               }}
-              className=" bg-primaryButton hover:bg-black/20 border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className="w-full sm:w-auto bg-primaryButton hover:bg-black/20 border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
               disabled={actionLoading !== null}
             >
               {actionLoading === "rejected" ? (
                 <Loader2 className="animate-spin text-white" />
               ) : (
-                "Reject"
+                "Reject Influencer"
               )}
             </CustomButton>
           )}
+          {showDelete && (
+            <Button
+              variant="ghost"
+              onClick={() =>
+                onDelete(influencer?.platform, influencer.influencer_id)
+              }
+              className="w-full sm:w-auto cursor-pointer border bg-transparent text-primaryButton hover:text-white text-sm font-medium rounded-lg "
+              disabled={deleteInfluencerhook.isPending}
+            >
+              {deleteInfluencerhook.isPending ? (
+                <Loader2Icon className="animate-spin h-4 w-4 text-red-500" />
+              ) : (
+                <Trash2Icon className="h-4 w-4 text-deleteButton" />
+              )}
+            </Button>
+
+          )}
         </div>
+
       )}
 
       {showPriceInputs && actionSuccess === null && (
@@ -374,25 +410,7 @@ const InfluencerCard = ({
           Cancel
         </CustomButton>
       )}
-
-      {showDelete && (
-        <div className="mt-4 flex items-center justify-center">
-          <CustomButton
-            onClick={() =>
-              onDelete(influencer?.platform, influencer.influencer_id)
-            }
-            className="cursor-pointer border bg-transparent border-primaryButton text-primaryButton hover:text-white text-sm font-medium py-2.5 rounded-lg "
-            disabled={deleteInfluencerhook.isPending}
-          >
-            {deleteInfluencerhook.isPending ? (
-              <Loader2Icon className="animate-spin h-4 w-4 text-red-500" />
-            ) : (
-              <Trash2Icon className="h-4 w-4 text-deleteButton" />
-            )}
-          </CustomButton>
-        </div>
-      )}
-    </article>
+    </Card>
   );
 };
 

@@ -70,9 +70,8 @@ export default function AllCampaignPage() {
               disabled={isRefetching}
             >
               <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                  isRefetching ? "animate-spin" : ""
-                }`}
+                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                  }`}
               />
             </Button>
           </div>
@@ -170,14 +169,14 @@ export default function AllCampaignPage() {
           </div>,
           <div key={`delete-${campaign._id}`} className="truncate">
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               disabled={deleteCampaignHook.isPending}
               onClick={() => {
                 deleteCampaignHook.mutate(campaign._id);
               }}
             >
-              <Trash className="w-4 h-4 text-primary--text cursor-pointer" />
+              <Trash className="w-4 h-4 text-red-300 cursor-pointer" />
             </Button>
           </div>,
         ])}

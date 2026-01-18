@@ -59,13 +59,21 @@ export default function Sidebar({ links }: SidebarProps) {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-[280px] h-4/4 p-6 bg-slate-900 border border-white/10 rounded-2xl">
-        <div className="mb-4 flex items-center gap-2">
+      <aside className="hidden md:flex fixed top-0 left-0 h-screen w-[280px] flex-col p-6 
+  bg-slate-900 border-r border-white/10">
+
+        <div className="mb-6 flex items-center gap-2">
           <Image src="/assets/favicon.png" alt="logo" width={36} height={36} />
           <h2 className="text-xl font-bold text-white">iShout</h2>
         </div>
-        <nav className="flex flex-col gap-2">{renderedLinks}</nav>
-        <div className="mt-4 pt-4 border-t border-white/10">
+
+        {/* Links */}
+        <nav className="flex flex-col gap-1 flex-1 overflow-y-auto">
+          {renderedLinks}
+        </nav>
+
+        {/* Logout */}
+        <div className="pt-4 border-t border-white/10">
           <Button
             variant="ghost"
             className="w-full text-red-400 hover:bg-red-500/10"
@@ -77,28 +85,37 @@ export default function Sidebar({ links }: SidebarProps) {
         </div>
       </aside>
 
+
       <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
 
+      {/* Mobile Sidebar */}
       {/* Mobile Sidebar */}
       <div className="md:hidden">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
-            <Button size="icon" variant="outline">
+            <button
+              className="fixed top-3 left-4 z-50 text-white"
+              aria-label="Open menu"
+            >
               <Menu />
-            </Button>
+            </button>
           </SheetTrigger>
 
           <SheetContent
             side="left"
-            onCloseAutoFocus={(e) => e.preventDefault()}
             className="w-[280px] p-6 bg-slate-900"
+            onCloseAutoFocus={(e) => e.preventDefault()}
           >
-            <div className="mb-4 flex items-center gap-2">
+            <div className="mb-6 flex items-center gap-2">
               <Image src="/assets/favicon.png" alt="logo" width={36} height={36} />
               <h2 className="text-xl font-bold text-white">iShout</h2>
             </div>
-            <nav className="flex flex-col gap-2">{renderedLinks}</nav>
-            <div className="mt-auto pt-6 border-t border-white/10">
+
+            <nav className="flex flex-col gap-2 flex-1 overflow-y-auto">
+              {renderedLinks}
+            </nav>
+
+            <div className="pt-6 border-t border-white/10">
               <Button
                 variant="ghost"
                 className="w-full text-red-400 hover:bg-red-500/10"
@@ -114,6 +131,7 @@ export default function Sidebar({ links }: SidebarProps) {
           </SheetContent>
         </Sheet>
       </div>
+
     </>
   );
 }

@@ -4,6 +4,7 @@ import Sidebar from "../../component/sidebar";
 import { adminSidebarLinks } from "@/src/constant/sidebaritems";
 import WebSocketListener from "@/src/helper/websocket-listener";
 import NotificationBootstrap from "@/src/helper/NotificationBootstrap";
+import Image from "next/image";
 
 export default function AdminDashboardLayout({
   children,
@@ -11,17 +12,23 @@ export default function AdminDashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <QueryProvider>
-        <NotificationBootstrap />
-        <WebSocketListener />
-        <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pl-2 mt-2">
-          <Sidebar links={adminSidebarLinks} />
-          <div className="main-content-area px-2 md:px-4 py-2 overflow-x-hidden">
+    <QueryProvider>
+      <NotificationBootstrap />
+      <WebSocketListener />
+
+      <div className="min-h-screen flex">
+        {/* Desktop Sidebar */}
+        <Sidebar links={adminSidebarLinks} />
+
+        {/* Main Section */}
+        <div className="flex-1 flex flex-col md:ml-[280px]">
+          {/* Content */}
+          <main className="flex-1 px-4 py-4 overflow-y-auto 
+            mt-14 md:mt-0">
             {children}
-          </div>
+          </main>
         </div>
-      </QueryProvider>
-    </>
+      </div>
+    </QueryProvider>
   );
 }
