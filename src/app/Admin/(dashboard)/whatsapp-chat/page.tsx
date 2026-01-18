@@ -36,9 +36,8 @@ export default function WhatsAppChat() {
           disabled={isRefetching}
         >
           <RefreshCcw
-            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-              isRefetching ? "animate-spin" : ""
-            }`}
+            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+              }`}
           />
         </Button>
       </div>
@@ -53,6 +52,7 @@ export default function WhatsAppChat() {
           "Last Message",
           "Campaign Created",
           "Status",
+          "Created At",
           "Action",
         ]}
         subheader={data?.users?.map(

@@ -17,12 +17,8 @@ export default function AdminDashboardLayout({
       <WebSocketListener />
 
       <div className="min-h-screen flex">
-        {/* Desktop Sidebar */}
         <Sidebar links={adminSidebarLinks} />
-
-        {/* Main Section */}
         <div className="flex-1 flex flex-col md:ml-[280px]">
-          {/* Content */}
           <main className="flex-1 px-4 py-4 overflow-y-auto 
             mt-14 md:mt-0">
             {children}
