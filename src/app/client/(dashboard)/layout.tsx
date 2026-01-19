@@ -10,10 +10,13 @@ export default function ClientDashboardLayout({
 }) {
   return (
     <QueryProvider>
-      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pl-6 mt-8">
+      <div className="min-h-screen flex">
         <Sidebar links={employeeSidebarLinks} />
-        <div className="main-content-area px-4 md:px-6 py-4 overflow-x-hidden">
-          {children}
+        <div className="flex-1 flex flex-col md:ml-[280px]">
+          <main className="flex-1 px-4 py-4 overflow-y-auto 
+            mt-14 md:mt-0">
+            {children}
+          </main>
         </div>
       </div>
     </QueryProvider>
