@@ -69,32 +69,44 @@ export default function CompanyProfilePage() {
                   disabled={isRefetching}
                 >
                   <RefreshCcw
-                    className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                      isRefetching ? "animate-spin" : ""
-                    }`}
+                    className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                      }`}
                   />
                 </Button>
               </div>
-              <CustomButton
-                className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
-                onClick={() => {
-                  setIsEditing(!isEditing);
-                  if (isEditing) {
-                    updateProfile(form.getValues());
-                    setIsEditing(false);
-                  }
-                }}
-              >
-                {isEditing ? (
-                  isPending ? (
-                    <Loader2 className="animate-spin text-white" />
-                  ) : (
-                    "Save Profile"
-                  )
-                ) : (
-                  "Edit Profile"
+              <div className="flex flex-row items-center gap-2">
+                {isEditing && (
+                  <CustomButton
+                    className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
+                    onClick={() => {
+                      setIsEditing(false);
+                    }}
+                  >
+                    Cancel
+                  </CustomButton>
                 )}
-              </CustomButton>
+                <CustomButton
+                  className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
+                  onClick={() => {
+                    setIsEditing(!isEditing);
+                    if (isEditing) {
+                      updateProfile(form.getValues());
+                      setIsEditing(false);
+                    }
+                  }}
+                >
+                  {isEditing ? (
+                    isPending ? (
+                      <Loader2 className="animate-spin text-white" />
+                    ) : (
+                      "Save Profile"
+                    )
+                  ) : (
+                    "Edit Profile"
+                  )}
+
+                </CustomButton>
+              </div>
             </div>
             <p className="italic text-xs text-slate-200 mt-2">
               Update your profile information and contact details
