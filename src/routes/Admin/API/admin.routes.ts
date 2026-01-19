@@ -241,6 +241,10 @@ export const AdminInstaConversationListApi = async () => {
     const response = await api.get(AdminENDPOINT.ADMIN_INSTA_CONVERSATION_LIST);
     return response.data;
 }
+export const AdminDeleteUserApi = async (user_id: string) => {
+    const response = await api.delete(AdminENDPOINT.ADMIN_DELETE_USER(user_id))
+    return response.data
+}
 export const AdminInstaConversationByIdApi = async (conversation_id: string) => {
     const response = await api.get(AdminENDPOINT.ADMIN_INSTA_CONVERSATION_BY_ID, {
         params: {

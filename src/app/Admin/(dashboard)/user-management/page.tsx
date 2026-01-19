@@ -3,14 +3,16 @@ import { Button } from "@/components/ui/button";
 import { UserStatus } from "@/src/app/component/custom-component/user-status";
 import TableComponent from "@/src/app/component/CustomTable";
 import AllUsersHook from "@/src/routes/Admin/Hooks/allusers-hook";
+import DeleteUserHook from "@/src/routes/Admin/Hooks/delete-user-hook";
 import UpdateUserStatusHook from "@/src/routes/Admin/Hooks/update-userstatus-hook";
 import { UserManagementResponse } from "@/src/types/Admin-Type/usermanagment.type";
-import { RefreshCcw } from "lucide-react";
+import { RefreshCcw, Trash } from "lucide-react";
 import { useState } from "react";
 
 export default function UserManagementPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } = AllUsersHook(currentPage);
+  const deleteUserHook = DeleteUserHook();
   const updateUserStatus = UpdateUserStatusHook();
 
 
@@ -51,6 +53,7 @@ export default function UserManagementPage() {
           "Phone",
           "Role",
           "Status",
+          "Delete"
         ]}
         subheader={data?.users?.map((user: UserManagementResponse) => [
           <div key={`company-name-${user.user_id}`} className="truncate">
@@ -81,6 +84,18 @@ export default function UserManagementPage() {
                 });
               }}
             />
+          </div>,
+          <div key={`delete-${user.user_id}`} className="truncate">
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={deleteUserHook.isPending}
+              onClick={() => {
+                deleteUserHook.mutate(user.user_id);
+              }}
+            >
+              <Trash className="w-4 h-4 text-red-300 cursor-pointer" />
+            </Button>
           </div>,
         ])}
         paginationstart={data?.page ?? currentPage}
