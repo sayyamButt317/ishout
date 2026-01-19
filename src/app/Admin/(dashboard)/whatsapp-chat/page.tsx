@@ -53,7 +53,6 @@ export default function WhatsAppChat() {
           "Campaign Created",
           "Status",
           "Created At",
-          "Action",
         ]}
         subheader={data?.users?.map(
           (userSession: WhatsAppUserSessionResponse) => [
