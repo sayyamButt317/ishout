@@ -1,0 +1,21 @@
+import { toast } from "sonner";
+import { CompanyForgotPasswordApi } from "../company.routes";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+
+
+
+export default function SendEmailForgotPasswordHook() {
+    return useMutation({
+        mutationFn: (email: string) => CompanyForgotPasswordApi(email),
+        onSuccess: ({ message }: { message: string }) => {
+            toast.success(message);
+        },
+        onError: (error) => {
+            const axiosError = error as AxiosError<{ detail: string }>;
+            toast.error('Failed to forgot password', {
+                description: axiosError.response?.data?.detail as string
+            });
+        },
+    });
+}

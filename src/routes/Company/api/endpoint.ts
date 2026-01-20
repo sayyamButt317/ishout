@@ -10,4 +10,7 @@ export const CompanyENDPOINT = {
   COMPANY_UPDATE_INFLUENCER_STATUS: `/company/campaigns/update-influencer-status`,
   REVIEW_PENDING_INFLUENCERS: (campaign_id: string) => `/company/review-pending-influencers/${campaign_id}`,
   COMPNAY_APPROVED_CAMPAIGN: (user_id: string) => `/company/${user_id}/approved-campaign`,
+  FORGOT_PASSWORD: `/auth/forgot-password`,
+  VERIFY_OTP: `/auth/verify-otp`,
+  RESET_PASSWORD: `/auth/reset-password`,
 };

@@ -100,3 +100,18 @@ export const CompanyUpdateProfileApi = async (user_id: string, profileRequest: U
   const response = await api.patch<UpdateProfileResponseProps>(CompanyENDPOINT.PROFILE_UPDATE(user_id), profileRequest);
   return response.data;
 }
+
+export const CompanyForgotPasswordApi = async (email: string) => {
+  const response = await api.post(CompanyENDPOINT.FORGOT_PASSWORD, { email });
+  return response.data;
+}
+
+export const CompanyVerifyOtpApi = async (otp: string) => {
+  const response = await api.post(CompanyENDPOINT.VERIFY_OTP, { otp });
+  return response.data;
+}
+
+export const CompanyResetPasswordApi = async (password: string) => {
+  const response = await api.post(CompanyENDPOINT.RESET_PASSWORD, { password });
+  return response.data;
+}

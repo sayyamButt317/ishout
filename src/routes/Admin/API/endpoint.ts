@@ -13,6 +13,7 @@ export const AdminENDPOINT = {
     ADMIN_APPROVED_CAMPAIGN_BY_ID: (campaign_id: string) => `/admin/approved-campaign/${campaign_id}`,
     ADMIN_ONBOARDING_INFLUENCERS: (campaign_id: string) => `/admin/company-approved-influencers/${campaign_id}`,
     ADMIN_ONBOARDING_CAMPAIGNS: `/admin/onboarding-campaigns`,
+    ADMIN_DELETE_USER: (user_id: string) => `/admin/delete-user/${user_id}`,
 
     ADMIN_GENERATE_INFLUENCERS_BY_ID: (campaign_id: string) => `/admin/campaigns/generate-influencers/${campaign_id}`,
     ADMIN_GENERATED_INFLUENCERS_BY_ID: (campaign_id: string) => `/admin/generated-influencers/${campaign_id}`,

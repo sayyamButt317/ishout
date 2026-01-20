@@ -1,15 +1,23 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import SendEmailForgotPasswordHook from "@/src/routes/Company/api/Hooks/CompanyForgotPassword.hook";
+import { Loader2, Mail } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function ForgetPassword() {
+  const sendEmailForgotPasswordHook = SendEmailForgotPasswordHook();
+  const [email, setEmail] = useState('');
+
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendEmailForgotPasswordHook.mutate(email);
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 sm:p-8 shadow-xl">
-        {/* Header */}
         <div className="text-center space-y-2 mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-white italic">
             Forgot Password?
@@ -20,24 +28,31 @@ export default function ForgetPassword() {
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
-          <div className="space-y-1">
-            <Label htmlFor="email" className="text-slate-300">
-              Email address
-            </Label>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="relative">
+            <Mail
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={18}
+            />
             <Input
-              id="email"
               type="email"
-              placeholder="you@example.com"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-black/60 border-white/10 text-white placeholder:text-slate-500"
+              className="pl-10 pr-4 py-2 w-full border rounded-xl text-sm"
             />
           </div>
 
-          <Button className="w-full bg-primaryButton hover:bg-primaryHover italic cursor-pointer text-white">
-            Send Reset Link
+          <Button className="w-full bg-primaryButton hover:bg-primaryHover italic cursor-pointer text-white"
+            type="submit"
+            disabled={sendEmailForgotPasswordHook.isPending}>
+            {sendEmailForgotPasswordHook.isPending ? <Loader2 className="animate-spin" /> : 'Send Reset Link'}
           </Button>
         </form>
+        <p className="text-sm text-center text-gray-500 mt-4">
+          Enter your registered email address and we’ll send you a password reset link.
+        </p>
 
         {/* Footer */}
         <div className="mt-6 text-center">
