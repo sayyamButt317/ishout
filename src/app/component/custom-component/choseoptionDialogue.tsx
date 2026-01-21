@@ -5,11 +5,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
-import { useState } from "react";
 import CustomButton from "../button";
 import AddInfluencerNumberHook from "@/src/routes/Admin/Hooks/addInfluencerNumber-hook";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ChooseOptionDialogProps {
   open: boolean;
@@ -19,6 +19,9 @@ interface ChooseOptionDialogProps {
     platform: string;
     picture: string;
     influencer_id: string;
+    phone_number: string;
+    min_price: number;
+    max_price: number;
   } | null;
 }
 
@@ -28,9 +31,18 @@ export default function ChooseOptionDialog({
   influencer,
 }: ChooseOptionDialogProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [maxPricing, setMaxPricing] = useState("");
-  const [minPricing, setMinPricing] = useState("");
+  const [maxPricing, setMaxPricing] = useState<number>(0);
+  const [minPricing, setMinPricing] = useState<number>(0);
+
   const { mutate: addInfluencerNumber, isPending } = AddInfluencerNumberHook();
+
+  useEffect(() => {
+    if (influencer) {
+      setPhoneNumber(influencer.phone_number || "");
+      setMaxPricing(influencer.max_price || 0);
+      setMinPricing(influencer.min_price || 0);
+    }
+  }, [influencer]);
 
   if (!influencer) return null;
 
@@ -88,7 +100,7 @@ export default function ChooseOptionDialog({
             required
             placeholder="Enter max pricing"
             value={maxPricing}
-            onChange={(e) => setMaxPricing(e.target.value)}
+            onChange={(e) => setMaxPricing(Number(e.target.value))}
             className="border-1 border-[#E0E0E0] rounded-md p-2 text-black"
             disabled={isPending}
           />
@@ -102,7 +114,7 @@ export default function ChooseOptionDialog({
             required
             placeholder="Enter min pricing"
             value={minPricing}
-            onChange={(e) => setMinPricing(e.target.value)}
+            onChange={(e) => setMinPricing(Number(e.target.value))}
             className="border-1 border-[#E0E0E0] rounded-md p-2 text-black"
             disabled={isPending}
           />
@@ -120,14 +132,24 @@ export default function ChooseOptionDialog({
             className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
             disabled={isPending}
             onClick={() => {
+              console.log({
+                influencer_id: influencer.influencer_id,
+                phone_number: phoneNumber,
+                platform: influencer.platform,
+                min_price: minPricing,
+                max_price: maxPricing,
+              });
               addInfluencerNumber({
                 influencer_id: influencer.influencer_id,
                 phone_number: phoneNumber,
                 platform: influencer.platform as PlatformType,
-                max_price: parseFloat(maxPricing || "0"),
-                min_price: parseFloat(minPricing || "0"),
+                min_price: minPricing,
+                max_price: maxPricing,
               });
-              onClose();
+              setPhoneNumber("");
+              setMaxPricing(0);
+              setMinPricing(0);
+              // onClose();
             }}
           >
             {isPending ? (

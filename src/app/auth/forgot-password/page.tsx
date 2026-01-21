@@ -5,6 +5,7 @@ import SendEmailForgotPasswordHook from "@/src/routes/Company/api/Hooks/CompanyF
 import { Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ForgetPassword() {
   const sendEmailForgotPasswordHook = SendEmailForgotPasswordHook();
@@ -13,7 +14,12 @@ export default function ForgetPassword() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim()) {
+      toast.error('Email is required');
+      return;
+    }
     sendEmailForgotPasswordHook.mutate(email);
+    setEmail('');
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">

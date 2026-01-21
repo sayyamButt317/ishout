@@ -34,9 +34,8 @@ const ApprovedCampaignPage = () => {
           disabled={isRefetching}
         >
           <RefreshCcw
-            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-              isRefetching ? "animate-spin" : ""
-            }`}
+            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+              }`}
           />
         </Button>
       </div>

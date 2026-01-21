@@ -44,7 +44,6 @@ export default function WebSocketListener() {
       }
     };
     socket.onmessage = (event) => {
-      console.group("📩 WS message received");
       try {
         const { type, payload } = JSON.parse(event.data);
         switch (type) {

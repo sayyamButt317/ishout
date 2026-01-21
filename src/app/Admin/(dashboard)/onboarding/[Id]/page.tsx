@@ -2,7 +2,7 @@
 import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import TableComponent from "@/src/app/component/CustomTable";
 import Image from "next/image";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import {
@@ -19,6 +19,7 @@ import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
 import ChooseOptionDialog from "@/src/app/component/custom-component/choseoptionDialogue";
 
+
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
   const router = useRouter();
@@ -28,13 +29,18 @@ export default function OnboardingInfluencerByCampaignId() {
     currentPage
   );
 
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState<{
     username: string;
     platform: string;
     picture: string;
     influencer_id: string;
+    phone_number: string;
+    min_price: number;
+    max_price: number;
   } | null>(null);
+
 
   const handleMessage = useCallback(
     (platform: PlatformType, username: string) => {
@@ -89,21 +95,19 @@ export default function OnboardingInfluencerByCampaignId() {
               disabled={isRefetching}
             >
               <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                  isRefetching ? "animate-spin" : ""
-                }`}
+                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                  }`}
               />
             </Button>
           </div>
           <CustomButton
-            className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
+            className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-[160px]"
             onClick={() => {
               router.replace(`/Admin/onboarding`);
             }}
           >
             <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden sm:inline">Back to Onboarding</span>
-            <span className="sm:hidden">Back</span>
+            Back to Onboarding
           </CustomButton>
         </div>
         <p className="italic text-xs text-slate-200 mt-2 mb-2">
@@ -162,22 +166,22 @@ export default function OnboardingInfluencerByCampaignId() {
               </div>
             </div>,
             formatFollowers(influencer.followers),
-            <div key={`engagement-${influencer._id}`} className="truncate">
+            <div key={`engagement-${influencer._id}`} className="text-xs truncate">
               {formatEngagementRate(influencer.engagementRate)}
             </div>,
-            <div key={`country-${influencer._id}`} className="truncate">
+            <div key={`country-${influencer._id}`} className="text-xs truncate">
               {influencer.country}
             </div>,
             <div key={`pricing-${influencer._id}`} className="truncate">
               ${influencer.pricing}
             </div>,
-            <div key={`phone-number-${influencer._id}`} className="truncate">
+            <div key={`phone-number-${influencer._id}`} className="text-center truncate">
               {influencer?.phone_number || "—"}
             </div>,
-            <div key={`min-price-${influencer._id}`} className="truncate">
+            <div key={`min-price-${influencer._id}`} className="text-center truncate">
               ${influencer?.min_price || Number(0)}
             </div>,
-            <div key={`max-price-${influencer._id}`} className="truncate">
+            <div key={`max-price-${influencer._id}`} className="text-center truncate">
               ${influencer?.max_price || Number(0)}
             </div>,
             <div key={`platform-${influencer._id}`} className="truncate">
@@ -197,14 +201,14 @@ export default function OnboardingInfluencerByCampaignId() {
             >
               <Button
                 className="cursor-pointer"
-                variant="outline"
+                variant="ghost"
                 onClick={() => {
                   handleMessage(influencer.platform, influencer.username);
                   // handleSendOnboardingMessage(1565041078267027);
                 }}
               >
                 <span className="flex items-center gap-2">
-                  Message <MessageCircle className="h-4 w-4" />
+                  <MessageCircle className="h-4 w-4 text-white" />
                 </span>
               </Button>
             </div>,
@@ -213,15 +217,18 @@ export default function OnboardingInfluencerByCampaignId() {
               className="text-xs text-slate-400"
             >
               <Button
-                variant="outline"
+                variant="ghost"
+                className="cursor-pointer"
                 onClick={() => {
                   setSelectedInfluencer({
                     username: influencer.username,
                     platform: influencer.platform,
                     picture: influencer.picture,
                     influencer_id: influencer.influencer_id,
+                    phone_number: influencer.phone_number || "",
+                    min_price: influencer.min_price || 0,
+                    max_price: influencer.max_price || 0,
                   });
-
                   setDialogOpen(true);
                 }}
               >
