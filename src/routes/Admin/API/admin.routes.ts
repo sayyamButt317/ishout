@@ -187,6 +187,8 @@ export const AdminAddInfluencersNumberApi = async (addInfluencersNumberRequest: 
         influencer_id: addInfluencersNumberRequest.influencer_id,
         phone_number: addInfluencersNumberRequest.phone_number,
         platform: addInfluencersNumberRequest.platform,
+        max_price: addInfluencersNumberRequest.max_price,
+        min_price: addInfluencersNumberRequest.min_price,
     });
     return response.data;
 }

@@ -55,7 +55,6 @@ export default function Signup() {
       <div className="h-full">
         <DomeGallery />
       </div>
-      
       <div className="bg-slate-50 flex items-center justify-center p-6 lg:p-12">
         <Card className="bg-white w-full max-w-md text-card-foreground border border-border shadow-xl">
           <CardContent className="p-8">
@@ -112,6 +111,7 @@ export default function Signup() {
                         <FormControl>
                           <Input
                             placeholder="971 9876543210"
+                            type="tel"
                             className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             {...field}
                           />
