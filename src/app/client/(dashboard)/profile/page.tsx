@@ -24,29 +24,55 @@ import {
   CompanyProfileFormSchema,
   CompanyProfileFormValidator,
 } from "@/src/validators/Company/profileschema-validation";
-import CustomButton from "@/src/app/component/button";
 import CompanyProfileDetailsHook from "@/src/routes/Company/api/Hooks/get-profile.hook";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CompanyUpdateProfileHook from "@/src/routes/Company/api/Hooks/update-profile.hook";
 
 export default function CompanyProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const { user_id } = useAuthStore();
+
+
   const { data, refetch, isRefetching } = CompanyProfileDetailsHook(user_id);
-  const { mutate: updateProfile, isPending } =
-    CompanyUpdateProfileHook(user_id);
+  const { mutate: updateProfile, isPending } = CompanyUpdateProfileHook(user_id);
+
 
   const form = useForm<CompanyProfileFormValidator>({
     resolver: zodResolver(CompanyProfileFormSchema),
     defaultValues: {
-      company_name: data?.user?.company_name || "",
-      contact_person: data?.user?.contact_person || "",
-      phone: data?.user?.phone || "",
-      email: data?.user?.email || "",
+      company_name: data?.user?.company_name,
+      contact_person: data?.user?.contact_person,
+      phone: data?.user?.phone,
+      email: data?.user?.email,
     },
   });
+
+  const {
+    formState: { isDirty },
+  } = form;
+
+  const onSubmit = (values: CompanyProfileFormValidator) => {
+    updateProfile(values, {
+      onSuccess: () => {
+        setIsEditing(false);
+      },
+    });
+  };
+
+  const ref = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if (data?.user) {
+      form.reset({
+        company_name: data.user.company_name ?? "",
+        contact_person: data.user.contact_person ?? "",
+        phone: data.user.phone ?? "",
+        email: data.user.email ?? "",
+      });
+    }
+  }, [data, form]);
 
   return (
     <div className=" bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex items-center justify-center">
@@ -74,39 +100,45 @@ export default function CompanyProfilePage() {
                   />
                 </Button>
               </div>
-              <div className="flex flex-row items-center gap-2">
+              <div className="flex gap-2">
                 {isEditing && (
-                  <CustomButton
-                    className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
+                  <Button
+                    type="button"
                     onClick={() => {
+                      if (isDirty) {
+                        const confirmLeave = confirm(
+                          "You have unsaved changes. Do you want to discard them?"
+                        );
+                        if (!confirmLeave) return;
+                      }
+                      form.reset();
                       setIsEditing(false);
                     }}
+                    className="bg-gray-700 text-white h-9 px-4"
                   >
                     Cancel
-                  </CustomButton>
+                  </Button>
+
                 )}
-                <CustomButton
-                  className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
+
+                <Button
+                  type={isEditing ? "submit" : "button"}
+                  form="company-profile-form"
+                  disabled={isEditing && (!isDirty || isPending)}
                   onClick={() => {
-                    setIsEditing(!isEditing);
-                    if (isEditing) {
-                      updateProfile(form.getValues());
-                      setIsEditing(false);
-                    }
+                    if (!isEditing) setIsEditing(true);
                   }}
+                  className="bg-secondaryButton text-white h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isEditing ? (
-                    isPending ? (
-                      <Loader2 className="animate-spin text-white" />
-                    ) : (
-                      "Save Profile"
-                    )
+                    isPending ? <Loader2 className="animate-spin" /> : "Save Profile"
                   ) : (
                     "Edit Profile"
                   )}
+                </Button>
 
-                </CustomButton>
               </div>
+
             </div>
             <p className="italic text-xs text-slate-200 mt-2">
               Update your profile information and contact details
@@ -114,7 +146,11 @@ export default function CompanyProfilePage() {
           </div>
 
           <Form {...form}>
-            <form className="space-y-6">
+            <form
+              id="company-profile-form"
+              ref={ref}
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
@@ -129,8 +165,9 @@ export default function CompanyProfilePage() {
                           <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
                           <Input
                             {...field}
+                            type="text"
                             placeholder={data?.user?.contact_person || ""}
-                            disabled={isEditing ? false : true}
+                            disabled={!isEditing}
                             className="pl-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
                           />
                         </div>
@@ -139,6 +176,7 @@ export default function CompanyProfilePage() {
                     </FormItem>
                   )}
                 />
+
 
                 <FormField
                   control={form.control}
@@ -153,8 +191,9 @@ export default function CompanyProfilePage() {
                           <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
                           <Input
                             {...field}
-                            placeholder={data?.user?.phone || ""}
-                            disabled={isEditing ? false : true}
+                            type="tel"
+                            placeholder="971 9876543210"
+                            disabled={!isEditing}
                             className="pl-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
                           />
                         </div>
@@ -179,8 +218,9 @@ export default function CompanyProfilePage() {
                         <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
                         <Input
                           {...field}
-                          placeholder={data?.user?.company_name || ""}
-                          disabled={isEditing ? false : true}
+                          type="text"
+                          placeholder="Your Company Name"
+                          disabled={!isEditing}
                           className="pl-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
                         />
                       </div>
@@ -205,8 +245,8 @@ export default function CompanyProfilePage() {
                         <Input
                           {...field}
                           type="email"
-                          placeholder={data?.user?.email || ""}
-                          disabled={isEditing ? false : true}
+                          placeholder="name@company.com"
+                          disabled={!isEditing}
                           className="pl-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
                         />
                       </div>
