@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from '@/src/types/Admin-Type/Campaign.type';
 import { CompanyProfileDetailsResponseProps, UpdateProfileRequestProps, UpdateProfileResponseProps } from '@/src/types/Compnay/profile-type';
-import { VerifyOtpRequestProps } from '@/src/types/Compnay/password-type';
+import { ChangePasswordRequestProps } from '@/src/types/Compnay/password-type';
 
 
 const api = axios.create({
@@ -107,12 +107,12 @@ export const CompanyForgotPasswordApi = async (email: string) => {
   return response.data;
 }
 
-export const CompanyVerifyOtpApi = async (data: VerifyOtpRequestProps) => {
-  const response = await api.post(CompanyENDPOINT.VERIFY_OTP, data);
+export const CompanyVerifyOtpApi = async (otp: string) => {
+  const response = await api.post(CompanyENDPOINT.VERIFY_OTP, { otp });
   return response.data;
 }
 
-export const CompanyResetPasswordApi = async (password: string) => {
+export const CompanyChangePasswordApi = async (password: ChangePasswordRequestProps) => {
   const response = await api.post(CompanyENDPOINT.RESET_PASSWORD, { password });
   return response.data;
 }
