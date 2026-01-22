@@ -6,8 +6,10 @@ import { Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function ForgetPassword() {
+  const router = useRouter();
   const sendEmailForgotPasswordHook = SendEmailForgotPasswordHook();
   const [email, setEmail] = useState('');
 
@@ -19,6 +21,7 @@ export default function ForgetPassword() {
       return;
     }
     sendEmailForgotPasswordHook.mutate(email);
+    router.replace('/auth/verify-otp');
     setEmail('');
   };
   return (
