@@ -4,26 +4,21 @@ import { Input } from "@/components/ui/input";
 import SendEmailForgotPasswordHook from "@/src/routes/Company/api/Hooks/CompanyForgotPassword.hook";
 import { Loader2, Mail } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";
 
 export default function ForgetPassword() {
   const router = useRouter();
   const sendEmailForgotPasswordHook = SendEmailForgotPasswordHook();
-  const [email, setEmail] = useState('');
+  const { email, setEmail } = useForgotPasswordStore();
 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim()) {
-      toast.error('Email is required');
-      return;
-    }
+    setEmail(email);
     sendEmailForgotPasswordHook.mutate(email);
-    router.replace('/auth/verify-otp');
-    setEmail('');
   };
+  ;
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 sm:p-8 shadow-xl">
@@ -50,6 +45,7 @@ export default function ForgetPassword() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="pl-10 pr-4 py-2 w-full border rounded-xl text-sm"
+              disabled={sendEmailForgotPasswordHook.isPending}
             />
           </div>
 

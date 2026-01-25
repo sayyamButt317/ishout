@@ -44,6 +44,8 @@ const ApprovedCampaignPage = () => {
       </p>
       <TableComponent
         header={[
+          "Company Name",
+          "Source",
           "Campaign Name",
           "Platform",
           "Requested ",
@@ -53,6 +55,12 @@ const ApprovedCampaignPage = () => {
         ]}
         subheader={data?.campaigns?.map(
           (campaign: ApprovedCampaignResponse) => [
+            <div key={`company-name-${campaign?._id}`} className="truncate">
+              {campaign?.company_name}
+            </div>,
+            <div key={`source-${campaign?._id}`} className="truncate">
+              {campaign?.user_type}
+            </div>,
             <div key={`name-${campaign?.campaign_id}`} className="truncate">
               {campaign?.name}
             </div>,

@@ -107,8 +107,8 @@ export const CompanyForgotPasswordApi = async (email: string) => {
   return response.data;
 }
 
-export const CompanyVerifyOtpApi = async (otp: string) => {
-  const response = await api.post(CompanyENDPOINT.VERIFY_OTP, { otp });
+export const CompanyVerifyOtpApi = async (otp: string, email: string) => {
+  const response = await api.post(CompanyENDPOINT.VERIFY_OTP, { otp, email });
   return response.data;
 }
 

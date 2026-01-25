@@ -1,8 +1,10 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import ChangePasswordHook from "@/src/routes/Company/api/Hooks/change-password.hook";
 import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";
 import { ShieldCheck, LockKeyhole } from "lucide-react";
+import { toast } from "sonner";
 
 export default function ChangePassword() {
     const {
@@ -10,18 +12,23 @@ export default function ChangePassword() {
         confirm_password,
         setNewPassword,
         setConfirmPassword,
+        token,
+        email
 
     } = useForgotPasswordStore();
+    const changePasswordMutation = ChangePasswordHook();
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // if (new_password !== confirm_password) {
-        //     toast.error('Passwords do not match!');
-        //     return;
-        // }
-        // changePasswordMutation.mutate({
-        //     new_password: new_password,
-        //     confirm_password: confirm_password,
-        // });
+        if (new_password !== confirm_password) {
+            toast.error('Passwords do not match!');
+            return;
+        }
+        changePasswordMutation.mutate({
+            email: email,
+            new_password: new_password,
+            confirm_password: confirm_password,
+            token: token,
+        });
     }
     return (
         <div className="min-h-screen flex items-center justify-center px-4">
