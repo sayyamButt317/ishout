@@ -97,6 +97,7 @@ export interface CampaignResponse {
 export interface ApprovedCampaignResponse {
     _id: string;
     campaign_id: string;
+    company_name: string;
     user_type: string;
     name: string;
     platform: PlatformType;

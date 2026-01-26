@@ -5,25 +5,18 @@ import { Loader2, KeyRound } from 'lucide-react';
 import VerifyOtpHook from '@/src/routes/Company/api/Hooks/VerifyOtp.hook';
 import { toast } from 'sonner';
 import { useForgotPasswordStore } from '@/src/store/User/forgot-password.store';
-import { useRouter } from 'next/navigation';
 
 const VerifyOtp = () => {
   const {
-    otp, setOtp,
+    otp, email, setOtp
   } = useForgotPasswordStore();
-  const router = useRouter();
 
   const verifyOtpMutation = VerifyOtpHook();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!otp.trim()) {
-      toast.error('OTP is required');
-      return;
-    }
-    verifyOtpMutation.mutate(otp);
-    router.replace('/auth/change-password');
-    setOtp('');
+    verifyOtpMutation.mutate({ otp, email });
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -50,6 +43,7 @@ const VerifyOtp = () => {
               onChange={(e) => setOtp(e.target.value)}
               required
               className="pl-10 py-2 w-full border rounded-xl text-sm"
+              disabled={verifyOtpMutation.isPending}
             />
           </div>
           <Button type="submit" className="w-full bg-primaryButton hover:bg-primaryHover italic cursor-pointer text-white" disabled={verifyOtpMutation.isPending}>
