@@ -5,10 +5,11 @@ import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import TableComponent from "@/src/app/component/CustomTable";
 import WhatsappUserSessionHook from "@/src/routes/Admin/Hooks/usersession-hook";
 import { WhatsAppUserSessionResponse } from "@/src/types/Admin-Type/whatsapp-type";
-import { RefreshCcw } from "lucide-react";
+import { RefreshCcw, Trash } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWhatsAppChatStore } from "@/src/store/Campaign/chat.store";
+import DeleteWhatsappChatHook from "@/src/routes/Admin/Hooks/delete-whatsappchat-hook";
 
 export default function WhatsAppChat() {
   const router = useRouter();
@@ -18,7 +19,7 @@ export default function WhatsAppChat() {
     currentPage,
     pageSize
   );
-
+  const deleteWhatsappChatHook = DeleteWhatsappChatHook();
   const unreadMap = useWhatsAppChatStore((s) => s.unread);
 
   return (
@@ -53,6 +54,7 @@ export default function WhatsAppChat() {
           "Campaign Created",
           "Status",
           "Created At",
+          "Action"
         ]}
         subheader={data?.users?.map(
           (userSession: WhatsAppUserSessionResponse) => [
@@ -98,6 +100,13 @@ export default function WhatsAppChat() {
                 </span>
               )}
             </CustomButton>,
+            <div key={`delete-${userSession._id}`} className="truncate">
+              <Trash className="w-4 h-4 text-red-300 cursor-pointer"
+                onClick={() => {
+                  deleteWhatsappChatHook.mutate(userSession.thread_id);
+                }}
+              />
+            </div>
           ]
         )}
         paginationstart={data?.page ?? 1}

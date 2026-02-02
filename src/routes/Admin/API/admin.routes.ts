@@ -255,6 +255,11 @@ export const AdminInstaConversationByIdApi = async (conversation_id: string) => 
     });
     return response.data;
 }
+
+export const AdminDeleteWhatsappUserMessagesApi = async (thread_id: string) => {
+    const response = await api.delete(AdminENDPOINT.DELETE_WHATSAPP_USER_MESSAGES(thread_id));
+    return response.data;
+}
 export const SendOnboardingMessage = async (
     psid: number,
     messageTemplate: MessageTemplate

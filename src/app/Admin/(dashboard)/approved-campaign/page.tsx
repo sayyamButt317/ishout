@@ -7,7 +7,7 @@ import TableComponent from "@/src/app/component/CustomTable";
 import ApprovedCampaignHook from "@/src/routes/Admin/Hooks/approvedCampaign-hook";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
 import { ApprovedCampaignResponse } from "@/src/types/Admin-Type/Campaign.type";
-import { Eye, RefreshCcw } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
