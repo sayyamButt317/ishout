@@ -45,5 +45,5 @@ export const AdminENDPOINT = {
     ADMIN_REPLY_INSTAGRAM_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`,
     META_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`,
 
-    DELETE_WHATSAPP_USER_MESSAGES: (thread_id: string) => `/admin/delete-whatsapp-messages/${thread_id}`,
+    DELETE_WHATSAPP_USER_MESSAGES: (thread_id: string) => `/admin/delete-whatsapp-chat/${thread_id}`,
 }
