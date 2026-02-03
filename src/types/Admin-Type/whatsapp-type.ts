@@ -9,4 +9,6 @@ export interface WhatsAppUserSessionResponse {
     last_message: Date;
     campaign_created: boolean;
     status?: string;
+    agent_paused: boolean;
+    human_takeover: boolean;
 }
