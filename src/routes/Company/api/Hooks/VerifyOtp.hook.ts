@@ -10,17 +10,21 @@ import { useRouter } from "next/navigation";
 export default function VerifyOtpHook() {
     const { setResetToken } = useForgotPasswordStore();
     const router = useRouter();
+
     return useMutation({
-        mutationFn: ({ otp, email }: { otp: string, email: string }) => CompanyVerifyOtpApi(otp, email),
-        onSuccess: ({ data }: { data: VerifyOtpResponseProps }) => {
+        mutationFn: ({ otp, email }: { otp: string; email: string }) => CompanyVerifyOtpApi(otp, email),
+        onSuccess: (data: VerifyOtpResponseProps) => {
+            console.log("OTP verified:", data);
+            console.log("Stored reset_token:", useForgotPasswordStore.getState().reset_token);
             toast.success(data.message);
             setResetToken(data.reset_token);
             router.replace('/auth/change-password');
         },
         onError: (error) => {
-            const axiosError = error as AxiosError<{ detail: string }>;
+            const axiosError = error as AxiosError<{ message: string; error: { message: string } }>;
             toast.error('Failed to verify OTP', {
-                description: axiosError.response?.data?.detail as string,
+                description:
+                    axiosError.response?.data?.error?.message || 'An error occurred during verify OTP.',
             });
         },
     });

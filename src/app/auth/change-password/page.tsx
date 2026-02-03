@@ -12,7 +12,7 @@ export default function ChangePassword() {
         confirm_password,
         setNewPassword,
         setConfirmPassword,
-        token,
+        reset_token,
         email
 
     } = useForgotPasswordStore();
@@ -27,7 +27,7 @@ export default function ChangePassword() {
             email: email,
             new_password: new_password,
             confirm_password: confirm_password,
-            token: token,
+            token: reset_token,
         });
     }
     return (
