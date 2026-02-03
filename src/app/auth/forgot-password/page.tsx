@@ -4,11 +4,10 @@ import { Input } from "@/components/ui/input";
 import SendEmailForgotPasswordHook from "@/src/routes/Company/api/Hooks/CompanyForgotPassword.hook";
 import { Loader2, Mail } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";
+import Image from "next/image";
 
 export default function ForgetPassword() {
-  const router = useRouter();
   const sendEmailForgotPasswordHook = SendEmailForgotPasswordHook();
   const { email, setEmail } = useForgotPasswordStore();
 
@@ -22,6 +21,18 @@ export default function ForgetPassword() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 sm:p-8 shadow-xl">
+        <div className="mb-2 flex flex-row items-center justify-center gap-1">
+          <Image
+            src="/assets/favicon.png"
+            alt="ishout"
+            width={40}
+            height={40}
+          />
+          <h2 className="text-2xl font-bold text-white">iShout</h2>
+          <span className="text-primarytext font-extrabold text-2xl">
+            .
+          </span>
+        </div>
         <div className="text-center space-y-2 mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-white italic">
             Forgot Password?

@@ -12,5 +12,5 @@ export const CompanyENDPOINT = {
   COMPNAY_APPROVED_CAMPAIGN: (user_id: string) => `/company/${user_id}/approved-campaign`,
   FORGOT_PASSWORD: `/auth/forgot-password`,
   VERIFY_OTP: `/auth/verify-otp`,
-  RESET_PASSWORD: `/auth/change-password`,
+  RESET_PASSWORD: `/company/change-password`,
 };
