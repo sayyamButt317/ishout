@@ -21,15 +21,38 @@ const options = [
     id: "whatsapp",
     title: "WhatsApp Campaign",
     description:
-      "Create and manage a full WhatsApp campaign easily with AI support to help you create a campaign.",
+      "Create and manage a full WhatsApp campaign easily with AI support to help you create a campaign or by directly messaging the ishout on this number : +971 50 305 4372",
     icon: MessageCircle,
     img: "/assets/whatsapp-campaign.png",
   },
 ];
 
+
 export default function ChooseCampaign() {
   const router = useRouter();
+  // const messages = useWhatsAppChatStore((s) => s.chats[Id ?? ""] || []);
+  // const addMessage = useWhatsAppChatStore((s) => s.addMessage);
+  // const setMessages = useWhatsAppChatStore((s) => s.setMessages);
+  // const { playMessageSentSound } = useNotificationSound();
 
+  // const sendMessage = SendWhatsappMessageHook(Id ?? "");
+
+  // const handleSend = useCallback(
+  //   (msg: string) => {
+
+  //     const newMessage: ChatMessage = {
+  //       _id: crypto.randomUUID(),
+  //       thread_id: Id!,
+  //       sender: "ADMIN",
+  //       message: msg,
+  //       timestamp: new Date().toISOString(),
+  //     };
+  //     addMessage(Id!, newMessage);
+  //     playMessageSentSound();
+  //     sendMessage.mutate(msg);
+  //   },
+  //   [adminTakeover, playMessageSentSound, Id, addMessage, sendMessage]
+  // );
   return (
     <div className="col-span-12 w-full flex justify-center px-4 sm:px-6 lg:px-10">
       <Card className="w-full max-w-6xl rounded-4xl bg-transparent border-none shadow-2xl p-6 sm:p-10">
