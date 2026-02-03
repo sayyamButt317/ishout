@@ -46,7 +46,7 @@ const Summary = () => {
 
   return (
     <aside className="lg:col-span-4">
-      <div className="sticky top-8 group overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-slate-900 via-gray-900 to-zinc-900 p-8 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-3xl">
+      <div className="sticky group overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-slate-900 via-gray-900 to-zinc-900 p-8 shadow-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-3xl">
         {/* Animated Background Elements */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-500/10 via-transparent to-gray-500/10 opacity-50" />
         <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-gradient-to-br from-slate-400/20 to-gray-400/20 blur-xl" />
@@ -76,14 +76,12 @@ const Summary = () => {
             {/* Completion Status */}
             <div className="flex items-center gap-2 text-sm">
               <div
-                className={`h-2 w-2 rounded-full ${
-                  isFormComplete ? "bg-green-400 animate-pulse" : "bg-amber-400"
-                }`}
+                className={`h-2 w-2 rounded-full ${isFormComplete ? "bg-green-400 animate-pulse" : "bg-amber-400"
+                  }`}
               />
               <span
-                className={`${
-                  isFormComplete ? "text-green-200" : "text-amber-200"
-                }`}
+                className={`${isFormComplete ? "text-green-200" : "text-amber-200"
+                  }`}
               >
                 {isFormComplete ? "Ready to launch" : "Complete all fields"}
               </span>
@@ -234,11 +232,10 @@ const Summary = () => {
               <CustomButton
                 onClick={() => handleLaunchCampaign()}
                 disabled={!isFormComplete || isPending}
-                className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 ${
-                  isFormComplete
+                className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 ${isFormComplete
                     ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-500/25"
                     : "bg-slate-600 text-slate-400 cursor-not-allowed"
-                }`}
+                  }`}
               >
                 {isPending ? (
                   <div className="flex items-center gap-2">

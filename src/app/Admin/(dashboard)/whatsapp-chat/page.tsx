@@ -52,7 +52,8 @@ export default function WhatsAppChat() {
           "Acknowledged",
           "Last Message",
           "Campaign Created",
-          "Status",
+          "Mode",
+          "Human Takeover",
           "Created At",
           "Action"
         ]}
@@ -63,6 +64,7 @@ export default function WhatsAppChat() {
             </div>,
             <div key={`phone-number-${userSession._id}`} className="truncate">
               {userSession?.thread_id}
+
             </div>,
             <div
               key={`user-acknowledgement-${userSession._id}`}
@@ -83,9 +85,15 @@ export default function WhatsAppChat() {
             >
               {userSession?.campaign_created ? "Yes" : "No"}
             </div>,
-            <div key={`status-${userSession._id}`} className="truncate">
-              <StatusBadge status={userSession?.status ?? "Pending"} />
+            <div key={`agent-control-info-${userSession._id}`} className="truncate">
+              <StatusBadge status={userSession?.agent_paused === false ? "Agent" : "Human"} />
             </div>,
+            <div key={`human-takeover-info-${userSession._id}`} className="truncate">
+              <StatusBadge status={userSession?.human_takeover === true ? "Enabled" : "Disabled"} />
+            </div>,
+            // <div key={`status-${userSession._id}`} className="truncate">
+            //   <StatusBadge status={userSession?.status ?? "Pending"} />
+            // </div>,
             <CustomButton
               key={`action-${userSession._id}`}
               onClick={() => {

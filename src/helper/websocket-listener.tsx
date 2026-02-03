@@ -122,11 +122,6 @@ export default function WebSocketListener() {
               last_active: payload.last_active,
             };
             updateSession(payload.thread_id, session);
-            toast.info(
-              payload.human_takeover
-                ? "Human takeover enabled"
-                : "AI agent resumed"
-            );
             break;
           }
 
