@@ -7,6 +7,7 @@ import Video from "./component/video";
 import VideoCarousel from "./component/custom-component/video-carousel";
 import { CaseStudiesVideos, ReachGCCVideos } from "../constant/videoUrls";
 import Footer from "./component/landingPage/footer";
+import LogoFooter from "./component/logo-footer";
 
 export default function LandingPage() {
   return (
@@ -73,6 +74,7 @@ export default function LandingPage() {
       />
       <VideoCarousel heading="10M+ reach across GCC" videos={ReachGCCVideos} />
       <Footer />
+      <LogoFooter />
     </div>
   );
 }

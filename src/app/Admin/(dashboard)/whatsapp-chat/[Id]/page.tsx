@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import useWhatsAppMessagesHook from "@/src/routes/Admin/Hooks/whatsappmessages-hook";
 import { MessageBubble } from "@/src/app/component/custom-component/messgaeBubble";
 import { AdminTakeoverToggle } from "@/src/app/component/custom-component/admintoggle";
@@ -24,7 +24,8 @@ export default function WhatsAppChatById() {
     100
   );
 
-  const messages = useWhatsAppChatStore((s) => s.chats[Id ?? ""] || []);
+  const messages = useWhatsAppChatStore((s) => s.chats[Id ?? ""]);
+  const memoizedMessages = useMemo(() => messages ?? [], [messages]);
   const addMessage = useWhatsAppChatStore((s) => s.addMessage);
   const setMessages = useWhatsAppChatStore((s) => s.setMessages);
   const { playMessageSentSound } = useNotificationSound();
@@ -38,7 +39,7 @@ export default function WhatsAppChatById() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length]);
+  }, [memoizedMessages.length]);
 
   useEffect(() => {
     if (!toogleStatus.data) return;
@@ -61,6 +62,8 @@ export default function WhatsAppChatById() {
     },
     [humantakeover, toogleStatus]
   );
+
+  // Send message handler
   const handleSend = useCallback(
     (msg: string) => {
       if (!msg.trim() || !adminTakeover) return;
@@ -78,8 +81,10 @@ export default function WhatsAppChatById() {
     [adminTakeover, playMessageSentSound, Id, addMessage, sendMessage]
   );
 
+  // Extract user name
   const name =
-    messages.filter((msg) => msg.sender === "USER")[0]?.username ?? "";
+    memoizedMessages.find((msg) => msg.sender === "USER")?.username ?? "";
+
   return (
     <div className="flex flex-col h-[90vh] rounded-xl overflow-hidden bg-[#0b141a] border border-white/10">
       <div className="flex items-center justify-between px-4 py-3 bg-[#202c33]">
@@ -105,9 +110,8 @@ export default function WhatsAppChatById() {
 
             {/* Refresh */}
             <RefreshCcw
-              className={`ml-2 w-4 h-4 text-primary-text cursor-pointer ${
-                isRefetching ? "animate-spin" : ""
-              }`}
+              className={`ml-2 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                }`}
               onClick={() =>
                 refetch().then(() => {
                   const newMessages = data?.messages ?? [];
@@ -127,13 +131,14 @@ export default function WhatsAppChatById() {
           />
         )}
       </div>
+
       <div className="flex-1 overflow-y-auto px-4 py-3 space-y-2">
-        {isPending && messages.length === 0 ? (
+        {isPending && memoizedMessages.length === 0 ? (
           <div className="flex h-full items-center justify-center">
             <Spinner />
           </div>
         ) : (
-          messages.map((msg) => (
+          memoizedMessages.map((msg) => (
             <MessageBubble
               key={msg._id || `${msg.timestamp}-${msg.sender}`}
               message={msg.message}
@@ -144,6 +149,7 @@ export default function WhatsAppChatById() {
         )}
         <div ref={bottomRef} />
       </div>
+
       <ChatInput
         enabled={!!adminTakeover && !humantakeover.isPending}
         onSend={handleSend}
