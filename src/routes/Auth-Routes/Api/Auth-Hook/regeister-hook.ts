@@ -19,10 +19,10 @@ export default function RegisterMutation() {
             router.replace('/client/choose-campaign');
         },
         onError: (error) => {
-            const axiosError = error as AxiosError<{ detail: string }>;
+            const axiosError = error as AxiosError<{ message: string, error: { message: string } }>;
             toast.error('Failed to register', {
                 description:
-                    axiosError.response?.data?.detail || 'An error occurred during registration.',
+                    axiosError.response?.data?.error?.message || 'An error occurred during registration.',
             });
         },
     });
