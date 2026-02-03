@@ -54,7 +54,7 @@ export default function WhatsAppChat() {
           "Campaign Created",
           "Mode",
           "Human Takeover",
-          "Created At",
+          "Conversation",
           "Action"
         ]}
         subheader={data?.users?.map(
