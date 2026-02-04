@@ -14,8 +14,6 @@ export default function VerifyOtpHook() {
     return useMutation({
         mutationFn: ({ otp, email }: { otp: string; email: string }) => CompanyVerifyOtpApi(otp, email),
         onSuccess: (data: VerifyOtpResponseProps) => {
-            console.log("OTP verified:", data);
-            console.log("Stored reset_token:", useForgotPasswordStore.getState().reset_token);
             toast.success(data.message);
             setResetToken(data.reset_token);
             router.replace('/auth/change-password');
