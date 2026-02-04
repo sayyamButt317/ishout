@@ -54,6 +54,7 @@ export default function LogoFooter() {
 
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <p className='text-xs text-white/60'>© 2025 iShout</p>
+                        <p className='text-sm text-white/60'>In case of any questions, please contact us at: <a href='mailto:info@ishout.ae' className='text-white hover:text-white transition-colors'>info@ishout.ae</a></p>
                         <div className="flex items-center gap-6">
                             <a href='#' className='text-xs text-white/60 hover:text-white transition-colors'>Terms & Conditions</a>
                             <div className='w-px h-4 bg-white/20'></div>
