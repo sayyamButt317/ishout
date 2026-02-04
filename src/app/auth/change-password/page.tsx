@@ -5,8 +5,11 @@ import ResetPasswordHook from "@/src/routes/Company/api/Hooks/reset-password.hoo
 import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";
 import { ShieldCheck, LockKeyhole } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function ChangePassword() {
+    const [showPassword, setShowPassword] = useState(false);
     const {
         new_password,
         confirm_password,
@@ -49,13 +52,27 @@ export default function ChangePassword() {
                             size={18}
                         />
                         <Input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="New Password"
                             value={new_password}
                             onChange={(e) => setNewPassword(e.target.value)}
                             required
                             className="pl-10 py-2 w-full border rounded-xl text-sm"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword((v) => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            aria-label={
+                                showPassword ? "Hide password" : "Show password"
+                            }
+                        >
+                            {showPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                            ) : (
+                                <Eye className="h-5 w-5" />
+                            )}
+                        </button>
                     </div>
 
                     <div className="relative">
@@ -64,13 +81,27 @@ export default function ChangePassword() {
                             size={18}
                         />
                         <Input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Confirm Password"
                             value={confirm_password}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                             className="pl-10 py-2 w-full border rounded-xl text-sm"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword((v) => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            aria-label={
+                                showPassword ? "Hide password" : "Show password"
+                            }
+                        >
+                            {showPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                            ) : (
+                                <Eye className="h-5 w-5" />
+                            )}
+                        </button>
                     </div>
                     <Button type="submit" className="w-full bg-primaryButton hover:bg-primaryHover italic cursor-pointer text-white" disabled={false}>
                         Change Password
