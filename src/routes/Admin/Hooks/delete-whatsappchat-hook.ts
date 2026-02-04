@@ -16,7 +16,8 @@ export default function DeleteWhatsappChatHook() {
             queryClient.invalidateQueries({ queryKey: ['whatsapp-messages'] });
         },
         onError: (error: AxiosError<{ detail: string }>) => {
-            toast.error(error.response?.data?.detail as string);
+            console.log(error);
+            // toast.error(error.response?.data?.detail as string);
         },
     })
 }
