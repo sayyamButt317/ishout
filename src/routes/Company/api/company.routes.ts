@@ -113,6 +113,6 @@ export const CompanyVerifyOtpApi = async (otp: string, email: string) => {
 }
 
 export const CompanyChangePasswordApi = async (password: ChangePasswordRequestProps) => {
-  const response = await api.post(CompanyENDPOINT.RESET_PASSWORD, { password });
+  const response = await api.put(CompanyENDPOINT.RESET_PASSWORD, { password });
   return response.data;
 }
