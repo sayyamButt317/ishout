@@ -1,33 +1,36 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ChangePasswordHook from "@/src/routes/Company/api/Hooks/change-password.hook";
+import ResetPasswordHook from "@/src/routes/Company/api/Hooks/reset-password.hook";
 import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";
 import { ShieldCheck, LockKeyhole } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function ChangePassword() {
+    const [showPassword, setShowPassword] = useState(false);
     const {
         new_password,
         confirm_password,
         setNewPassword,
         setConfirmPassword,
         reset_token,
-        email
+        email,
 
     } = useForgotPasswordStore();
-    const changePasswordMutation = ChangePasswordHook();
+    const resetPasswordMutation = ResetPasswordHook();
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (new_password !== confirm_password) {
             toast.error('Passwords do not match!');
             return;
         }
-        changePasswordMutation.mutate({
+        resetPasswordMutation.mutate({
             email: email,
+            token: reset_token,
             new_password: new_password,
             confirm_password: confirm_password,
-            token: reset_token,
         });
     }
     return (
@@ -43,20 +46,33 @@ export default function ChangePassword() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-
                     <div className="relative">
                         <LockKeyhole
                             className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                             size={18}
                         />
                         <Input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="New Password"
                             value={new_password}
                             onChange={(e) => setNewPassword(e.target.value)}
                             required
                             className="pl-10 py-2 w-full border rounded-xl text-sm"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword((v) => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            aria-label={
+                                showPassword ? "Hide password" : "Show password"
+                            }
+                        >
+                            {showPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                            ) : (
+                                <Eye className="h-5 w-5" />
+                            )}
+                        </button>
                     </div>
 
                     <div className="relative">
@@ -65,13 +81,27 @@ export default function ChangePassword() {
                             size={18}
                         />
                         <Input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Confirm Password"
                             value={confirm_password}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             required
                             className="pl-10 py-2 w-full border rounded-xl text-sm"
                         />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword((v) => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                            aria-label={
+                                showPassword ? "Hide password" : "Show password"
+                            }
+                        >
+                            {showPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                            ) : (
+                                <Eye className="h-5 w-5" />
+                            )}
+                        </button>
                     </div>
                     <Button type="submit" className="w-full bg-primaryButton hover:bg-primaryHover italic cursor-pointer text-white" disabled={false}>
                         Change Password

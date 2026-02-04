@@ -9,6 +9,8 @@ interface ForgotPasswordStore {
     confirm_password: string;
     token: string;
     reset_token: string;
+    reset_all_fields: () => void;
+    setResetAllFields: () => void;
     setUserId: (user_id: string) => void;
     setEmail: (email: string) => void;
     setOtp: (otp: string) => void;
@@ -16,6 +18,7 @@ interface ForgotPasswordStore {
     setConfirmPassword: (confirm_password: string) => void;
     setToken: (token: string) => void;
     setResetToken: (reset_token: string) => void;
+
 }
 
 export const useForgotPasswordStore = create<ForgotPasswordStore>()(
@@ -23,12 +26,26 @@ export const useForgotPasswordStore = create<ForgotPasswordStore>()(
         persist(
             (set, get) => ({
                 user_id: "",
+                token: "",
                 email: "",
                 otp: "",
                 new_password: "",
                 confirm_password: "",
-                token: "",
                 reset_token: "",
+                reset_all_fields: () => set({
+                    email: "",
+                    otp: "",
+                    new_password: "",
+                    confirm_password: "",
+                    reset_token: "",
+                }),
+                setResetAllFields: () => set({
+                    email: "",
+                    otp: "",
+                    new_password: "",
+                    confirm_password: "",
+                    reset_token: "",
+                }),
                 setResetToken: (reset_token: string) => set({ reset_token }),
                 setUserId: (user_id: string) => set({ user_id }),
                 setEmail: (email: string) => set({ email }),
