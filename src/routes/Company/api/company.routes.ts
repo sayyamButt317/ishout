@@ -116,3 +116,8 @@ export const CompanyChangePasswordApi = async (password: ChangePasswordRequestPr
   const response = await api.put(CompanyENDPOINT.RESET_PASSWORD, { password });
   return response.data;
 }
+
+export const CompanyResetPasswordApi = async (payload: ChangePasswordRequestProps) => {
+  const response = await api.put(CompanyENDPOINT.RESET_PASSWORD, payload);
+  return response.data;
+}
