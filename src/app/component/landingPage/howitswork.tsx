@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import CustomButton from '../button';
 
 export default function HowItWorks({ id }: { id: string }) {
   return (
@@ -21,11 +22,6 @@ export default function HowItWorks({ id }: { id: string }) {
             viewBox="0 495 277.77 1600"
             preserveAspectRatio="xMinYMin slice"
           >
-            <path d="M5.53,541v30.12" strokeWidth="0.60" fill="none" />
-            <path d="M5.53,719v30.12" strokeWidth="0.60" fill="none" />
-            <path d="M5.53,890v30.12" strokeWidth="0.60" fill="none" />
-            <path d="M5.53,1063v30.12" strokeWidth="0.60" fill="none" />
-            <path d="M5.53,1241v30.12" strokeWidth="0.60" fill="none" />
             <path
               fill="none"
               strokeLinecap="round"
@@ -48,7 +44,26 @@ export default function HowItWorks({ id }: { id: string }) {
                     </span>
                   </div>
                   <div className="absolute top-7.5 left-13.75 z-10">
-                    <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50"></div>
+                    <div className="relative flex items-center justify-center">
+                      {/* Vertical line (centered behind dot) */}
+                      <svg
+                        className="absolute left-1/2 -translate-x-1/2"
+                        width="2"
+                        height="80"
+                        viewBox="0 0 2 80"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 0v80"
+                          stroke="white"
+                          strokeWidth="1.2"
+                          opacity="0.6"
+                        />
+                      </svg>
+
+                      {/* Dot (unchanged position) */}
+                      <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50 relative z-10"></div>
+                    </div>
                   </div>
                   <div className="flex-1 pl-8">
                     <h3 className="mb-3 text-[25pt] font-bold text-white italic">
@@ -85,7 +100,23 @@ export default function HowItWorks({ id }: { id: string }) {
                     </span>
                   </div>
                   <div className="absolute top-7.5 left-13.75 z-10">
-                    <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50"></div>
+                    <div className="relative flex items-center justify-center">
+                      <svg
+                        className="absolute left-1/2 -translate-x-1/2"
+                        width="2"
+                        height="80"
+                        viewBox="0 0 2 80"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 0v80"
+                          stroke="white"
+                          strokeWidth="1.2"
+                          opacity="0.6"
+                        />
+                      </svg>
+                      <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50 relative z-10"></div>
+                    </div>
                   </div>
                   <div className="flex-1 pl-8">
                     <h3 className="mb-3 text-[25pt] font-bold text-white italic">
@@ -123,7 +154,23 @@ export default function HowItWorks({ id }: { id: string }) {
                     </span>
                   </div>
                   <div className="absolute top-7.5 left-13.75 z-10">
-                    <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50"></div>
+                    <div className="relative flex items-center justify-center">
+                      <svg
+                        className="absolute left-1/2 -translate-x-1/2"
+                        width="2"
+                        height="80"
+                        viewBox="0 0 2 80"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 0v80"
+                          stroke="white"
+                          strokeWidth="1.2"
+                          opacity="0.6"
+                        />
+                      </svg>
+                      <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50 relative z-10"></div>
+                    </div>
                   </div>
                   <div className="flex-1 pl-8">
                     <h3 className="mb-3 text-[25pt] font-bold text-white italic">
@@ -159,7 +206,23 @@ export default function HowItWorks({ id }: { id: string }) {
                     </span>
                   </div>
                   <div className="absolute top-7.5 left-13.75 z-10">
-                    <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50"></div>
+                    <div className="relative flex items-center justify-center">
+                      <svg
+                        className="absolute left-1/2 -translate-x-1/2"
+                        width="2"
+                        height="80"
+                        viewBox="0 0 2 80"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 0v80"
+                          stroke="white"
+                          strokeWidth="1.2"
+                          opacity="0.6"
+                        />
+                      </svg>
+                      <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50 relative z-10"></div>
+                    </div>
                   </div>
                   <div className="flex-1 pl-8">
                     <h3 className="mb-3 text-[25pt] font-bold text-white italic">
@@ -195,7 +258,23 @@ export default function HowItWorks({ id }: { id: string }) {
                     </span>
                   </div>
                   <div className="absolute top-7.5 left-13.75 z-10">
-                    <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50"></div>
+                    <div className="relative flex items-center justify-center">
+                      <svg
+                        className="absolute left-1/2 -translate-x-1/2"
+                        width="2"
+                        height="80"
+                        viewBox="0 0 2 80"
+                        fill="none"
+                      >
+                        <path
+                          d="M1 0v80"
+                          stroke="white"
+                          strokeWidth="1.2"
+                          opacity="0.6"
+                        />
+                      </svg>
+                      <div className="h-3 w-3 rounded-full bg-white shadow-lg shadow-white/50 relative z-10"></div>
+                    </div>
                   </div>
                   <div className="flex-1 pl-8">
                     <h3 className="mb-3 text-[25pt] font-bold text-white italic">
@@ -370,26 +449,56 @@ export default function HowItWorks({ id }: { id: string }) {
             </div>
           </div>
         </div>
-        <div className="relative text-center mt-20">
+        <div className="relative text-center mt-14">
           <div className="flex items-center justify-center">
             <div className="relative container flex w-full items-center justify-center">
               <div className="flex-1"></div>
+
               <div className="relative z-10">
-                <div className="absolute inset-0 rounded-full bg-linear-to-r from-neutral-500 via-[#CCCCCD] to-neutral-500 opacity-50 blur-xl"></div>
-                <button className="group relative">
-                  <div className="absolute inset-0 rounded-full from-gray-400 via-[#CCCCCD] to-gray-400 opacity-40 blur-md transition-opacity duration-300 group-hover:bg-linear-to-r group-hover:opacity-40"></div>
-                  <div className="rounded-3xl border border-white/15 p-[5.5px]">
-                    <div className="rounded-3xl border border-white/40 p-1.5">
-                      <div className="relative transform cursor-pointer rounded-2xl bg-linear-to-r from-gray-300 via-gray-50 to-gray-300 px-8 py-2.5 shadow-2xl transition-all duration-300 group-hover:shadow-white/20">
-                        <span className="dark-text font-extrabold tracking-tight md:text-[15pt]">
-                          Launch Your Campaign
-                        </span>
-                      </div>
-                    </div>
+                {/* REDUCED GLOW: Lowered opacity from 50 to 20 and adjusted blur */}
+                <div className="absolute inset-0 rounded-full bg-white opacity-20 blur-2xl"></div>
+
+                {/* Layer 1: Outer Border */}
+                <div className="mt-6 p-[6px] border border-white/10 rounded-[22px] inline-block relative z-10">
+                  {/* Layer 2: Middle Border */}
+                  <div className="p-[8px] border border-white/20 rounded-[20px] inline-block">
+                    <CustomButton
+                      className="
+                /* Background & Subtle Gradient */
+                bg-gradient-to-b from-white to-[#f8fafc]
+                hover:from-gray-50 hover:to-[#f1f5f9]
+                
+                /* Typography */
+                text-black 
+                text-xl 
+                font-black 
+                italic 
+                tracking-tight
+                
+                /* Sizing & Shape */
+                rounded-[14px] 
+                h-14 
+                px-14 
+                
+                /* Border instead of Shadow */
+                border-b-2 border-gray-200
+                
+                /* Interactive */
+                cursor-pointer
+                transition-all 
+                duration-150
+                active:scale-95
+                active:border-b-0
+              "
+                    >
+                      Launch Your Campaign
+                    </CustomButton>
                   </div>
-                </button>
+                </div>
               </div>
-              <div className="flex-1 bg-linear-to-l from-transparent via-neutral-700 to-neutral-600 p-[0.5px]"></div>
+
+              {/* Side decorative line */}
+              <div className="flex-1 bg-gradient-to-l from-transparent via-neutral-700 to-neutral-600 h-[1px] mt-5"></div>
             </div>
           </div>
         </div>

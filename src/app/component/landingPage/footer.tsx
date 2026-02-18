@@ -1,5 +1,7 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import CustomButton from '../button';
+import CalendlyDemo from '../calendly-demo';
 
 export default function Footer() {
   return (
@@ -14,12 +16,39 @@ export default function Footer() {
           Join the brands transforming the influencer marketing with AI
         </p>
 
-        <div className="border border-white/10 rounded-2xl p-1 shadow-lg">
-          <Button className="bg-primaryButton hover:bg-primaryHover italic text-white w-52 sm:w-60 rounded-lg">
-            Book Your Demo
-          </Button>
-        </div>
+        <CalendlyDemo>
+          {/* Layer 1: The New Outer-most Border */}
+          <div className="mt-6 p-[6px] border border-white/15 rounded-[22px] inline-block">
+            {/* Layer 2: Middle Border */}
+            <div className="p-[8px] border border-white/30 rounded-[20px] inline-block">
+              <CustomButton
+                className="
+          bg-[#ff3b8d]
+          hover:bg-[#ff5a9e]
+          cursor-pointer
+          rounded-[14px]
+          h-14
+          px-20
+          text-xl
+          font-extrabold
+          italic
+          text-white
 
+          /* Base glow - subtle */
+          shadow-[0_0_12px_rgba(255,255,255,0.25),0_0_25px_rgba(255,255,255,0.15),0_0_40px_rgba(255,255,255,0.08)]
+
+          /* Hover glow - soft but visible */
+          hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)]
+
+          transition-all
+          duration-150
+        "
+              >
+                Book a Demo
+              </CustomButton>
+            </div>
+          </div>
+        </CalendlyDemo>
         <p className="text-xs sm:text-sm font-thin italic text-slate-100">
           Let&apos;s Talk
         </p>
