@@ -1,6 +1,7 @@
 import {
   BarChart3,
   CircleCheck,
+  Handshake,
   // FileText,
   Hourglass,
   LayoutGrid,
@@ -96,12 +97,21 @@ export const adminSidebarLinks = [
       </div>
     ),
   },
+  // {
+  //   label: "Instagram",
+  //   route: "/Admin/messages",
+  //   icon: (
+  //     <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
+  //       <SiInstagram className="text-2xl text-white" />
+  //     </div>
+  //   ),
+  // },
   {
-    label: "Instagram",
-    route: "/Admin/messages",
+    label: "Negotiation",
+    route: "/Admin/negotiation",
     icon: (
-      <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
-        <SiInstagram className="text-2xl text-white" />
+      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
+        <Handshake className="text-2xl text-white" />
       </div>
     ),
   },

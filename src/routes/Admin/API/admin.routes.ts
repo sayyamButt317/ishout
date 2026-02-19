@@ -261,6 +261,24 @@ export const AdminDeleteWhatsappUserMessagesApi = async (thread_id: string) => {
     return response.data;
 }
 
+
+export const AdminSendNegotiationMessage = async (influencer_id: string) => {
+    const response = await api.post(AdminENDPOINT.SENDNEGOTITIONTEMPLATE, {
+        influencer_id,
+    });
+    return response.data;
+}
+
+export const NegotiationStatsApi = async (page: number = 1, page_size: number = 10) => {
+    const response = await api.get(AdminENDPOINT.NEGOTIATION_STATS, {
+        params: {
+            page,
+            page_size
+        }
+    });
+    return response.data;
+}
+
 export const SendOnboardingMessage = async (
     psid: number,
     messageTemplate: MessageTemplate

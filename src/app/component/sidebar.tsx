@@ -87,8 +87,6 @@ export default function Sidebar({ links }: SidebarProps) {
 
 
       <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
-
-      {/* Mobile Sidebar */}
       {/* Mobile Sidebar */}
       <div className="md:hidden">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>

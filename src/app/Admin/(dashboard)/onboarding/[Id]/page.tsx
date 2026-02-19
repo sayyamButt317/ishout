@@ -11,17 +11,19 @@ import {
   UsernameLink,
 } from "@/src/helper/followersformat";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
-import { ArrowLeft, MessageCircle, Pencil, RefreshCcw } from "lucide-react";
+import { ArrowLeft, MessageCircle, Pencil, RefreshCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
 import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
 import ChooseOptionDialog from "@/src/app/component/custom-component/choseoptionDialogue";
+import SendNegotiationHook from "@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook";
 
 
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
+  const { mutate: sendNegotiationMutation, isPending } = SendNegotiationHook();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } = OnboardingHook(
@@ -52,30 +54,6 @@ export default function OnboardingInfluencerByCampaignId() {
     },
     []
   );
-
-  // const handleSendOnboardingMessage = async (psid: number) => {
-  //   try {
-  //     const messageTemplate = {
-  //       title: "Hey 👋",
-  //       subtitle:
-  //         "We're reaching out from iShout regarding an upcoming campaign.\n\n" +
-  //         "We'd love to move forward and would like to confirm a few details:\n\n" +
-  //         "1. Are you available?\n" +
-  //         "2. Please share your pricing.\n" +
-  //         "3. Kindly provide your WhatsApp / phone number.\n\n" +
-  //         "Looking forward to your response!\n— iShout Team",
-  //     };
-
-  //     await SendOnboardingMessage(psid, messageTemplate);
-  //     toast.success("Message sent successfully!");
-  //   } catch (error) {
-  //     const errorMessage =
-  //       error instanceof Error && error.message
-  //         ? error.message
-  //         : "Failed to send message. Please try again.";
-  //     toast.error(errorMessage);
-  //   }
-  // };
 
   return (
     <>
@@ -130,6 +108,7 @@ export default function OnboardingInfluencerByCampaignId() {
           "Company",
           "Message",
           "Edit",
+          "Negotiation"
         ]}
         subheader={data?.influencers?.map(
           (influencer: ReviewInfluencerResponse) => [
@@ -204,7 +183,6 @@ export default function OnboardingInfluencerByCampaignId() {
                 variant="ghost"
                 onClick={() => {
                   handleMessage(influencer.platform, influencer.username);
-                  // handleSendOnboardingMessage(1565041078267027);
                 }}
               >
                 <span className="flex items-center gap-2">
@@ -236,6 +214,21 @@ export default function OnboardingInfluencerByCampaignId() {
                   <Pencil className="h-4 w-4" />
                 </span>
               </Button>
+            </div>,
+            <div
+              key={`action-${influencer._id}`}
+              className="text-xs text-slate-400"
+            >
+              <CustomButton
+                className="cursor-pointer bg-primaryButton hover:bg-secondaryHover text-white"
+                onClick={() => {
+                  sendNegotiationMutation(influencer._id);
+                }}
+                disabled={isPending}
+              >
+                <Sparkles className={`h-4 w-4 ${isPending ? " animate-spin" : ""}`} />
+                {isPending ? "Sending..." : "Send Negotiation"}
+              </CustomButton>
             </div>,
           ]
         )}
