@@ -1,10 +1,8 @@
 "use client";
-import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
 import { useCallback, useState } from "react";
 import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
-import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
-import { ArrowLeft, RefreshCcw } from "lucide-react";
-import { ArrowLeft, MessageCircle, Pencil, RefreshCcw, Sparkles } from "lucide-react";
+import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer"
+import { ArrowLeft,  Pencil, RefreshCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
@@ -61,30 +59,6 @@ export default function OnboardingInfluencerByCampaignId() {
     });
     setDialogOpen(true);
   }, []);
-
-  // const handleSendOnboardingMessage = async (psid: number) => {
-  //   try {
-  //     const messageTemplate = {
-  //       title: "Hey 👋",
-  //       subtitle:
-  //         "We're reaching out from iShout regarding an upcoming campaign.\n\n" +
-  //         "We'd love to move forward and would like to confirm a few details:\n\n" +
-  //         "1. Are you available?\n" +
-  //         "2. Please share your pricing.\n" +
-  //         "3. Kindly provide your WhatsApp / phone number.\n\n" +
-  //         "Looking forward to your response!\n— iShout Team",
-  //     };
-
-  //     await SendOnboardingMessage(psid, messageTemplate);
-  //     toast.success("Message sent successfully!");
-  //   } catch (error) {
-  //     const errorMessage =
-  //       error instanceof Error && error.message
-  //         ? error.message
-  //         : "Failed to send message. Please try again.";
-  //     toast.error(errorMessage);
-  //   }
-  // };
 
   return (
     <>
@@ -152,150 +126,7 @@ export default function OnboardingInfluencerByCampaignId() {
           </div>
         )
       )}
-      <TableComponent
-        header={[
-          "Influencer",
-          "Followers",
-          "Engagement",
-          "Country",
-          "Pricing",
-          "Phone Number",
-          "Min Price",
-          "Max Price",
-          "Platform",
-          "Admin",
-          "Company",
-          "Message",
-          "Edit",
-          "Negotiation"
-        ]}
-        subheader={data?.influencers?.map(
-          (influencer: ReviewInfluencerResponse) => [
-            <div
-              key={`profile-${influencer._id}`}
-              className="flex items-center gap-3"
-            >
-              <div className="relative h-12 w-12 rounded-full overflow-hidden border border-white/15">
-                <Image
-                  src={influencer.picture}
-                  alt={influencer.username}
-                  fill
-                  sizes="48px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="truncate max-w-[160px]">
-                <p className="font-semibold">
-                  <span
-                    className="text-white hover:text-blue-600 hover:underline cursor-pointer"
-                    onClick={() =>
-                      window.open(
-                        UsernameLink(influencer.platform, influencer.username),
-                        "_blank"
-                      )
-                    }
-                  >
-                    {influencer.username}
-                  </span>
-                </p>
-                <p className="text-xs text-slate-400 truncate">
-                  {influencer.bio || "—"}
-                </p>
-              </div>
-            </div>,
-            formatFollowers(influencer.followers),
-            <div key={`engagement-${influencer._id}`} className="text-xs truncate">
-              {formatEngagementRate(influencer.engagementRate)}
-            </div>,
-            <div key={`country-${influencer._id}`} className="text-xs truncate">
-              {influencer.country}
-            </div>,
-            <div key={`pricing-${influencer._id}`} className="truncate">
-              ${influencer.pricing}
-            </div>,
-            <div key={`phone-number-${influencer._id}`} className="text-center truncate">
-              {influencer?.phone_number || "—"}
-            </div>,
-            <div key={`min-price-${influencer._id}`} className="text-center truncate">
-              ${influencer?.min_price || Number(0)}
-            </div>,
-            <div key={`max-price-${influencer._id}`} className="text-center truncate">
-              ${influencer?.max_price || Number(0)}
-            </div>,
-            <div key={`platform-${influencer._id}`} className="truncate">
-              <PlatformBadge platform={[influencer.platform]} />
-            </div>,
-            <StatusBadge
-              key={`status-${influencer._id}`}
-              status={influencer.admin_approved ? "approved" : "reject"}
-            />,
-            <StatusBadge
-              key={`status-${influencer._id}`}
-              status={influencer.company_approved ? "approved" : "reject"}
-            />,
-            <div
-              key={`action-${influencer._id}`}
-              className="text-xs text-slate-400"
-            >
-              <Button
-                className="cursor-pointer"
-                variant="ghost"
-                onClick={() => {
-                  handleMessage(influencer.platform, influencer.username);
-                }}
-              >
-                <span className="flex items-center gap-2">
-                  <MessageCircle className="h-4 w-4 text-white" />
-                </span>
-              </Button>
-            </div>,
-            <div
-              key={`action-${influencer._id}`}
-              className="text-xs text-slate-400"
-            >
-              <Button
-                variant="ghost"
-                className="cursor-pointer"
-                onClick={() => {
-                  setSelectedInfluencer({
-                    username: influencer.username,
-                    platform: influencer.platform,
-                    picture: influencer.picture,
-                    influencer_id: influencer.influencer_id,
-                    phone_number: influencer.phone_number || "",
-                    min_price: influencer.min_price || 0,
-                    max_price: influencer.max_price || 0,
-                  });
-                  setDialogOpen(true);
-                }}
-              >
-                <span className="flex items-center gap-2">
-                  <Pencil className="h-4 w-4" />
-                </span>
-              </Button>
-            </div>,
-            <div
-              key={`action-${influencer._id}`}
-              className="text-xs text-slate-400"
-            >
-              <CustomButton
-                className="cursor-pointer bg-primaryButton hover:bg-secondaryHover text-white"
-                onClick={() => {
-                  sendNegotiationMutation(influencer._id);
-                }}
-                disabled={isPending}
-              >
-                <Sparkles className={`h-4 w-4 ${isPending ? " animate-spin" : ""}`} />
-                {isPending ? "Sending..." : "Send Negotiation"}
-              </CustomButton>
-            </div>,
-          ]
-        )}
-        paginationstart={currentPage}
-        paginationend={data?.total_pages ?? 1}
-        onPageChange={(page: number) => setCurrentPage(page)}
-        isLoading={isLoading}
-      />
+    
       <ChooseOptionDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
