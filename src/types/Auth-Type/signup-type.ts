@@ -22,7 +22,5 @@ export interface User {
     updated_at: string;
 }
 export type SignUpResponseProps = {
-    access_token: string;
-    refresh_token: string;
-    user: User;
-}
+  message: string;
+};

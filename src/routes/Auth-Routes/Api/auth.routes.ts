@@ -37,3 +37,10 @@ export const LoginMutationApi = async (loginRequest: LoginRequestProps) => {
   const response = await api.post<LoginResponseProps>(AuthENDPOINT.LOGIN, loginRequest);
   return response.data;
 }
+
+export const verifyEmailApi = async (token: string) => {
+  const response = await api.get<{ message: string }>(
+    `${AuthENDPOINT.VERIFY_EMAIL}?token=${token}`
+  );
+  return response.data;
+};
