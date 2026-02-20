@@ -84,10 +84,9 @@ export function InfluencersFollowersRange() {
                       }}
                       className={`
                         group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 ease-out
-                        ${
-                          isSelected
-                            ? "border-emerald-400 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 shadow-lg shadow-emerald-500/25"
-                            : "border-white/20 bg-white/5 hover:border-emerald-300/50 hover:bg-white/10"
+                        ${isSelected
+                          ? "border-emerald-400 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 shadow-lg shadow-emerald-500/25"
+                          : "border-white/20 bg-white/5 hover:border-emerald-300/50 hover:bg-white/10"
                         }
                      hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/20
                   focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:ring-offset-2 focus:ring-offset-slate-900
@@ -131,7 +130,6 @@ export function InfluencersFollowersRange() {
           ))}
         </div>
 
-        {/* Footer Info */}
         <div className="mt-8 flex items-center justify-between text-xs text-amber-200/60">
           <div className="flex items-center gap-2">
             <div className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
