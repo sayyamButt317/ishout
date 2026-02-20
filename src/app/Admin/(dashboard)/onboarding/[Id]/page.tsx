@@ -1,23 +1,15 @@
 "use client";
-import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import TableComponent from "@/src/app/component/CustomTable";
-import Image from "next/image";
 import { useCallback, useState } from "react";
 import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
-import StatusBadge from "@/src/app/component/custom-component/statusbadge";
-import {
-  formatEngagementRate,
-  formatFollowers,
-  UsernameLink,
-} from "@/src/helper/followersformat";
-import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
-import { ArrowLeft, MessageCircle, Pencil, RefreshCcw, Sparkles } from "lucide-react";
+import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer"
+import { ArrowLeft,  Pencil, RefreshCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
 import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
 import ChooseOptionDialog from "@/src/app/component/custom-component/choseoptionDialogue";
+import OnboardingCard from "@/src/app/component/Ready-made/onboarding-card";
 import SendNegotiationHook from "@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook";
 
 
@@ -54,6 +46,19 @@ export default function OnboardingInfluencerByCampaignId() {
     },
     []
   );
+
+  const handleEdit = useCallback((influencer: ReviewInfluencerResponse) => {
+    setSelectedInfluencer({
+      username: influencer.username,
+      platform: influencer.platform,
+      picture: influencer.picture,
+      influencer_id: influencer.influencer_id,
+      phone_number: influencer.phone_number || "",
+      min_price: influencer.min_price || 0,
+      max_price: influencer.max_price || 0,
+    });
+    setDialogOpen(true);
+  }, []);
 
   return (
     <>
@@ -93,150 +98,35 @@ export default function OnboardingInfluencerByCampaignId() {
         </p>
       </div>
 
-      <TableComponent
-        header={[
-          "Influencer",
-          "Followers",
-          "Engagement",
-          "Country",
-          "Pricing",
-          "Phone Number",
-          "Min Price",
-          "Max Price",
-          "Platform",
-          "Admin",
-          "Company",
-          "Message",
-          "Edit",
-          "Negotiation"
-        ]}
-        subheader={data?.influencers?.map(
-          (influencer: ReviewInfluencerResponse) => [
-            <div
-              key={`profile-${influencer._id}`}
-              className="flex items-center gap-3"
-            >
-              <div className="relative h-12 w-12 rounded-full overflow-hidden border border-white/15">
-                <Image
-                  src={influencer.picture}
-                  alt={influencer.username}
-                  fill
-                  sizes="48px"
-                  className="object-cover"
-                />
-              </div>
-              <div className="truncate max-w-[160px]">
-                <p className="font-semibold">
-                  <span
-                    className="text-white hover:text-blue-600 hover:underline cursor-pointer"
-                    onClick={() =>
-                      window.open(
-                        UsernameLink(influencer.platform, influencer.username),
-                        "_blank"
-                      )
-                    }
-                  >
-                    {influencer.username}
-                  </span>
-                </p>
-                <p className="text-xs text-slate-400 truncate">
-                  {influencer.bio || "—"}
-                </p>
-              </div>
-            </div>,
-            formatFollowers(influencer.followers),
-            <div key={`engagement-${influencer._id}`} className="text-xs truncate">
-              {formatEngagementRate(influencer.engagementRate)}
-            </div>,
-            <div key={`country-${influencer._id}`} className="text-xs truncate">
-              {influencer.country}
-            </div>,
-            <div key={`pricing-${influencer._id}`} className="truncate">
-              ${influencer.pricing}
-            </div>,
-            <div key={`phone-number-${influencer._id}`} className="text-center truncate">
-              {influencer?.phone_number || "—"}
-            </div>,
-            <div key={`min-price-${influencer._id}`} className="text-center truncate">
-              ${influencer?.min_price || Number(0)}
-            </div>,
-            <div key={`max-price-${influencer._id}`} className="text-center truncate">
-              ${influencer?.max_price || Number(0)}
-            </div>,
-            <div key={`platform-${influencer._id}`} className="truncate">
-              <PlatformBadge platform={[influencer.platform]} />
-            </div>,
-            <StatusBadge
-              key={`status-${influencer._id}`}
-              status={influencer.admin_approved ? "approved" : "reject"}
-            />,
-            <StatusBadge
-              key={`status-${influencer._id}`}
-              status={influencer.company_approved ? "approved" : "reject"}
-            />,
-            <div
-              key={`action-${influencer._id}`}
-              className="text-xs text-slate-400"
-            >
-              <Button
-                className="cursor-pointer"
-                variant="ghost"
-                onClick={() => {
-                  handleMessage(influencer.platform, influencer.username);
-                }}
-              >
-                <span className="flex items-center gap-2">
-                  <MessageCircle className="h-4 w-4 text-white" />
-                </span>
-              </Button>
-            </div>,
-            <div
-              key={`action-${influencer._id}`}
-              className="text-xs text-slate-400"
-            >
-              <Button
-                variant="ghost"
-                className="cursor-pointer"
-                onClick={() => {
-                  setSelectedInfluencer({
-                    username: influencer.username,
-                    platform: influencer.platform,
-                    picture: influencer.picture,
-                    influencer_id: influencer.influencer_id,
-                    phone_number: influencer.phone_number || "",
-                    min_price: influencer.min_price || 0,
-                    max_price: influencer.max_price || 0,
-                  });
-                  setDialogOpen(true);
-                }}
-              >
-                <span className="flex items-center gap-2">
-                  <Pencil className="h-4 w-4" />
-                </span>
-              </Button>
-            </div>,
-            <div
-              key={`action-${influencer._id}`}
-              className="text-xs text-slate-400"
-            >
-              <CustomButton
-                className="cursor-pointer bg-primaryButton hover:bg-secondaryHover text-white"
-                onClick={() => {
-                  sendNegotiationMutation(influencer._id);
-                }}
-                disabled={isPending}
-              >
-                <Sparkles className={`h-4 w-4 ${isPending ? " animate-spin" : ""}`} />
-                {isPending ? "Sending..." : "Send Negotiation"}
-              </CustomButton>
-            </div>,
-          ]
-        )}
-        paginationstart={currentPage}
-        paginationend={data?.total_pages ?? 1}
-        onPageChange={(page: number) => setCurrentPage(page)}
-        isLoading={isLoading}
-      />
+      {isLoading && (
+        <div className="flex justify-center items-center min-h-[200px]">
+          <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
+            Loading onboarded influencers...
+          </div>
+        </div>
+      )}
+
+      {data?.influencers?.length ? (
+        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4">
+          {data?.influencers?.map((influencer: ReviewInfluencerResponse) => (
+            <OnboardingCard
+              key={influencer._id}
+              influencer={influencer}
+              onEdit={handleEdit}
+              onMessage={handleMessage}
+            />
+          ))}
+        </div>
+      ) : (
+        !isLoading && (
+          <div className="flex justify-center items-center min-h-[200px]">
+            <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
+              No onboarded influencers found
+            </div>
+          </div>
+        )
+      )}
+    
       <ChooseOptionDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
