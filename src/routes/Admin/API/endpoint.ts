@@ -1,4 +1,5 @@
 export const AdminENDPOINT = {
+    CAMPAIGN_BREIF: `/campaign-breif`,
     INFLUENCERS_CAMPAIGN_BY_ID: (campaign_id: string) => `/admin/campaigns/${campaign_id}`,
     INFLUENCERS_LIST_BY_ID: (campaign_id: string) => `/admin/campaigns/${campaign_id}/generate-influencers`,
 
@@ -46,4 +47,6 @@ export const AdminENDPOINT = {
     META_MESSAGE: `https://graph.facebook.com/v23.0/me/messages`,
 
     DELETE_WHATSAPP_USER_MESSAGES: (thread_id: string) => `/admin/delete-whatsapp-chat/${thread_id}`,
+    SENDNEGOTITIONTEMPLATE: `/admin/negotiation-initial-message`,
+    NEGOTIATION_STATS: `/admin/negotiation-controls`
 }

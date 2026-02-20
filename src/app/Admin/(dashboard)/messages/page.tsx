@@ -165,7 +165,7 @@ export default function InstagramInbox() {
               businessUsername={BUSINESS_USERNAME}
             />
 
-            {/* Input (future send message) */}
+            {/* Input send message */}
             <div className="border-t border-gray-700 p-3 flex flex-row gap-2">
               <Input
                 disabled={!otherPSID}

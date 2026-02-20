@@ -5,9 +5,7 @@ export default function LogoFooter() {
         <>
             <footer className='bg-black py-12 px-4 sm:px-6 lg:px-8'>
                 <div className='w-full max-w-7xl mx-auto'>
-
                     <div className="flex flex-wrap justify-between gap-y-12 lg:gap-x-8">
-
                         <div className="w-full md:w-[45%] lg:w-[35%] flex flex-col items-center md:items-start text-center md:text-left">
                             <div className="flex flex-row items-center justify-center gap-1">
                                 <Image

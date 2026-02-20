@@ -4,7 +4,6 @@ import Sidebar from "../../component/sidebar";
 import { adminSidebarLinks } from "@/src/constant/sidebaritems";
 import WebSocketListener from "@/src/helper/websocket-listener";
 import NotificationBootstrap from "@/src/helper/NotificationBootstrap";
-import Image from "next/image";
 
 export default function AdminDashboardLayout({
   children,
