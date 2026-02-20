@@ -61,6 +61,8 @@ export const CompanyCampaignBreifApi = async (user_input: string) => {
   return response.data;
 }
 
+
+
 export const FindInfluencer = async (influencerRequest: FindInfluencerRequestProps) => {
   const response = await api.post(CompanyENDPOINT.CREATE_CAMPAIGN, influencerRequest);
   return response.data;
