@@ -1,5 +1,5 @@
 export const CompanyENDPOINT = {
-
+  CAMPAIGN_BREIF: `/company/campaign-brief`,
   CAMPAIGN: `/company/campaigns`,
   CREATE_CAMPAIGN: `/company/campaigns`,
   CAMPAIGN_REJECTED_INFLUENCERS: `/company/campaigns/rejected-influencers`,
