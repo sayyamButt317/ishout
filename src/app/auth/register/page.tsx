@@ -12,6 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import PhoneInput from "react-phone-number-input";
 import {
   SignUpFormSchema,
   SignUpFormValidator,
@@ -108,12 +109,15 @@ export default function Signup() {
                         <FormLabel className="text-sm font-medium text-slate-700">
                           Phone Number
                         </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="971 9876543210"
-                            type="tel"
-                            className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            {...field}
+                        <FormControl className="overflow-hidden">
+                          <PhoneInput
+                            international
+                            defaultCountry="AE"
+                            countryCallingCodeEditable={false}
+                            placeholder="Enter phone number"
+                            value={field.value}
+                            onChange={(value) => field.onChange(value ?? "")}
+                            className="signup-phone-input text-black h-11 rounded-md border border-slate-200 bg-white px-3 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-transparent w-full"
                           />
                         </FormControl>
                         <FormMessage className="text-xs" />

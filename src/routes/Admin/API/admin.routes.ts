@@ -54,7 +54,10 @@ api.interceptors.response.use(
     },
 );
 
-
+export const AdminCampaignBreifApi = async (user_input: string) => {
+    const response = await api.post(AdminENDPOINT.CAMPAIGN_BREIF, { user_input: user_input });
+    return response.data;
+}
 interface AdminAllCampaignParams {
     page?: number;
     status?: string;
@@ -258,6 +261,24 @@ export const AdminInstaConversationByIdApi = async (conversation_id: string) => 
 
 export const AdminDeleteWhatsappUserMessagesApi = async (thread_id: string) => {
     const response = await api.delete(AdminENDPOINT.DELETE_WHATSAPP_USER_MESSAGES(thread_id));
+    return response.data;
+}
+
+
+export const AdminSendNegotiationMessage = async (influencer_id: string) => {
+    const response = await api.post(AdminENDPOINT.SENDNEGOTITIONTEMPLATE, {
+        influencer_id,
+    });
+    return response.data;
+}
+
+export const NegotiationStatsApi = async (page: number = 1, page_size: number = 10) => {
+    const response = await api.get(AdminENDPOINT.NEGOTIATION_STATS, {
+        params: {
+            page,
+            page_size
+        }
+    });
     return response.data;
 }
 

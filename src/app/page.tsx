@@ -1,13 +1,14 @@
-"use client";
-import CustomButton from "./component/button";
-import Header from "./component/header";
-import HowItWorks from "@/src/app/component/landingPage/howitswork";
-import Image from "next/image";
-import Video from "./component/video";
-import VideoCarousel from "./component/custom-component/video-carousel";
-import { CaseStudiesVideos, ReachGCCVideos } from "../constant/videoUrls";
-import Footer from "./component/landingPage/footer";
-import LogoFooter from "./component/logo-footer";
+'use client';
+import CustomButton from './component/button';
+import Header from './component/header';
+import HowItWorks from '@/src/app/component/landingPage/howitswork';
+import Image from 'next/image';
+import Video from './component/video';
+import VideoCarousel from './component/custom-component/video-carousel';
+import { CaseStudiesVideos, ReachGCCVideos } from '../constant/videoUrls';
+import Footer from './component/landingPage/footer';
+import LogoFooter from './component/logo-footer';
+import CalendlyDemo from './component/calendly-demo';
 
 export default function LandingPage() {
   return (
@@ -44,9 +45,37 @@ export default function LandingPage() {
             <p className="text-base font-thin sm:text-lg text-slate-100 max-w-xl italic mt-4">
               Where brands build influence with data, speed, and precision.
             </p>
-            <CustomButton className="mt-6 bg-primaryButton hover:bg-primaryHover cursor-pointer rounded-full">
-              Book a Demo
-            </CustomButton>
+            <CalendlyDemo>
+              <div className="mt-6 p-[6px] border border-white/15 rounded-[22px] inline-block">
+                <div className="p-[8px] border border-white/30 rounded-[20px] inline-block">
+                  <CustomButton
+                    className="
+          bg-[#ff3b8d]
+          hover:bg-[#ff5a9e]
+          cursor-pointer
+          rounded-[14px]
+          h-14
+          px-20
+          text-xl
+          font-extrabold
+          italic
+          text-white
+
+          /* Base glow - subtle */
+          shadow-[0_0_12px_rgba(255,255,255,0.25),0_0_25px_rgba(255,255,255,0.15),0_0_40px_rgba(255,255,255,0.08)]
+
+          /* Hover glow - soft but visible */
+          hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)]
+
+          transition-all
+          duration-150
+        "
+                  >
+                    Book a Demo
+                  </CustomButton>
+                </div>
+              </div>
+            </CalendlyDemo>
           </div>
           <div className="flex-1 flex justify-center md:justify-end items-center relative">
             <Video />
@@ -61,8 +90,8 @@ export default function LandingPage() {
         <p className="italic mt-4 text-center justify-center items-center text-neutral-600 dark:text-neutral-400 text-base md:text-md font-sans max-w-2xl mx-auto">
           <span className="font-bold">Proven Results at Scale,</span>
           <span className="font-thin justify-center items-center">
-            We &apos;ve helped over 600 brands amplify their reach and
-            performance with <span className="font-bold">AI-powered </span>
+            We &apos;ve helped over 600 brands amplify their reach and performance with{' '}
+            <span className="font-bold">AI-powered </span>
             influencers. marketing
           </span>
         </p>
