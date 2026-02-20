@@ -8,13 +8,22 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const options = [
+  // {
+  //   id: "template",
+  //   title: "Quick Template",
+  //   description:
+  //     "Start fast with a ready-made campaign template to launch quickly and save time.",
+  //   icon: Sparkles,
+  //   route: "/client/create-campaign",
+  //   img: "/assets/quick-template.png",
+  // },
   {
-    id: "template",
+    id: "campaign-breif",
     title: "Quick Template",
     description:
       "Start fast with a ready-made campaign template to launch quickly and save time.",
     icon: Sparkles,
-    route: "/client/create-campaign",
+    route: "/client/campaign-breif",
     img: "/assets/quick-template.png",
   },
   {
@@ -30,29 +39,6 @@ const options = [
 
 export default function ChooseCampaign() {
   const router = useRouter();
-  // const messages = useWhatsAppChatStore((s) => s.chats[Id ?? ""] || []);
-  // const addMessage = useWhatsAppChatStore((s) => s.addMessage);
-  // const setMessages = useWhatsAppChatStore((s) => s.setMessages);
-  // const { playMessageSentSound } = useNotificationSound();
-
-  // const sendMessage = SendWhatsappMessageHook(Id ?? "");
-
-  // const handleSend = useCallback(
-  //   (msg: string) => {
-
-  //     const newMessage: ChatMessage = {
-  //       _id: crypto.randomUUID(),
-  //       thread_id: Id!,
-  //       sender: "ADMIN",
-  //       message: msg,
-  //       timestamp: new Date().toISOString(),
-  //     };
-  //     addMessage(Id!, newMessage);
-  //     playMessageSentSound();
-  //     sendMessage.mutate(msg);
-  //   },
-  //   [adminTakeover, playMessageSentSound, Id, addMessage, sendMessage]
-  // );
   return (
     <div className="col-span-12 w-full flex justify-center px-4 sm:px-6 lg:px-10">
       <Card className="w-full max-w-6xl rounded-4xl bg-transparent border-none shadow-2xl p-6 sm:p-10">
