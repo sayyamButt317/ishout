@@ -1,4 +1,5 @@
 export const AdminENDPOINT = {
+    CAMPAIGN_BREIF: `/campaign-breif`,
     INFLUENCERS_CAMPAIGN_BY_ID: (campaign_id: string) => `/admin/campaigns/${campaign_id}`,
     INFLUENCERS_LIST_BY_ID: (campaign_id: string) => `/admin/campaigns/${campaign_id}/generate-influencers`,
 

@@ -54,7 +54,10 @@ api.interceptors.response.use(
     },
 );
 
-
+export const AdminCampaignBreifApi = async (user_input: string) => {
+    const response = await api.post(AdminENDPOINT.CAMPAIGN_BREIF, { user_input: user_input });
+    return response.data;
+}
 interface AdminAllCampaignParams {
     page?: number;
     status?: string;
