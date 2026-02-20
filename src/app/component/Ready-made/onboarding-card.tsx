@@ -54,13 +54,13 @@ const OnboardingCard = ({
             <Image
               src={influencer?.picture}
               alt={influencer?.username}
-              width={72}
-              height={72}
-              className="h-16 w-16 rounded-full object-cover ring-2 ring-white/10"
+              width={64}
+              height={64}
+              className="h-14 w-14 rounded-full object-cover ring-2 ring-white/10"
             />
             <div className="min-w-0">
               <div
-                className="text-[22px] italic font-semibold leading-tight text-white truncate cursor-pointer"
+                className="text-lg italic font-semibold leading-tight text-white truncate cursor-pointer"
                 onClick={() =>
                   window.open(
                     UsernameLink(
@@ -74,19 +74,19 @@ const OnboardingCard = ({
                 @{influencer?.username || "No name available"}
               </div>
 
-              <div className="mt-1 flex items-center gap-2 text-sm text-white/60 min-w-0">
-                <MapPin className="h-4 w-4 shrink-0" />
+              <div className="mt-1 flex items-center gap-1.5 text-xs text-white/60 min-w-0">
+                <MapPin className="h-3.5 w-3.5 shrink-0" />
                 <span className="truncate">{influencer?.country}</span>
-                <span className="text-white/25">|</span>
-                <span className="inline-flex items-center gap-2">
+                <span className="text-white/25 text-sm">|</span>
+                <span className="inline-flex items-center gap-1.5">
                   {influencer?.platform === "instagram" ? (
-                    <SiInstagram className="text-primarytext" size={16} />
+                    <SiInstagram className="text-primarytext" size={14} />
                   ) : influencer?.platform === "tiktok" ? (
-                    <SiTiktok className="text-white" size={16} />
+                    <SiTiktok className="text-white" size={14} />
                   ) : (
-                    <SiYoutube className="text-red-500" size={16} />
+                    <SiYoutube className="text-red-500" size={14} />
                   )}
-                  <span className="text-white/60 capitalize">{influencer?.platform}</span>
+                  <span className="text-white/60 capitalize text-xs">{influencer?.platform}</span>
                 </span>
               </div>
             </div>
@@ -96,15 +96,15 @@ const OnboardingCard = ({
             type="button"
             variant="ghost"
             onClick={() => onEdit(influencer)}
-            className="h-8 rounded-full border border-white/40 bg-white/[0.02] px-6 text-base font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
+            className="h-7 rounded-full border border-white/40 bg-white/[0.02] px-4 text-sm font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
           >
             Edit
           </Button>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-4">
+        <div className="mt-4 grid grid-cols-2 gap-3">
           <CustomButton
-            className="h-12 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal"
+            className="h-10 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal text-sm"
             onClick={() => {
               onMessage(
                 influencer?.platform as PlatformType,
@@ -116,28 +116,28 @@ const OnboardingCard = ({
           </CustomButton>
           <CustomButton
             onClick={handleViewProfile}
-            className="h-12 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal"
+            className="h-10 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal text-sm"
           >
             View Profile
           </CustomButton>
         </div>
 
         <div className="mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] divide-x divide-white/10">
-          <div className="py-3 text-center">
-            <p className="text-[11px] tracking-[0.16em] text-white/60">FOLLOWERS</p>
-            <p className="mt-1 text-lg font-semibold text-white">
+          <div className="py-2.5 text-center">
+            <p className="text-[10px] tracking-[0.16em] text-white/60">FOLLOWERS</p>
+            <p className="mt-1 text-base font-semibold text-white">
               {formatFollowers(influencer?.followers || 0)}
             </p>
           </div>
-          <div className="py-3 text-center">
-            <p className="text-[11px] tracking-[0.16em] text-white/60">ENGAGE</p>
-            <p className="mt-1 text-lg font-semibold text-primarytext">
+          <div className="py-2.5 text-center">
+            <p className="text-[10px] tracking-[0.16em] text-white/60">ENGAGE</p>
+            <p className="mt-1 text-base font-semibold text-primarytext">
               {formatEngagementRate(influencer?.engagementRate)}
             </p>
           </div>
-          <div className="py-3 text-center">
-            <p className="text-[11px] tracking-[0.16em] text-white/60">PRICE</p>
-            <p className="mt-1 text-lg font-semibold text-white">
+          <div className="py-2.5 text-center">
+            <p className="text-[10px] tracking-[0.16em] text-white/60">PRICE</p>
+            <p className="mt-1 text-base font-semibold text-white">
               ${influencer?.pricing || 0}
             </p>
           </div>
@@ -145,18 +145,18 @@ const OnboardingCard = ({
 
         <div className="relative mt-4 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05]">
 
-          <div className="absolute left-1/2 top-1/2 h-18 w-px -translate-x-1/2 -translate-y-1/2 bg-white"></div>
+          <div className="absolute left-1/2 top-1/2 h-16 w-px -translate-x-1/2 -translate-y-1/2 bg-white"></div>
 
-          <div className="py-6 text-center">
+          <div className="py-5 text-center">
             <p className="text-sm text-white/75">Min Price</p>
-            <p className="mt-1 text-xl font-semibold text-white">
+            <p className="mt-1 text-lg font-semibold text-white">
               ${influencer?.min_price || 0}
             </p>
           </div>
 
-          <div className="py-6 text-center">
+          <div className="py-5 text-center">
             <p className="text-sm text-white/75">Max Price</p>
-            <p className="mt-1 text-xl font-semibold text-white">
+            <p className="mt-1 text-lg font-semibold text-white">
               ${influencer?.max_price || 0}
             </p>
           </div>
@@ -164,27 +164,26 @@ const OnboardingCard = ({
         </div>
 
 
-        <div className="mt-4 grid grid-cols-2 gap-4">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-5 py-4 text-center">
-            <p className="text-sm text-white/75">Admin Status</p>
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
+            <p className="text-sm text-white/75 whitespace-nowrap">Admin Status</p>
             <p
-              className={`mt-1 text-lg  font-normal ${influencer?.admin_approved ? "text-emerald-400" : "text-red-400"
-                }`}
+              className={`mt-1 text-base font-normal ${influencer?.admin_approved ? "text-emerald-400" : "text-red-400"
+                } whitespace-nowrap`}
             >
               {influencer?.admin_approved ? "Approved" : "Not Approved"}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-5 py-4 text-center">
-            <p className="text-sm text-white/75">Company Status</p>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
+            <p className="text-sm text-white/75 whitespace-nowrap">Company Status</p>
             <p
-              className={`mt-1 text-lg  font-normal ${influencer?.company_approved ? "text-emerald-400" : "text-red-400"
-                }`}
+              className={`mt-1 text-base font-normal ${influencer?.company_approved ? "text-emerald-400" : "text-red-400"
+                } whitespace-nowrap`}
             >
               {influencer?.company_approved ? "Approved" : "Not Approved"}
             </p>
           </div>
         </div>
-
 
         {/* 
         <div className="mt-6 flex items-center gap-3">

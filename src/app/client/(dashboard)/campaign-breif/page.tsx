@@ -1,22 +1,26 @@
 'use client';
-import { Input } from '@/components/ui/input';
-import Button from '@/src/app/component/button';
-import CampaignBreifHook from '@/src/routes/Company/api/Hooks/CampaignBreif-hook';
-import { Loader2, Send } from 'lucide-react';
-import { useState } from 'react';
+
+import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const CampaignBreifPage = () => {
-    const { mutate: generateCampaignBreif, isPending } = CampaignBreifHook();
+    const router = useRouter();
+    const [isPending, setIsPending] = useState(false);
     const [input, setInput] = useState('');
     
     const handleGenerateCampaignBreif = () => {
-        if (input.trim()) {
-            generateCampaignBreif(input);
-        }
+        const prompt = input.trim();
+        if (!prompt) return;
+
+        // Navigate to the result page. That page is structured so
+        // it can later render API output without changing the layout.
+        setIsPending(true);
+        router.push(`/client/campaign-breif/result?prompt=${encodeURIComponent(prompt)}`);
     }
 
-    const handleKeyPress = (e: React.KeyboardEvent) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter' && !isPending && input.trim()) {
             handleGenerateCampaignBreif();
         }
@@ -61,7 +65,7 @@ const CampaignBreifPage = () => {
                                 placeholder="Write down your prompt here...."
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
-                                onKeyPress={handleKeyPress}
+                                onKeyDown={handleKeyDown}
                                 className="flex-1 bg-transparent text-white placeholder:text-white/50 outline-none text-sm md:text-base font-normal"
                             />
                             <button
