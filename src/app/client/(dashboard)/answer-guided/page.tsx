@@ -1,11 +1,11 @@
-import GuidedQuestionSummary from "@/src/app/component/guided-questions/summary";
+// import GuidedQuestionSummary from "@/src/app/component/guided-questions/summary";
 
-const AnswerGuided = () => {
-  return (
-    <div>
-      <GuidedQuestionSummary />
-    </div>
-  );
-};
+// const AnswerGuided = () => {
+//   return (
+//     <div>
+//       <GuidedQuestionSummary />
+//     </div>
+//   );
+// };
 
-export default AnswerGuided;
+// export default AnswerGuided;
