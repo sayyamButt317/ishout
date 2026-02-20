@@ -82,9 +82,9 @@ export default function NegotiationPage() {
                             <div key={`intent-${userSession._id}`} className="truncate">
                                 {userSession?.intent}
                             </div>,
-                            <div key={`next-action-${userSession._id}`} className="truncate">
-                                {userSession?.analysis?.next_action}
-                            </div>,
+                            // <div key={`next-action-${userSession._id}`} className="truncate">
+                            //     {userSession?.analysis?.next_action}
+                            // </div>,
                             <div key={`manual-negotiation-${userSession._id}`} className="truncate">
                                 {userSession?.manual_negotiation}
                             </div>,
