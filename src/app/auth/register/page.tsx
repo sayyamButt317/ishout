@@ -56,23 +56,26 @@ export default function Signup() {
       <div className="h-full">
         <DomeGallery />
       </div>
-      <div className="bg-slate-50 flex items-center justify-center p-6 lg:p-12">
+      <div className="bg-gradient-to-tr from-indigo-900 to-slate-900 flex items-center justify-center p-4 lg:p-12">
         <Card className="bg-white w-full max-w-md text-card-foreground border border-border shadow-xl">
-          <CardContent className="p-8">
-            <div className="mb-2 flex flex-row items-center justify-center gap-0">
-              <Image
-                src="/assets/favicon.png"
-                alt="ishout"
-                width={40}
-                height={40}
-              />
-              <h2 className="text-2xl font-bold text-slate-900">iShout</h2>
-              <span className="text-primarytext font-extrabold text-2xl">
-                .
-              </span>
-            </div>
+          <CardContent className="p-4">
+            <Link href="/" className="cursor-pointer">
+              <div className="mb-2 flex flex-row items-center justify-center gap-0">
+                <Image
+                  src="/assets/favicon.png"
+                  alt="ishout"
+                  width={50}
+                  height={50}
+                />
+                <h2 className="text-3xl font-bold text-slate-900">iShout</h2>
+                <span className="text-primarytext font-extrabold text-3xl">
+                  .
+                </span>
+              </div>
+            </Link>
+
             <p className="text-slate-600 text-sm text-center">
-              Create your account to get started
+              Create your account to get started now
             </p>
             <Form {...form}>
               <form
