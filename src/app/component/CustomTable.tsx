@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -6,9 +6,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Eye, Trash } from "lucide-react";
-import Spinner from "./custom-component/spinner";
+} from '@/components/ui/table';
+import { Eye, Trash, Pencil } from 'lucide-react';
+import Spinner from './custom-component/spinner';
 
 interface TableProps {
   header: string[];
@@ -17,8 +17,10 @@ interface TableProps {
   subheader: (string | React.ReactNode)[][];
   showTrashIcon?: boolean;
   showEyeIcon?: boolean;
+  showEditIcon?: boolean; // ✅ Added
   onDelete?: (rowIndex: number) => void;
   onView?: (rowIndex: number) => void;
+  onEdit?: (rowIndex: number) => void; // ✅ Added
   onPageChange?: (page: number) => void;
   isLoading?: boolean;
   error?: {
@@ -33,8 +35,10 @@ export default function TableComponent({
   subheader,
   showTrashIcon = false,
   showEyeIcon = false,
+  showEditIcon = false, // ✅ Default added
   onDelete,
   onView,
+  onEdit, // ✅ Added
   onPageChange,
   isLoading = false,
   error,
@@ -51,6 +55,9 @@ export default function TableComponent({
     }
   };
 
+  const actionColumnCount =
+    showTrashIcon || showEyeIcon || showEditIcon ? 1 : 0;
+
   return (
     <div className="w-full overflow-x-auto text-white border rounded-md">
       <div className="min-h-[400px] flex flex-col justify-between">
@@ -65,7 +72,8 @@ export default function TableComponent({
                   {head}
                 </TableHead>
               ))}
-              {(showTrashIcon || showEyeIcon) && (
+
+              {(showTrashIcon || showEyeIcon || showEditIcon) && (
                 <TableHead className="text-left font-roboto text-[#535862] whitespace-nowrap">
                   Action
                 </TableHead>
@@ -77,17 +85,16 @@ export default function TableComponent({
             {isLoading ? (
               <TableRow>
                 <TableCell
-                  colSpan={header.length + (showTrashIcon ? 1 : 0)}
+                  colSpan={header.length + actionColumnCount}
                   className="text-center py-8"
                 >
                   <Spinner size={20} />
-                  {/* <Loader2 className="animate-spin text-white items-center" /> */}
                 </TableCell>
               </TableRow>
             ) : !subheader || subheader?.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={header.length + (showTrashIcon ? 1 : 0)}
+                  colSpan={header.length + actionColumnCount}
                   className="text-center py-8"
                 >
                   No data available
@@ -96,7 +103,7 @@ export default function TableComponent({
             ) : error ? (
               <TableRow>
                 <TableCell
-                  colSpan={header.length + (showTrashIcon ? 1 : 0)}
+                  colSpan={header.length + actionColumnCount}
                   className="text-center py-8"
                 >
                   Error: {error.message}
@@ -113,7 +120,8 @@ export default function TableComponent({
                       {cell}
                     </TableCell>
                   ))}
-                  {(showTrashIcon || showEyeIcon) && (
+
+                  {(showTrashIcon || showEyeIcon || showEditIcon) && (
                     <TableCell className="flex items-center gap-3">
                       {showEyeIcon && (
                         <Eye
@@ -121,9 +129,17 @@ export default function TableComponent({
                           onClick={() => onView?.(rowIndex)}
                         />
                       )}
+
+                      {showEditIcon && (
+                        <Pencil
+                          className="w-4 h-4 text-blue-400 cursor-pointer"
+                          onClick={() => onEdit?.(rowIndex)}
+                        />
+                      )}
+
                       {showTrashIcon && (
                         <Trash
-                          className="w-4 h-4 text-[#f7941D] cursor-pointer"
+                          className="w-4 h-4 text-red-400 cursor-pointer"
                           onClick={() => onDelete?.(rowIndex)}
                         />
                       )}
@@ -145,6 +161,7 @@ export default function TableComponent({
             >
               Previous
             </Button>
+
             <Button
               className="cursor-pointer"
               variant="outline"
@@ -154,6 +171,7 @@ export default function TableComponent({
               Next
             </Button>
           </div>
+
           <div className="text-sm text-gray-500 sm:text-right">
             Page {paginationstart} of {paginationend}
           </div>
