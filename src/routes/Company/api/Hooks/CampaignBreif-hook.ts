@@ -4,14 +4,16 @@ import { CompanyCampaignBreifApi } from "../company.routes";
 
 export default function CampaignBreifHook() {
     return useMutation({
-        mutationFn: (user_input: string) => CompanyCampaignBreifApi(user_input),
-        onSuccess: (data) => {
-            toast.success('Campaign breif generated successfully');
-            return data;
+        mutationFn: (payload: {
+            user_input: string,
+            user_id: string
+        }) =>
+            CompanyCampaignBreifApi(payload),
+        onSuccess: () => {
+            toast.success("Campaign brief generated successfully");
         },
-        onError: (error) => {
-            toast.error('Failed to generate campaign breif');
-            return error;
+        onError: () => {
+            toast.error("Failed to generate campaign brief");
         },
-    })
+    });
 }
