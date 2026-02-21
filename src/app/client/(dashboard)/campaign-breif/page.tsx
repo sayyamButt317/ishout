@@ -1,93 +1,117 @@
 'use client';
-
-import { Loader2 } from 'lucide-react';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import CampaignBriefResult from '@/src/app/component/custom-component/CampaignBriefResult';
+import CampaignBreifHook from '@/src/routes/Company/api/Hooks/CampaignBreif-hook';
+import useAuthStore from '@/src/store/AuthStore/authStore';
+import { Loader2, Sparkles } from 'lucide-react';
+import { useCallback, useState } from 'react';
 
 const CampaignBreifPage = () => {
-    const router = useRouter();
-    const [isPending, setIsPending] = useState(false);
+    const { mutate: generateCampaignBreif, data, isPending } = CampaignBreifHook();
+
+    // const [activeBrief, setActiveBrief] = useState<BriefItem | null>(null);
+    // const [briefs, setBriefs] = useState<BriefItem[]>([]);
+
+    const { user_id } = useAuthStore()
     const [input, setInput] = useState('');
-    
-    const handleGenerateCampaignBreif = () => {
-        const prompt = input.trim();
-        if (!prompt) return;
 
-        // Navigate to the result page. That page is structured so
-        // it can later render API output without changing the layout.
-        setIsPending(true);
-        router.push(`/client/campaign-breif/result?prompt=${encodeURIComponent(prompt)}`);
-    }
+    const handleGenerateCampaignBreif = useCallback(() => {
+        const user_input = input.trim();
+        if (!user_input) return;
+        generateCampaignBreif(
+            { user_input, user_id },
+        );
+    }, [input, user_id, generateCampaignBreif]);
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === 'Enter' && !isPending && input.trim()) {
             handleGenerateCampaignBreif();
         }
-    }
+    };
 
     return (
-        <div className="relative min-h-screen w-full bg-black overflow-hidden text-white flex flex-col items-center justify-center">
-     
-            <Image
-                src="https://ik.imagekit.io/dtdxnyskk/leftVector.svg"
-                alt="leftVector"
-                unoptimized={true}
-                loading="lazy"
-                width={800}
-                height={800}
-                className="absolute left-0 top-0 h-full w-auto object-contain pointer-events-none opacity-40"
-            />
-            <Image
-                src="https://ik.imagekit.io/dtdxnyskk/rightVector.svg"
-                alt="rightVector"
-                unoptimized={true}
-                loading="lazy"
-                width={800}
-                height={800}
-                className="absolute right-0 top-0 h-full w-auto object-contain pointer-events-none opacity-40"
-            />
+        <div className="min-h-screen bg-gradient-to-b from-[#0B0F19] via-[#0F172A] to-black text-white flex flex-col">
+            <div className="flex-1 flex items-center justify-center px-6 py-20">
+                <div className="w-full max-w-4xl">
+                    <div className="text-center mb-14">
+                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-white/70 mb-6">
+                            <Sparkles size={16} />
+                            AI-Powered Campaign Strategy
+                        </div>
 
-          
-            <div className="relative z-10 w-full max-w-3xl px-6 md:px-8 lg:px-10">
-                
-                <div className="text-center mb-12 md:mb-16">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl italic font-light text-white leading-tight">
-                        How Can I Assist You Today
-                    </h1>
-                </div>
+                        <h1 className="text-4xl md:text-5xl font-semibold leading-tight tracking-tight">
+                            Generate a Complete <span className="text-white/70">Campaign Brief</span> in Seconds
+                        </h1>
+                        <p className="mt-6 text-white/60 text-base md:text-lg max-w-2xl mx-auto">
+                            Describe your brand, goals, and audience. Our AI agent will craft a
+                            structured influencer campaign brief ready for execution.
+                        </p>
+                    </div>
 
-                <div className="flex flex-col gap-4">
-                    <div className="relative w-full">
-                        <div className="relative flex items-center px-5 py-3 md:px-6 md:py-4 rounded-2xl border border-white/30 bg-white/5 backdrop-blur-md hover:border-white/40 transition-all duration-300">
-                            <input
-                                type="text"
-                                placeholder="Write down your prompt here...."
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                className="flex-1 bg-transparent text-white placeholder:text-white/50 outline-none text-sm md:text-base font-normal"
-                            />
+                    <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-3xl p-8 md:p-10 shadow-2xl shadow-black/40">
+                        <label className="block text-sm text-white/60 mb-3">
+                            Describe your campaign
+                        </label>
+
+                        <textarea
+                            placeholder="Example: We are launching a new skincare line in UAE targeting women 18–30. Budget is $20k. We want awareness + influencer reels + TikTok strategy..."
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            rows={6}
+                            className="w-full bg-black/40 border border-white/10 rounded-2xl p-5 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/20 transition-all resize-none"
+                        />
+
+                        <div className="flex items-center justify-between mt-6">
+                            <p className="text-xs text-white/40">
+                                Press <span className="text-white/60 font-medium">Enter</span> to generate
+                            </p>
                             <button
                                 onClick={handleGenerateCampaignBreif}
                                 disabled={isPending || !input.trim()}
-                                className="flex-shrink-0 flex items-center justify-center w-10 h-10 md:w-11 md:h-11 rounded-full bg-white hover:bg-white/95 text-black disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg ml-3"
-                                aria-label="Send prompt"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
                             >
                                 {isPending ? (
-                                    <Loader2 className='w-5 h-5 md:w-5 md:h-5 animate-spin' />
+                                    <>
+                                        <Loader2 className="w-4 h-4 animate-spin" />
+                                        Generating...
+                                    </>
                                 ) : (
-                                    <svg className="w-5 h-5 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                                    </svg>
+                                    <>
+                                        Generate Brief
+                                    </>
                                 )}
                             </button>
                         </div>
                     </div>
+                    <div className="mt-10 text-center text-sm text-white/40">
+                        The more details you provide (budget, region, target audience, deliverables),
+                        the better the generated campaign strategy.
+                    </div>
                 </div>
             </div>
-        </div>
-    )
-}
+            {/* {!activeBrief && (
+                <BriefList
+                    briefs={briefs}
+                    onSelect={(brief) => setActiveBrief(brief)}
+                />
+            )} */}
 
-export default CampaignBreifPage
+            {/* {activeBrief && (
+                <CampaignBriefResult
+                    brief={activeBrief}
+                    onRegenerate={() => regenerateBrief()}
+                />
+            )} */}
+            {data && (
+                <div className="mt-20">
+                    <CampaignBriefResult brief={data} />
+                </div>
+            )}
+            <div className="text-center text-xs text-white/30 pb-8">
+                Powered by AI Campaign Intelligence
+            </div>
+        </div>
+    );
+};
+
+export default CampaignBreifPage;

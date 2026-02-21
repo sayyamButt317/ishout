@@ -47,21 +47,15 @@ api.interceptors.response.use(
   },
 );
 
-//Get All Jobs
-// export const CompanyCampaignBreifApi = async (user_input: string) => {
-//   const response = await api.post(CompanyENDPOINT.CAMPAIGN_BREIF, { user_input: user_input });
-//   return response.data;
-// }
-
-//Get All Jobs
-export const CompanyCampaignBreifApi = async (user_input: string) => {
-  const response = await api.post(CompanyENDPOINT.CAMPAIGN_BREIF, null, {
-    params: { user_input },
-  });
+export const CompanyCampaignBreifApi = async (payload: {
+  user_input: string, user_id: string
+}) => {
+  const response = await api.post(
+    CompanyENDPOINT.CAMPAIGN_BREIF,
+    payload
+  );
   return response.data;
-}
-
-
+};
 
 export const FindInfluencer = async (influencerRequest: FindInfluencerRequestProps) => {
   const response = await api.post(CompanyENDPOINT.CREATE_CAMPAIGN, influencerRequest);
