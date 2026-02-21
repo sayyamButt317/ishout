@@ -1,4 +1,5 @@
 'use client';
+import CustomButton from '@/src/app/component/button';
 import CampaignBriefResult from '@/src/app/component/custom-component/CampaignBriefResult';
 import CampaignBreifHook from '@/src/routes/Company/api/Hooks/CampaignBreif-hook';
 import useAuthStore from '@/src/store/AuthStore/authStore';
@@ -65,10 +66,10 @@ const CampaignBreifPage = () => {
                             <p className="text-xs text-white/40">
                                 Press <span className="text-white/60 font-medium">Enter</span> to generate
                             </p>
-                            <button
+                            <CustomButton
                                 onClick={handleGenerateCampaignBreif}
                                 disabled={isPending || !input.trim()}
-                                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-   text-black font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
                             >
                                 {isPending ? (
                                     <>
@@ -80,7 +81,7 @@ const CampaignBreifPage = () => {
                                         Generate Brief
                                     </>
                                 )}
-                            </button>
+                            </CustomButton>
                         </div>
                     </div>
                     <div className="mt-10 text-center text-sm text-white/40">

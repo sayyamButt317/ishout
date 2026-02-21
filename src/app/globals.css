@@ -168,40 +168,63 @@ html {
   display: flex;
   align-items: center;
   width: 100%;
-  box-sizing: border-box;
+  height: 44px;
+  padding: 0 2px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  transition: all 0.2s ease;
 }
 
+.signup-phone-input:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+/* --- FLAG BOX --- */
 .signup-phone-input .PhoneInputCountry {
-  margin-right: 0.5rem;
-  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  padding: 6px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  transition: all 0.2s ease;
 }
 
+.signup-phone-input .PhoneInputCountry:hover {
+  border-color: #cbd5e1;
+}
+
+/* Remove default select styling */
 .signup-phone-input .PhoneInputCountrySelect {
   background: transparent;
-  border: 0;
+  border: none;
   outline: none;
+  font-size: 13px;
+  cursor: pointer;
 }
 
+/* Flag size */
 .signup-phone-input .PhoneInputCountryIcon {
-  width: 1.25rem;
-  height: 1.25rem;
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  overflow: hidden;
 }
 
-.signup-phone-input .PhoneInputCountryIconImg {
-  width: 95%;
-  height: 95%;
-  object-fit: cover;
-  border-radius: 0.25rem;
-}
-
+/* Phone number input */
 .signup-phone-input .PhoneInputInput {
   flex: 1;
-  border: 0;
+  border: none;
   outline: none;
   background: transparent;
+  font-size: 14px;
+  color: #0f172a;
   min-width: 0;
-  font-size: 0.870rem; 
+}
+
+.signup-phone-input .PhoneInputInput::placeholder {
+  color: #94a3b8;
 }
