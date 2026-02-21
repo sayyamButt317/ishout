@@ -3,6 +3,7 @@ export interface UpdateProfileRequestProps {
     contact_person: string;
     phone: string;
     email: string;
+    password?: string;
 }
 
 export interface UpdateProfileResponseProps {
