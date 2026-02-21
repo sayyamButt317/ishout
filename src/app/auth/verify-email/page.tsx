@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import VerifyEmailMutation from '@/src/routes/Auth-Routes/Api/Auth-Hook/verify-email-hook';
 import { Loader2 } from 'lucide-react';
+
 
 export default function VerifyEmailPage() {
   const searchParams = useSearchParams();
@@ -16,8 +17,7 @@ export default function VerifyEmailPage() {
       hasVerified.current = true;
       verifyMutation.mutate(token);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]); // verifyMutation intentionally left out
+  }, [token]);
 
 
   return (
@@ -44,4 +44,12 @@ export default function VerifyEmailPage() {
       </div>
     </div>
   );
+}
+
+export function VerifyEmailPageSuspense() {
+  return (
+    <Suspense>
+      <VerifyEmailPage />
+    </Suspense>
+  )
 }
