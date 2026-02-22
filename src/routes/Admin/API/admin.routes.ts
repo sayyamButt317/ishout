@@ -261,11 +261,18 @@ export const AdminDeleteWhatsappUserMessagesApi = async (thread_id: string) => {
 
 
 export const AdminSendNegotiationMessage = async (influencer_id: string) => {
-    const response = await api.post(AdminENDPOINT.SENDNEGOTITIONTEMPLATE, {
-        influencer_id,
-    });
+    const response = await api.post(
+        AdminENDPOINT.SENDNEGOTITIONTEMPLATE,
+        null,
+        {
+            params: {
+                influencer_id: influencer_id,
+            },
+        }
+    );
+
     return response.data;
-}
+};
 
 export const NegotiationStatsApi = async (page: number = 1, page_size: number = 10) => {
     const response = await api.get(AdminENDPOINT.NEGOTIATION_STATS, {
