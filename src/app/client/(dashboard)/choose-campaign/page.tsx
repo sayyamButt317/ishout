@@ -8,18 +8,10 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const options = [
-  // {
-  //   id: "template",
-  //   title: "Quick Template",
-  //   description:
-  //     "Start fast with a ready-made campaign template to launch quickly and save time.",
-  //   icon: Sparkles,
-  //   route: "/client/create-campaign",
-  //   img: "/assets/quick-template.png",
-  // },
+
   {
     id: "campaign-breif",
-    title: "Quick Template",
+    title: "Generate Campaign",
     description:
       "Start fast with a ready-made campaign template to launch quickly and save time.",
     icon: Sparkles,
