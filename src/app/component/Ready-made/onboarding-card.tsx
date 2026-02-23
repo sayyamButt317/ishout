@@ -1,10 +1,9 @@
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import Image from "next/image";
-import React from "react";
 import CustomButton from "../button";
-
 import {
   MapPin,
+  Trash2,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,8 @@ import {
   formatEngagementRate,
   UsernameLink,
 } from "@/src/helper/followersformat";
-import { SiInstagram, SiTiktok, SiYoutube } from "react-icons/si";
+import { SiInstagram, SiTiktok, SiWhatsapp, SiYoutube } from "react-icons/si";
+
 
 interface OnboardingCardProps {
   influencer: ReviewInfluencerResponse;
@@ -23,6 +23,7 @@ interface OnboardingCardProps {
   onApprove?: (influencer: ReviewInfluencerResponse) => void;
   onReject?: (influencer: ReviewInfluencerResponse) => void;
   onDelete?: (influencer: ReviewInfluencerResponse) => void;
+  sendNegotiation?: (influencer: ReviewInfluencerResponse) => void;
 }
 
 const OnboardingCard = ({
@@ -32,6 +33,7 @@ const OnboardingCard = ({
   onApprove,
   onReject,
   onDelete,
+  sendNegotiation,
 }: OnboardingCardProps) => {
   const handleViewProfile = () => {
     if (influencer?.platform === "instagram") {
@@ -92,17 +94,19 @@ const OnboardingCard = ({
             </div>
           </div>
 
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => onEdit(influencer)}
-            className="h-7 rounded-full border border-white/40 bg-white/[0.02] px-4 text-sm font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
-          >
-            Edit
-          </Button>
+          {onEdit && (
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => onEdit(influencer)}
+              className="h-7 rounded-full border border-white/40 bg-white/[0.02]"
+            >
+              Edit
+            </Button>
+          )}
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="mt-6 grid grid-cols-2 gap-3">
           <CustomButton
             className="h-10 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal text-sm"
             onClick={() => {
@@ -142,19 +146,18 @@ const OnboardingCard = ({
             </p>
           </div>
         </div>
-
         <div className="relative mt-4 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05]">
 
           <div className="absolute left-1/2 top-1/2 h-16 w-px -translate-x-1/2 -translate-y-1/2 bg-white"></div>
 
-          <div className="py-5 text-center">
+          <div className="py-3 text-center">
             <p className="text-sm text-white/75">Min Price</p>
             <p className="mt-1 text-lg font-semibold text-white">
               ${influencer?.min_price || 0}
             </p>
           </div>
 
-          <div className="py-5 text-center">
+          <div className="py-3 text-center">
             <p className="text-sm text-white/75">Max Price</p>
             <p className="mt-1 text-lg font-semibold text-white">
               ${influencer?.max_price || 0}
@@ -185,34 +188,50 @@ const OnboardingCard = ({
           </div>
         </div>
 
-        {/* 
-        <div className="mt-6 flex items-center gap-3">
-          <Button
-            onClick={() => onApprove?.(influencer)}
-            className="flex-1 h-12 rounded-2xl bg-[#ED3E75] hover:bg-[#d73669] active:bg-[#c52f5f] text-white italic font-normal text-base shadow-lg shadow-[#ED3E75]/30 transition-all active:scale-[0.985]"
-          >
-            Approve
-          </Button>
 
+        {(onApprove || onReject || onDelete) && (
+          <div className="mt-6 flex items-center gap-3">
+            {onApprove && (
+              <Button
+                onClick={() => onApprove(influencer)}
+                className="flex-1 h-12 rounded-2xl bg-[#ED3E75] hover:bg-[#d73669] text-white italic"
+              >
+                Approve
+              </Button>
+            )}
 
-          <Button
-            onClick={() => onReject?.(influencer)}
-            className="flex-1 h-12 rounded-2xl bg-[#224085] hover:bg-[#1c356f] active:bg-[#162b5a] text-white italic font-normal text-base shadow-lg shadow-[#224085]/30 transition-all active:scale-[0.985]"
-          >
-            Reject
-          </Button>
+            {onReject && (
+              <Button
+                onClick={() => onReject(influencer)}
+                className="flex-1 h-12 rounded-2xl bg-[#224085] hover:bg-[#1c356f] text-white italic"
+              >
+                Reject
+              </Button>
+            )}
 
+            {onDelete && (
+              <Button
+                variant="ghost"
+                onClick={() => onDelete(influencer)}
+                className="h-12 w-12 rounded-2xl border border-[#FF6262]/20 bg-[#FF62620D] text-[#FF6262]"
+              >
+                <Trash2 className="h-5 w-5" />
+              </Button>
+            )}
+          </div>
+        )}
 
-          <Button
-            variant="ghost"
-            onClick={() => onDelete?.(influencer)}
-          className="h-12 w-12 rounded-2xl border border-[#FF6262]/20 bg-[#FF62620D] text-[#FF6262] hover:bg-[#FF6262]/15 transition-all"
-
-          >
-            <Trash2 className="h-5 w-5" />
-          </Button>
-        </div>
-        */}
+        {sendNegotiation && (
+          <div className="mt-6 flex items-center gap-3">
+            <CustomButton
+              onClick={() => sendNegotiation(influencer)}
+              className="flex-1 h-12 rounded-2xl bg-[#ED3E75] text-white italic"
+            >
+              <SiWhatsapp className="text-2xl text-white" />
+              Start Negotiation
+            </CustomButton>
+          </div>
+        )}
       </div>
     </Card>
   );
