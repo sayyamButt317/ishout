@@ -69,7 +69,7 @@ const CampaignBreifPage = () => {
                             <CustomButton
                                 onClick={handleGenerateCampaignBreif}
                                 disabled={isPending || !input.trim()}
-                                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-   text-black font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
                             >
                                 {isPending ? (
                                     <>
