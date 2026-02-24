@@ -18,88 +18,88 @@ export default function OnboardingCampaignPage() {
 
   return (
     <>
-      <div className="flex flex-row items-center gap-2">
-        <h1 className="italic text-2xl font-bold text-white">
-          Onboarding Influencers
-        </h1>
-        <Button
-          className="cursor-pointer"
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            refetch();
-          }}
-          disabled={isRefetching}
-        >
-          <RefreshCcw
-            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-              isRefetching ? "animate-spin" : ""
-            }`}
-          />
-        </Button>
+      <div className="mb-6">
+        <div className="flex flex-row items-center gap-2">
+          <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">
+            Onboarding Influencers
+          </h1>
+          <Button
+            className="cursor-pointer"
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              refetch();
+            }}
+            disabled={isRefetching}
+          >
+            <RefreshCcw
+              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+                isRefetching ? "animate-spin" : ""
+              }`}
+            />
+          </Button>
+        </div>
+        <p className="italic text-xs text-slate-200 mt-2">
+          Showing {data?.campaigns?.length} onboarding campaigns that have waiting
+          for influencers to be onboarded
+        </p>
       </div>
-      <p className="italic text-xs text-slate-200 mt-2 mb-2">
-        Showing {data?.campaigns?.length} onboarding campaigns that have waiting
-        for influencers to be onboarded
-      </p>
 
       <TableComponent
         header={[
-          "Company",
-          "Category",
+          "Company Name",
+          "Campaign Name",
+          "Source",
           "Platform",
-          "Status",
+          "Category",
+          "Followers",
+          "Country",
           "Requested",
           "Onboarded",
+          "Status",
           "Created At",
           "View",
         ]}
+        imageUrls={data?.campaigns?.map((campaign: CompanyCampaignResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
-          <div
-            key={`company-${campaign._id}`}
-            className="flex items-center gap-3"
-          >
-            <div className="truncate max-w-[160px]">
-              <p className="font-semibold">{campaign?.company_name}</p>
-            </div>
+          <div key={`company-${campaign._id}`} className="truncate">
+            {campaign?.company_name}
           </div>,
-          <div
-            key={`category-${campaign._id}`}
-            className="truncate max-w-[160px]"
-          >
-            {campaign?.category?.join(", ")}
+          <div key={`campaign-name-${campaign._id}`} className="truncate">
+            {campaign?.name}
           </div>,
-          <div
-            key={`platform-${campaign._id}`}
-            className="truncate max-w-[160px]"
-          >
+          <div key={`source-${campaign._id}`} className="truncate">
+            {(campaign as any)?.user_type || "-"}
+          </div>,
+          <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
           </div>,
-          <div
-            key={`status-${campaign._id}`}
-            className="truncate max-w-[160px]"
-          >
-            <StatusBadge status={campaign?.status} />
+          <div key={`category-${campaign._id}`} className="truncate">
+            {campaign?.category?.join(", ") || "-"}
           </div>,
-          <div
-            key={`requested-influencers-${campaign._id}`}
-            className="truncate flex items-center"
-          >
+          <div key={`followers-${campaign._id}`} className="truncate">
+            {Array.isArray(campaign?.followers) 
+              ? campaign.followers.map((f: any) => typeof f === 'number' ? `${f}k` : f).join(", ")
+              : "-"}
+          </div>,
+          <div key={`country-${campaign._id}`} className="truncate">
+            {(campaign as any)?.country?.join(", ") || "-"}
+          </div>,
+          <div key={`requested-influencers-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.limit} />
           </div>,
-          <div
-            key={`onboarding-influencers-${campaign._id}`}
-            className="truncate flex items-center "
-          >
+          <div key={`onboarding-influencers-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.approved_influencer_count} />
           </div>,
-
+          <div key={`status-${campaign._id}`} className="truncate">
+            <StatusBadge status={campaign?.status} />
+          </div>,
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
           <div key={`view-${campaign._id}`} className="truncate">
             <Button
-              className="cursor-pointer"
+              className="cursor-pointer w-[80px] whitespace-nowrap"
               variant="outline"
               onClick={() => {
                 router.push(`/Admin/onboarding/${campaign?._id}`);

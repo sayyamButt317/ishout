@@ -9,10 +9,11 @@ export default function LogoFooter() {
                         <div className="w-full md:w-[45%] lg:w-[35%] flex flex-col items-center md:items-start text-center md:text-left">
                             <div className="flex flex-row items-center justify-center gap-1">
                                 <Image
-                                    src="/assets/favicon.png"
+                                    src="/assets/iShout-gif-black-background.gif"
                                     alt="ishout"
                                     width={40}
                                     height={40}
+                                    unoptimized={true}
                                 />
                                 <h2 className="text-2xl font-bold text-white">iShout</h2>
                                 <span className="text-primarytext font-extrabold text-2xl">

@@ -17,15 +17,15 @@ export const Platforms = [
 
 export const PLATFORM_CONFIG = {
   instagram: {
-    icon: <SiInstagram />,
+    icon: <SiInstagram className="text-xl" />,
     color: "text-pink-500",
   },
   tiktok: {
-    icon: <SiTiktok />,
+    icon: <SiTiktok className="text-xl" />,
     color: "text-black dark:text-white",
   },
   youtube: {
-    icon: <SiYoutube />,
+    icon: <SiYoutube className="text-xl" />,
     color: "text-red-500",
   },
   all: {

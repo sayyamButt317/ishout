@@ -121,7 +121,7 @@ export const WhatsAppShareButton = ({
       {shareMutation.isPending ? (
         <Spinner size={14} />
       ) : (
-        <SiWhatsapp className="h-4 w-4 text-green-500" />
+        <SiWhatsapp className="size-5 text-green-500" />
       )}
     </Button>
   );

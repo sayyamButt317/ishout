@@ -43,7 +43,7 @@ export function UserStatus({ status, updateStatus }: StatusProps) {
       <DropdownMenuTrigger asChild>
         <Badge
           variant="outline"
-          className={`capitalize ${getButtonStyle()} w-full cursor-pointer text-xs sm:text-sm`}
+          className={`capitalize ${getButtonStyle()} w-auto min-w-[80px] cursor-pointer text-xs sm:text-sm px-3 py-1`}
         >
           {selectedStatus || "select status"}
         </Badge>
