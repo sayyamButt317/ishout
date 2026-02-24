@@ -30,11 +30,12 @@ const Header = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex flex-row gap-2">
             <Image
-              src="/assets/logo.svg"
+              src="/assets/iShout-gif-black-background.gif"
               alt="logo"
               width={155}
               height={155}
               className="w-[155px] h-[40px]"
+              unoptimized={true}
             />
           </div>
 

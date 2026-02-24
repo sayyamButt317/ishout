@@ -21,61 +21,74 @@ const ApprovedCampaignPage = () => {
   const router = useRouter();
   return (
     <>
-      <div className="flex flex-row ">
-        <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
-          Approved Campaigns
-        </h1>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            refetch();
-          }}
-          disabled={isRefetching}
-        >
-          <RefreshCcw
-            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-              }`}
-          />
-        </Button>
+      <div className="mb-6">
+        <div className="flex flex-row ">
+          <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">
+            Approved Campaigns
+          </h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              refetch();
+            }}
+            disabled={isRefetching}
+          >
+            <RefreshCcw
+              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                }`}
+            />
+          </Button>
+        </div>
+        <p className="italic text-xs text-slate-200 mt-2">
+          Showing {data?.campaigns.length} of {data?.total} approved campaigns
+        </p>
       </div>
-      <p className="italic text-xs text-slate-200 mt-2 mb-2">
-        Showing {data?.campaigns.length} of {data?.total} approved campaigns
-      </p>
       <TableComponent
         header={[
           "Company Name",
-          "Source",
           "Campaign Name",
+          "Source",
           "Platform",
-          "Requested ",
+          "Category",
+          "Followers",
+          "Country",
+          "Requested",
+          "Approved",
           "Status",
           "Created At",
           "View",
         ]}
+        imageUrls={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
         subheader={data?.campaigns?.map(
           (campaign: ApprovedCampaignResponse) => [
             <div key={`company-name-${campaign?._id}`} className="truncate">
               {campaign?.company_name}
             </div>,
+            <div key={`campaign-name-${campaign?.campaign_id}`} className="truncate">
+              {campaign?.name}
+            </div>,
             <div key={`source-${campaign?._id}`} className="truncate">
               {campaign?.user_type}
-            </div>,
-            <div key={`name-${campaign?.campaign_id}`} className="truncate">
-              {campaign?.name}
             </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
               <PlatformBadge platform={campaign?.platform} />
             </div>,
+            <div key={`category-${campaign._id}`} className="truncate">
+              {(campaign as any)?.category?.join(", ") || "-"}
+            </div>,
+            <div key={`followers-${campaign._id}`} className="truncate">
+              {(campaign as any)?.followers?.join(", ") || "-"}
+            </div>,
+            <div key={`country-${campaign._id}`} className="truncate">
+              {(campaign as any)?.country?.join(", ") || "-"}
+            </div>,
             <div key={`requested-${campaign._id}`} className="truncate">
               <CountButton count={campaign?.limit} />
             </div>,
-            // <div key={`approved-${campaign._id}`} className="truncate">
-            //   <CountButton count={campaign?.approved_influencers_count} />
-            // </div>,
-            // <div key={`rejected-${campaign._id}`} className="truncate">
-            //   <CountButton count={campaign?.rejected_influencers_count} />
-            // </div>,
+            <div key={`approved-${campaign._id}`} className="truncate">
+              <CountButton count={(campaign as any)?.approved_influencer_count || 0} />
+            </div>,
             <div key={`status-${campaign?._id}`} className="truncate">
               <DropDownCustomStatus
                 status={campaign?.status}
@@ -92,7 +105,7 @@ const ApprovedCampaignPage = () => {
             </div>,
             <div key={`view-${campaign._id}`} className="truncate">
               <Button
-                className="cursor-pointer"
+                className="cursor-pointer w-[80px] whitespace-nowrap"
                 variant="outline"
                 onClick={() => {
                   router.push(
@@ -103,11 +116,6 @@ const ApprovedCampaignPage = () => {
                 View
               </Button>
             </div>,
-            // <div key={`delete-${campaign._id}`} className="truncate">
-            //   <Button variant="outline" size="icon">
-            //     <Download className="w-4 h-4 text-delete-text cursor-pointer" />
-            //   </Button>
-            // </div>,
           ]
         )}
         paginationstart={currentPage}

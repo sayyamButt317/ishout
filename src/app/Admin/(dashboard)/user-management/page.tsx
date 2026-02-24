@@ -54,7 +54,7 @@ export default function UserManagementPage() {
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex flex-row items-center gap-2">
-            <h1 className="italic text-2xl font-bold text-white">User Management</h1>
+            <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">User Management</h1>
 
             <Button
               variant="ghost"
@@ -83,10 +83,10 @@ export default function UserManagementPage() {
           'Contact Person',
           'Email',
           'Phone',
-          'Role',
-          'Status',
           'Delete',
           'Edit',
+          'Role',
+          'Status',
         ]}
         subheader={data?.users?.map((user: UserManagementResponse) => [
           <div key={`company-${user.user_id}`} className="truncate">
@@ -101,20 +101,6 @@ export default function UserManagementPage() {
           <div key={`phone-${user.user_id}`} className="truncate">
             {user.phone}
           </div>,
-          <div key={`role-${user.user_id}`} className="truncate">
-            {user.role?.charAt(0).toUpperCase() + user.role?.slice(1)}
-          </div>,
-          <div
-            key={`status-${user.user_id}`}
-            className="flex items-center justify-center"
-          >
-            <UserStatus
-              status={user.status}
-              updateStatus={(status: string) =>
-                updateUserStatus.mutate({ user_id: user.user_id, status })
-              }
-            />
-          </div>,
           <div key={`delete-${user.user_id}`}>
             <Button
               variant="ghost"
@@ -122,13 +108,27 @@ export default function UserManagementPage() {
               disabled={deleteUserHook.isPending}
               onClick={() => deleteUserHook.mutate(user.user_id)}
             >
-              <Trash className="w-4 h-4 text-red-300" />
+              <Trash className="size-5 text-red-300" />
             </Button>
           </div>,
           <div key={`edit-${user.user_id}`}>
             <Button variant="ghost" size="icon" onClick={() => openEditModal(user)}>
-              <Pencil className="w-4 h-4 text-blue-400" />
+              <Pencil className="size-5 text-blue-400" />
             </Button>
+          </div>,
+          <div key={`role-${user.user_id}`} className="truncate">
+            {user.role?.charAt(0).toUpperCase() + user.role?.slice(1)}
+          </div>,
+          <div
+            key={`status-${user.user_id}`}
+            className="flex items-center justify-start"
+          >
+            <UserStatus
+              status={user.status}
+              updateStatus={(status: string) =>
+                updateUserStatus.mutate({ user_id: user.user_id, status })
+              }
+            />
           </div>,
         ])}
         paginationstart={data?.page ?? currentPage}
