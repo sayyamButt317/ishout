@@ -63,7 +63,7 @@ export default function Sidebar({ links }: SidebarProps) {
   bg-slate-900 border-r border-white/10">
 
         <div className="mb-6 flex items-center gap-2">
-          <Image src="/assets/favicon.png" alt="logo" width={36} height={36} />
+          <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={36} height={36} unoptimized={true} />
           <h2 className="text-xl font-bold text-white">iShout</h2>
         </div>
 
@@ -105,7 +105,7 @@ export default function Sidebar({ links }: SidebarProps) {
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <div className="mb-6 flex items-center gap-2">
-              <Image src="/assets/favicon.png" alt="logo" width={36} height={36} />
+              <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={36} height={36} unoptimized={true} />
               <h2 className="text-xl font-bold text-white">iShout</h2>
             </div>
 

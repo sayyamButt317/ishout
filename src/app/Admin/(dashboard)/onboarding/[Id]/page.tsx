@@ -2,7 +2,7 @@
 import { useCallback, useState } from "react";
 import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer"
-import { ArrowLeft,  Pencil, RefreshCcw, Sparkles } from "lucide-react";
+import { ArrowLeft, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PlatformType } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
@@ -60,6 +60,10 @@ export default function OnboardingInfluencerByCampaignId() {
     setDialogOpen(true);
   }, []);
 
+  const handleSendNegotiation = useCallback((influencer_id: string) => {
+    sendNegotiationMutation(influencer_id);
+  }, [sendNegotiationMutation]);
+
   return (
     <>
       <div>
@@ -107,13 +111,14 @@ export default function OnboardingInfluencerByCampaignId() {
       )}
 
       {data?.influencers?.length ? (
-        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4">
+        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
           {data?.influencers?.map((influencer: ReviewInfluencerResponse) => (
             <OnboardingCard
               key={influencer._id}
               influencer={influencer}
               onEdit={handleEdit}
               onMessage={handleMessage}
+              sendNegotiation={() => handleSendNegotiation(influencer._id)}
             />
           ))}
         </div>
@@ -126,7 +131,7 @@ export default function OnboardingInfluencerByCampaignId() {
           </div>
         )
       )}
-    
+
       <ChooseOptionDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}

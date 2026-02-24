@@ -29,47 +29,66 @@ export default function AdminPendingCampaigns() {
   const router = useRouter();
   return (
     <>
-      <div className="flex flex-row ">
-        <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
-          Pending Campaigns
-        </h1>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            refetch();
-          }}
-          disabled={isRefetching}
-        >
-          <RefreshCcw
-            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-              }`}
-          />
-        </Button>
+      <div className="mb-6">
+        <div className="flex flex-row ">
+          <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">
+            Pending Campaigns
+          </h1>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => {
+              refetch();
+            }}
+            disabled={isRefetching}
+          >
+            <RefreshCcw
+              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                }`}
+            />
+          </Button>
+        </div>
+        <p className="italic text-xs text-slate-200 mt-2">
+          Showing {data?.campaigns.length} of {data?.total} pending campaigns
+        </p>
       </div>
-      <p className="italic text-xs text-slate-200 mt-2 mb-2">
-        Showing {data?.campaigns.length} of {data?.total} pending campaigns
-      </p>
       <TableComponent
         header={[
           "Company Name",
+          "Campaign Name",
           "Source",
           "Platform",
-          "Requested ",
+          "Category",
+          "Followers",
+          "Country",
+          "Requested",
           "Status",
           "Created At",
           "Generate/View-Generated",
         ]}
+        imageUrls={data?.campaigns.map((campaign: AdminAllCampaignApiResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
         subheader={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => [
             <div key={`company-name-${campaign._id}`} className="truncate">
               {campaign?.company_name}
+            </div>,
+            <div key={`campaign-name-${campaign._id}`} className="truncate">
+              {campaign?.name}
             </div>,
             <div key={`source-${campaign._id}`} className="truncate">
               {campaign?.user_type}
             </div>,
             <div key={`platform-${campaign._id}`} className="truncate">
               <PlatformBadge platform={campaign?.platform} />
+            </div>,
+            <div key={`category-${campaign._id}`} className="truncate">
+              {campaign?.category?.join(", ")}
+            </div>,
+            <div key={`followers-${campaign._id}`} className="truncate">
+              {campaign?.followers?.join(", ")}
+            </div>,
+            <div key={`country-${campaign._id}`} className="truncate">
+              {campaign?.country?.join(", ")}
             </div>,
             <div key={`requested-${campaign._id}`} className="truncate">
               <CountButton count={campaign?.limit} />
@@ -84,7 +103,7 @@ export default function AdminPendingCampaigns() {
               {campaign?.generated === false ? (
                 <CustomButton
                   key={`generate-${campaign._id}`}
-                  className="bg-primaryButton hover:bg-primaryHover text-white"
+                  className="bg-primaryButton hover:bg-primaryHover text-white w-[70px] px-19 whitespace-nowrap"
                   onClick={() => {
                     clearTemplate();
                     clearApprovedInfluencers();
@@ -119,7 +138,7 @@ export default function AdminPendingCampaigns() {
                 </CustomButton>
               ) : (
                 <CustomButton
-                  className="bg-secondaryButton hover:bg-secondaryHover text-white"
+                  className="bg-secondaryButton hover:bg-secondaryHover text-white min-w-[150px] whitespace-nowrap"
                   onClick={() => {
                     router.push(`/Admin/pending-campaign/${campaign._id}`);
                   }}

@@ -57,7 +57,7 @@ export default function AllCampaignPage() {
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex flex-row items-center gap-2">
-            <h1 className="italic text-2xl font-bold text-white">
+            <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">
               Company Generated Campaigns
             </h1>
             <Button
@@ -108,43 +108,45 @@ export default function AllCampaignPage() {
 
       <TableComponent
         header={[
-          "Company",
-          "Category",
-          "Platform",
-          "Followers",
+          "Company Name",
+          "Campaign Name",
           "Source",
-          "Influencers",
+          "Platform",
+          "Category",
+          "Followers",
+          "Country",
           "Requested",
           "Status",
+          "Created At",
           "Chat",
           "Action",
         ]}
+        imageUrls={campaigns.map((campaign: AdminAllCampaignApiResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
+        statuses={campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign.status)}
         subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
           <div key={`company-name-${campaign._id}`} className="truncate">
             {campaign?.company_name}
           </div>,
-          <div key={`category-${campaign._id}`} className="truncate">
-            <Badge className="text-xs capitalize bg-slate-800 text-white border border-white/20">
-              {campaign?.category.join(", ")}
-            </Badge>
-          </div>,
-          <div key={`platform-${campaign._id}`} className="truncate">
-            <PlatformBadge platform={campaign?.platform} />
-          </div>,
-          <div key={`followers-${campaign._id}`} className="truncate">
-            {campaign?.followers?.join(", ")}
+          <div key={`campaign-name-${campaign._id}`} className="truncate">
+            {campaign?.name}
           </div>,
           <div key={`source-${campaign._id}`} className="truncate">
             {campaign?.user_type}
           </div>,
-          <div
-            key={`requested-influencers-${campaign._id}`}
-            className="truncate"
-          >
-            <CountButton count={campaign?.limit} />
+          <div key={`platform-${campaign._id}`} className="truncate">
+            <PlatformBadge platform={campaign?.platform} />
           </div>,
-          <div key={`requested-date-${campaign._id}`} className="truncate">
-            {new Date(campaign.created_at).toLocaleDateString()}
+          <div key={`category-${campaign._id}`} className="truncate">
+            {campaign?.category?.join(", ") || "-"}
+          </div>,
+          <div key={`followers-${campaign._id}`} className="truncate">
+            {campaign?.followers?.join(", ") || "-"}
+          </div>,
+          <div key={`country-${campaign._id}`} className="truncate">
+            {campaign?.country?.join(", ") || "-"}
+          </div>,
+          <div key={`requested-${campaign._id}`} className="truncate">
+            <CountButton count={campaign?.limit} />
           </div>,
           <div key={`status-${campaign._id}`} className="truncate">
             <DropDownCustomStatus
@@ -156,6 +158,9 @@ export default function AllCampaignPage() {
                 });
               }}
             />
+          </div>,
+          <div key={`created-at-${campaign._id}`} className="truncate">
+            {new Date(campaign.created_at).toLocaleDateString()}
           </div>,
           <div
             key={`share-${campaign._id}`}
@@ -176,7 +181,7 @@ export default function AllCampaignPage() {
                 deleteCampaignHook.mutate(campaign._id);
               }}
             >
-              <Trash className="w-4 h-4 text-red-300 cursor-pointer" />
+              <Trash className="size-5 text-red-300 cursor-pointer" />
             </Button>
           </div>,
         ])}
