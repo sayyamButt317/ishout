@@ -7,6 +7,7 @@ import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from '@/src/types/Admin-Type/Campaign.type';
 import { CompanyProfileDetailsResponseProps, UpdateProfileRequestProps, UpdateProfileResponseProps } from '@/src/types/Compnay/profile-type';
 import { ChangePasswordRequestProps } from '@/src/types/Compnay/password-type';
+import { GetCampaignBriefResponse } from "@/src/types/Compnay/campaign-brief.types";
 
 
 const api = axios.create({
@@ -54,6 +55,16 @@ export const CompanyCampaignBreifApi = async (payload: {
     CompanyENDPOINT.CAMPAIGN_BREIF,
     payload
   );
+  return response.data;
+};
+
+export const getCampaignBrief = async (
+  user_id: string
+): Promise<GetCampaignBriefResponse> => {
+  const response = await api.get<GetCampaignBriefResponse>(
+    CompanyENDPOINT.GET_CAMPAIGN_BRIEF(user_id)
+  );
+
   return response.data;
 };
 

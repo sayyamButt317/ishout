@@ -1,6 +1,7 @@
 import {
   BarChart3,
   CircleCheck,
+  FileText,
   Handshake,
   // FileText,
   Hourglass,
@@ -9,30 +10,35 @@ import {
   User,
   UserCheck,
   Users,
-} from "lucide-react";
-import { SiInstagram, SiWhatsapp } from "react-icons/si";
+} from 'lucide-react';
+import { SiInstagram, SiWhatsapp } from 'react-icons/si';
 
 export const employeeSidebarLinks = [
   {
-    label: "Create Campaign",
-    route: "/client/choose-campaign",
+    label: 'Create Campaign',
+    route: '/client/choose-campaign',
     icon: <Plus className="w-5 h-5" />,
   },
 
   {
-    label: "Review Influencer",
-    route: "/client/influencer-review",
+    label: 'Review Influencer',
+    route: '/client/influencer-review',
     icon: <UserCheck className="w-5 h-5" />,
   },
   {
-    label: "All Campaigns",
-    route: "/client/all-campaign",
+    label: 'All Campaigns',
+    route: '/client/all-campaign',
     icon: <LayoutGrid className="w-5 h-5" />,
   },
   {
-    label: "Profile",
-    route: "/client/profile",
+    label: 'Profile',
+    route: '/client/profile',
     icon: <User className="w-5 h-5" />,
+  },
+  {
+    label: 'Campaign Brief',
+    route: '/client/get-campaign-brief',
+    icon: <FileText className="w-5 h-5" />, // optional: choose an icon
   },
 
   // {
@@ -44,8 +50,8 @@ export const employeeSidebarLinks = [
 
 export const adminSidebarLinks = [
   {
-    label: "Pending Campaign",
-    route: "/Admin/pending-campaign",
+    label: 'Pending Campaign',
+    route: '/Admin/pending-campaign',
     icon: (
       <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
         <Hourglass className="text-2xl text-white" />
@@ -53,8 +59,8 @@ export const adminSidebarLinks = [
     ),
   },
   {
-    label: "Approved Influencers",
-    route: "/Admin/approved-campaign",
+    label: 'Approved Influencers',
+    route: '/Admin/approved-campaign',
     icon: (
       <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
         <CircleCheck className="text-2xl text-white" />
@@ -62,8 +68,8 @@ export const adminSidebarLinks = [
     ),
   },
   {
-    label: "OnBoarding",
-    route: "/Admin/onboarding",
+    label: 'OnBoarding',
+    route: '/Admin/onboarding',
     icon: (
       <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
         <UserCheck className="text-2xl text-white" />
@@ -71,8 +77,8 @@ export const adminSidebarLinks = [
     ),
   },
   {
-    label: "All Campaigns",
-    route: "/Admin/all-campaign",
+    label: 'All Campaigns',
+    route: '/Admin/all-campaign',
     icon: (
       <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
         <LayoutGrid className="text-2xl text-white" />
@@ -80,8 +86,8 @@ export const adminSidebarLinks = [
     ),
   },
   {
-    label: "User Management",
-    route: "/Admin/user-management",
+    label: 'User Management',
+    route: '/Admin/user-management',
     icon: (
       <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
         <Users className="text-2xl text-white" />
@@ -89,8 +95,8 @@ export const adminSidebarLinks = [
     ),
   },
   {
-    label: "WhatsApp",
-    route: "/Admin/whatsapp-chat",
+    label: 'WhatsApp',
+    route: '/Admin/whatsapp-chat',
     icon: (
       <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
         <SiWhatsapp className="text-2xl text-white" />
@@ -107,8 +113,8 @@ export const adminSidebarLinks = [
   //   ),
   // },
   {
-    label: "Negotiation",
-    route: "/Admin/negotiation",
+    label: 'Negotiation',
+    route: '/Admin/negotiation',
     icon: (
       <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
         <Handshake className="text-2xl text-white" />
