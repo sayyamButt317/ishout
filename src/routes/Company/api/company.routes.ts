@@ -8,6 +8,7 @@ import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps
 import { CompanyProfileDetailsResponseProps, UpdateProfileRequestProps, UpdateProfileResponseProps } from '@/src/types/Compnay/profile-type';
 import { ChangePasswordRequestProps } from '@/src/types/Compnay/password-type';
 import { GetCampaignBriefResponse } from "@/src/types/Compnay/campaign-brief.types";
+import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 
 
 const api = axios.create({
@@ -55,6 +56,16 @@ export const CompanyCampaignBreifApi = async (payload: {
     CompanyENDPOINT.CAMPAIGN_BREIF,
     payload
   );
+  return response.data;
+};
+
+export const UpdateCampaignBriefApi = async (brief: UpdateCampaignBrief) => {
+  if (!brief.id) throw new Error("Brief ID is required for update");
+  const response = await api.patch(
+    CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id), // use endpoint helper
+    brief
+  );
+
   return response.data;
 };
 

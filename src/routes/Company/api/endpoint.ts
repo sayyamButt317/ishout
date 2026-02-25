@@ -1,7 +1,9 @@
 export const CompanyENDPOINT = {
   CAMPAIGN_BREIF: `/company/campaign-brief`,
    GET_CAMPAIGN_BRIEF: (user_id: string) =>
-    `/api/company/campaign-brief/${user_id}`,
+    `/company/campaign-brief/${user_id}`,
+     UPDATE_CAMPAIGN_BRIEF: (brief_id: string) =>
+    `/company/update-campaign-brief/${brief_id}`,
   CAMPAIGN: `/company/campaigns`,
   CREATE_CAMPAIGN: `/company/campaigns`,
   CAMPAIGN_REJECTED_INFLUENCERS: `/company/campaigns/rejected-influencers`,
