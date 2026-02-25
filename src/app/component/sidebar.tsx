@@ -38,18 +38,32 @@ export default function Sidebar({ links }: SidebarProps) {
             href={link.route}
             onClick={() => setMobileOpen(false)}
             className={cn(
-              "group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200",
+              "group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ease-out",
               isSelected
-                ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-white"
-                : "text-slate-300 hover:bg-white/10 hover:text-white border border-transparent"
+                ? "bg-white/5 backdrop-blur-xl border border-white/10 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)]"
+                : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
             )}
           >
-            {link.icon}
-            <span className="text-sm font-medium">{link.label}</span>
-
             {isSelected && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full" />
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-transparent blur-xl opacity-80 -z-10" />
             )}
+
+            {link.icon && (
+              <div
+                className={cn(
+                  "flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300",
+                  isSelected
+                    ? "bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-white"
+                    : "bg-white/5 text-slate-400 group-hover:bg-white/10"
+                )}
+              >
+                {link.icon}
+              </div>
+            )}
+
+            <span className="text-sm font-medium tracking-wide">
+              {link.label}
+            </span>
           </Link>
         );
       }),
@@ -58,25 +72,32 @@ export default function Sidebar({ links }: SidebarProps) {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex fixed top-0 left-0 h-screen w-[280px] flex-col p-6 
-  bg-slate-900 border-r border-white/10">
+      {/* Desktop */}
+      <aside className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-[260px] flex-col 
+        rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10
+        shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
 
-        <div className="mb-6 flex items-center gap-2">
-          <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={36} height={36} unoptimized={true} />
-          <h2 className="text-xl font-bold text-white">iShout</h2>
+        {/* Logo */}
+        <div className="mb-8 flex items-center gap-3">
+          <div className="relative">
+            <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
+            <Image src="/assets/favicon.png" alt="logo" width={36} height={36} className="relative z-10" />
+          </div>
+          <h2 className="text-lg font-semibold tracking-wide text-white">
+            iShout
+          </h2>
         </div>
 
         {/* Links */}
-        <nav className="flex flex-col gap-1 flex-1 overflow-y-auto">
+        <nav className="flex flex-col gap-2 flex-1 overflow-y-auto pr-1">
           {renderedLinks}
         </nav>
 
         {/* Logout */}
-        <div className="pt-4 border-t border-white/10">
+        <div className="pt-6 border-t border-white/10">
           <Button
             variant="ghost"
-            className="w-full text-red-400 hover:bg-red-500/10"
+            className="w-full justify-start text-red-400 hover:bg-red-500/10 rounded-xl"
             onClick={() => setIsLogout(true)}
           >
             <LogOut className="w-4 h-4 mr-2" />
@@ -85,14 +106,14 @@ export default function Sidebar({ links }: SidebarProps) {
         </div>
       </aside>
 
-
       <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
-      {/* Mobile Sidebar */}
+
+      {/* Mobile */}
       <div className="md:hidden">
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <button
-              className="fixed top-3 left-4 z-50 text-white"
+              className="fixed top-4 left-4 z-50 text-white bg-white/10 backdrop-blur-xl p-2 rounded-xl border border-white/10"
               aria-label="Open menu"
             >
               <Menu />
@@ -101,7 +122,7 @@ export default function Sidebar({ links }: SidebarProps) {
 
           <SheetContent
             side="left"
-            className="w-[280px] p-6 bg-slate-900"
+            className="w-[260px] p-6 bg-slate-950 border-r border-white/10"
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
@@ -117,7 +138,7 @@ export default function Sidebar({ links }: SidebarProps) {
             <div className="pt-6 border-t border-white/10">
               <Button
                 variant="ghost"
-                className="w-full text-red-400 hover:bg-red-500/10"
+                className="w-full justify-start text-red-400 hover:bg-red-500/10 rounded-xl"
                 onClick={() => {
                   setMobileOpen(false);
                   setIsLogout(true);
@@ -130,7 +151,6 @@ export default function Sidebar({ links }: SidebarProps) {
           </SheetContent>
         </Sheet>
       </div>
-
     </>
   );
 }

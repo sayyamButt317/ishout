@@ -46,30 +46,31 @@ export default function LandingPage() {
               Where brands build influence with data, speed, and precision.
             </p>
             <CalendlyDemo>
-              <div className="mt-6 p-[6px] border border-white/15 rounded-[22px] inline-block">
-                <div className="p-[8px] border border-white/30 rounded-[20px] inline-block">
+              <div className="mt-6 p-[4px] border border-white/15 rounded-[20px] inline-block">
+                <div className="p-[6px] border border-white/30 rounded-[20px] inline-block">
                   <CustomButton
                     className="
-          bg-[#ff3b8d]
-          hover:bg-[#ff5a9e]
-          cursor-pointer
-          rounded-[14px]
-          h-14
-          px-20
-          text-xl
-          font-extrabold
-          italic
-          text-white
+    bg-[#ff3b8d]
+    hover:bg-[#ff5a9e]
+    cursor-pointer
+    rounded-[14px]
+    h-12
+    px-20
+    text-xl
+    font-extrabold
+    italic
+    text-white
+    
+    /* Default state: No shadow */
+    shadow-none
 
-          /* Base glow - subtle */
-          shadow-[0_0_12px_rgba(255,255,255,0.25),0_0_25px_rgba(255,255,255,0.15),0_0_40px_rgba(255,255,255,0.08)]
+    /* Hover state: Multi-layered glow */
+    hover:shadow-[0_0_15px_rgba(255,255,255,0.4),0_0_30px_rgba(255,59,141,0.6),0_0_50px_rgba(255,59,141,0.3)]
 
-          /* Hover glow - soft but visible */
-          hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)]
-
-          transition-all
-          duration-150
-        "
+    transition-all
+    duration-300
+    ease-out
+  "
                   >
                     Book a Demo
                   </CustomButton>
