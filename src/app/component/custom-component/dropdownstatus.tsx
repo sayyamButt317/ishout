@@ -49,9 +49,9 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
           variant="outline"
           className={`
             capitalize ${getButtonStyle()} 
-            w-full max-w-[200px] sm:w-auto 
-            cursor-pointer text-xs sm:text-sm
-            truncate
+            w-auto max-w-[80px] sm:max-w-[200px]
+            cursor-pointer text-[10px] sm:text-sm
+            truncate px-2 sm:px-3
           `}
         >
           {selectedStatus || "Select status"}
