@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { LogOut, Menu } from "lucide-react";
 import { useState, useMemo } from "react";
 import LogoutDialogue from "./logoutdialogue";
@@ -104,6 +104,7 @@ export default function Sidebar({ links }: SidebarProps) {
             className="w-[280px] p-6 bg-slate-900"
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
+            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <div className="mb-6 flex items-center gap-2">
               <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={36} height={36} unoptimized={true} />
               <h2 className="text-xl font-bold text-white">iShout</h2>

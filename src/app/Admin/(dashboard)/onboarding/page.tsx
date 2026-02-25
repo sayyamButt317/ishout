@@ -99,7 +99,7 @@ export default function OnboardingCampaignPage() {
           </div>,
           <div key={`view-${campaign._id}`} className="truncate">
             <Button
-              className="cursor-pointer w-[80px] whitespace-nowrap"
+              className="cursor-pointer w-[60px] sm:w-[80px] h-6 sm:h-9 text-[10px] sm:text-sm whitespace-nowrap px-2 sm:px-4"
               variant="outline"
               onClick={() => {
                 router.push(`/Admin/onboarding/${campaign?._id}`);
