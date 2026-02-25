@@ -4,23 +4,25 @@ import {
   CampaignBrief,
   UpdateCampaignBrief,
 } from '@/src/types/Compnay/campaignbrieftype';
-import { Copy, CheckCircle2, Sparkles, RotateCcw, Pencil, Save } from 'lucide-react';
+import { Copy, CheckCircle2, Sparkles, Check, Pencil, Save } from 'lucide-react';
 import { useState } from 'react';
 import { Section } from './briefsection';
 import useUpdateCampaignBrief from '@/src/routes/Company/api/Hooks/useUpdateCampaignBriefHook';
 import { toast } from 'sonner';
+import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 
 interface Props {
   brief: CampaignBrief;
   onRegenerate?: () => void;
+  onApprove?: () => void;
 }
 
-const CampaignBriefResult = ({ brief, onRegenerate }: Props) => {
+const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
   const [copied, setCopied] = useState(false);
   const [editable, setEditable] = useState(false);
   const [localBrief, setLocalBrief] = useState<CampaignBrief>(brief);
+  const { setField, addToArray } = useReadyMadeTemplateStore();
 
-  // Update hook
   const { mutate: updateBrief, isPending: isUpdating } = useUpdateCampaignBrief();
 
   // Copy to clipboard
@@ -42,19 +44,24 @@ const CampaignBriefResult = ({ brief, onRegenerate }: Props) => {
     }
 
     const payload: UpdateCampaignBrief = { ...localBrief, id: localBrief.id };
-    console.log('Saving payload:', payload); // <-- DEBUG
+    console.log('Saving payload:', payload);
 
     updateBrief(payload, {
       onSuccess: (data) => {
-        console.log('Update success:', data); // <-- DEBUG
+        console.log('Update success:', data);
         setLocalBrief(data);
         setEditable(false);
       },
     });
   };
 
+  const handleApprove = () => {
+    toast.success('Campaign data ready in summary');
+    onApprove?.();
+  };
+
   return (
-    <div className="relative max-w-7xl mx-auto px-6 py-20">
+    <div className="relative max-w-7xl mx-auto px-6 pt-4 pb-20">
       {/* HEADER */}
       <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-16">
         <div>
@@ -88,11 +95,11 @@ const CampaignBriefResult = ({ brief, onRegenerate }: Props) => {
           )}
 
           <button
-            onClick={onRegenerate}
+            onClick={handleApprove}
             className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition"
           >
-            <RotateCcw size={16} />
-            Regenerate
+            <Check size={16} />
+            Approve
           </button>
 
           <button
