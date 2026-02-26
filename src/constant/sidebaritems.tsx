@@ -31,14 +31,14 @@ export const employeeSidebarLinks = [
     icon: <LayoutGrid className="w-5 h-5" />,
   },
   {
-    label: 'Profile',
-    route: '/client/profile',
-    icon: <User className="w-5 h-5" />,
-  },
-  {
     label: 'Campaign Brief',
     route: '/client/get-campaign-brief',
     icon: <FileText className="w-5 h-5" />, // optional: choose an icon
+  },
+  {
+    label: 'Profile',
+    route: '/client/profile',
+    icon: <User className="w-5 h-5" />,
   },
 
   // {
