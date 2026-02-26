@@ -48,9 +48,7 @@ const OnboardingCard = ({
   return (
     <Card className="group relative w-full rounded-[28px] border border-white/10 bg-[#0f0f10] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] overflow-hidden">
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-transparent" />
-
       <div className="relative p-6">
-
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4 min-w-0">
             <Image
@@ -75,7 +73,6 @@ const OnboardingCard = ({
               >
                 @{influencer?.username || "No name available"}
               </div>
-
               <div className="mt-1 flex items-center gap-1.5 text-xs text-white/60 min-w-0">
                 <MapPin className="h-3.5 w-3.5 shrink-0" />
                 <span className="truncate">{influencer?.country}</span>
@@ -93,7 +90,6 @@ const OnboardingCard = ({
               </div>
             </div>
           </div>
-
           {onEdit && (
             <Button
               type="button"
@@ -105,7 +101,6 @@ const OnboardingCard = ({
             </Button>
           )}
         </div>
-
         <div className="mt-6 grid grid-cols-2 gap-3">
           <CustomButton
             className="h-10 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal text-sm"
@@ -125,7 +120,6 @@ const OnboardingCard = ({
             View Profile
           </CustomButton>
         </div>
-
         <div className="mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] divide-x divide-white/10">
           <div className="py-2.5 text-center">
             <p className="text-[10px] tracking-[0.16em] text-white/60">FOLLOWERS</p>
@@ -147,26 +141,20 @@ const OnboardingCard = ({
           </div>
         </div>
         <div className="relative mt-4 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05]">
-
           <div className="absolute left-1/2 top-1/2 h-16 w-px -translate-x-1/2 -translate-y-1/2 bg-white"></div>
-
           <div className="py-3 text-center">
             <p className="text-sm text-white/75">Min Price</p>
             <p className="mt-1 text-lg font-semibold text-white">
               ${influencer?.min_price || 0}
             </p>
           </div>
-
           <div className="py-3 text-center">
             <p className="text-sm text-white/75">Max Price</p>
             <p className="mt-1 text-lg font-semibold text-white">
               ${influencer?.max_price || 0}
             </p>
           </div>
-
         </div>
-
-
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
             <p className="text-sm text-white/75 whitespace-nowrap">Admin Status</p>
@@ -187,8 +175,6 @@ const OnboardingCard = ({
             </p>
           </div>
         </div>
-
-
         {(onApprove || onReject || onDelete) && (
           <div className="mt-6 flex items-center gap-3">
             {onApprove && (
@@ -199,7 +185,6 @@ const OnboardingCard = ({
                 Approve
               </Button>
             )}
-
             {onReject && (
               <Button
                 onClick={() => onReject(influencer)}
@@ -208,7 +193,6 @@ const OnboardingCard = ({
                 Reject
               </Button>
             )}
-
             {onDelete && (
               <Button
                 variant="ghost"
@@ -220,7 +204,6 @@ const OnboardingCard = ({
             )}
           </div>
         )}
-
         {sendNegotiation && (
           <div className="mt-6 flex items-center gap-3">
             <CustomButton
