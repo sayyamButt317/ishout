@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CustomButton from "../button";
 import Spinner from "../custom-component/spinner";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
-import { X, Plus } from "lucide-react";
+import { X } from "lucide-react";
 import { toast } from "sonner";
 import CreateCampaignHook from "@/src/routes/Company/api/Hooks/create-campaign.hook";
 import useAuthStore from "@/src/store/AuthStore/authStore";
@@ -165,9 +165,9 @@ const EditableField = ({
           />
           <button
             onClick={onAdd}
-            className={`px-1.5 py-0.5 ${config.color.button} rounded-md text-xs font-medium transition-colors`}
+            className={`px-2 py-0.5 ${config.color.button} rounded-md text-[10px] font-medium transition-colors`}
           >
-            <Plus size={10} />
+            Add
           </button>
         </div>
     </div>

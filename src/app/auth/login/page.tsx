@@ -65,6 +65,14 @@ export default function Login() {
                   width={50}
                   height={50}
                 />
+                
+{/* <Image
+  src="/assets/iShout-gif-black-background.gif"
+  alt="ishout"
+  width={50}
+  height={50}
+  unoptimized={true}
+/> */}
                 <h2 className="text-3xl font-bold text-slate-100">iShout</h2>
                 <span className="text-primarytext font-extrabold text-3xl">
                   .

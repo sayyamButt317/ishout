@@ -236,6 +236,14 @@ export default function Signup() {
             <Link href="/" className="cursor-pointer">
               <div className="mb-2 flex flex-row items-center justify-center gap-0">
                 <Image src="/assets/favicon.png" alt="ishout" width={50} height={50} />
+                
+{/* <Image
+  src="/assets/iShout-gif-black-background.gif"
+  alt="ishout"
+  width={50}
+  height={50}
+  unoptimized={true}
+/> */}
                 <h2 className="text-3xl font-bold text-slate-900">iShout</h2>
                 <span className="text-primarytext font-extrabold text-3xl">.</span>
               </div>
