@@ -10,13 +10,13 @@ import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 import { rangeOfFollowers } from '@/src/constant/rangeoffollowers';
 
 const CampaignBreifPage = () => {
-  const { mutate: generateCampaignBreif, data, isPending } = CampaignBreifHook();
+  const { mutate: generateCampaignBreif, data, isPending, reset } = CampaignBreifHook();
 
   const { user_id } = useAuthStore();
   const [input, setInput] = useState('');
   const [showSummaryPopup, setShowSummaryPopup] = useState(false);
   const resultRef = useRef<HTMLDivElement>(null);
-  const { setField } = useReadyMadeTemplateStore();
+  const { setField, clearTemplate } = useReadyMadeTemplateStore();
 
   const handleGenerateCampaignBreif = useCallback(() => {
     const user_input = input.trim();
@@ -85,13 +85,19 @@ const CampaignBreifPage = () => {
         }, 100);
       }
     });
-  }, [input, user_id, generateCampaignBreif]);
+  }, [input, user_id, generateCampaignBreif, setField]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !isPending && input.trim()) {
       handleGenerateCampaignBreif();
     }
   };
+
+  const handleApprove = useCallback(() => {
+    setInput('');
+    reset();
+    setShowSummaryPopup(true);
+  }, [reset]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0B0F19] via-[#0F172A] to-black text-white flex flex-col">
@@ -156,7 +162,7 @@ const CampaignBreifPage = () => {
 
       {data && (
         <div ref={resultRef}>
-          <CampaignBriefResult brief={data} onApprove={() => setShowSummaryPopup(true)} />
+          <CampaignBriefResult brief={data} onApprove={handleApprove} />
         </div>
       )}
 
