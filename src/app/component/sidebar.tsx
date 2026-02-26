@@ -78,15 +78,20 @@ export default function Sidebar({ links }: SidebarProps) {
         shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
 
         {/* Logo */}
-        <div className="mb-8 flex items-center gap-3">
+        <a 
+          href="https://ishout.ae" 
+         // target="_blank" 
+          rel="noopener noreferrer"
+          className="mb-8 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+        >
           <div className="relative">
             <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
-            <Image src="/assets/favicon.png" alt="logo" width={36} height={36} className="relative z-10" />
+            <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={36} height={36} className="relative z-10" unoptimized={true} />
           </div>
           <h2 className="text-lg font-semibold tracking-wide text-white">
             iShout
           </h2>
-        </div>
+        </a>
 
         {/* Links */}
         <nav className="flex flex-col gap-2 flex-1 overflow-y-auto pr-1">
@@ -126,10 +131,16 @@ export default function Sidebar({ links }: SidebarProps) {
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-            <div className="mb-6 flex items-center gap-2">
+            <a 
+              href="https://ishout.ae" 
+          //    target="_blank" 
+              rel="noopener noreferrer"
+              className="mb-6 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => setMobileOpen(false)}
+            >
               <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={36} height={36} unoptimized={true} />
               <h2 className="text-xl font-bold text-white">iShout</h2>
-            </div>
+            </a>
 
             <nav className="flex flex-col gap-2 flex-1 overflow-y-auto">
               {renderedLinks}

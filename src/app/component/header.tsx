@@ -32,9 +32,9 @@ const Header = () => {
             <Image
               src="/assets/iShout-gif-black-background.gif"
               alt="logo"
-              width={155}
-              height={155}
-              className="w-[155px] h-[40px]"
+              width={200}
+              height={52}
+              className="w-[200px] h-[52px] object-contain"
               unoptimized={true}
             />
           </div>
