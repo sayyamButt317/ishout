@@ -47,5 +47,6 @@ export const AdminENDPOINT = {
 
     DELETE_WHATSAPP_USER_MESSAGES: (thread_id: string) => `/admin/delete-whatsapp-chat/${thread_id}`,
     SENDNEGOTITIONTEMPLATE: `/admin/negotiation-initial-message`,
-    NEGOTIATION_STATS: `/admin/negotiation-controls`
+    NEGOTIATION_STATS: `/admin/negotiation-controls`,
+    NEGOTIATION_CHAT_DETAIL: `/admin/negotiation-chat-detail`
 }
