@@ -168,29 +168,29 @@ html {
   display: flex;
   align-items: center;
   width: 100%;
-  height: 44px;
-  padding: 0 2px;
+  height: 48px;
+  padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  background: white;
+  /* FORCE visible border */
   transition: all 0.2s ease;
 }
 
-.signup-phone-input:focus-within {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+.signup-phone-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
 }
 
 /* --- FLAG BOX --- */
 .signup-phone-input .PhoneInputCountry {
   display: flex;
   align-items: center;
-  margin-right: 10px;
-  padding: 6px 8px;
-  border: 1px solid #e2e8f0;
+  margin-right: 8px;
+  padding: 4px 6px;
+  border: 1px solid hsl(var(--input));
   border-radius: 6px;
-  background: #f8fafc;
-  transition: all 0.2s ease;
+  background: transparent;
 }
 
 .signup-phone-input .PhoneInputCountry:hover {
@@ -204,6 +204,7 @@ html {
   outline: none;
   font-size: 13px;
   cursor: pointer;
+  color: white; /* MOBILE WHITE TEXT */
 }
 
 /* Flag size */
@@ -221,10 +222,10 @@ html {
   outline: none;
   background: transparent;
   font-size: 14px;
-  color: #0f172a;
+  color: white; /* WHITE TEXT */
   min-width: 0;
 }
-
 .signup-phone-input .PhoneInputInput::placeholder {
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.6);
 }
+
