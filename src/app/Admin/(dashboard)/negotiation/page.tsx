@@ -1,15 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import CustomButton from "@/src/app/component/button";
-import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import TableComponent from "@/src/app/component/CustomTable";
-import { RefreshCcw, Trash } from "lucide-react";
+import CustomButton from "@/src/app/component/button";
+import { RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useWhatsAppChatStore } from "@/src/store/Campaign/chat.store";
-import DeleteWhatsappChatHook from "@/src/routes/Admin/Hooks/delete-whatsappchat-hook";
 import NegotiationStatsHook from "@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook";
 import { NegotiationStatsResponse } from "@/src/types/Admin-Type/negotiation.type";
+import { useWhatsAppChatStore } from "@/src/store/Campaign/chat.store";
 
 export default function NegotiationPage() {
     const router = useRouter();
@@ -19,6 +17,7 @@ export default function NegotiationPage() {
         currentPage,
         pageSize
     );
+    const unreadMap = useWhatsAppChatStore((s) => s.unread);
     console.log("data", data);
 
     return (
@@ -42,80 +41,115 @@ export default function NegotiationPage() {
                 </Button>
             </div>
             <p className="italic text-xs text-slate-200 mt-2 mb-2">
-                Showing {data?.users?.length} of {data?.total} user sessions
+                Showing {data?.negotiation_controls?.length || 0} of {data?.total || 0} user sessions
             </p>
             <TableComponent
                 header={[
                     "Phone Number",
-                    "conversation_mode",
+                    "Name",
+                    "User Message",
+                    "Conversation Mode",
                     "Min Price",
                     "Max Price",
-                    "last_offered_price",
-                    "intent",
-                    "next_action",
-                    "Human Takeover",
-                    "conversation_mode",
-                    "manual_negotiation",
-                    "agent_paused"
+                    "Last Offered Price",
+                    "User Offer",
+                    "Intent",
+                    "Next Action",
+                    "Negotiation Status",
+                    "Negotiation Round",
+                    "Negotiation Completed",
+                    "Manual Negotiation",
+                    "Agent Paused",
+                    "Final Reply",
+                    "View Chat"
                 ]}
                 subheader={data?.negotiation_controls
                     ?.map(
-                        (userSession: NegotiationStatsResponse) => [
-                            <div key={`user-name-${userSession.thread_id}`} className="truncate">
-                                {userSession?.thread_id}
+                        (userSession: NegotiationStatsResponse) => {
+                            const analysisIntent = userSession?.analysis && 'intent' in userSession.analysis ? userSession.analysis.intent : null;
+                            const analysisNextAction = userSession?.analysis && 'next_action' in userSession.analysis ? userSession.analysis.next_action : null;
+                            
+                            return [
+                            <div key={`phone-${userSession.thread_id}`} className="truncate">
+                                {userSession?.thread_id || "-"}
                             </div>,
-                            <div
-                                key={`user-acknowledgement-${userSession._id}`}
-                                className="truncate"
-                            >
-                                {userSession?.conversation_mode}
+                            <div key={`name-${userSession._id}`} className="truncate">
+                                {userSession?.name || "-"}
                             </div>,
-                            <div key={`min-price-${userSession._id}`} className="truncate">
-                                {userSession?.min_price}
-                            </div>,
-                            <div key={`max-price-${userSession._id}`} className="truncate">
-                                {userSession?.max_price}
-                            </div>,
-                            <div key={`last-offered-price-${userSession._id}`} className="truncate">
-                                {userSession?.last_offered_price}
-                            </div>,
-                            <div key={`intent-${userSession._id}`} className="truncate">
-                                {userSession?.intent}
-                            </div>,
-                            // <div key={`next-action-${userSession._id}`} className="truncate">
-                            //     {userSession?.analysis?.next_action}
-                            // </div>,
-                            <div key={`manual-negotiation-${userSession._id}`} className="truncate">
-                                {userSession?.manual_negotiation}
-                            </div>,
-                            <div key={`agent-paused-${userSession._id}`} className="truncate">
-                                {userSession?.agent_paused}
+                            <div key={`user-message-${userSession._id}`} className="truncate max-w-xs" title={userSession?.user_message || ""}>
+                                {userSession?.user_message || "-"}
                             </div>,
                             <div key={`conversation-mode-${userSession._id}`} className="truncate">
-                                {userSession?.conversation_mode}
+                                {userSession?.conversation_mode || "-"}
                             </div>,
-                            // <CustomButton
-                            //     key={`action-${userSession._id}`}
-                            //     onClick={() => {
-                            //         router.push(`/Admin/whatsapp-chat/${userSession.thread_id}`);
-                            //     }}
-                            //     className="relative bg-primaryButton hover:bg-primaryHover text-white"
-                            // >
-                            //     View Chat
-                            //     {unreadMap?.[userSession.thread_id] > 0 && (
-                            //         <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                            //             {unreadMap[userSession.thread_id]}
-                            //         </span>
-                            //     )}
-                            // </CustomButton>,
-                            // <div key={`delete-${userSession._id}`} className="truncate">
-                            //     <Trash className="w-4 h-4 text-red-300 cursor-pointer"
-                            //         onClick={() => {
-                            //             deleteWhatsappChatHook.mutate(userSession.thread_id);
-                            //         }}
-                            //     />
-                            // </div>
-                        ]
+                            <div key={`min-price-${userSession._id}`} className="truncate">
+                                {userSession?.min_price !== null && userSession?.min_price !== undefined 
+                                    ? `$${userSession.min_price}` 
+                                    : "-"}
+                            </div>,
+                            <div key={`max-price-${userSession._id}`} className="truncate">
+                                {userSession?.max_price !== null && userSession?.max_price !== undefined 
+                                    ? `$${userSession.max_price}` 
+                                    : "-"}
+                            </div>,
+                            <div key={`last-offered-price-${userSession._id}`} className="truncate">
+                                {userSession?.last_offered_price !== null && userSession?.last_offered_price !== undefined 
+                                    ? `$${userSession.last_offered_price}` 
+                                    : "-"}
+                            </div>,
+                            <div key={`user-offer-${userSession._id}`} className="truncate">
+                                {userSession?.user_offer !== null && userSession?.user_offer !== undefined 
+                                    ? `$${userSession.user_offer}` 
+                                    : "-"}
+                            </div>,
+                            <div key={`intent-${userSession._id}`} className="truncate">
+                                {userSession?.intent || analysisIntent || "-"}
+                            </div>,
+                            <div key={`next-action-${userSession._id}`} className="truncate" title={userSession?.next_action || analysisNextAction || ""}>
+                                {userSession?.next_action || analysisNextAction || "-"}
+                            </div>,
+                            <div key={`negotiation-status-${userSession._id}`} className="truncate">
+                                {userSession?.negotiation_status || "-"}
+                            </div>,
+                            <div key={`negotiation-round-${userSession._id}`} className="truncate">
+                                {userSession?.negotiation_round !== null && userSession?.negotiation_round !== undefined 
+                                    ? userSession.negotiation_round 
+                                    : "-"}
+                            </div>,
+                            <div key={`negotiation-completed-${userSession._id}`} className="truncate">
+                                {userSession?.negotiation_completed !== null && userSession?.negotiation_completed !== undefined 
+                                    ? userSession.negotiation_completed ? "Yes" : "No" 
+                                    : "-"}
+                            </div>,
+                            <div key={`manual-negotiation-${userSession._id}`} className="truncate">
+                                {userSession?.manual_negotiation !== null && userSession?.manual_negotiation !== undefined 
+                                    ? userSession.manual_negotiation ? "Yes" : "No" 
+                                    : "-"}
+                            </div>,
+                            <div key={`agent-paused-${userSession._id}`} className="truncate">
+                                {userSession?.agent_paused !== null && userSession?.agent_paused !== undefined 
+                                    ? userSession.agent_paused ? "Yes" : "No" 
+                                    : "-"}
+                            </div>,
+                            <div key={`final-reply-${userSession._id}`} className="truncate max-w-xs" title={userSession?.final_reply || ""}>
+                                {userSession?.final_reply || "-"}
+                            </div>,
+                            <CustomButton
+                                key={`view-chat-${userSession._id}`}
+                                onClick={() => {
+                                    router.push(`/Admin/negotiation-chat/${userSession._id}`);
+                                }}
+                                className="relative bg-primaryButton hover:bg-primaryHover text-white"
+                            >
+                                View Chat
+                                {unreadMap?.[userSession.thread_id] > 0 && (
+                                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                        {unreadMap[userSession.thread_id]}
+                                    </span>
+                                )}
+                            </CustomButton>
+                        ];
+                        }
                     )}
                 paginationstart={data?.page ?? 1}
                 paginationend={data?.total_pages ?? 1}

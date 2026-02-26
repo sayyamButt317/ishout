@@ -284,6 +284,15 @@ export const NegotiationStatsApi = async (page: number = 1, page_size: number = 
     return response.data;
 }
 
+export const NegotiationChatDetailApi = async (_id: string) => {
+    const response = await api.get(AdminENDPOINT.NEGOTIATION_CHAT_DETAIL, {
+        params: {
+            _id
+        }
+    });
+    return response.data;
+}
+
 export const SendOnboardingMessage = async (
     psid: number,
     messageTemplate: MessageTemplate

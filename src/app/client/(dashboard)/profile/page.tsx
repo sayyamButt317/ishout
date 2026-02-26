@@ -16,10 +16,10 @@ import {
   Building2,
   Loader2,
   Mail,
-  Phone,
   RefreshCcw,
   User,
 } from "lucide-react";
+import PhoneInput from 'react-phone-number-input';
 import {
   CompanyProfileFormSchema,
   CompanyProfileFormValidator,
@@ -29,6 +29,7 @@ import useAuthStore from "@/src/store/AuthStore/authStore";
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import CompanyUpdateProfileHook from "@/src/routes/Company/api/Hooks/update-profile.hook";
+import { normalizePhoneNumberForDisplay, removePlusPrefix } from "@/src/utils/phone.utils";
 
 export default function CompanyProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -54,7 +55,11 @@ export default function CompanyProfilePage() {
   } = form;
 
   const onSubmit = (values: CompanyProfileFormValidator) => {
-    updateProfile(values, {
+    const valuesToSend = {
+      ...values,
+      phone: removePlusPrefix(values.phone),
+    };
+    updateProfile(valuesToSend, {
       onSuccess: () => {
         setIsEditing(false);
       },
@@ -181,26 +186,32 @@ export default function CompanyProfilePage() {
                 <FormField
                   control={form.control}
                   name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-neutral-300">
-                        Phone Number
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
-                          <Input
-                            {...field}
-                            type="tel"
-                            placeholder="971 9876543210"
+                  render={({ field }) => {
+                    const displayValue = normalizePhoneNumberForDisplay(field.value);
+                    return (
+                      <FormItem>
+                        <FormLabel className="text-neutral-300">
+                          Phone Number
+                        </FormLabel>
+                        <FormControl>
+                          <PhoneInput
+                            international
+                            defaultCountry="AE"
+                            countryCallingCodeEditable={false}
+                            placeholder="Enter phone number"
+                            value={displayValue}
+                            onChange={(value) => {
+                              const valueWithoutPlus = removePlusPrefix(value);
+                              field.onChange(valueWithoutPlus);
+                            }}
                             disabled={!isEditing}
-                            className="pl-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
+                            className="profile-phone-input"
                           />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
               </div>
 

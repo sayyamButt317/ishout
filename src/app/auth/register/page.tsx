@@ -17,6 +17,7 @@ import {
   SignUpFormSchema,
   SignUpFormValidator,
 } from '@/src/validators/Auth-Validator/signUp-Validators';
+import { normalizePhoneNumberForDisplay, removePlusPrefix } from '@/src/utils/phone.utils';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import CustomButton from '../../component/button';
@@ -47,7 +48,7 @@ export default function Signup() {
     registerMutation({
       company_name: data.company_name,
       contact_person: data.contact_person,
-      phone: data.phone,
+      phone: removePlusPrefix(data.phone),
       email: data.email,
       password: data.password,
     });
@@ -104,25 +105,31 @@ export default function Signup() {
                 <FormField
                   control={form.control}
                   name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-slate-100">
-                        Phone Number
-                      </FormLabel>
-                      <FormControl>
-                        <PhoneInput
-                          international
-                          defaultCountry="AE"
-                          countryCallingCodeEditable={false}
-                          placeholder="Enter phone number"
-                          value={field.value}
-                          onChange={(value) => field.onChange(value ?? '')}
-                          className="signup-phone-input h-12 rounded-md border border-input bg-background px-3 focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent w-full"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs text-red-500" />
-                    </FormItem>
-                  )}
+                  render={({ field }) => {
+                    const displayValue = normalizePhoneNumberForDisplay(field.value);
+                    return (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-slate-100">
+                          Phone Number
+                        </FormLabel>
+                        <FormControl>
+                          <PhoneInput
+                            international
+                            defaultCountry="AE"
+                            countryCallingCodeEditable={false}
+                            placeholder="Enter phone number"
+                            value={displayValue}
+                            onChange={(value) => {
+                              const valueWithoutPlus = removePlusPrefix(value);
+                              field.onChange(valueWithoutPlus);
+                            }}
+                            className="signup-phone-input h-12 rounded-md border border-input bg-background px-3 focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent w-full"
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs text-red-500" />
+                      </FormItem>
+                    );
+                  }}
                 />
 
                 {/* Company Name */}
@@ -279,20 +286,25 @@ export default function Signup() {
                 <FormField
                   control={form.control}
                   name="phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-slate-700">
-                        Phone Number
-                      </FormLabel>
-                      <FormControl>
-                        <PhoneInput
-                          international
-                          defaultCountry="AE"
-                          countryCallingCodeEditable={false}
-                          placeholder="Enter phone number"
-                          value={field.value}
-                          onChange={(value) => field.onChange(value ?? '')}
-                          className="
+                  render={({ field }) => {
+                    const displayValue = normalizePhoneNumberForDisplay(field.value);
+                    return (
+                      <FormItem>
+                        <FormLabel className="text-sm font-medium text-slate-700">
+                          Phone Number
+                        </FormLabel>
+                        <FormControl>
+                          <PhoneInput
+                            international
+                            defaultCountry="AE"
+                            countryCallingCodeEditable={false}
+                            placeholder="Enter phone number"
+                            value={displayValue}
+                            onChange={(value) => {
+                              const valueWithoutPlus = removePlusPrefix(value);
+                              field.onChange(valueWithoutPlus);
+                            }}
+                            className="
     flex items-center w-full
     h-11 px-3
     rounded-md
@@ -308,11 +320,12 @@ export default function Signup() {
     [&_.PhoneInputCountry]:bg-transparent
     [&_.PhoneInputCountry]:border-none
   "
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    );
+                  }}
                 />
 
                 {/* Company Name */}
