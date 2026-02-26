@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { isValidPhoneNumber } from 'react-phone-number-input';
+import { isValidPhoneLength, normalizePhoneNumberForDisplay } from '@/src/utils/phone.utils';
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -12,11 +13,22 @@ export const SignUpFormSchema = z
         phone: z
             .string()
             .min(1, { message: 'Please enter your phone number.' })
-            .refine((value) => isValidPhoneNumber(value), {
-                message: 'Please enter a valid phone number.',
+            .refine((value) => {
+                if (!isValidPhoneLength(value)) {
+                    return false;
+                }
+                const normalizedValue = normalizePhoneNumberForDisplay(value);
+                if (!normalizedValue) {
+                    return false;
+                }
+                try {
+                    return isValidPhoneNumber(normalizedValue);
+                } catch {
+                    return false;
+                }
+            }, {
+                message: 'Please enter a valid phone number (7-15 digits).',
             }),
-        // industry: z.string().min(1, { message: 'Industry type is required.' }),
-        // company_size: z.string().min(1, { message: 'Company size is required.' }),
         email: z.string().regex(emailRegex, { message: 'Please enter a valid email address.' }),
         password: z
             .string()

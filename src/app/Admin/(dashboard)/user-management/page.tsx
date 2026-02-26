@@ -12,6 +12,8 @@ import { UserManagementResponse } from '@/src/types/Admin-Type/usermanagment.typ
 import { RefreshCcw, Trash, Pencil, X, Loader2, Eye, EyeOff } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import PhoneInput from 'react-phone-number-input';
+import { normalizePhoneNumberForDisplay, removePlusPrefix } from '@/src/utils/phone.utils';
 
 type EditableUser = UserManagementResponse & {
   password?: string; 
@@ -165,7 +167,7 @@ export default function UserManagementPage() {
                   const payload: UpdateUserPayload = {
                     company_name: selectedUser.company_name,
                     contact_person: selectedUser.contact_person,
-                    phone: selectedUser.phone,
+                    phone: removePlusPrefix(selectedUser.phone),
                     email: selectedUser.email,
                   };
 
@@ -200,15 +202,19 @@ export default function UserManagementPage() {
                   {/* Phone */}
                   <div>
                     <label className="block mb-1 text-neutral-300">Phone Number</label>
-                    <Input
-                      value={selectedUser.phone}
-                      onChange={(e) =>
+                    <PhoneInput
+                      international
+                      defaultCountry="AE"
+                      countryCallingCodeEditable={false}
+                      placeholder="Enter phone number"
+                      value={normalizePhoneNumberForDisplay(selectedUser.phone)}
+                      onChange={(value) =>
                         setSelectedUser({
                           ...selectedUser,
-                          phone: e.target.value,
+                          phone: removePlusPrefix(value),
                         })
                       }
-                      className="h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton w-full"
+                      className="admin-phone-input"
                     />
                   </div>
 
