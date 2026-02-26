@@ -95,7 +95,7 @@ const OnboardingCard = ({
               type="button"
               variant="ghost"
               onClick={() => onEdit(influencer)}
-              className="h-7 rounded-full border border-white/40 bg-white/[0.02]"
+              className="h-7 rounded-full border border-white/40 bg-white/[0.02] text-white/90 hover:bg-white/[0.06] font-normal text-sm cursor-pointer"
             >
               Edit
             </Button>
@@ -207,17 +207,17 @@ const OnboardingCard = ({
         {sendNegotiation && (
           <div className="mt-6 flex items-center gap-3">
             <CustomButton
+              disabled={influencer?.phone_number && influencer?.min_price && influencer?.max_price ? false : true}
               onClick={() => sendNegotiation(influencer)}
               className="flex-1 h-12 rounded-2xl bg-[#ED3E75] text-white italic"
             >
-              <SiWhatsapp className="text-2xl text-white" />
-              Start Negotiation
+              <SiWhatsapp className="text-2xl text-white" /> Start Negotiation
             </CustomButton>
           </div>
         )}
       </div>
     </Card>
   );
-};
+}
 
 export default OnboardingCard;
