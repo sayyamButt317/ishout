@@ -1,7 +1,6 @@
 "use client";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
@@ -48,116 +47,104 @@ export default function ChooseOptionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-md rounded-2xl bg-white shadow-2xl">
-        <DialogTitle className="italic text-center text-2xl font-bold text-[#0B0B17]">
-          Add Influencer Phone Number
-        </DialogTitle>
-        {/* Influencer Card */}
-        <Card className="mt-6 border rounded-xl bg-white shadow-sm">
-          <CardContent className="flex items-center gap-4 p-4">
-            <div className="relative h-20 w-20 rounded-full overflow-hidden">
-              <Image
-                src={influencer?.picture}
-                alt={influencer?.username}
-                width={80}
-                height={80}
-                className="h-20 w-20 rounded-full object-cover p-1 bg-gray-100"
-              />
-            </div>
+      <DialogContent className="max-w-lg border border-white/10 bg-black text-white rounded-3xl overflow-hidden">
+        <div className="relative p-8 space-y-8">
+          <div className="space-y-2">
+            <DialogTitle className="text-2xl font-semibold tracking-tight">
+              Update Influencer Details
+            </DialogTitle>
+            <p className="text-sm text-white/50">
+              Add contact number and pricing range for this creator.
+            </p>
+          </div>
+          <div className="flex items-center gap-5 p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+            <Image
+              src={influencer.picture}
+              alt={influencer.username}
+              width={72}
+              height={72}
+              className="rounded-2xl object-cover ring-2 ring-white/10"
+            />
 
-            <div className="flex flex-col">
-              <p className="font-semibold text-[#0B0B17]">
+            <div>
+              <p className="text-lg font-semibold tracking-tight">
                 @{influencer.username}
               </p>
-              <p className="text-xs text-gray-500 capitalize">
+              <p className="text-sm text-white/50 capitalize">
                 {influencer.platform}
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label className="text-xs uppercase tracking-wider text-white/40">
+                Phone Number
+              </Label>
+              <Input
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                disabled={isPending}
+                placeholder="97150XXXXXXX"
+                className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white placeholder:text-white/30"
+              />
+            </div>
 
-        {/* Phone Input */}
-        <div className="mt-4 space-y-2">
-          <Label className="text-sm font-medium text-[#0B0B17]">
-            Phone Number
-          </Label>
-          <Input
-            type="tel"
-            required
-            placeholder="Enter phone number"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            pattern="[0-9]{10}"
-            title="Please enter a valid phone number with country code"
-            className="border-1 border-[#E0E0E0] rounded-md p-2 text-black"
-            disabled={isPending}
-          />
-          <Label className="text-sm font-medium text-[#0B0B17]">
-            Max Pricing
-          </Label>
-          <Input
-            type="number"
-            required
-            placeholder="Enter max pricing"
-            value={maxPricing}
-            onChange={(e) => setMaxPricing(Number(e.target.value))}
-            className="border-1 border-[#E0E0E0] rounded-md p-2 text-black"
-            disabled={isPending}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label className="text-sm font-medium text-[#0B0B17]">
-            Min Pricing
-          </Label>
-          <Input
-            type="number"
-            required
-            placeholder="Enter min pricing"
-            value={minPricing}
-            onChange={(e) => setMinPricing(Number(e.target.value))}
-            className="border-1 border-[#E0E0E0] rounded-md p-2 text-black"
-            disabled={isPending}
-          />
-        </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-xs uppercase tracking-wider text-white/40">
+                  Min Price
+                </Label>
+                <Input
+                  type="number"
+                  value={minPricing}
+                  onChange={(e) => setMinPricing(Number(e.target.value))}
+                  disabled={isPending}
+                  className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white"
+                />
+              </div>
 
-        {/* Actions */}
-        <div className="mt-6 flex justify-end gap-2">
-          <CustomButton
-            className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
-            onClick={onClose}
-          >
-            Cancel
-          </CustomButton>
-          <CustomButton
-            className="bg-secondaryButton hover:bg-secondaryHover italic text-xs sm:text-sm font-medium text-white flex items-center justify-center gap-1 sm:gap-2 rounded-md px-3 sm:px-4 md:px-6 h-8 sm:h-9 transition-all cursor-pointer"
-            disabled={isPending}
-            onClick={() => {
-              console.log({
-                influencer_id: influencer.influencer_id,
-                phone_number: phoneNumber,
-                platform: influencer.platform,
-                min_price: minPricing,
-                max_price: maxPricing,
-              });
-              addInfluencerNumber({
-                influencer_id: influencer.influencer_id,
-                phone_number: phoneNumber,
-                platform: influencer.platform as PlatformType,
-                min_price: minPricing,
-                max_price: maxPricing,
-              });
-              setPhoneNumber("");
-              setMaxPricing(0);
-              setMinPricing(0);
-              // onClose();
-            }}
-          >
-            {isPending ? (
-              <Loader2 className="animate-spin text-white" />
-            ) : (
-              "Save"
-            )}
-          </CustomButton>
+              <div className="space-y-2">
+                <Label className="text-xs uppercase tracking-wider text-white/40">
+                  Max Price
+                </Label>
+                <Input
+                  type="number"
+                  value={maxPricing}
+                  onChange={(e) => setMaxPricing(Number(e.target.value))}
+                  disabled={isPending}
+                  className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end gap-4 pt-4 border-t border-white/10">
+            <CustomButton
+              onClick={onClose}
+              className="h-11 px-6 rounded-2xl bg-white/[0.05] border border-white/10 hover:bg-white/[0.08] text-white/70 transition-all"
+            >
+              Cancel
+            </CustomButton>
+            <CustomButton
+              disabled={isPending}
+              onClick={() => {
+                addInfluencerNumber({
+                  influencer_id: influencer.influencer_id,
+                  phone_number: phoneNumber,
+                  platform: influencer.platform as PlatformType,
+                  min_price: minPricing,
+                  max_price: maxPricing,
+                });
+              }}
+              className="h-11 px-8 rounded-2xl bg-[#ff4e7e] hover:bg-[#ff6f7f] text-white font-medium shadow-lg shadow-[#ff4e7e]/30 transition-all flex items-center justify-center min-w-[110px]"
+            >
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Save Changes"
+              )}
+            </CustomButton>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

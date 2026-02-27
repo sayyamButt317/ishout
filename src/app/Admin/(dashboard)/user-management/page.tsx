@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ComponentType } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserStatus } from '@/src/app/component/custom-component/user-status';
 import TableComponent from '@/src/app/component/CustomTable';
@@ -8,6 +8,7 @@ import AllUsersHook from '@/src/routes/Admin/Hooks/allusers-hook';
 import DeleteUserHook from '@/src/routes/Admin/Hooks/delete-user-hook';
 import UpdateUserStatusHook from '@/src/routes/Admin/Hooks/update-userstatus-hook';
 import CompanyUpdateProfileHook from '@/src/routes/Company/api/Hooks/update-profile.hook';
+import UploadUserLogoHook from '@/src/routes/Auth-Routes/Api/Auth-Hook/upload-user-logo-hook';
 import { UserManagementResponse } from '@/src/types/Admin-Type/usermanagment.type';
 import { RefreshCcw, Trash, Pencil, X, Loader2, Eye, EyeOff } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,6 +28,76 @@ type UpdateUserPayload = {
   password?: string;
 };
 
+type CountryOption = { value?: string; label: string };
+type FlagIconComponent = ComponentType<{ country: string; title: string; className?: string }>;
+
+function MobileCountrySelect({
+  value,
+  onChange,
+  options,
+  iconComponent: FlagIcon,
+}: {
+  value?: string;
+  onChange: (value?: string) => void;
+  options: CountryOption[];
+  iconComponent: FlagIconComponent;
+}) {
+  const [open, setOpen] = useState(false);
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-1 rounded px-1 py-0.5 hover:bg-white/10 cursor-pointer transition-colors"
+      >
+        {value && <FlagIcon country={value} title={selectedLabel} />}
+        <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={() => setOpen(false)}>
+          <div
+            className="absolute inset-0 bg-black/60"
+            aria-hidden="true"
+          />
+          <div
+            className="relative z-10 w-full flex flex-col overflow-hidden rounded-2xl bg-neutral-900 border border-white/10 shadow-2xl mx-4 mb-4"
+            style={{ maxHeight: '60vh' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex shrink-0 items-center justify-between px-4 pt-4 pb-2 border-b border-white/10">
+              <span className="text-white font-semibold text-sm">Select Country</span>
+              <button type="button" onClick={() => setOpen(false)} className="text-white/60 hover:text-white">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+            <ul className="flex-1 overflow-y-auto">
+              {options.filter((o) => o.value).map((option) => (
+                <li key={option.value}>
+                  <button
+                    type="button"
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-white/10 transition-colors ${option.value === value ? 'bg-white/10 text-white font-medium' : 'text-neutral-300'}`}
+                    onClick={() => { onChange(option.value); setOpen(false); }}
+                  >
+                    <FlagIcon country={option.value!} title={option.label} />
+                    <span>{option.label}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function UserManagementPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,6 +106,7 @@ export default function UserManagementPage() {
   const { data, isLoading, refetch, isRefetching } = AllUsersHook(currentPage);
   const deleteUserHook = DeleteUserHook();
   const updateUserStatus = UpdateUserStatusHook();
+  const uploadLogoHook = UploadUserLogoHook();
 
   const { mutate: updateProfile, isPending: isUpdating } = CompanyUpdateProfileHook(
     selectedUser?.user_id || '',
@@ -90,6 +162,20 @@ export default function UserManagementPage() {
           'Role',
           'Status',
         ]}
+        imageUrls={data?.users?.map((user: UserManagementResponse) => user.logo_url || null)}
+        onImageUpload={(rowIndex, file) => {
+          const user = data?.users?.[rowIndex];
+          if (user?.user_id) {
+            uploadLogoHook.mutate(
+              { user_id: user.user_id, file },
+              {
+                onSuccess: () => {
+                  refetch();
+                },
+              }
+            );
+          }
+        }}
         subheader={data?.users?.map((user: UserManagementResponse) => [
           <div key={`company-${user.user_id}`} className="truncate">
             {user.company_name}
@@ -202,20 +288,39 @@ export default function UserManagementPage() {
                   {/* Phone */}
                   <div>
                     <label className="block mb-1 text-neutral-300">Phone Number</label>
-                    <PhoneInput
-                      international
-                      defaultCountry="AE"
-                      countryCallingCodeEditable={false}
-                      placeholder="Enter phone number"
-                      value={normalizePhoneNumberForDisplay(selectedUser.phone)}
-                      onChange={(value) =>
-                        setSelectedUser({
-                          ...selectedUser,
-                          phone: removePlusPrefix(value),
-                        })
-                      }
-                      className="admin-phone-input"
-                    />
+                    <div className="md:hidden">
+                      <PhoneInput
+                        international
+                        defaultCountry="AE"
+                        countryCallingCodeEditable={false}
+                        placeholder="Enter phone number"
+                        value={normalizePhoneNumberForDisplay(selectedUser.phone)}
+                        onChange={(value) =>
+                          setSelectedUser({
+                            ...selectedUser,
+                            phone: removePlusPrefix(value),
+                          })
+                        }
+                        className="admin-phone-input"
+                        countrySelectComponent={MobileCountrySelect}
+                      />
+                    </div>
+                    <div className="hidden md:block">
+                      <PhoneInput
+                        international
+                        defaultCountry="AE"
+                        countryCallingCodeEditable={false}
+                        placeholder="Enter phone number"
+                        value={normalizePhoneNumberForDisplay(selectedUser.phone)}
+                        onChange={(value) =>
+                          setSelectedUser({
+                            ...selectedUser,
+                            phone: removePlusPrefix(value),
+                          })
+                        }
+                        className="admin-phone-input"
+                      />
+                    </div>
                   </div>
 
                   {/* Company */}
@@ -302,6 +407,7 @@ export default function UserManagementPage() {
           </Card>
         </div>
       )}
+
     </>
   );
 }
