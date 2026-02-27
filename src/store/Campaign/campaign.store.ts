@@ -11,6 +11,7 @@ interface TemplateProps {
     followers: string[];
     country: string[];
     campaign_id: string;
+    brief_id: string;
     iseditable: boolean;
     isSelected: boolean;
     results?: ReadyMadeInfluencersApiResponse[];
@@ -44,6 +45,7 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
                 followers: [],
                 country: [],
                 campaign_id: "",
+                brief_id: "",
                 results: undefined,
                 iseditable: false,
                 isSelected: false,
@@ -66,6 +68,7 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
                     _id: [],
                     username: [],
                     campaign_id: "",
+                    brief_id: "",
                     category: [],
                     platform: [],
                     limit: "",

@@ -2,11 +2,23 @@ import React, { useState } from "react";
 import CustomButton from "../button";
 import Spinner from "../custom-component/spinner";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
-import { X } from "lucide-react";
+import { X, ChevronDown } from "lucide-react";
 import { toast } from "sonner";
 import CreateCampaignHook from "@/src/routes/Company/api/Hooks/create-campaign.hook";
 import useAuthStore from "@/src/store/AuthStore/authStore";
-import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Platforms } from "@/src/constant/platform";
+import { campaignNames } from "@/src/constant/campaignname";
+import { rangeOfFollowers } from "@/src/constant/rangeoffollowers";
+import { INSTAGRAM_INFLUENCERS_COUNTRIES } from "@/src/constant/country";
+import { NumberofFollowers } from "@/src/constant/numberofInfluencers";
 
 interface SummaryPopupProps {
   onClose: () => void;
@@ -105,71 +117,122 @@ const fieldConfigs: FieldConfig[] = [
 interface EditableFieldProps {
   config: FieldConfig;
   value: any;
-  inputValue: string;
-  onInputChange: (value: string) => void;
-  onAdd: () => void;
+  options: string[];
+  onSelect: (item: string) => void;
   onRemove: (item: string) => void;
 }
 
 const EditableField = ({
   config,
   value,
-  inputValue,
-  onInputChange,
-  onAdd,
+  options,
+  onSelect,
   onRemove,
 }: EditableFieldProps) => {
+  const [open, setOpen] = React.useState(false);
+  
+  const selectedItems = config.isArray
+    ? (Array.isArray(value) ? value : [])
+    : value
+    ? [value]
+    : [];
+
+  const getDisplayText = () => {
+    if (config.isArray) {
+      if (selectedItems.length === 0) return config.placeholder;
+      if (selectedItems.length === 1) return selectedItems[0];
+      return `${selectedItems.length} selected`;
+    } else {
+      if (!value) return config.placeholder;
+      return config.displayValue ? config.displayValue(value) : value;
+    }
+  };
+
   return (
-    <div className="bg-white/5 rounded-lg p-1.5 border border-white/10">
-      <div className="flex items-center gap-1 mb-1">
-        <div className={`h-1 w-1 rounded-full ${config.color.dot}`} />
-        <h4 className="text-[10px] font-semibold text-white">{config.label}</h4>
+    <div className="bg-white/5 rounded-lg p-3 lg:p-4 border border-white/10">
+      <div className="flex items-center gap-2 mb-2 lg:mb-3">
+        <div className={`h-1.5 w-1.5 lg:h-2 lg:w-2 rounded-full ${config.color.dot}`} />
+        <h4 className="text-xs lg:text-sm font-semibold text-white">{config.label}</h4>
       </div>
-      <div className="flex flex-wrap gap-1 min-h-[16px]">
-        {config.isArray && Array.isArray(value) && value.length > 0
-          ? value.map((item, i) => (
+      <div className="flex flex-wrap gap-1.5 lg:gap-2 min-h-[24px] lg:min-h-[28px] mb-2 lg:mb-3">
+        {selectedItems.length > 0
+          ? selectedItems.map((item, i) => (
               <span
                 key={`${item}-${i}`}
-                className={`inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r ${config.color.gradient} ${config.color.border} px-1.5 py-0.5 ${config.color.text} text-[10px] font-medium`}
+                className={`inline-flex items-center gap-1 rounded-full bg-gradient-to-r ${config.color.gradient} ${config.color.border} border px-2 py-1 ${config.color.text} text-[10px] lg:text-xs font-medium`}
               >
-                {item}
+                {config.isArray ? item : config.displayValue ? config.displayValue(item) : item}
                 <button
                   className="hover:bg-white/20 rounded-full p-0.5 transition-colors duration-200"
                   onClick={() => onRemove(item)}
                 >
-                  <X className="w-1.5 h-1.5" />
+                  <X className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                 </button>
               </span>
             ))
-          : !config.isArray && value && (
-              <span
-                className={`inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r ${config.color.gradient} ${config.color.border} px-1.5 py-0.5 ${config.color.text} text-[10px] font-medium`}
-              >
-                {config.displayValue ? config.displayValue(value) : value}
-              </span>
-            )}
+          : null}
       </div>
-      <div className="flex gap-1 mt-1">
-          <Input
-            type="text"
-            placeholder={config.placeholder}
-            value={inputValue}
-            onChange={(e) => onInputChange(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                onAdd();
-              }
-            }}
-            className={`flex-1 h-6 text-[10px] bg-white/5 border-white/10 text-white placeholder:text-slate-400 focus-visible:${config.color.ring}`}
-          />
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
           <button
-            onClick={onAdd}
-            className={`px-2 py-0.5 ${config.color.button} rounded-md text-[10px] font-medium transition-colors`}
+            className={`w-full flex items-center justify-between h-8 lg:h-10 px-3 lg:px-4 rounded-md text-xs lg:text-sm bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-colors ${config.color.ring} focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900`}
           >
-            Add
+            <span className="truncate">{getDisplayText()}</span>
+            <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 shrink-0 ml-2" />
           </button>
-        </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className={`z-[100] w-[var(--radix-dropdown-menu-trigger-width)] max-h-[250px] overflow-y-auto bg-slate-800/95 backdrop-blur-sm border-white/10 ${config.color.border}`}
+          align="start"
+          side="bottom"
+          sideOffset={4}
+          avoidCollisions={false}
+          collisionPadding={0}
+        >
+          {config.isArray ? (
+            options.map((option) => {
+              const isSelected = selectedItems.includes(option);
+              return (
+                <DropdownMenuCheckboxItem
+                  key={option}
+                  checked={isSelected}
+                  onCheckedChange={() => {
+                    if (isSelected) {
+                      onRemove(option);
+                    } else {
+                      onSelect(option);
+                    }
+                  }}
+                  className={`text-xs lg:text-sm text-white focus:bg-white/10 ${config.color.text}`}
+                >
+                  {option}
+                </DropdownMenuCheckboxItem>
+              );
+            })
+          ) : (
+            <DropdownMenuRadioGroup
+              value={value || undefined}
+              onValueChange={(val) => {
+                if (val === value) {
+                  onRemove(val);
+                } else {
+                  onSelect(val);
+                }
+              }}
+            >
+              {options.map((option) => (
+                <DropdownMenuRadioItem
+                  key={option}
+                  value={option}
+                  className={`text-xs lg:text-sm text-white focus:bg-white/10 ${config.color.text}`}
+                >
+                  {config.displayValue ? config.displayValue(option) : option}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
@@ -181,6 +244,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
     limit,
     followers,
     country,
+    brief_id,
     clearTemplate,
     removeFromArray,
     addToArray,
@@ -190,30 +254,41 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
   const { company_name } = useAuthStore();
   const { mutateAsync: findInfluencer, isPending } = CreateCampaignHook();
 
-  const [inputs, setInputs] = useState({
-    platform: "",
-    category: "",
-    followers: "",
-    country: "",
-    limit: "",
-  });
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
 
   const fieldValues = { platform, category, followers, country, limit };
 
-  const handleAddValue = (config: FieldConfig) => {
-    const value = inputs[config.key].trim();
-    if (!value) return;
-
-    if (config.isArray) {
-      addToArray(config.key as "platform" | "category" | "followers" | "country", value);
-    } else {
-      setField(config.key, value);
+  const getOptionsForField = (key: string): string[] => {
+    switch (key) {
+      case "platform":
+        return Platforms.map((p) => p.name);
+      case "category":
+        return campaignNames;
+      case "followers":
+        return rangeOfFollowers;
+      case "country":
+        return INSTAGRAM_INFLUENCERS_COUNTRIES;
+      case "limit":
+        return NumberofFollowers;
+      default:
+        return [];
     }
-
-    setInputs((prev) => ({ ...prev, [config.key]: "" }));
   };
 
-  const handleRemoveValue = (config: FieldConfig, item: string) => {
+  const handleSelect = (config: FieldConfig, item: string) => {
+    if (config.isArray) {
+      addToArray(config.key as "platform" | "category" | "followers" | "country", item);
+    } else {
+      setField(config.key, item);
+    }
+  };
+
+  const handleRemove = (config: FieldConfig, item: string) => {
     if (config.isArray) {
       removeFromArray(config.key as "platform" | "category" | "followers" | "country" | "limit", item);
     } else {
@@ -233,6 +308,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
       followers: followers,
       country: country,
       company_name: company_name,
+      brief_id: brief_id || undefined,
     });
     clearTemplate();
     onClose();
@@ -246,42 +322,42 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
     limit;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-6 md:pt-8 p-3 md:p-4 bg-black/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-2xl lg:max-w-3xl max-h-[85vh]">
-        <div className="group rounded-2xl border border-white/20 bg-gradient-to-br from-slate-900 via-gray-900 to-zinc-900 shadow-2xl backdrop-blur-sm p-3 md:p-4 max-h-[85vh] overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-500/10 via-transparent to-gray-500/10 opacity-50 rounded-2xl" />
-          <div className="absolute -top-4 -right-4 h-20 w-20 rounded-full bg-gradient-to-br from-slate-400/20 to-gray-400/20 blur-xl" />
-          <div className="absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-gradient-to-tr from-zinc-400/20 to-slate-400/20 blur-xl" />
+    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 md:p-6 lg:p-8 bg-black/60 backdrop-blur-sm overflow-y-auto">
+      <div className="relative w-full max-w-3xl lg:max-w-5xl xl:max-w-6xl my-8 pb-[300px]">
+        <div className="group rounded-3xl border border-white/20 bg-gradient-to-br from-slate-900 via-gray-900 to-zinc-900 shadow-2xl backdrop-blur-sm p-6 md:p-8 lg:p-10">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-500/10 via-transparent to-gray-500/10 opacity-50 rounded-3xl" />
+          <div className="absolute -top-4 -right-4 h-24 w-24 lg:h-32 lg:w-32 rounded-full bg-gradient-to-br from-slate-400/20 to-gray-400/20 blur-xl" />
+          <div className="absolute -bottom-4 -left-4 h-28 w-28 lg:h-36 lg:w-36 rounded-full bg-gradient-to-tr from-zinc-400/20 to-slate-400/20 blur-xl" />
 
           <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row items-start justify-between mb-2 gap-1.5">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-start justify-between mb-6 lg:mb-8 gap-3">
+              <div className="flex items-center gap-3 lg:gap-4">
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-r from-slate-500 to-gray-600 rounded-full blur-sm opacity-75" />
-                  <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-slate-500 to-gray-600 text-white text-sm font-bold shadow-lg">
+                  <div className="relative flex h-12 w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-gradient-to-r from-slate-500 to-gray-600 text-white text-xl lg:text-2xl font-bold shadow-lg">
                     📋
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm md:text-base font-bold text-white mb-0 tracking-tight">
+                  <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 tracking-tight">
                     Campaign Summary
                   </h3>
-                  <p className="text-slate-100/80 text-[10px] leading-tight">
+                  <p className="text-slate-100/80 text-xs lg:text-sm leading-tight">
                     Review your campaign settings before launching
                   </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="text-white/60 hover:text-white hover:bg-white/10 rounded-full p-1 transition-all duration-200 self-end sm:self-start"
+                className="text-white/60 hover:text-white hover:bg-white/10 rounded-full p-2 transition-all duration-200 self-end sm:self-start"
               >
-                <X size={16} className="md:w-4 md:h-4" />
+                <X size={20} className="lg:w-6 lg:h-6" />
               </button>
             </div>
 
-            <div className="flex items-center gap-1 text-[10px] mb-2">
+            <div className="flex items-center gap-2 text-xs lg:text-sm mb-6">
               <div
-                className={`h-1 w-1 rounded-full ${
+                className={`h-2 w-2 rounded-full ${
                   isFormComplete ? "bg-green-400 animate-pulse" : "bg-amber-400"
                 }`}
               />
@@ -292,42 +368,39 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-1.5 md:gap-2">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
               {fieldConfigs.map((config) => (
                 <EditableField
                   key={config.key}
                   config={config}
                   value={fieldValues[config.key]}
-                  inputValue={inputs[config.key]}
-                  onInputChange={(value) =>
-                    setInputs((prev) => ({ ...prev, [config.key]: value }))
-                  }
-                  onAdd={() => handleAddValue(config)}
-                  onRemove={(item) => handleRemoveValue(config, item)}
+                  options={getOptionsForField(config.key)}
+                  onSelect={(item) => handleSelect(config, item)}
+                  onRemove={(item) => handleRemove(config, item)}
                 />
               ))}
             </div>
 
-            <div className="mt-2 space-y-1.5">
-              <div className="flex flex-col sm:flex-row gap-1.5">
+            <div className="mt-6 lg:mt-8 space-y-3 lg:space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
                 <CustomButton
                   onClick={() => clearTemplate()}
-                  className="flex-1 bg-slate-600 hover:bg-slate-700 text-white px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all duration-200 hover:scale-105"
+                  className="flex-1 bg-slate-600 hover:bg-slate-700 text-white px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 hover:scale-105"
                 >
                   Clear
                 </CustomButton>
                 <CustomButton
                   onClick={() => handleLaunchCampaign()}
                   disabled={!isFormComplete || isPending}
-                  className={`flex-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all duration-200 hover:scale-105 ${
+                  className={`flex-1 px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 hover:scale-105 ${
                     isFormComplete
                       ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-500/25"
                       : "bg-slate-600 text-slate-400 cursor-not-allowed"
                   }`}
                 >
                   {isPending ? (
-                    <div className="flex items-center justify-center gap-1">
-                      <Spinner size={12} />
+                    <div className="flex items-center justify-center gap-2">
+                      <Spinner size={16} />
                       Creating...
                     </div>
                   ) : (
@@ -336,7 +409,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                 </CustomButton>
               </div>
               <div className="text-center">
-                <p className="text-[10px] text-slate-400">
+                <p className="text-xs lg:text-sm text-slate-400">
                   {isFormComplete
                     ? "🎉 Your campaign is ready to launch!"
                     : "Complete all fields above to launch your campaign"}

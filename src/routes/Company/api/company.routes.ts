@@ -7,7 +7,7 @@ import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from '@/src/types/Admin-Type/Campaign.type';
 import { CompanyProfileDetailsResponseProps, UpdateProfileRequestProps, UpdateProfileResponseProps } from '@/src/types/Compnay/profile-type';
 import { ChangePasswordRequestProps } from '@/src/types/Compnay/password-type';
-import { GetCampaignBriefResponse } from "@/src/types/Compnay/campaign-brief.types";
+import { GetCampaignBriefResponse, CampaignBriefItem } from "@/src/types/Compnay/campaign-brief.types";
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 
 
@@ -74,6 +74,16 @@ export const getCampaignBrief = async (
 ): Promise<GetCampaignBriefResponse> => {
   const response = await api.get<GetCampaignBriefResponse>(
     CompanyENDPOINT.GET_CAMPAIGN_BRIEF(user_id)
+  );
+
+  return response.data;
+};
+
+export const getCampaignBriefDetail = async (
+  brief_id: string
+): Promise<CampaignBriefItem> => {
+  const response = await api.get<CampaignBriefItem>(
+    CompanyENDPOINT.GET_CAMPAIGN_BRIEF_DETAIL(brief_id)
   );
 
   return response.data;
