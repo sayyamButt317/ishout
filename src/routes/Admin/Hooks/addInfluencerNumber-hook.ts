@@ -10,7 +10,7 @@ export default function AddInfluencerNumberHook() {
         mutationFn: (addInfluencersNumberRequest: AddInfluencersNumberRequest) => AdminAddInfluencersNumberApi(addInfluencersNumberRequest),
         onSuccess: async (data: { message: string }) => {
             toast.success(data.message);
-            await queryClient.invalidateQueries({ queryKey: ['campaign-influencers'] });
+            await queryClient.invalidateQueries({ queryKey: ['onboarding'] });
         },
         onError: (error) => {
             const axiosError = error as AxiosError<{ detail: string }>;
