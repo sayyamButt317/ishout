@@ -26,6 +26,7 @@ export default function OnboardingInfluencerByCampaignId() {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState<{
+    _id: string;
     username: string;
     platform: string;
     picture: string;
@@ -49,6 +50,7 @@ export default function OnboardingInfluencerByCampaignId() {
 
   const handleEdit = useCallback((influencer: ReviewInfluencerResponse) => {
     setSelectedInfluencer({
+      _id: influencer._id,
       username: influencer.username,
       platform: influencer.platform,
       picture: influencer.picture,

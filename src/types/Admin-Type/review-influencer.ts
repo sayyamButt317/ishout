@@ -33,7 +33,7 @@ export interface InfluencerReviewApiResponse {
 }
 
 export interface AddInfluencersNumberRequest {
-    influencer_id: string;
+    campaign_influencer_id: string;
     phone_number: string;
     platform: string;
     max_price: number;

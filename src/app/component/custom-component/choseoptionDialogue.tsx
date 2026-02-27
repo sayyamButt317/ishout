@@ -14,6 +14,7 @@ interface ChooseOptionDialogProps {
   open: boolean;
   onClose: () => void;
   influencer: {
+    _id: string;
     username: string;
     platform: string;
     picture: string;
@@ -129,7 +130,14 @@ export default function ChooseOptionDialog({
               disabled={isPending}
               onClick={() => {
                 addInfluencerNumber({
-                  influencer_id: influencer.influencer_id,
+                  campaign_influencer_id: influencer._id,
+                  phone_number: phoneNumber,
+                  platform: influencer.platform as PlatformType,
+                  min_price: minPricing,
+                  max_price: maxPricing,
+                });
+                console.log("payload", {
+                  campaign_influencer_id: influencer._id,
                   phone_number: phoneNumber,
                   platform: influencer.platform as PlatformType,
                   min_price: minPricing,
