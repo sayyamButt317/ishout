@@ -59,20 +59,20 @@ export default function Login() {
           <div className="p-8">
             <Link href="/" className="cursor-pointer">
               <div className="mb-2 flex flex-row items-center justify-center gap-0">
-                <Image
+                {/* <Image
                   src="/assets/favicon.png"
                   alt="ishout"
                   width={50}
                   height={50}
+                /> */}
+
+                <Image
+                  src="/assets/iShout-gif-black-background.gif"
+                  alt="ishout"
+                  width={50}
+                  height={50}
+                  unoptimized={true}
                 />
-                
-{/* <Image
-  src="/assets/iShout-gif-black-background.gif"
-  alt="ishout"
-  width={50}
-  height={50}
-  unoptimized={true}
-/> */}
                 <h2 className="text-3xl font-bold text-slate-100">iShout</h2>
                 <span className="text-primarytext font-extrabold text-3xl">
                   .
@@ -180,18 +180,28 @@ export default function Login() {
         {/* Desktop - Login Card */}
         <Card className="hidden lg:block bg-slate-100 rounded-3xl w-full max-w-md text-card-foreground border border-border shadow-xl">
           <div className="p-8 ">
-            <div className="mb-2 flex flex-row items-center justify-center gap-0">
-              <Image
-                src="/assets/favicon.png"
-                alt="ishout"
-                width={40}
-                height={40}
-              />
-              <h2 className="text-2xl font-bold text-slate-900">iShout</h2>
-              <span className="text-primarytext font-extrabold text-2xl">
-                .
-              </span>
-            </div>
+            <Link href="/" className="cursor-pointer">
+              <div className="mb-2 flex flex-row items-center justify-center gap-0">
+                {/* <Image
+                  src="/assets/favicon.png"
+                  alt="ishout"
+                  width={50}
+                  height={50}
+                /> */}
+
+                <Image
+                  src="/assets/iShout-gif-black-background.gif"
+                  alt="ishout"
+                  width={50}
+                  height={50}
+                  unoptimized={true}
+                />
+                <h2 className="text-3xl font-bold text-slate-900">iShout</h2>
+                <span className="text-primarytext font-extrabold text-3xl">
+                  .
+                </span>
+              </div>
+            </Link>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}

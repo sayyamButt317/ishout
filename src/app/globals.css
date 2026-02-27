@@ -199,12 +199,18 @@ html {
 
 /* Remove default select styling */
 .signup-phone-input .PhoneInputCountrySelect {
-  background: transparent;
+  background-color: #0a0a1a;
   border: none;
   outline: none;
   font-size: 13px;
   cursor: pointer;
-  color: white; /* MOBILE WHITE TEXT */
+  color: white;
+  max-width: 100%;
+}
+
+.signup-phone-input .PhoneInputCountrySelect option {
+  background-color: #0a0a1a;
+  color: white;
 }
 
 /* Flag size */
@@ -267,13 +273,19 @@ html {
 }
 
 .profile-phone-input .PhoneInputCountrySelect {
-  background: transparent;
+  background-color: #0d0d1e;
+  color-scheme: dark;
   border: none;
   outline: none;
   font-size: 13px;
   cursor: pointer;
   color: rgb(212, 212, 212);
   padding: 2px 4px;
+}
+
+.profile-phone-input .PhoneInputCountrySelect option {
+  background-color: #0d0d1e;
+  color: rgb(212, 212, 212);
 }
 
 .profile-phone-input:disabled .PhoneInputCountrySelect {
@@ -334,13 +346,19 @@ html {
 }
 
 .admin-phone-input .PhoneInputCountrySelect {
-  background: transparent;
+  background-color: #0d0d1e;
+  color-scheme: dark;
   border: none;
   outline: none;
   font-size: 13px;
   cursor: pointer;
   color: rgb(212, 212, 212);
   padding: 2px 4px;
+}
+
+.admin-phone-input .PhoneInputCountrySelect option {
+  background-color: #0d0d1e;
+  color: rgb(212, 212, 212);
 }
 
 .admin-phone-input .PhoneInputCountryIcon {

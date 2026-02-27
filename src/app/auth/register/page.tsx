@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, type ComponentType } from 'react';
 import {
   Form,
   FormControl,
@@ -28,6 +28,72 @@ import Image from 'next/image';
 const DomeGallery = dynamic(() => import('@/src/constant/Influencers-data'), {
   ssr: false,
 });
+
+type CountryOption = { value?: string; label: string };
+type FlagIconComponent = ComponentType<{ country: string; title: string; className?: string }>;
+
+function MobileCountrySelect({
+  value,
+  onChange,
+  options,
+  iconComponent: FlagIcon,
+}: {
+  value?: string;
+  onChange: (value?: string) => void;
+  options: CountryOption[];
+  iconComponent: FlagIconComponent;
+}) {
+  const [open, setOpen] = useState(false);
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-1 rounded px-1 py-0.5 hover:bg-white/10 transition-colors"
+      >
+        {value && <FlagIcon country={value} title={selectedLabel} />}
+        <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40 bg-black/60" onClick={() => setOpen(false)} />
+          <div className="fixed inset-x-6 top-1/4 bottom-[15%] z-50 flex flex-col rounded-2xl border border-white/10 bg-[#0d0d1e] shadow-2xl overflow-hidden">
+            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3">
+              <span className="text-sm font-semibold text-white">Select Country</span>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="text-base leading-none text-white/50 hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              {options.filter((o) => o.value).map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => { onChange(o.value); setOpen(false); }}
+                  className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-white/10 ${
+                    o.value === value ? 'bg-white/10 font-semibold text-white' : 'text-white/80'
+                  }`}
+                >
+                  <FlagIcon country={o.value!} title={o.label} />
+                  <span>{o.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -123,6 +189,7 @@ export default function Signup() {
                               const valueWithoutPlus = removePlusPrefix(value);
                               field.onChange(valueWithoutPlus);
                             }}
+                            countrySelectComponent={MobileCountrySelect}
                             className="signup-phone-input h-12 rounded-md border border-input bg-background px-3 focus-within:ring-2 focus-within:ring-ring focus-within:border-transparent w-full"
                           />
                         </FormControl>
@@ -242,15 +309,15 @@ export default function Signup() {
           <div className="p-8">
             <Link href="/" className="cursor-pointer">
               <div className="mb-2 flex flex-row items-center justify-center gap-0">
-                <Image src="/assets/favicon.png" alt="ishout" width={50} height={50} />
-                
-{/* <Image
-  src="/assets/iShout-gif-black-background.gif"
-  alt="ishout"
-  width={50}
-  height={50}
-  unoptimized={true}
-/> */}
+                {/* <Image src="/assets/favicon.png" alt="ishout" width={50} height={50} /> */}
+
+                <Image
+                  src="/assets/iShout-gif-black-background.gif"
+                  alt="ishout"
+                  width={50}
+                  height={50}
+                  unoptimized={true}
+                />
                 <h2 className="text-3xl font-bold text-slate-900">iShout</h2>
                 <span className="text-primarytext font-extrabold text-3xl">.</span>
               </div>
@@ -304,22 +371,7 @@ export default function Signup() {
                               const valueWithoutPlus = removePlusPrefix(value);
                               field.onChange(valueWithoutPlus);
                             }}
-                            className="
-    flex items-center w-full
-    h-11 px-3
-    rounded-md
-    border border-slate-200
-  
-    text-black
-     focus-within:border-[#cbd5e1]
-    [&_.PhoneInputInput]:bg-transparent
-    [&_.PhoneInputInput]:border-none
-    [&_.PhoneInputInput]:outline-none
-    [&_.PhoneInputInput]:text-black
-    [&_.PhoneInputInput]:placeholder:text-slate-400
-    [&_.PhoneInputCountry]:bg-transparent
-    [&_.PhoneInputCountry]:border-none
-  "
+                            className="flex items-center w-full h-11 px-3 rounded-md border border-slate-200 bg-transparent text-black focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px] [&_.PhoneInputInput]:bg-transparent [&_.PhoneInputInput]:border-none [&_.PhoneInputInput]:outline-none [&_.PhoneInputInput]:text-black [&_.PhoneInputInput]:placeholder:text-slate-400 [&_.PhoneInputInput]:focus:bg-transparent [&_.PhoneInputCountry]:bg-transparent [&_.PhoneInputCountry]:border-none [&_.PhoneInputCountry]:hover:bg-transparent"
                           />
                         </FormControl>
                         <FormMessage className="text-xs" />
