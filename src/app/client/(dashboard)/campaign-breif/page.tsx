@@ -23,6 +23,9 @@ const CampaignBreifPage = () => {
     if (!user_input) return;
     generateCampaignBreif({ user_input, user_id }, {
       onSuccess: (responseData: any) => {
+        if (responseData?.id) {
+          setField('brief_id', responseData.id);
+        }
         setField('platform', []);
         setField('category', []);
         setField('followers', []);

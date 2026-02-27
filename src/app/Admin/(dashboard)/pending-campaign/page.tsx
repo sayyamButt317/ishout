@@ -14,6 +14,8 @@ import StatusBadge from "@/src/app/component/custom-component/statusbadge";
 import CustomButton from "@/src/app/component/button";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
+import CampaignBriefDialog from "@/src/app/component/custom-component/CampaignBriefDialog";
+import CampaignBriefDetailHook from "@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook";
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,6 +28,9 @@ export default function AdminPendingCampaigns() {
   const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(
     null
   );
+  const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? "");
   const router = useRouter();
   return (
     <>
@@ -65,6 +70,7 @@ export default function AdminPendingCampaigns() {
           "Status",
           "Created At",
           "Generate/View-Generated",
+          "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0View",
         ]}
         imageUrls={data?.campaigns.map((campaign: AdminAllCampaignApiResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
         subheader={data?.campaigns.map(
@@ -99,11 +105,11 @@ export default function AdminPendingCampaigns() {
             <div key={`created-at-${campaign._id}`} className="truncate">
               {new Date(campaign?.created_at).toLocaleDateString()}
             </div>,
-            <div key={`view-${campaign._id}`} className="truncate">
+            <div key={`view-${campaign._id}`} className="min-w-[180px]">
               {campaign?.generated === false ? (
                 <CustomButton
                   key={`generate-${campaign._id}`}
-                  className="bg-primaryButton hover:bg-primaryHover text-white w-[70px] px-19 whitespace-nowrap"
+                  className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
                   onClick={() => {
                     clearTemplate();
                     clearApprovedInfluencers();
@@ -138,7 +144,7 @@ export default function AdminPendingCampaigns() {
                 </CustomButton>
               ) : (
                 <CustomButton
-                  className="bg-secondaryButton hover:bg-secondaryHover text-white min-w-[150px] whitespace-nowrap"
+                  className="bg-secondaryButton hover:bg-secondaryHover text-white whitespace-nowrap text-xs px-3"
                   onClick={() => {
                     router.push(`/Admin/pending-campaign/${campaign._id}`);
                   }}
@@ -146,6 +152,21 @@ export default function AdminPendingCampaigns() {
                   View Generated
                 </CustomButton>
               )}
+            </div>,
+            <div key={`view-brief-${campaign._id}`} className="min-w-[90px] pl-4">
+              <CustomButton
+                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+                onClick={() => {
+                  const briefId = (campaign as any)?.brief_id;
+                  if (briefId) {
+                    setSelectedBriefId(briefId);
+                    setDialogOpen(true);
+                  }
+                }}
+                disabled={!(campaign as any)?.brief_id}
+              >
+                View
+              </CustomButton>
             </div>,
           ]
         )}
@@ -155,6 +176,12 @@ export default function AdminPendingCampaigns() {
           setCurrentPage(page);
         }}
         isLoading={isLoading}
+      />
+
+      <CampaignBriefDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        briefData={briefData?.response}
       />
     </>
   );
