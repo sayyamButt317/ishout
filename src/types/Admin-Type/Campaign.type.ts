@@ -74,6 +74,7 @@ export interface CompanyCampaignResponse {
     status: string;
     pending_influencers_count: number;
     approved_influencer_count: number;
+    logo_url: string;
     created_at: string;
     updated_at: string;
 }
