@@ -33,9 +33,8 @@ export default function OnboardingCampaignPage() {
             disabled={isRefetching}
           >
             <RefreshCcw
-              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                isRefetching ? "animate-spin" : ""
-              }`}
+              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                }`}
             />
           </Button>
         </div>
@@ -60,7 +59,7 @@ export default function OnboardingCampaignPage() {
           "Created At",
           "View",
         ]}
-        imageUrls={data?.campaigns?.map((campaign: CompanyCampaignResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
+        imageUrls={data?.campaigns?.map((campaign: CompanyCampaignResponse) => campaign?.logo_url || null)}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
           <div key={`company-${campaign._id}`} className="truncate">
             {campaign?.company_name}
@@ -78,7 +77,7 @@ export default function OnboardingCampaignPage() {
             {campaign?.category?.join(", ") || "-"}
           </div>,
           <div key={`followers-${campaign._id}`} className="truncate">
-            {Array.isArray(campaign?.followers) 
+            {Array.isArray(campaign?.followers)
               ? campaign.followers.map((f: any) => typeof f === 'number' ? `${f}k` : f).join(", ")
               : "-"}
           </div>,

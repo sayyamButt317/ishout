@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, type ComponentType } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserStatus } from '@/src/app/component/custom-component/user-status';
@@ -17,7 +16,7 @@ import PhoneInput from 'react-phone-number-input';
 import { normalizePhoneNumberForDisplay, removePlusPrefix } from '@/src/utils/phone.utils';
 
 type EditableUser = UserManagementResponse & {
-  password?: string; 
+  password?: string;
 };
 
 type UpdateUserPayload = {
@@ -137,9 +136,8 @@ export default function UserManagementPage() {
               disabled={isRefetching}
             >
               <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text ${
-                  isRefetching ? 'animate-spin' : ''
-                }`}
+                className={`mt-5 w-4 h-4 text-primary-text ${isRefetching ? 'animate-spin' : ''
+                  }`}
               />
             </Button>
           </div>
@@ -196,7 +194,7 @@ export default function UserManagementPage() {
               disabled={deleteUserHook.isPending}
               onClick={() => deleteUserHook.mutate(user.user_id)}
             >
-              <Trash className="size-5 text-red-300" />
+              {deleteUserHook.isPending ? <Loader2 className="animate-spin text-red-300" /> : <Trash className="size-5 text-red-300" />}
             </Button>
           </div>,
           <div key={`edit-${user.user_id}`}>
@@ -238,9 +236,7 @@ export default function UserManagementPage() {
               >
                 <X className="w-5 h-5 text-white" />
               </Button>
-
               <h1 className="text-2xl font-semibold text-white mb-2">Edit User</h1>
-
               <p className="italic text-xs text-slate-200 mb-6">
                 Update user information and contact details
               </p>
@@ -258,7 +254,7 @@ export default function UserManagementPage() {
                   };
 
                   if (selectedUser.password?.trim()) {
-                    payload.password = selectedUser.password; 
+                    payload.password = selectedUser.password;
                   }
 
                   updateProfile(payload, {
@@ -364,14 +360,13 @@ export default function UserManagementPage() {
                       <Input
                         type={showPassword ? 'text' : 'password'}
                         placeholder="••••••••"
-                        autoComplete="new-password" // Prevents browser from auto-filling saved passwords
+                        autoComplete="new-password"
                         value={selectedUser?.password || ''}
                         onChange={(e) =>
                           setSelectedUser((prev) =>
                             prev ? { ...prev, password: e.target.value } : null,
                           )
                         }
-                        // Added 'bg-neutral-950' and ensured no 'bg-white' exists
                         className="h-11 bg-neutral-950 border-white/10 text-white placeholder:text-neutral-500 focus:ring-2 focus:ring-secondaryButton w-full pr-10"
                       />
 
