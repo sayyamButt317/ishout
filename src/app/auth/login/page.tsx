@@ -53,161 +53,49 @@ export default function Login() {
         <DomeGallery />
       </div>
       {/* Right - Login Form */}
-      <div className="bg-black lg:bg-slate-100 flex items-center justify-center p-6 lg:p-12">
-        {/* Mobile - Login Card */}
-        <Card className="lg:hidden bg-black rounded-3xl w-full max-w-md text-card-foreground border-2 shadow-2xl">
-          <div className="p-8">
-            <Link href="/" className="cursor-pointer">
-              <div className="mb-2 flex flex-row items-center justify-center gap-0">
-                {/* <Image
-                  src="/assets/favicon.png"
-                  alt="ishout"
-                  width={50}
-                  height={50}
-                /> */}
+      <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-black to-slate-900 p-6">
 
+        {/* Card */}
+        <Card className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+          <div className="p-10 space-y-8">
+
+            {/* Logo */}
+            <Link href="/" className="flex justify-center">
+              <div className="flex items-center gap-2">
                 <Image
                   src="/assets/iShout-gif-black-background.gif"
                   alt="ishout"
-                  width={50}
-                  height={50}
-                  unoptimized={true}
+                  width={80}
+                  height={80}
+                  unoptimized
                 />
-                <h2 className="text-3xl font-bold text-slate-100">iShout</h2>
-                <span className="text-primarytext font-extrabold text-3xl">
-                  .
-                </span>
+                <h2 className="text-4xl font-bold text-white tracking-tight">
+                  i
+                  <span className="text-primarytext font-extrabold">S</span>
+                  hout
+                  <span className="text-primarytext font-extrabold">.</span>
+                </h2>
               </div>
             </Link>
+
+            {/* Heading */}
+            <div className="text-center space-y-2">
+              <h1 className="text-2xl font-semibold text-white">
+                Welcome back
+              </h1>
+              <p className="italic text-sm text-slate-400">
+                Sign in to continue to your dashboard
+              </p>
+            </div>
+
+            {/* Form */}
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 ref={ref}
                 className="space-y-5"
               >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-slate-700">
-                        Email
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="name@company.com"
-                          className="text-slate-100 h-12 bg-background border-input focus:ring-2 focus:ring-ring focus:border-transparent"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium text-slate-700">
-                        Password
-                      </FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Your password"
-                            className="textslate-100 h-12 bg-background border-input focus:ring-2 focus:ring-ring focus:border-transparent pr-10"
-                            {...field}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setShowPassword((v) => !v)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                            aria-label={
-                              showPassword ? "Hide password" : "Show password"
-                            }
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-5 w-5" />
-                            ) : (
-                              <Eye className="h-5 w-5" />
-                            )}
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex items-center justify-end">
-                  <Link
-                    href="/auth/forgot-password"
-                    className="text-primary text-xs hover:underline"
-                  >
-                    Forget password?
-                  </Link>
-                </div>
-
-                <CustomButton
-                  onClick={() => form.handleSubmit(onSubmit)}
-                  className="w-full h-12 bg-gradient-to-r from-secondaryButton to-secondaryHover text-white shadow-green-500/2 font-semibold rounded-lg  hover:opacity-90"
-                  disabled={SignInMutation.isPending}
-                >
-                  {SignInMutation.isPending ? (
-                    <Loader2 className="animate-spin text-white" />
-                  ) : (
-                    "Login"
-                  )}
-                </CustomButton>
-              </form>
-            </Form>
-
-            <p className="text-sm text-slate-600 text-center mt-6">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/auth/register"
-                className="text-blue-600 hover:underline font-medium"
-              >
-                Create one
-              </Link>
-            </p>
-          </div>
-        </Card>
-
-        {/* Desktop - Login Card */}
-        <Card className="hidden lg:block bg-slate-100 rounded-3xl w-full max-w-md text-card-foreground border border-border shadow-xl">
-          <div className="p-8 ">
-            <Link href="/" className="cursor-pointer">
-              <div className="mb-2 flex flex-row items-center justify-center gap-0">
-                {/* <Image
-                  src="/assets/favicon.png"
-                  alt="ishout"
-                  width={50}
-                  height={50}
-                /> */}
-
-                <Image
-                  src="/assets/iShout-gif-black-background.gif"
-                  alt="ishout"
-                  width={50}
-                  height={50}
-                  unoptimized={true}
-                />
-                <h2 className="text-3xl font-bold text-slate-900">iShout</h2>
-                <span className="text-primarytext font-extrabold text-3xl">
-                  .
-                </span>
-              </div>
-            </Link>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                ref={ref}
-                className="space-y-5"
-              >
+                {/* Email */}
                 <FormField
                   control={form.control}
                   name="email"
@@ -217,14 +105,16 @@ export default function Login() {
                         <Input
                           type="email"
                           placeholder="name@company.com"
-                          className="text-black h-12 bg-background border-input focus:ring-2 focus:ring-ring focus:border-transparent"
+                          className="h-12 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-primarytext focus:border-transparent rounded-xl"
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage className="text-xs text-red-500" />
+                      <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
+
+                {/* Password */}
                 <FormField
                   control={form.control}
                   name="password"
@@ -234,17 +124,14 @@ export default function Login() {
                         <div className="relative">
                           <Input
                             type={showPassword ? "text" : "password"}
-                            placeholder="Your password"
-                            className="text-black h-12 bg-background border-input focus:ring-2 focus:ring-ring focus:border-transparent pr-10"
+                            placeholder="Enter your password"
+                            className="h-12 bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-primarytext focus:border-transparent rounded-xl pr-10"
                             {...field}
                           />
                           <button
                             type="button"
-                            onClick={() => setShowPassword((v) => !v)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                            aria-label={
-                              showPassword ? "Hide password" : "Show password"
-                            }
+                            onClick={() => setShowPassword(v => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
                           >
                             {showPassword ? (
                               <EyeOff className="h-5 w-5" />
@@ -254,43 +141,46 @@ export default function Login() {
                           </button>
                         </div>
                       </FormControl>
-                      <FormMessage className="text-xs text-red-500" />
+                      <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
 
-                <div className="flex items-center justify-end">
+                {/* Forgot */}
+                <div className="flex justify-end">
                   <Link
                     href="/auth/forgot-password"
-                    className="text-blue-600 font-medium text-xs hover:underline"
+                    className="text-xs text-slate-400 hover:text-white transition"
                   >
                     Forgot password?
                   </Link>
                 </div>
 
+                {/* Button */}
                 <CustomButton
-                  onClick={() => form.handleSubmit(onSubmit)}
-                  className="w-full h-12 bg-gradient-to-r from-secondaryButton to-secondaryHover hover:secondarytext text-white shadow-green-500/2 font-semibold rounded-lg  hover:opacity-90"
+                  className="w-full h-12 rounded-xl bg-primarytext text-white font-semibold shadow-lg hover:opacity-90 transition-all"
                   disabled={SignInMutation.isPending}
                 >
                   {SignInMutation.isPending ? (
                     <Loader2 className="animate-spin text-white" />
                   ) : (
-                    "Login"
+                    "Sign In"
                   )}
                 </CustomButton>
               </form>
             </Form>
 
-            <p className="text-sm text-slate-600 text-center mt-6">
-              Don&apos;t have an account?{" "}
+            {/* Footer */}
+            <p className="text-center text-sm text-slate-400">
+              Don’t have an account?{" "}
               <Link
                 href="/auth/register"
-                className="text-blue-600 hover:underline font-medium"
+                className="text-white font-medium hover:underline"
               >
-                Create one
+                Create account
               </Link>
             </p>
+
           </div>
         </Card>
       </div>
