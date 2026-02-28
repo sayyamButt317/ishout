@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "iShout",
   icons: {
-    icon: "/assets/favicon.png",
+    icon: "/assets/iShout-gif-black-background.gif",
   },
 };
 
