@@ -37,7 +37,7 @@ const OnboardingCard = ({
 }: OnboardingCardProps) => {
   const handleViewProfile = () => {
     if (influencer?.platform === "instagram") {
-      window.open(`https://ig.me/m/${influencer?.username}`, "_blank");
+      window.open(`https://www.instagram.com/${influencer?.username}`, "_blank");
     } else if (influencer?.platform === "tiktok") {
       window.open(`https://www.tiktok.com/@${influencer?.username}`, "_blank");
     } else if (influencer?.platform === "youtube") {
