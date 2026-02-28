@@ -79,6 +79,14 @@ export const getCampaignBrief = async (
   return response.data;
 };
 
+export const deleteCampaignBrief = async (brief_id: string) => {
+  const response = await api.delete(
+    CompanyENDPOINT.DELETE_CAMPAIGN_BRIEF(brief_id)
+  );
+
+  return response.data;
+};
+
 export const getCampaignBriefDetail = async (
   brief_id: string
 ): Promise<CampaignBriefItem> => {
