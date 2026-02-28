@@ -39,7 +39,10 @@ export default function WebSocketListener() {
     socketRef.current = socket;
     socket.onopen = () => {
       if (!hasConnectedOnce.current) {
-        toast.success("Live updates connected");
+        toast.success("Live updates connected", {
+          description: "Now you will receive notifications for new messages",
+          className: "bg-green-500/90 text-white border-0 shadow-xl rounded-xl px-5 py-4",
+        });
         hasConnectedOnce.current = true;
       }
     };

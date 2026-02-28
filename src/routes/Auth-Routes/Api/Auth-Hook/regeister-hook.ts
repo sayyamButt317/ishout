@@ -18,15 +18,10 @@ export default function RegisterMutation() {
 
     onError: (error) => {
       const axiosError = error as AxiosError<{
-        message?: string;
-        error?: { message?: string };
+        error: { status_code: number; message: string };
       }>;
-
-      toast.error("Failed to register", {
-        description:
-          axiosError.response?.data?.message ||
-          axiosError.response?.data?.message ||
-          "An error occurred during registration.",
+      toast.error("Registration Failed", {
+        description: axiosError.response?.data?.error?.message,
       });
     },
   });

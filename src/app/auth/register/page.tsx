@@ -283,7 +283,7 @@ export default function Signup() {
 
                 {/* CTA */}
                 <CustomButton
-                  className="w-full h-12 rounded-xl bg-primarytext text-white font-semibold shadow-lg hover:opacity-90 transition-all"
+                  className="w-full h-12 rounded-xl bg-primarytext text-white font-semibold shadow-lg hover:bg-primaryHover hover:opacity-90 transition-all"
                   disabled={isPending}
                 >
                   {isPending ? (

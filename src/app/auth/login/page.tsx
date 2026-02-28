@@ -158,7 +158,7 @@ export default function Login() {
 
                 {/* Button */}
                 <CustomButton
-                  className="w-full h-12 rounded-xl bg-primarytext text-white font-semibold shadow-lg hover:opacity-90 transition-all"
+                  className="w-full h-12 rounded-xl bg-primarytext text-white font-semibold shadow-lg hover:opacity-90 hover:bg-primaryHover transition-all"
                   disabled={SignInMutation.isPending}
                 >
                   {SignInMutation.isPending ? (
