@@ -60,12 +60,9 @@ export const CompanyCampaignBreifApi = async (payload: {
 };
 
 export const UpdateCampaignBriefApi = async (brief: UpdateCampaignBrief) => {
-  if (!brief.id) throw new Error("Brief ID is required for update");
-  const response = await api.patch(
-    CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id), // use endpoint helper
+  const response = await api.patch(CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id),
     brief
   );
-
   return response.data;
 };
 

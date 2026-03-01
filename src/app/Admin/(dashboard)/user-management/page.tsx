@@ -105,7 +105,7 @@ export default function UserManagementPage() {
   const { data, isLoading, refetch, isRefetching } = AllUsersHook(currentPage);
   const deleteUserHook = DeleteUserHook();
   const updateUserStatus = UpdateUserStatusHook();
-  const uploadLogoHook = UploadUserLogoHook();
+  const { mutate: uploadLogo, isPending: isUploading } = UploadUserLogoHook();
 
   const { mutate: updateProfile, isPending: isUpdating } = CompanyUpdateProfileHook(
     selectedUser?.user_id || '',
@@ -160,16 +160,16 @@ export default function UserManagementPage() {
           'Role',
           'Status',
         ]}
-        imageUrls={data?.users?.map((user: UserManagementResponse) => user.logo_url || null)}
+        imageUrls={data?.users?.map((user: UserManagementResponse) => user?.logo_url || null)}
         onImageUpload={(rowIndex, file) => {
           const user = data?.users?.[rowIndex];
           if (user?.user_id) {
-            uploadLogoHook.mutate(
+            uploadLogo(
               { user_id: user.user_id, file },
               {
                 onSuccess: () => {
                   refetch();
-                },
+                }
               }
             );
           }
