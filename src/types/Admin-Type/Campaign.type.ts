@@ -105,5 +105,6 @@ export interface ApprovedCampaignResponse {
     platform: PlatformType;
     limit: number;
     status: string;
+    logo_url: string;
     created_at: string;
 }
