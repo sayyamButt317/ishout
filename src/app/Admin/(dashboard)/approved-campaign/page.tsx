@@ -59,7 +59,7 @@ const ApprovedCampaignPage = () => {
           "Created At",
           "View",
         ]}
-        imageUrls={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
+        imageUrls={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => campaign?.logo_url || null)}
         subheader={data?.campaigns?.map(
           (campaign: ApprovedCampaignResponse) => [
             <div key={`company-name-${campaign?._id}`} className="truncate">
@@ -75,7 +75,7 @@ const ApprovedCampaignPage = () => {
               <PlatformBadge platform={campaign?.platform} />
             </div>,
             <div key={`category-${campaign._id}`} className="truncate">
-              {(campaign as any)?.category?.join(", ") || "-"}
+              {(campaign)?.category?.join(", ") || "-"}
             </div>,
             <div key={`followers-${campaign._id}`} className="truncate">
               {(campaign as any)?.followers?.join(", ") || "-"}

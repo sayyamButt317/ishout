@@ -4,7 +4,6 @@ import { Check, Eye, Trash, Pencil } from 'lucide-react';
 import Spinner from './custom-component/spinner';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { useQueryClient } from '@tanstack/react-query';
 import ImageUploadModal from './custom-component/image-upload-modal';
 
 const STATUS_STEPS = [
@@ -19,7 +18,7 @@ const STATUS_ORDER = ['pending', 'approved', 'processing', 'completed'] as const
 function getStatusSteps(currentStatus: string) {
   const normalizedStatus = currentStatus.toLowerCase();
   const currentIndex = STATUS_ORDER.indexOf(normalizedStatus as any);
-  
+
   if (currentIndex === -1) {
     return STATUS_STEPS.map((step, index) => ({
       ...step,
@@ -27,7 +26,7 @@ function getStatusSteps(currentStatus: string) {
       isCurrent: false
     }));
   }
-  
+
   return STATUS_STEPS.map((step, index) => ({
     ...step,
     isActive: index <= currentIndex,
@@ -92,15 +91,15 @@ export default function TableComponent({
     }
   };
 
-  const toggleRowSelection = (rowIndex: number) => {
-    const newSelected = new Set(selectedRows);
-    if (newSelected.has(rowIndex)) {
-      newSelected.delete(rowIndex);
-    } else {
-      newSelected.add(rowIndex);
-    }
-    setSelectedRows(newSelected);
-  };
+  // const toggleRowSelection = (rowIndex: number) => {
+  //   const newSelected = new Set(selectedRows);
+  //   if (newSelected.has(rowIndex)) {
+  //     newSelected.delete(rowIndex);
+  //   } else {
+  //     newSelected.add(rowIndex);
+  //   }
+  //   setSelectedRows(newSelected);
+  // };
 
   if (isLoading) {
     return (
@@ -131,10 +130,10 @@ export default function TableComponent({
       <div className="min-h-[400px] flex flex-col justify-between">
         <div className="space-y-3">
           {subheader.map((row, rowIndex) => {
-            const isSelected = selectedRows.has(rowIndex);
+            // const isSelected = selectedRows.has(rowIndex);
             const currentStatus = statuses?.[rowIndex]?.toLowerCase() || 'pending';
             const statusSteps = getStatusSteps(currentStatus);
-            
+
             return (
               <div key={rowIndex} className="w-full">
                 <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1A1A1A] p-3 sm:p-5 hover:border-white/20 transition-colors">
@@ -144,34 +143,31 @@ export default function TableComponent({
                         {statusSteps.map((step, stepIndex) => (
                           <div key={step.key} className="flex items-center">
                             <div className="flex flex-col items-center">
-                              <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${
-                                step.isActive 
-                                  ? 'bg-[#FF3B8D] text-white' 
-                                  : 'bg-white/10 text-white/40 border border-white/20'
-                              }`}>
+                              <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${step.isActive
+                                ? 'bg-[#FF3B8D] text-white'
+                                : 'bg-white/10 text-white/40 border border-white/20'
+                                }`}>
                                 {step.isActive && stepIndex > 0 ? (
                                   <Check className="w-3 h-3 sm:w-4 sm:h-4" />
                                 ) : (
                                   step.letter
                                 )}
                               </div>
-                              <span className={`text-[8px] sm:text-[10px] mt-1 whitespace-nowrap ${
-                                step.isActive ? 'text-white/80' : 'text-white/40'
-                              }`}>
+                              <span className={`text-[8px] sm:text-[10px] mt-1 whitespace-nowrap ${step.isActive ? 'text-white/80' : 'text-white/40'
+                                }`}>
                                 {step.label}
                               </span>
                             </div>
-                             {stepIndex < statusSteps.length - 1 && (
-                               <div className={`w-12 sm:w-64 h-0.5 mx-1 sm:mx-2 ${
-                                 step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
-                               }`} />
-                             )}
+                            {stepIndex < statusSteps.length - 1 && (
+                              <div className={`w-12 sm:w-64 h-0.5 mx-1 sm:mx-2 ${step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
+                                }`} />
+                            )}
                           </div>
                         ))}
                       </div>
                     </div>
                   )}
-                  
+
                   <div className="sm:hidden mb-3">
                     <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
                       <input
@@ -180,6 +176,8 @@ export default function TableComponent({
                         ref={(el) => {
                           fileInputRefs.current[rowIndex] = el;
                         }}
+                        disabled={isLoading}
+                        title={isLoading ? 'Loading...' : 'Upload Image'}
                         className="hidden"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
@@ -334,36 +332,36 @@ export default function TableComponent({
                                 {header[cellIndex] || `Field ${cellIndex + 1}`}
                               </p>
                               <div className="text-xs sm:text-sm text-white font-medium break-words">
-                      {cell}
+                                {cell}
                               </div>
                             </div>
                           );
                         })}
 
-                  {(showTrashIcon || showEyeIcon || showEditIcon) && (
+                        {(showTrashIcon || showEyeIcon || showEditIcon) && (
                           <div className="min-w-0">
                             <p className="text-[10px] sm:text-xs text-white/60 mb-1 sm:mb-1.5 font-medium">Action</p>
                             <div className="flex items-center gap-2 sm:gap-3">
-                      {showEyeIcon && (
-                        <Eye
+                              {showEyeIcon && (
+                                <Eye
                                   className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f7941D] cursor-pointer hover:opacity-80 transition-opacity"
-                          onClick={() => onView?.(rowIndex)}
-                        />
-                      )}
+                                  onClick={() => onView?.(rowIndex)}
+                                />
+                              )}
 
-                      {showEditIcon && (
-                        <Pencil
+                              {showEditIcon && (
+                                <Pencil
                                   className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 cursor-pointer hover:opacity-80 transition-opacity"
-                          onClick={() => onEdit?.(rowIndex)}
-                        />
-                      )}
+                                  onClick={() => onEdit?.(rowIndex)}
+                                />
+                              )}
 
-                      {showTrashIcon && (
-                        <Trash
+                              {showTrashIcon && (
+                                <Trash
                                   className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400 cursor-pointer hover:opacity-80 transition-opacity"
-                          onClick={() => onDelete?.(rowIndex)}
-                        />
-                      )}
+                                  onClick={() => onDelete?.(rowIndex)}
+                                />
+                              )}
                             </div>
                           </div>
                         )}

@@ -27,4 +27,26 @@ export interface CampaignBriefItem {
   created_at: string;
 }
 
+
+
+export interface CampaignBriefDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  briefData: {
+    title?: string;
+    brand_name_influencer_campaign_brief?: string;
+    campaign_overview?: string[];
+    campaign_objectives?: string[];
+    target_audience?: string[];
+    influencer_profile?: string[];
+    content_direction?: string[];
+    deliverables_per_influencer?: string[];
+    timeline?: string[];
+    kpis_success_metrics?: string[];
+    usage_rights?: string[];
+    dos_donts?: string[];
+    created_at?: string;
+  };
+}
+
 export type GetCampaignBriefResponse = CampaignBriefItem[];

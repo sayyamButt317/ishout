@@ -49,6 +49,7 @@ export interface AdminAllCampaignApiResponse {
     user_id: string;
     influencers_ids: number;
     generated: boolean;
+    logo_url: string;
     created_at: string;
     updated_at: string;
 }
