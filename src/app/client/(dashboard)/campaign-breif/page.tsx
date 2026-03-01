@@ -9,6 +9,16 @@ import SummaryPopup from '@/src/app/component/Ready-made/SummaryPopup';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 import { rangeOfFollowers } from '@/src/constant/rangeoffollowers';
 
+
+interface CampaignBriefResponse {
+  id: string;
+  platform: string[];
+  category: string[];
+  followers: string[];
+  country: string[];
+  limit: number;
+}
+
 const CampaignBreifPage = () => {
   const { mutate: generateCampaignBreif, data, isPending, reset } = CampaignBreifHook();
 
@@ -22,7 +32,7 @@ const CampaignBreifPage = () => {
     const user_input = input.trim();
     if (!user_input) return;
     generateCampaignBreif({ user_input, user_id }, {
-      onSuccess: (responseData: any) => {
+      onSuccess: (responseData: CampaignBriefResponse) => {
         if (responseData?.id) {
           setField('brief_id', responseData.id);
         }

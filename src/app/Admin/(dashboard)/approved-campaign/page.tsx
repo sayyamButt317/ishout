@@ -105,8 +105,7 @@ const ApprovedCampaignPage = () => {
             </div>,
             <div key={`view-${campaign._id}`} className="truncate">
               <Button
-                className="cursor-pointer w-[60px] sm:w-[80px] h-6 sm:h-9 text-[10px] sm:text-sm whitespace-nowrap px-2 sm:px-4"
-                variant="outline"
+                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
                 onClick={() => {
                   router.push(
                     `/Admin/approved-campaign/${campaign?.campaign_id}`

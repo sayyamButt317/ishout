@@ -68,7 +68,7 @@ export default function OnboardingCampaignPage() {
             {campaign?.name}
           </div>,
           <div key={`source-${campaign._id}`} className="truncate">
-            {(campaign as any)?.user_type || "-"}
+            {campaign?.user_type || "-"}
           </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
@@ -78,11 +78,11 @@ export default function OnboardingCampaignPage() {
           </div>,
           <div key={`followers-${campaign._id}`} className="truncate">
             {Array.isArray(campaign?.followers)
-              ? campaign.followers.map((f: any) => typeof f === 'number' ? `${f}k` : f).join(", ")
+              ? campaign.followers.map((f: number) => `${f}k`).join(", ")
               : "-"}
           </div>,
           <div key={`country-${campaign._id}`} className="truncate">
-            {(campaign as any)?.country?.join(", ") || "-"}
+            {campaign?.country?.join(", ") || "-"}
           </div>,
           <div key={`requested-influencers-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.limit} />
@@ -98,8 +98,7 @@ export default function OnboardingCampaignPage() {
           </div>,
           <div key={`view-${campaign._id}`} className="truncate">
             <Button
-              className="cursor-pointer w-[60px] sm:w-[80px] h-6 sm:h-9 text-[10px] sm:text-sm whitespace-nowrap px-2 sm:px-4"
-              variant="outline"
+              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
               onClick={() => {
                 router.push(`/Admin/onboarding/${campaign?._id}`);
               }}
