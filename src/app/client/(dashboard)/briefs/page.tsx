@@ -11,6 +11,7 @@ import CampaignBriefHook, {
 import { CampaignBriefItem } from '@/src/types/Compnay/campaign-brief.types';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import { Trash } from 'lucide-react';
+import Spinner from '@/src/app/component/custom-component/spinner';
 
 export default function CampaignBriefPage() {
   const { user_id } = useAuthStore();
@@ -21,6 +22,7 @@ export default function CampaignBriefPage() {
   const [open, setOpen] = useState(false);
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [search, setSearch] = useState('');
+
 
   const briefs = useMemo(() => data ?? [], [data]);
 
@@ -57,7 +59,7 @@ export default function CampaignBriefPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-neutral-950 text-white">
-        Loading Campaign Briefs...
+        <Spinner size={24} />
       </div>
     );
   }
@@ -128,7 +130,6 @@ export default function CampaignBriefPage() {
                     <Trash className="size-5" />
                   </Button>
 
-                  {/* ================= OPEN DIALOG BUTTON ================= */}
                   <Button
                     size="sm"
                     className="rounded-full bg-primaryButton hover:opacity-90"
