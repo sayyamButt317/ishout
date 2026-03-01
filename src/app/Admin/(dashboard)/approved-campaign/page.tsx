@@ -54,7 +54,7 @@ const ApprovedCampaignPage = () => {
           "Followers",
           "Country",
           "Requested",
-          "Approved",
+          // "Approved",
           "Status",
           "Created At",
           "View",
@@ -75,20 +75,20 @@ const ApprovedCampaignPage = () => {
               <PlatformBadge platform={campaign?.platform} />
             </div>,
             <div key={`category-${campaign._id}`} className="truncate">
-              {(campaign)?.category?.join(", ") || "-"}
+              {campaign?.category?.join(", ") || "-"}
             </div>,
             <div key={`followers-${campaign._id}`} className="truncate">
-              {(campaign as any)?.followers?.join(", ") || "-"}
+              {campaign?.followers?.join(", ") || "-"}
             </div>,
             <div key={`country-${campaign._id}`} className="truncate">
-              {(campaign as any)?.country?.join(", ") || "-"}
+              {campaign?.country?.join(", ") || "-"}
             </div>,
             <div key={`requested-${campaign._id}`} className="truncate">
               <CountButton count={campaign?.limit} />
             </div>,
-            <div key={`approved-${campaign._id}`} className="truncate">
-              <CountButton count={(campaign as any)?.approved_influencer_count || 0} />
-            </div>,
+            // <div key={`approved-${campaign._id}`} className="truncate">
+            //   <CountButton count={(campaign as any)?.approved_influencer_count || 0} />
+            // </div>,
             <div key={`status-${campaign?._id}`} className="truncate">
               <DropDownCustomStatus
                 status={campaign?.status}
