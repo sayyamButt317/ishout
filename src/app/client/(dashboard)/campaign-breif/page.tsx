@@ -52,7 +52,7 @@ const CampaignBreifPage = () => {
           if (Array.isArray(responseData.followers) && responseData.followers.length > 0) {
             setField('followers', responseData.followers);
           } else if (typeof responseData.followers === 'string') {
-            const followerValue = responseData.followers.toLowerCase().trim();
+            const followerValue = (responseData.followers as unknown as string).toLowerCase().trim();
             let numValue: number;
 
             if (followerValue.includes('k')) {
