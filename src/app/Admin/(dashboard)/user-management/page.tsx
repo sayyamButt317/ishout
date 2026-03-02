@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, type ComponentType } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserStatus } from '@/src/app/component/custom-component/user-status';
@@ -7,7 +8,6 @@ import AllUsersHook from '@/src/routes/Admin/Hooks/allusers-hook';
 import DeleteUserHook from '@/src/routes/Admin/Hooks/delete-user-hook';
 import UpdateUserStatusHook from '@/src/routes/Admin/Hooks/update-userstatus-hook';
 import CompanyUpdateProfileHook from '@/src/routes/Company/api/Hooks/update-profile.hook';
-import UploadUserLogoHook from '@/src/routes/Auth-Routes/Api/Auth-Hook/upload-user-logo-hook';
 import { UserManagementResponse } from '@/src/types/Admin-Type/usermanagment.type';
 import { RefreshCcw, Trash, Pencil, X, Loader2, Eye, EyeOff } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,7 +16,7 @@ import PhoneInput from 'react-phone-number-input';
 import { normalizePhoneNumberForDisplay, removePlusPrefix } from '@/src/utils/phone.utils';
 
 type EditableUser = UserManagementResponse & {
-  password?: string;
+  password?: string; 
 };
 
 type UpdateUserPayload = {
@@ -105,7 +105,6 @@ export default function UserManagementPage() {
   const { data, isLoading, refetch, isRefetching } = AllUsersHook(currentPage);
   const deleteUserHook = DeleteUserHook();
   const updateUserStatus = UpdateUserStatusHook();
-  const { mutate: uploadLogo, isPending: isUploading } = UploadUserLogoHook();
 
   const { mutate: updateProfile, isPending: isUpdating } = CompanyUpdateProfileHook(
     selectedUser?.user_id || '',
@@ -136,8 +135,9 @@ export default function UserManagementPage() {
               disabled={isRefetching}
             >
               <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text ${isRefetching ? 'animate-spin' : ''
-                  }`}
+                className={`mt-5 w-4 h-4 text-primary-text ${
+                  isRefetching ? 'animate-spin' : ''
+                }`}
               />
             </Button>
           </div>
@@ -160,20 +160,6 @@ export default function UserManagementPage() {
           'Role',
           'Status',
         ]}
-        imageUrls={data?.users?.map((user: UserManagementResponse) => user?.logo_url || null)}
-        onImageUpload={(rowIndex, file) => {
-          const user = data?.users?.[rowIndex];
-          if (user?.user_id) {
-            uploadLogo(
-              { user_id: user.user_id, file },
-              {
-                onSuccess: () => {
-                  refetch();
-                }
-              }
-            );
-          }
-        }}
         subheader={data?.users?.map((user: UserManagementResponse) => [
           <div key={`company-${user.user_id}`} className="truncate">
             {user.company_name}
@@ -194,7 +180,7 @@ export default function UserManagementPage() {
               disabled={deleteUserHook.isPending}
               onClick={() => deleteUserHook.mutate(user.user_id)}
             >
-              {deleteUserHook.isPending ? <Loader2 className="animate-spin text-red-300" /> : <Trash className="size-5 text-red-300" />}
+              <Trash className="size-5 text-red-300" />
             </Button>
           </div>,
           <div key={`edit-${user.user_id}`}>
@@ -236,7 +222,9 @@ export default function UserManagementPage() {
               >
                 <X className="w-5 h-5 text-white" />
               </Button>
+
               <h1 className="text-2xl font-semibold text-white mb-2">Edit User</h1>
+
               <p className="italic text-xs text-slate-200 mb-6">
                 Update user information and contact details
               </p>
@@ -254,7 +242,7 @@ export default function UserManagementPage() {
                   };
 
                   if (selectedUser.password?.trim()) {
-                    payload.password = selectedUser.password;
+                    payload.password = selectedUser.password; 
                   }
 
                   updateProfile(payload, {
@@ -360,13 +348,14 @@ export default function UserManagementPage() {
                       <Input
                         type={showPassword ? 'text' : 'password'}
                         placeholder="••••••••"
-                        autoComplete="new-password"
+                        autoComplete="new-password" // Prevents browser from auto-filling saved passwords
                         value={selectedUser?.password || ''}
                         onChange={(e) =>
                           setSelectedUser((prev) =>
                             prev ? { ...prev, password: e.target.value } : null,
                           )
                         }
+                        // Added 'bg-neutral-950' and ensured no 'bg-white' exists
                         className="h-11 bg-neutral-950 border-white/10 text-white placeholder:text-neutral-500 focus:ring-2 focus:ring-secondaryButton w-full pr-10"
                       />
 
@@ -402,7 +391,6 @@ export default function UserManagementPage() {
           </Card>
         </div>
       )}
-
     </>
   );
 }
