@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from '@/src/types/Admin-Type/Campaign.type';
 import { CompanyProfileDetailsResponseProps, UpdateProfileRequestProps, UpdateProfileResponseProps } from '@/src/types/Compnay/profile-type';
-import { ChangePasswordRequestProps } from '@/src/types/Compnay/password-type';
+import { ChangePasswordRequestProps, ProfileChangePasswordRequestProps } from '@/src/types/Compnay/password-type';
 import { GetCampaignBriefResponse, CampaignBriefItem } from "@/src/types/Compnay/campaign-brief.types";
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 
@@ -164,5 +164,10 @@ export const CompanyChangePasswordApi = async (password: ChangePasswordRequestPr
 
 export const CompanyResetPasswordApi = async (payload: ChangePasswordRequestProps) => {
   const response = await api.put(CompanyENDPOINT.RESET_PASSWORD, payload);
+  return response.data;
+}
+
+export const CompanyProfileChangePasswordApi = async (user_id: string, payload: ProfileChangePasswordRequestProps) => {
+  const response = await api.put(CompanyENDPOINT.CHANGE_PASSWORD(user_id), payload);
   return response.data;
 }

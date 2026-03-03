@@ -19,6 +19,9 @@ import {
   Mail,
   RefreshCcw,
   User,
+  Eye,
+  EyeOff,
+  Lock,
 } from "lucide-react";
 import PhoneInput from 'react-phone-number-input';
 import {
@@ -31,6 +34,11 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import CompanyUpdateProfileHook from "@/src/routes/Company/api/Hooks/update-profile.hook";
 import { normalizePhoneNumberForDisplay, removePlusPrefix } from "@/src/utils/phone.utils";
+import {
+  ChangePasswordFormSchema,
+  ChangePasswordFormValidator,
+} from "@/src/validators/Company/change-password-validation";
+import ProfileChangePasswordHook from "@/src/routes/Company/api/Hooks/profile-change-password.hook";
 
 type CountryOption = { value?: string; label: string };
 type FlagIconComponent = ComponentType<{ country: string; title: string; className?: string }>;
@@ -139,11 +147,14 @@ function MobileCountrySelect({
 
 export default function CompanyProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const { user_id } = useAuthStore();
-
 
   const { data, refetch, isRefetching } = CompanyProfileDetailsHook(user_id);
   const { mutate: updateProfile, isPending } = CompanyUpdateProfileHook(user_id);
+  const { mutate: changePassword, isPending: isChangingPassword } = ProfileChangePasswordHook(user_id);
 
 
   const form = useForm<CompanyProfileFormValidator>({
@@ -174,6 +185,18 @@ export default function CompanyProfilePage() {
 
   const ref = useRef<HTMLFormElement>(null);
 
+  const passwordForm = useForm<ChangePasswordFormValidator>({
+    resolver: zodResolver(ChangePasswordFormSchema),
+    mode: "onBlur",
+    reValidateMode: "onChange",
+    shouldUnregister: false,
+    criteriaMode: "all",
+    defaultValues: {
+      old_password: "",
+      new_password: "",
+    },
+  });
+
   useEffect(() => {
     if (data?.user) {
       form.reset({
@@ -184,6 +207,40 @@ export default function CompanyProfilePage() {
       });
     }
   }, [data, form]);
+
+  const onPasswordSubmit = (values: ChangePasswordFormValidator) => {
+    changePassword(
+      {
+        old_password: values.old_password,
+        new_password: values.new_password,
+      },
+      {
+        onSuccess: () => {
+          setIsEditingPassword(false);
+          passwordForm.reset();
+        },
+        onError: (error) => {
+          const axiosError = error as { response?: { data?: { detail?: string } } };
+          const errorMessage = axiosError.response?.data?.detail || 'Failed to change password';
+          const lowerMessage = errorMessage.toLowerCase();
+          
+          if (lowerMessage.includes('current password') || 
+              lowerMessage.includes('old password') ||
+              lowerMessage.includes('incorrect password') ||
+              lowerMessage.includes('wrong password') ||
+              lowerMessage.includes('invalid password')) {
+            const errorMsg = errorMessage.toLowerCase().includes('current password') 
+              ? errorMessage.replace(/current password/gi, 'old password')
+              : errorMessage;
+            passwordForm.setError('old_password', {
+              type: 'manual',
+              message: errorMsg,
+            });
+          }
+        },
+      }
+    );
+  };
 
   return (
     <div className=" bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex items-center justify-center">
@@ -394,6 +451,160 @@ export default function CompanyProfilePage() {
               />
             </form>
           </Form>
+
+          <div className="mt-8 pt-8 border-t border-white/10">
+            <div className="mb-6">
+              <div className="flex flex-row items-center gap-2 justify-between">
+                <div>
+                  <h2 className="text-xl md:text-2xl font-semibold text-white">
+                    Change Password
+                  </h2>
+                  <p className="italic text-xs text-slate-200 mt-2">
+                    Update your account password
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  {isEditingPassword && (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        passwordForm.reset({
+                          old_password: "",
+                          new_password: "",
+                        });
+                        passwordForm.clearErrors();
+                        setIsEditingPassword(false);
+                      }}
+                      className="bg-gray-700 text-white h-9 px-4"
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                  <Button
+                    type={isEditingPassword ? "submit" : "button"}
+                    form="change-password-form"
+                    disabled={isEditingPassword && isChangingPassword}
+                    onClick={() => {
+                      if (!isEditingPassword) {
+                        passwordForm.reset({
+                          old_password: "",
+                          new_password: "",
+                        }, {
+                          keepErrors: false,
+                          keepDirty: false,
+                          keepIsSubmitted: false,
+                          keepTouched: false,
+                          keepIsValid: false,
+                          keepSubmitCount: false,
+                        });
+                        passwordForm.clearErrors();
+                        setIsEditingPassword(true);
+                      }
+                    }}
+                    className="bg-secondaryButton text-white h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isEditingPassword ? (
+                      isChangingPassword ? (
+                        <Loader2 className="animate-spin" />
+                      ) : (
+                        "Save Password"
+                      )
+                    ) : (
+                      "Change Password"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            <Form {...passwordForm}>
+              <form
+                id="change-password-form"
+                onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
+                className="space-y-6"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <FormField
+                    control={passwordForm.control}
+                    name="old_password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-neutral-300">
+                          Old Password
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                            <Input
+                              type={showPassword ? "text" : "password"}
+                              placeholder="Enter old password"
+                              {...field}
+                              value={field.value || ""}
+                              disabled={!isEditingPassword}
+                              className="pl-10 pr-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword((v) => !v)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+                            >
+                              {showPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                              ) : (
+                                <Eye className="h-5 w-5" />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <div className="min-h-[20px]">
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={passwordForm.control}
+                    name="new_password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-neutral-300">
+                          New Password
+                        </FormLabel>
+                        <FormControl>
+                          <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                            <Input
+                              type={showNewPassword ? "text" : "password"}
+                              placeholder="Enter new password"
+                              {...field}
+                              value={field.value || ""}
+                              disabled={!isEditingPassword}
+                              className="pl-10 pr-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowNewPassword((v) => !v)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+                            >
+                              {showNewPassword ? (
+                                <EyeOff className="h-5 w-5" />
+                              ) : (
+                                <Eye className="h-5 w-5" />
+                              )}
+                            </button>
+                          </div>
+                        </FormControl>
+                        <div className="min-h-[20px]">
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </form>
+            </Form>
+          </div>
         </CardContent>
       </Card>
     </div>

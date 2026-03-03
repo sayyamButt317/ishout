@@ -5,6 +5,7 @@ import Spinner from './custom-component/spinner';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import ImageUploadModal from './custom-component/image-upload-modal';
+import { useRouter } from 'next/navigation';
 
 const STATUS_STEPS = [
   { key: 'pending', label: 'Pending', letter: 'P' },
@@ -41,6 +42,7 @@ interface TableProps {
   subheader: (string | React.ReactNode)[][];
   imageUrls?: (string | null | undefined)[];
   statuses?: string[];
+  campaignIds?: (string | null | undefined)[];
   showTrashIcon?: boolean;
   showEyeIcon?: boolean;
   showEditIcon?: boolean;
@@ -62,6 +64,7 @@ export default function TableComponent({
   subheader,
   imageUrls,
   statuses,
+  campaignIds,
   showTrashIcon = false,
   showEyeIcon = false,
   showEditIcon = false,
@@ -73,6 +76,7 @@ export default function TableComponent({
   isLoading = false,
   error,
 }: TableProps) {
+  const router = useRouter();
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   const [uploadedImages, setUploadedImages] = useState<{ [key: number]: string }>({});
@@ -140,30 +144,48 @@ export default function TableComponent({
                   {statuses && (
                     <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-white/10 overflow-x-auto">
                       <div className="flex items-center justify-between min-w-[280px] sm:max-w-2xl">
-                        {statusSteps.map((step, stepIndex) => (
-                          <div key={step.key} className="flex items-center">
-                            <div className="flex flex-col items-center">
-                              <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${step.isActive
-                                ? 'bg-[#FF3B8D] text-white'
-                                : 'bg-white/10 text-white/40 border border-white/20'
-                                }`}>
-                                {step.isActive && stepIndex > 0 ? (
-                                  <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                                ) : (
-                                  step.letter
-                                )}
+                        {statusSteps.map((step, stepIndex) => {
+                          const isApprovedByAdmin = step.key === 'approved';
+                          const campaignId = campaignIds?.[rowIndex];
+                          const isClickable = isApprovedByAdmin && campaignId;
+                          const handleStepClick = (e: React.MouseEvent) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (isClickable && campaignId) {
+                              router.push(`/Admin/approved-campaign/${campaignId}`);
+                            }
+                          };
+                          
+                          return (
+                            <div key={step.key} className="flex items-center">
+                              <div 
+                                onClick={isClickable ? handleStepClick : undefined}
+                                className={`flex flex-col items-center ${isClickable ? 'cursor-pointer' : ''}`}
+                              >
+                                <div 
+                                  className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${step.isActive
+                                    ? 'bg-[#FF3B8D] text-white'
+                                    : 'bg-white/10 text-white/40 border border-white/20'
+                                    } ${isClickable ? 'hover:bg-[#FF3B8D]/80' : ''}`}>
+                                  {step.isActive && stepIndex > 0 ? (
+                                    <Check className="w-3 h-3 sm:w-4 sm:h-4" />
+                                  ) : (
+                                    step.letter
+                                  )}
+                                </div>
+                                <span 
+                                  className={`text-[8px] sm:text-[10px] mt-1 whitespace-nowrap ${step.isActive ? 'text-white/80' : 'text-white/40'
+                                    } ${isClickable ? 'hover:text-white' : ''}`}>
+                                  {step.label}
+                                </span>
                               </div>
-                              <span className={`text-[8px] sm:text-[10px] mt-1 whitespace-nowrap ${step.isActive ? 'text-white/80' : 'text-white/40'
-                                }`}>
-                                {step.label}
-                              </span>
+                              {stepIndex < statusSteps.length - 1 && (
+                                <div className={`w-12 sm:w-64 h-0.5 mx-1 sm:mx-2 ${step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
+                                  }`} />
+                              )}
                             </div>
-                            {stepIndex < statusSteps.length - 1 && (
-                              <div className={`w-12 sm:w-64 h-0.5 mx-1 sm:mx-2 ${step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
-                                }`} />
-                            )}
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   )}

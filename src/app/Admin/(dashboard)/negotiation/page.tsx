@@ -151,7 +151,7 @@ export default function NegotiationPage() {
                         ];
                         }
                     )}
-                paginationstart={data?.page ?? 1}
+                paginationstart={currentPage}
                 paginationend={data?.total_pages ?? 1}
                 onPageChange={(page: number) => {
                     setCurrentPage(page);

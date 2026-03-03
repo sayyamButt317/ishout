@@ -89,7 +89,7 @@ export default function Sidebar({ links }: SidebarProps) {
           </div>
           <h2 className="text-4xl font-bold text-white tracking-tight">
             i
-            <span className="text-primarytext font-extrabold">S</span>
+            <span className="text-white font-extrabold">S</span>
             hout
             <span className="text-primarytext font-extrabold">.</span>
           </h2>
