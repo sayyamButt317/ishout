@@ -54,12 +54,14 @@ const ApprovedCampaignPage = () => {
           "Followers",
           "Country",
           "Requested",
-          "Approved",
+          // "Approved",
           "Status",
           "Created At",
           "View",
         ]}
-        imageUrls={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
+        imageUrls={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => campaign?.logo_url || null)}
+        statuses={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => campaign?.status)}
+        campaignIds={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => campaign?.campaign_id)}
         subheader={data?.campaigns?.map(
           (campaign: ApprovedCampaignResponse) => [
             <div key={`company-name-${campaign?._id}`} className="truncate">
@@ -75,20 +77,20 @@ const ApprovedCampaignPage = () => {
               <PlatformBadge platform={campaign?.platform} />
             </div>,
             <div key={`category-${campaign._id}`} className="truncate">
-              {(campaign as any)?.category?.join(", ") || "-"}
+              {campaign?.category?.join(", ") || "-"}
             </div>,
             <div key={`followers-${campaign._id}`} className="truncate">
-              {(campaign as any)?.followers?.join(", ") || "-"}
+              {campaign?.followers?.join(", ") || "-"}
             </div>,
             <div key={`country-${campaign._id}`} className="truncate">
-              {(campaign as any)?.country?.join(", ") || "-"}
+              {campaign?.country?.join(", ") || "-"}
             </div>,
             <div key={`requested-${campaign._id}`} className="truncate">
               <CountButton count={campaign?.limit} />
             </div>,
-            <div key={`approved-${campaign._id}`} className="truncate">
-              <CountButton count={(campaign as any)?.approved_influencer_count || 0} />
-            </div>,
+            // <div key={`approved-${campaign._id}`} className="truncate">
+            //   <CountButton count={(campaign as any)?.approved_influencer_count || 0} />
+            // </div>,
             <div key={`status-${campaign?._id}`} className="truncate">
               <DropDownCustomStatus
                 status={campaign?.status}
@@ -105,8 +107,7 @@ const ApprovedCampaignPage = () => {
             </div>,
             <div key={`view-${campaign._id}`} className="truncate">
               <Button
-                className="cursor-pointer w-[60px] sm:w-[80px] h-6 sm:h-9 text-[10px] sm:text-sm whitespace-nowrap px-2 sm:px-4"
-                variant="outline"
+                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
                 onClick={() => {
                   router.push(
                     `/Admin/approved-campaign/${campaign?.campaign_id}`

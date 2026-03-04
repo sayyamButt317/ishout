@@ -121,8 +121,9 @@ export default function AllCampaignPage() {
           "Chat",
           "Action",
         ]}
-        imageUrls={campaigns.map((campaign: AdminAllCampaignApiResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
+        imageUrls={campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign?.logo_url || null)}
         statuses={campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign.status)}
+        campaignIds={campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign._id)}
         subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
           <div key={`company-name-${campaign._id}`} className="truncate">
             {campaign?.company_name}

@@ -182,7 +182,7 @@ export const AdminMoreInfluencerApi = async (moreInfluencerRequest: GeneratedMor
 
 export const AdminAddInfluencersNumberApi = async (addInfluencersNumberRequest: AddInfluencersNumberRequest) => {
     const response = await api.post(AdminENDPOINT.ADMIN_ADD_INFLUENCERS_NUMBER, {
-        influencer_id: addInfluencersNumberRequest.influencer_id,
+        campaign_influencer_id: addInfluencersNumberRequest.campaign_influencer_id,
         phone_number: addInfluencersNumberRequest.phone_number,
         platform: addInfluencersNumberRequest.platform,
         max_price: addInfluencersNumberRequest.max_price,

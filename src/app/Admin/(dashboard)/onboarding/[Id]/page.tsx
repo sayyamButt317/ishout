@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo, useEffect } from "react";
 import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
 import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer"
 import { ArrowLeft, RefreshCcw } from "lucide-react";
@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import ChooseOptionDialog from "@/src/app/component/custom-component/choseoptionDialogue";
 import OnboardingCard from "@/src/app/component/Ready-made/onboarding-card";
 import SendNegotiationHook from "@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook";
+import NegotiationStatsHook from "@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook";
 
 
 export default function OnboardingInfluencerByCampaignId() {
@@ -22,10 +23,23 @@ export default function OnboardingInfluencerByCampaignId() {
     Id,
     currentPage
   );
+  const { data: negotiationData } = NegotiationStatsHook(1, 100);
+  
+  const getNegotiationForInfluencer = useCallback((influencer: ReviewInfluencerResponse) => {
+    if (!negotiationData?.negotiation_controls) return null;
+    const negotiation = negotiationData.negotiation_controls.find((n: any) => 
+      n.influencer_id === influencer._id
+    );
+    return negotiation ? {
+      _id: negotiation._id,
+      last_offered_price: negotiation.last_offered_price,
+    } : null;
+  }, [negotiationData]);
 
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState<{
+    _id: string;
     username: string;
     platform: string;
     picture: string;
@@ -49,6 +63,7 @@ export default function OnboardingInfluencerByCampaignId() {
 
   const handleEdit = useCallback((influencer: ReviewInfluencerResponse) => {
     setSelectedInfluencer({
+      _id: influencer._id,
       username: influencer.username,
       platform: influencer.platform,
       picture: influencer.picture,
@@ -111,16 +126,21 @@ export default function OnboardingInfluencerByCampaignId() {
       )}
 
       {data?.influencers?.length ? (
-        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
-          {data?.influencers?.map((influencer: ReviewInfluencerResponse) => (
-            <OnboardingCard
-              key={influencer._id}
-              influencer={influencer}
-              onEdit={handleEdit}
-              onMessage={handleMessage}
-              sendNegotiation={() => handleSendNegotiation(influencer._id)}
-            />
-          ))}
+        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-3 sm:gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
+          {data?.influencers?.map((influencer: ReviewInfluencerResponse) => {
+            const negotiation = getNegotiationForInfluencer(influencer);
+            return (
+              <OnboardingCard
+                key={influencer._id}
+                influencer={influencer}
+                onEdit={handleEdit}
+                onMessage={handleMessage}
+                sendNegotiation={() => handleSendNegotiation(influencer._id)}
+                negotiationId={negotiation?._id}
+                lastOfferedPrice={negotiation?.last_offered_price}
+              />
+            );
+          })}
         </div>
       ) : (
         !isLoading && (

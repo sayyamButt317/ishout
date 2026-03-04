@@ -9,6 +9,16 @@ import SummaryPopup from '@/src/app/component/Ready-made/SummaryPopup';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 import { rangeOfFollowers } from '@/src/constant/rangeoffollowers';
 
+
+interface CampaignBriefResponse {
+  id: string;
+  platform: string[];
+  category: string[];
+  followers: string[];
+  country: string[];
+  limit: number;
+}
+
 const CampaignBreifPage = () => {
   const { mutate: generateCampaignBreif, data, isPending, reset } = CampaignBreifHook();
 
@@ -22,7 +32,7 @@ const CampaignBreifPage = () => {
     const user_input = input.trim();
     if (!user_input) return;
     generateCampaignBreif({ user_input, user_id }, {
-      onSuccess: (responseData: any) => {
+      onSuccess: (responseData: CampaignBriefResponse) => {
         if (responseData?.id) {
           setField('brief_id', responseData.id);
         }
@@ -31,7 +41,7 @@ const CampaignBreifPage = () => {
         setField('followers', []);
         setField('country', []);
         setField('limit', '');
-        
+
         if (responseData?.platform && Array.isArray(responseData.platform) && responseData.platform.length > 0) {
           setField('platform', responseData.platform);
         }
@@ -42,9 +52,9 @@ const CampaignBreifPage = () => {
           if (Array.isArray(responseData.followers) && responseData.followers.length > 0) {
             setField('followers', responseData.followers);
           } else if (typeof responseData.followers === 'string') {
-            const followerValue = responseData.followers.toLowerCase().trim();
+            const followerValue = (responseData.followers as unknown as string).toLowerCase().trim();
             let numValue: number;
-            
+
             if (followerValue.includes('k')) {
               numValue = parseInt(followerValue.replace('k', '')) * 1000;
             } else if (followerValue.includes('m')) {
@@ -55,18 +65,18 @@ const CampaignBreifPage = () => {
                 numValue = Math.floor(numValue / 1000) * 1000;
               }
             }
-            
+
             const matchedRange = rangeOfFollowers.find(range => {
               const [rangeStartStr, rangeEndStr] = range.toLowerCase().split('-');
-              const rangeStart = rangeStartStr.includes('m') 
-                ? parseInt(rangeStartStr.replace('m', '')) * 1000000 
+              const rangeStart = rangeStartStr.includes('m')
+                ? parseInt(rangeStartStr.replace('m', '')) * 1000000
                 : parseInt(rangeStartStr.replace('k', '')) * 1000;
-              const rangeEnd = rangeEndStr.includes('m') 
-                ? parseInt(rangeEndStr.replace('m', '')) * 1000000 
+              const rangeEnd = rangeEndStr.includes('m')
+                ? parseInt(rangeEndStr.replace('m', '')) * 1000000
                 : parseInt(rangeEndStr.replace('k', '').replace('m', '')) * 1000;
               return numValue >= rangeStart && numValue <= rangeEnd;
             });
-            
+
             if (matchedRange) {
               setField('followers', [matchedRange]);
             }
@@ -109,14 +119,14 @@ const CampaignBreifPage = () => {
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-white/70 mb-6">
               <Sparkles size={16} />
-              AI-Powered Campaign Strategy
+              AI-Powered Campaign Engine
             </div>
 
             <h1 className="text-4xl md:text-5xl font-semibold leading-tight tracking-tight">
-              Generate a Complete <span className="text-white/70">Campaign Brief</span> in
+              Generate a Complete <span className="text-primarytext">Campaign Brief</span> in
               Seconds
             </h1>
-            <p className="mt-6 text-white/60 text-base md:text-lg max-w-2xl mx-auto">
+            <p className="italic mt-6 text-white/60 text-base md:text-lg max-w-2xl mx-auto">
               Describe your brand, goals, and audience. Our AI agent will craft a
               structured influencer campaign brief ready for execution.
             </p>
@@ -143,7 +153,7 @@ const CampaignBreifPage = () => {
               <CustomButton
                 onClick={handleGenerateCampaignBreif}
                 disabled={isPending || !input.trim()}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primaryButton text-slate/50 font-medium hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 {isPending ? (
                   <>
@@ -156,9 +166,9 @@ const CampaignBreifPage = () => {
               </CustomButton>
             </div>
           </div>
-          <div className="mt-10 text-center text-sm text-white/40">
-            The more details you provide (budget, region, target audience, deliverables),
-            the better the generated campaign strategy.
+          <div className="mt-10 text-center text-sm text-white/40 max-w-xl mx-auto">
+            The more details you provide (budget, region, audience, deliverables),
+            the more accurate and actionable your AI campaign strategy becomes.
           </div>
         </div>
       </div>
@@ -169,8 +179,8 @@ const CampaignBreifPage = () => {
         </div>
       )}
 
-      <div className="text-center text-xs text-white/30 pb-8">
-        Powered by AI Campaign Intelligence
+      <div className="text-center text-xs text-white/30 pb-8 relative z-10">
+        Powered by <span className="text-[#ff4e7e]">iShout AI</span>
       </div>
 
       {showSummaryPopup && (

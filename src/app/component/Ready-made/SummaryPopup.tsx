@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CustomButton from "../button";
 import Spinner from "../custom-component/spinner";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
@@ -130,12 +130,12 @@ const EditableField = ({
   onRemove,
 }: EditableFieldProps) => {
   const [open, setOpen] = React.useState(false);
-  
+
   const selectedItems = config.isArray
     ? (Array.isArray(value) ? value : [])
     : value
-    ? [value]
-    : [];
+      ? [value]
+      : [];
 
   const getDisplayText = () => {
     if (config.isArray) {
@@ -157,19 +157,19 @@ const EditableField = ({
       <div className="flex flex-wrap gap-1.5 lg:gap-2 min-h-[24px] lg:min-h-[28px] mb-2 lg:mb-3">
         {selectedItems.length > 0
           ? selectedItems.map((item, i) => (
-              <span
-                key={`${item}-${i}`}
-                className={`inline-flex items-center gap-1 rounded-full bg-gradient-to-r ${config.color.gradient} ${config.color.border} border px-2 py-1 ${config.color.text} text-[10px] lg:text-xs font-medium`}
+            <span
+              key={`${item}-${i}`}
+              className={`inline-flex items-center gap-1 rounded-full bg-gradient-to-r ${config.color.gradient} ${config.color.border} border px-2 py-1 ${config.color.text} text-[10px] lg:text-xs font-medium`}
+            >
+              {config.isArray ? item : config.displayValue ? config.displayValue(item) : item}
+              <button
+                className="hover:bg-white/20 rounded-full p-0.5 transition-colors duration-200"
+                onClick={() => onRemove(item)}
               >
-                {config.isArray ? item : config.displayValue ? config.displayValue(item) : item}
-                <button
-                  className="hover:bg-white/20 rounded-full p-0.5 transition-colors duration-200"
-                  onClick={() => onRemove(item)}
-                >
-                  <X className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
-                </button>
-              </span>
-            ))
+                <X className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
+              </button>
+            </span>
+          ))
           : null}
       </div>
       <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -357,9 +357,8 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
 
             <div className="flex items-center gap-2 text-xs lg:text-sm mb-6">
               <div
-                className={`h-2 w-2 rounded-full ${
-                  isFormComplete ? "bg-green-400 animate-pulse" : "bg-amber-400"
-                }`}
+                className={`h-2 w-2 rounded-full ${isFormComplete ? "bg-primaryButton animate-pulse" : "bg-amber-400"
+                  }`}
               />
               <span
                 className={`${isFormComplete ? "text-green-200" : "text-amber-200"}`}
@@ -392,19 +391,18 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                 <CustomButton
                   onClick={() => handleLaunchCampaign()}
                   disabled={!isFormComplete || isPending}
-                  className={`flex-1 px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 hover:scale-105 ${
-                    isFormComplete
-                      ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-500/25"
-                      : "bg-slate-600 text-slate-400 cursor-not-allowed"
-                  }`}
+                  className={`flex-1 px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 hover:scale-105 ${isFormComplete
+                    ? "bg-primaryButton hover:bg-primaryHover text-white"
+                    : "bg-slate-600 text-slate-400 cursor-not-allowed"
+                    }`}
                 >
                   {isPending ? (
                     <div className="flex items-center justify-center gap-2">
                       <Spinner size={16} />
-                      Creating...
+                      Launching...
                     </div>
                   ) : (
-                    "Create Campaign"
+                    "Launch Campaign"
                   )}
                 </CustomButton>
               </div>
@@ -415,6 +413,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                     : "Complete all fields above to launch your campaign"}
                 </p>
               </div>
+
             </div>
           </div>
         </div>

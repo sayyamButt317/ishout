@@ -1,5 +1,4 @@
 import {
-  BarChart3,
   CircleCheck,
   FileText,
   Handshake,
@@ -11,42 +10,42 @@ import {
   UserCheck,
   Users,
 } from 'lucide-react';
-import { SiInstagram, SiWhatsapp } from 'react-icons/si';
+import { SiWhatsapp } from 'react-icons/si';
 
 export const employeeSidebarLinks = [
   {
     label: 'Create Campaign',
     route: '/client/choose-campaign',
-    icon: <Plus className="w-5 h-5" />,
+    icon: <Plus className="w-5 h-5 text-secondarytext group-hover:text-primarytext transition-colors" />,
   },
-
   {
     label: 'Review Influencer',
     route: '/client/influencer-review',
-    icon: <UserCheck className="w-5 h-5" />,
+    icon: <UserCheck className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
   },
   {
     label: 'All Campaigns',
     route: '/client/all-campaign',
-    icon: <LayoutGrid className="w-5 h-5" />,
+    icon: <LayoutGrid className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
   },
   {
     label: 'Campaign Brief',
-    route: '/client/get-campaign-brief',
-    icon: <FileText className="w-5 h-5" />, // optional: choose an icon
+    route: '/client/briefs',
+    icon: <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
   },
   {
     label: 'Profile',
     route: '/client/profile',
-    icon: <User className="w-5 h-5" />,
+    icon: <User className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
   },
-
-  // {
-  //   label: "Contents",
-  //   route: "/client/content",
-  //   icon: <FileText className="w-5 h-5" />,
-  // },
 ];
+
+// {
+//   label: "Contents",
+//   route: "/client/content",
+//   icon: <FileText className="w-5 h-5" />,
+// },
+
 
 export const adminSidebarLinks = [
   {

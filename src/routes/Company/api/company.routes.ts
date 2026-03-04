@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from '@/src/types/Admin-Type/Campaign.type';
 import { CompanyProfileDetailsResponseProps, UpdateProfileRequestProps, UpdateProfileResponseProps } from '@/src/types/Compnay/profile-type';
-import { ChangePasswordRequestProps } from '@/src/types/Compnay/password-type';
+import { ChangePasswordRequestProps, ProfileChangePasswordRequestProps } from '@/src/types/Compnay/password-type';
 import { GetCampaignBriefResponse, CampaignBriefItem } from "@/src/types/Compnay/campaign-brief.types";
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 
@@ -60,12 +60,9 @@ export const CompanyCampaignBreifApi = async (payload: {
 };
 
 export const UpdateCampaignBriefApi = async (brief: UpdateCampaignBrief) => {
-  if (!brief.id) throw new Error("Brief ID is required for update");
-  const response = await api.patch(
-    CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id), // use endpoint helper
+  const response = await api.patch(CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id),
     brief
   );
-
   return response.data;
 };
 
@@ -74,6 +71,14 @@ export const getCampaignBrief = async (
 ): Promise<GetCampaignBriefResponse> => {
   const response = await api.get<GetCampaignBriefResponse>(
     CompanyENDPOINT.GET_CAMPAIGN_BRIEF(user_id)
+  );
+
+  return response.data;
+};
+
+export const deleteCampaignBrief = async (brief_id: string) => {
+  const response = await api.delete(
+    CompanyENDPOINT.DELETE_CAMPAIGN_BRIEF(brief_id)
   );
 
   return response.data;
@@ -159,5 +164,10 @@ export const CompanyChangePasswordApi = async (password: ChangePasswordRequestPr
 
 export const CompanyResetPasswordApi = async (payload: ChangePasswordRequestProps) => {
   const response = await api.put(CompanyENDPOINT.RESET_PASSWORD, payload);
+  return response.data;
+}
+
+export const CompanyProfileChangePasswordApi = async (user_id: string, payload: ProfileChangePasswordRequestProps) => {
+  const response = await api.put(CompanyENDPOINT.CHANGE_PASSWORD(user_id), payload);
   return response.data;
 }

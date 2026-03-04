@@ -78,18 +78,20 @@ export default function Sidebar({ links }: SidebarProps) {
         shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
 
         {/* Logo */}
-        <a 
-          href="https://ishout.ae" 
-         // target="_blank" 
+        <a
+          href="https://ishout.ae"
           rel="noopener noreferrer"
           className="mb-8 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
         >
           <div className="relative">
             <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
-            <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={36} height={36} className="relative z-10" unoptimized={true} />
+            <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={80} height={80} className="relative z-10" unoptimized={true} />
           </div>
-          <h2 className="text-lg font-semibold tracking-wide text-white">
-            iShout
+          <h2 className="text-4xl font-bold text-white tracking-tight">
+            i
+            <span className="text-white font-extrabold">S</span>
+            hout
+            <span className="text-primarytext font-extrabold">.</span>
           </h2>
         </a>
 
@@ -99,7 +101,7 @@ export default function Sidebar({ links }: SidebarProps) {
         </nav>
 
         {/* Logout */}
-        <div className="pt-6 border-t border-white/10">
+        <div className="pt-6 border-t border-white/10 cursor-pointer">
           <Button
             variant="ghost"
             className="w-full justify-start text-red-400 hover:bg-red-500/10 rounded-xl"
@@ -131,9 +133,9 @@ export default function Sidebar({ links }: SidebarProps) {
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-            <a 
-              href="https://ishout.ae" 
-          //    target="_blank" 
+            <a
+              href="https://ishout.ae"
+              //    target="_blank" 
               rel="noopener noreferrer"
               className="mb-6 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => setMobileOpen(false)}

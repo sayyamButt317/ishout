@@ -4,6 +4,10 @@ export const CompanyENDPOINT = {
     `/company/campaign-brief/${user_id}`,
      UPDATE_CAMPAIGN_BRIEF: (brief_id: string) =>
     `/company/update-campaign-brief/${brief_id}`,
+
+    DELETE_CAMPAIGN_BRIEF: (brief_id: string) =>
+    `/company/campaign-brief/${brief_id}`,
+    
   GET_CAMPAIGN_BRIEF_DETAIL: (brief_id: string) =>
     `/company/campaign-brief/detail/${brief_id}`,
   CAMPAIGN: `/company/campaigns`,
@@ -18,6 +22,6 @@ export const CompanyENDPOINT = {
   COMPNAY_APPROVED_CAMPAIGN: (user_id: string) => `/company/${user_id}/approved-campaign`,
   FORGOT_PASSWORD: `/auth/forgot-password`,
   VERIFY_OTP: `/auth/verify-otp`,
-  CHANGE_PASSWORD: `/company/change-password`,
+  CHANGE_PASSWORD: (user_id: string) => `/company/change-password/${user_id}`,
   RESET_PASSWORD: `/company/reset-password`,
 };

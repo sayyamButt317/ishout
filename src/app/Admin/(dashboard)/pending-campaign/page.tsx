@@ -72,7 +72,7 @@ export default function AdminPendingCampaigns() {
           "Generate/View-Generated",
           "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0View",
         ]}
-        imageUrls={data?.campaigns.map((campaign: AdminAllCampaignApiResponse) => (campaign as any)?.image_url || (campaign as any)?.company_logo || null)}
+        imageUrls={data?.campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign?.logo_url || null)}
         subheader={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => [
             <div key={`company-name-${campaign._id}`} className="truncate">

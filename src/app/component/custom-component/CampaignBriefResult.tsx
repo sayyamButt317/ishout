@@ -1,15 +1,21 @@
-'use client';
+"use client";
 
 import {
   CampaignBrief,
   UpdateCampaignBrief,
-} from '@/src/types/Compnay/campaignbrieftype';
-import { Copy, CheckCircle2, Sparkles, Check, Pencil, Save } from 'lucide-react';
-import { useState } from 'react';
-import { Section } from './briefsection';
-import useUpdateCampaignBrief from '@/src/routes/Company/api/Hooks/useUpdateCampaignBriefHook';
-import { toast } from 'sonner';
-import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
+} from "@/src/types/Compnay/campaignbrieftype";
+import {
+  Copy,
+  CheckCircle2,
+  Sparkles,
+  Check,
+  Pencil,
+  Save,
+} from "lucide-react";
+import { useState } from "react";
+import { Section } from "./briefsection";
+import useUpdateCampaignBrief from "@/src/routes/Company/api/Hooks/useUpdateCampaignBriefHook";
+import { toast } from "sonner";
 
 interface Props {
   brief: CampaignBrief;
@@ -21,74 +27,79 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
   const [copied, setCopied] = useState(false);
   const [editable, setEditable] = useState(false);
   const [localBrief, setLocalBrief] = useState<CampaignBrief>(brief);
-  const { setField, addToArray } = useReadyMadeTemplateStore();
 
-  const { mutate: updateBrief, isPending: isUpdating } = useUpdateCampaignBrief();
+  const { mutate: updateBrief, isPending: isUpdating } =
+    useUpdateCampaignBrief();
 
-  // Copy to clipboard
   const handleCopy = async () => {
     await navigator.clipboard.writeText(JSON.stringify(localBrief, null, 2));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Update section locally
   const updateSection = (key: keyof CampaignBrief, value: string[]) => {
     setLocalBrief({ ...localBrief, [key]: value });
   };
 
   const handleSave = () => {
     if (!localBrief.id) {
-      toast.error('Cannot update: Brief ID is missing');
+      toast.error("Brief ID missing");
       return;
     }
 
-    const payload: UpdateCampaignBrief = { ...localBrief, id: localBrief.id };
-    console.log('Saving payload:', payload);
+    const payload: UpdateCampaignBrief = {
+      ...localBrief,
+      id: localBrief.id,
+    };
 
     updateBrief(payload, {
       onSuccess: (data) => {
-        console.log('Update success:', data);
         setLocalBrief(data);
         setEditable(false);
+        toast.success("Campaign brief updated");
       },
     });
   };
 
   const handleApprove = () => {
-    toast.success('Campaign data ready in summary');
+    toast.success("Campaign approved");
     onApprove?.();
   };
 
   return (
-    <div className="relative max-w-7xl mx-auto px-6 pt-4 pb-20">
+    <div className="relative max-w-7xl mx-auto px-6 pt-10 pb-24">
       {/* HEADER */}
-      <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-16">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-14">
         <div>
-          <div className="flex items-center gap-2 text-white/40 text-sm mb-3">
+          <div className="flex items-center gap-2 text-primarytext text-sm mb-3">
             <Sparkles size={14} />
             AI Generated Strategy
           </div>
-          <h2 className="text-4xl font-semibold tracking-tight">
+
+          <h2 className="text-4xl font-bold tracking-tight text-white">
             Campaign Intelligence Report
           </h2>
+
+          <p className="text-neutral-400 mt-3 max-w-2xl text-sm">
+            Review, refine and approve your AI-generated campaign strategy.
+          </p>
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <button
             onClick={editable ? handleSave : () => setEditable(true)}
             disabled={isUpdating}
-            className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primaryButton hover:bg-primaryHover transition text-white text-sm font-medium"
           >
             {editable ? <Save size={16} /> : <Pencil size={16} />}
-            {editable ? (isUpdating ? 'Saving...' : 'Save') : 'Edit'}
+            {editable ? (isUpdating ? "Saving..." : "Save") : "Edit"}
           </button>
 
           {editable && (
             <button
               onClick={() => setEditable(false)}
-              className="flex items-center cursor-pointer gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition text-sm text-white"
             >
               Cancel
             </button>
@@ -96,7 +107,7 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
 
           <button
             onClick={handleApprove}
-            className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition text-sm text-white"
           >
             <Check size={16} />
             Approve
@@ -104,18 +115,21 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
 
           <button
             onClick={handleCopy}
-            className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition text-sm text-white"
           >
             {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
-            {copied ? 'Copied' : 'Copy'}
+            {copied ? "Copied" : "Copy"}
           </button>
         </div>
       </div>
 
       {/* EXECUTIVE SUMMARY */}
-      <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-2xl p-12 mb-16 shadow-[0_0_100px_rgba(255,255,255,0.04)]">
-        <h3 className="text-2xl font-semibold mb-6 text-white">Executive Summary</h3>
-        <p className="text-white/70 leading-relaxed">
+      <div className="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-12 mb-14 shadow-xl">
+        <h3 className="text-2xl font-semibold mb-6 text-white">
+          Executive Summary
+        </h3>
+
+        <p className="text-neutral-300 leading-relaxed">
           {localBrief.brand_name_influencer_campaign_brief}
         </p>
       </div>
@@ -126,79 +140,83 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
           title="Campaign Overview"
           items={localBrief.campaign_overview}
           editable={editable}
-          onChange={(v) => updateSection('campaign_overview', v)}
+          onChange={(v) => updateSection("campaign_overview", v)}
         />
         <Section
           title="Campaign Objectives"
           items={localBrief.campaign_objectives}
           editable={editable}
-          onChange={(v) => updateSection('campaign_objectives', v)}
+          onChange={(v) => updateSection("campaign_objectives", v)}
         />
         <Section
           title="Target Audience"
           items={localBrief.target_audience}
           editable={editable}
-          onChange={(v) => updateSection('target_audience', v)}
+          onChange={(v) => updateSection("target_audience", v)}
         />
         <Section
           title="Influencer Profile"
           items={localBrief.influencer_profile}
           editable={editable}
-          onChange={(v) => updateSection('influencer_profile', v)}
+          onChange={(v) => updateSection("influencer_profile", v)}
         />
         <Section
           title="Key Campaign Message"
           items={localBrief.key_campaign_message}
           editable={editable}
-          onChange={(v) => updateSection('key_campaign_message', v)}
+          onChange={(v) => updateSection("key_campaign_message", v)}
         />
         <Section
           title="Content Direction"
           items={localBrief.content_direction}
           editable={editable}
-          onChange={(v) => updateSection('content_direction', v)}
+          onChange={(v) => updateSection("content_direction", v)}
         />
         <Section
           title="Deliverables"
           items={localBrief.deliverables_per_influencer}
           editable={editable}
-          onChange={(v) => updateSection('deliverables_per_influencer', v)}
+          onChange={(v) =>
+            updateSection("deliverables_per_influencer", v)
+          }
         />
         <Section
           title="Hashtags & Mentions"
-          editable={editable}
           items={localBrief.hashtags_mentions}
-          onChange={(v) => updateSection('hashtags_mentions', v)}
+          editable={editable}
+          onChange={(v) => updateSection("hashtags_mentions", v)}
         />
         <Section
           title="Timeline"
           items={localBrief.timeline}
           editable={editable}
-          onChange={(v) => updateSection('timeline', v)}
+          onChange={(v) => updateSection("timeline", v)}
         />
         <Section
           title="Approval Process"
           items={localBrief.approval_process}
           editable={editable}
-          onChange={(v) => updateSection('approval_process', v)}
+          onChange={(v) => updateSection("approval_process", v)}
         />
         <Section
           title="KPIs & Success Metrics"
-          editable={editable}
           items={localBrief.kpis_success_metrics}
-          onChange={(v) => updateSection('kpis_success_metrics', v)}
+          editable={editable}
+          onChange={(v) =>
+            updateSection("kpis_success_metrics", v)
+          }
         />
         <Section
           title="Usage Rights"
           items={localBrief.usage_rights}
           editable={editable}
-          onChange={(v) => updateSection('usage_rights', v)}
+          onChange={(v) => updateSection("usage_rights", v)}
         />
         <Section
           title="Do's & Don'ts"
-          editable={editable}
           items={localBrief.dos_donts}
-          onChange={(v) => updateSection('dos_donts', v)}
+          editable={editable}
+          onChange={(v) => updateSection("dos_donts", v)}
         />
       </div>
     </div>

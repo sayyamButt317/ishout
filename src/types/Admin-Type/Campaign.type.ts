@@ -49,6 +49,7 @@ export interface AdminAllCampaignApiResponse {
     user_id: string;
     influencers_ids: number;
     generated: boolean;
+    logo_url: string;
     created_at: string;
     updated_at: string;
 }
@@ -70,10 +71,13 @@ export interface CompanyCampaignResponse {
     name: string;
     platform: PlatformType;
     followers: number[];
+    country: string[];
     limit: number;
+    user_type: string;
     status: string;
     pending_influencers_count: number;
     approved_influencer_count: number;
+    logo_url: string;
     created_at: string;
     updated_at: string;
 }
@@ -98,10 +102,14 @@ export interface ApprovedCampaignResponse {
     _id: string;
     campaign_id: string;
     company_name: string;
+    category: string[];
+    followers: string[];
+    country: string[];
     user_type: string;
     name: string;
     platform: PlatformType;
     limit: number;
     status: string;
+    logo_url: string;
     created_at: string;
 }
