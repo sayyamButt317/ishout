@@ -23,10 +23,19 @@ export default function CampaignBriefPage() {
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
   const [search, setSearch] = useState('');
 
-
   const briefs = useMemo(() => data ?? [], [data]);
 
-  const filteredBriefs = useMemo(() => briefs.filter((brief) => brief.response.title?.toLowerCase().includes(search.toLowerCase()) || brief.response.brand_name_influencer_campaign_brief?.toLowerCase().includes(search.toLowerCase())), [briefs, search]);
+  const filteredBriefs = useMemo(
+    () =>
+      briefs.filter(
+        (brief) =>
+          brief.response.title?.toLowerCase().includes(search.toLowerCase()) ||
+          brief.response.brand_name_influencer_campaign_brief
+            ?.toLowerCase()
+            .includes(search.toLowerCase()),
+      ),
+    [briefs, search],
+  );
 
   // const handleExportPDF = () => {
   //   if (!selectedBrief) return;
