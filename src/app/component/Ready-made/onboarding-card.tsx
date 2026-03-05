@@ -14,6 +14,7 @@ import {
   UsernameLink,
 } from "@/src/helper/followersformat";
 import { SiInstagram, SiTiktok, SiWhatsapp, SiYoutube } from "react-icons/si";
+import { useRouter } from "next/navigation";
 
 
 interface OnboardingCardProps {
@@ -24,6 +25,8 @@ interface OnboardingCardProps {
   onReject?: (influencer: ReviewInfluencerResponse) => void;
   onDelete?: (influencer: ReviewInfluencerResponse) => void;
   sendNegotiation?: (influencer: ReviewInfluencerResponse) => void;
+  negotiationId?: string;
+  lastOfferedPrice?: number | null;
 }
 
 const OnboardingCard = ({
@@ -34,7 +37,11 @@ const OnboardingCard = ({
   onReject,
   onDelete,
   sendNegotiation,
+  negotiationId,
+  lastOfferedPrice,
 }: OnboardingCardProps) => {
+  const router = useRouter();
+  
   const handleViewProfile = () => {
     if (influencer?.platform === "instagram") {
       window.open(`https://www.instagram.com/${influencer?.username}`, "_blank");
@@ -45,8 +52,14 @@ const OnboardingCard = ({
     }
   };
 
+  const handleViewNegotiation = () => {
+    if (negotiationId) {
+      router.push(`/Admin/negotiation-chat/${negotiationId}`);
+    }
+  };
+
   return (
-    <Card className="group relative w-full rounded-[28px] border border-white/10 bg-[#0f0f10] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] overflow-hidden">
+    <Card className="group relative w-full max-w-md rounded-[28px] border border-white/10 bg-[#0f0f10] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] overflow-hidden">
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-transparent" />
       <div className="relative p-6">
         <div className="flex items-start justify-between gap-4">
@@ -90,16 +103,28 @@ const OnboardingCard = ({
               </div>
             </div>
           </div>
-          {onEdit && (
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => onEdit(influencer)}
-              className="h-7 rounded-full border border-white/40 bg-white/[0.02] text-white/90 hover:bg-white/[0.06] font-normal text-sm cursor-pointer"
-            >
-              Edit
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            {negotiationId && (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleViewNegotiation}
+                className="h-7 rounded-full border border-[#ED3E75] bg-[#ED3E75] text-white hover:bg-[#d73669] font-normal text-sm cursor-pointer flex items-center gap-1.5"
+              >
+                <SiWhatsapp className="text-base text-white" /> View Chat
+              </Button>
+            )}
+            {onEdit && (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => onEdit(influencer)}
+                className="h-7 rounded-full border border-white/40 bg-white/[0.02] text-white/90 hover:bg-white/[0.06] font-normal text-sm cursor-pointer"
+              >
+                Edit
+              </Button>
+            )}
+          </div>
         </div>
         <div className="mt-6 grid grid-cols-2 gap-3">
           <CustomButton
@@ -140,8 +165,7 @@ const OnboardingCard = ({
             </p>
           </div>
         </div>
-        <div className="relative mt-4 grid grid-cols-2 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05]">
-          <div className="absolute left-1/2 top-1/2 h-16 w-px -translate-x-1/2 -translate-y-1/2 bg-white"></div>
+        <div className="relative mt-4 grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] divide-x divide-white/10">
           <div className="py-3 text-center">
             <p className="text-sm text-white/75">Min Price</p>
             <p className="mt-1 text-lg font-semibold text-white">
@@ -152,6 +176,12 @@ const OnboardingCard = ({
             <p className="text-sm text-white/75">Max Price</p>
             <p className="mt-1 text-lg font-semibold text-white">
               ${influencer?.max_price || 0}
+            </p>
+          </div>
+          <div className="py-3 text-center">
+            <p className="text-sm text-white/75">Last Offered Price</p>
+            <p className="mt-1 text-lg font-semibold text-white">
+              ${lastOfferedPrice !== null && lastOfferedPrice !== undefined ? lastOfferedPrice : 0}
             </p>
           </div>
         </div>

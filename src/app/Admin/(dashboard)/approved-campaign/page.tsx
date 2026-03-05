@@ -60,6 +60,8 @@ const ApprovedCampaignPage = () => {
           "View",
         ]}
         imageUrls={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => campaign?.logo_url || null)}
+        statuses={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => campaign?.status)}
+        campaignIds={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => campaign?.campaign_id)}
         subheader={data?.campaigns?.map(
           (campaign: ApprovedCampaignResponse) => [
             <div key={`company-name-${campaign?._id}`} className="truncate">

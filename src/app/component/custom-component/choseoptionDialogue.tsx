@@ -31,16 +31,16 @@ export default function ChooseOptionDialog({
   influencer,
 }: ChooseOptionDialogProps) {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [maxPricing, setMaxPricing] = useState<number>(0);
-  const [minPricing, setMinPricing] = useState<number>(0);
+  const [maxPricing, setMaxPricing] = useState<string>("");
+  const [minPricing, setMinPricing] = useState<string>("");
 
   const { mutate: addInfluencerNumber, isPending } = AddInfluencerNumberHook();
 
   useEffect(() => {
     if (influencer) {
       setPhoneNumber(influencer.phone_number || "");
-      setMaxPricing(influencer.max_price || 0);
-      setMinPricing(influencer.min_price || 0);
+      setMaxPricing(influencer.max_price && influencer.max_price > 0 ? String(influencer.max_price) : "");
+      setMinPricing(influencer.min_price && influencer.min_price > 0 ? String(influencer.min_price) : "");
     }
   }, [influencer]);
 
@@ -99,9 +99,10 @@ export default function ChooseOptionDialog({
                 <Input
                   type="number"
                   value={minPricing}
-                  onChange={(e) => setMinPricing(Number(e.target.value))}
+                  onChange={(e) => setMinPricing(e.target.value)}
                   disabled={isPending}
-                  className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white"
+                  placeholder=""
+                  className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
 
@@ -112,9 +113,10 @@ export default function ChooseOptionDialog({
                 <Input
                   type="number"
                   value={maxPricing}
-                  onChange={(e) => setMaxPricing(Number(e.target.value))}
+                  onChange={(e) => setMaxPricing(e.target.value)}
                   disabled={isPending}
-                  className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white"
+                  placeholder=""
+                  className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
             </div>
@@ -129,20 +131,20 @@ export default function ChooseOptionDialog({
             <CustomButton
               disabled={isPending}
               onClick={() => {
-                addInfluencerNumber({
-                  campaign_influencer_id: influencer._id,
-                  phone_number: phoneNumber,
-                  platform: influencer.platform as PlatformType,
-                  min_price: minPricing,
-                  max_price: maxPricing,
-                });
-                console.log("payload", {
-                  campaign_influencer_id: influencer._id,
-                  phone_number: phoneNumber,
-                  platform: influencer.platform as PlatformType,
-                  min_price: minPricing,
-                  max_price: maxPricing,
-                });
+                addInfluencerNumber(
+                  {
+                    campaign_influencer_id: influencer._id,
+                    phone_number: phoneNumber,
+                    platform: influencer.platform as PlatformType,
+                    min_price: minPricing ? Number(minPricing) : 0,
+                    max_price: maxPricing ? Number(maxPricing) : 0,
+                  },
+                  {
+                    onSuccess: () => {
+                      onClose();
+                    },
+                  }
+                );
               }}
               className="h-11 px-8 rounded-2xl bg-[#ff4e7e] hover:bg-[#ff6f7f] text-white font-medium shadow-lg shadow-[#ff4e7e]/30 transition-all flex items-center justify-center min-w-[110px]"
             >

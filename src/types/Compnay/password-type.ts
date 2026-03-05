@@ -7,6 +7,10 @@ interface ChangePasswordRequestProps {
     new_password: string;
     confirm_password: string;
 }
+interface ProfileChangePasswordRequestProps {
+    old_password: string;
+    new_password: string;
+}
 interface ChangePasswordResponseProps {
     message: string;
 }
@@ -16,4 +20,4 @@ interface VerifyOtpResponseProps {
     reset_token: string;
 }
 
-export type { VerifyOtpRequestProps, VerifyOtpResponseProps, ChangePasswordRequestProps, ChangePasswordResponseProps };
+export type { VerifyOtpRequestProps, VerifyOtpResponseProps, ChangePasswordRequestProps, ChangePasswordResponseProps, ProfileChangePasswordRequestProps };
