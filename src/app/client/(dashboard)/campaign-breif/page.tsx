@@ -8,8 +8,7 @@ import { useCallback, useState, useRef } from 'react';
 import SummaryPopup from '@/src/app/component/Ready-made/SummaryPopup';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 import { rangeOfFollowers } from '@/src/constant/rangeoffollowers';
-
-
+import Image from 'next/image';
 interface CampaignBriefResponse {
   id: string;
   platform: string[];
@@ -31,73 +30,95 @@ const CampaignBreifPage = () => {
   const handleGenerateCampaignBreif = useCallback(() => {
     const user_input = input.trim();
     if (!user_input) return;
-    generateCampaignBreif({ user_input, user_id }, {
-      onSuccess: (responseData: CampaignBriefResponse) => {
-        if (responseData?.id) {
-          setField('brief_id', responseData.id);
-        }
-        setField('platform', []);
-        setField('category', []);
-        setField('followers', []);
-        setField('country', []);
-        setField('limit', '');
+    generateCampaignBreif(
+      { user_input, user_id },
+      {
+        onSuccess: (responseData: CampaignBriefResponse) => {
+          if (responseData?.id) {
+            setField('brief_id', responseData.id);
+          }
+          setField('platform', []);
+          setField('category', []);
+          setField('followers', []);
+          setField('country', []);
+          setField('limit', '');
 
-        if (responseData?.platform && Array.isArray(responseData.platform) && responseData.platform.length > 0) {
-          setField('platform', responseData.platform);
-        }
-        if (responseData?.category && Array.isArray(responseData.category) && responseData.category.length > 0) {
-          setField('category', responseData.category);
-        }
-        if (responseData?.followers) {
-          if (Array.isArray(responseData.followers) && responseData.followers.length > 0) {
-            setField('followers', responseData.followers);
-          } else if (typeof responseData.followers === 'string') {
-            const followerValue = (responseData.followers as unknown as string).toLowerCase().trim();
-            let numValue: number;
+          if (
+            responseData?.platform &&
+            Array.isArray(responseData.platform) &&
+            responseData.platform.length > 0
+          ) {
+            setField('platform', responseData.platform);
+          }
+          if (
+            responseData?.category &&
+            Array.isArray(responseData.category) &&
+            responseData.category.length > 0
+          ) {
+            setField('category', responseData.category);
+          }
+          if (responseData?.followers) {
+            if (
+              Array.isArray(responseData.followers) &&
+              responseData.followers.length > 0
+            ) {
+              setField('followers', responseData.followers);
+            } else if (typeof responseData.followers === 'string') {
+              const followerValue = (responseData.followers as unknown as string)
+                .toLowerCase()
+                .trim();
+              let numValue: number;
 
-            if (followerValue.includes('k')) {
-              numValue = parseInt(followerValue.replace('k', '')) * 1000;
-            } else if (followerValue.includes('m')) {
-              numValue = parseInt(followerValue.replace('m', '')) * 1000000;
-            } else {
-              numValue = parseInt(followerValue);
-              if (numValue >= 1000 && numValue < 1000000) {
-                numValue = Math.floor(numValue / 1000) * 1000;
+              if (followerValue.includes('k')) {
+                numValue = parseInt(followerValue.replace('k', '')) * 1000;
+              } else if (followerValue.includes('m')) {
+                numValue = parseInt(followerValue.replace('m', '')) * 1000000;
+              } else {
+                numValue = parseInt(followerValue);
+                if (numValue >= 1000 && numValue < 1000000) {
+                  numValue = Math.floor(numValue / 1000) * 1000;
+                }
+              }
+
+              const matchedRange = rangeOfFollowers.find((range) => {
+                const [rangeStartStr, rangeEndStr] = range.toLowerCase().split('-');
+                const rangeStart = rangeStartStr.includes('m')
+                  ? parseInt(rangeStartStr.replace('m', '')) * 1000000
+                  : parseInt(rangeStartStr.replace('k', '')) * 1000;
+                const rangeEnd = rangeEndStr.includes('m')
+                  ? parseInt(rangeEndStr.replace('m', '')) * 1000000
+                  : parseInt(rangeEndStr.replace('k', '').replace('m', '')) * 1000;
+                return numValue >= rangeStart && numValue <= rangeEnd;
+              });
+
+              if (matchedRange) {
+                setField('followers', [matchedRange]);
               }
             }
-
-            const matchedRange = rangeOfFollowers.find(range => {
-              const [rangeStartStr, rangeEndStr] = range.toLowerCase().split('-');
-              const rangeStart = rangeStartStr.includes('m')
-                ? parseInt(rangeStartStr.replace('m', '')) * 1000000
-                : parseInt(rangeStartStr.replace('k', '')) * 1000;
-              const rangeEnd = rangeEndStr.includes('m')
-                ? parseInt(rangeEndStr.replace('m', '')) * 1000000
-                : parseInt(rangeEndStr.replace('k', '').replace('m', '')) * 1000;
-              return numValue >= rangeStart && numValue <= rangeEnd;
-            });
-
-            if (matchedRange) {
-              setField('followers', [matchedRange]);
-            }
           }
-        }
-        if (responseData?.country && Array.isArray(responseData.country) && responseData.country.length > 0) {
-          const countryMap: Record<string, string> = {
-            'KSA': 'Saudi Arabia',
-            'UAE': 'United Arab Emirates',
-          };
-          const mappedCountries = responseData.country.map((c: string) => countryMap[c] || c);
-          setField('country', mappedCountries);
-        }
-        if (responseData?.limit) {
-          setField('limit', String(responseData.limit));
-        }
-        setTimeout(() => {
-          resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-      }
-    });
+          if (
+            responseData?.country &&
+            Array.isArray(responseData.country) &&
+            responseData.country.length > 0
+          ) {
+            const countryMap: Record<string, string> = {
+              KSA: 'Saudi Arabia',
+              UAE: 'United Arab Emirates',
+            };
+            const mappedCountries = responseData.country.map(
+              (c: string) => countryMap[c] || c,
+            );
+            setField('country', mappedCountries);
+          }
+          if (responseData?.limit) {
+            setField('limit', String(responseData.limit));
+          }
+          setTimeout(() => {
+            resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        },
+      },
+    );
   }, [input, user_id, generateCampaignBreif, setField]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -123,8 +144,8 @@ const CampaignBreifPage = () => {
             </div>
 
             <h1 className="text-4xl md:text-5xl font-semibold leading-tight tracking-tight">
-              Generate a Complete <span className="text-primarytext">Campaign Brief</span> in
-              Seconds
+              Generate a Complete <span className="text-primarytext">Campaign Brief</span>{' '}
+              in Seconds
             </h1>
             <p className="italic mt-6 text-white/60 text-base md:text-lg max-w-2xl mx-auto">
               Describe your brand, goals, and audience. Our AI agent will craft a
@@ -167,8 +188,8 @@ const CampaignBreifPage = () => {
             </div>
           </div>
           <div className="mt-10 text-center text-sm text-white/40 max-w-xl mx-auto">
-            The more details you provide (budget, region, audience, deliverables),
-            the more accurate and actionable your AI campaign strategy becomes.
+            The more details you provide (budget, region, audience, deliverables), the
+            more accurate and actionable your AI campaign strategy becomes.
           </div>
         </div>
       </div>
@@ -183,9 +204,7 @@ const CampaignBreifPage = () => {
         Powered by <span className="text-[#ff4e7e]">iShout AI</span>
       </div>
 
-      {showSummaryPopup && (
-        <SummaryPopup onClose={() => setShowSummaryPopup(false)} />
-      )}
+      {showSummaryPopup && <SummaryPopup onClose={() => setShowSummaryPopup(false)} />}
     </div>
   );
 };
