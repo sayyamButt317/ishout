@@ -14,6 +14,7 @@ export interface CampaignBriefResponseContent {
   kpis_success_metrics: string[];
   usage_rights: string[];
   dos_donts: string[];
+  campaign_logo_url?: string | null;
 }
 
 export interface CampaignBriefItem {
@@ -26,7 +27,6 @@ export interface CampaignBriefItem {
   regenerated_from: string | null;
   created_at: string;
 }
-
 
 
 export interface CampaignBriefDialogProps {
