@@ -70,7 +70,7 @@ export default function AdminPendingCampaigns() {
           "Status",
           "Created At",
           "Generate/View-Generated",
-          "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0View",
+          "View",
         ]}
         imageUrls={data?.campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign?.logo_url || null)}
         subheader={data?.campaigns.map(
