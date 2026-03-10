@@ -1,40 +1,49 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import TableComponent from "@/src/app/component/CustomTable";
-import { WhatsAppShareButton } from "@/src/app/component/custom-component/whatsappshare";
-import AllCampaignHook from "@/src/routes/Admin/Hooks/Allcampaign-hook";
-import { RefreshCcw, Trash } from "lucide-react";
-import React, { useState } from "react";
-import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
-import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import CountButton from "@/src/app/component/custom-component/countbutton";
-import { Badge } from "@/components/ui/badge";
-import UpdateStatusHook from "@/src/routes/Admin/Hooks/updateStatus-hook";
-import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
-import { DropdownMenuAction } from "@/src/app/component/custom-component/action";
-import StatusBadge from "@/src/app/component/custom-component/statusbadge";
-import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
+'use client';
+import { Button } from '@/components/ui/button';
+import TableComponent from '@/src/app/component/CustomTable';
+import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
+import AllCampaignHook from '@/src/routes/Admin/Hooks/Allcampaign-hook';
+import { RefreshCcw, Trash } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { AdminAllCampaignApiResponse } from '@/src/types/Admin-Type/Campaign.type';
+import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
+import CountButton from '@/src/app/component/custom-component/countbutton';
+import { Badge } from '@/components/ui/badge';
+import UpdateStatusHook from '@/src/routes/Admin/Hooks/updateStatus-hook';
+import { DropDownCustomStatus } from '@/src/app/component/custom-component/dropdownstatus';
+import { DropdownMenuAction } from '@/src/app/component/custom-component/action';
+import StatusBadge from '@/src/app/component/custom-component/statusbadge';
+import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
+import CustomButton from '@/src/app/component/button';
+import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
+import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 
 const STATUS_OPTIONS = [
-  { label: "All statuses", value: "all" },
-  { label: "Pending", value: "pending" },
-  { label: "Processing", value: "processing" },
-  { label: "Approved", value: "approved" },
-  { label: "Completed", value: "completed" },
-  { label: "Rejected", value: "rejected" },
+  { label: 'All statuses', value: 'all' },
+  { label: 'Pending', value: 'pending' },
+  { label: 'Processing', value: 'processing' },
+  { label: 'Approved', value: 'approved' },
+  { label: 'Completed', value: 'completed' },
+  { label: 'Rejected', value: 'rejected' },
 ] as const;
 
 export default function AllCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>('all');
   const deleteCampaignHook = DeleteCampaignHook();
-  const appliedStatus =
-    statusFilter === "all" ? undefined : statusFilter.toLowerCase();
+  const appliedStatus = statusFilter === 'all' ? undefined : statusFilter.toLowerCase();
+  const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
 
   const { data, isLoading, refetch, isRefetching } = AllCampaignHook(
     currentPage,
-    appliedStatus
+    appliedStatus,
   );
+
+  const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
 
   const updateStatusHook = UpdateStatusHook();
 
@@ -46,6 +55,15 @@ export default function AllCampaignPage() {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
   };
+
+  useEffect(() => {
+    if (briefData) {
+      setAdminBrief({
+        ...briefData.response,
+        id: briefData.id,
+      });
+    }
+  }, [briefData]);
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setStatusFilter(event.target.value);
@@ -70,8 +88,9 @@ export default function AllCampaignPage() {
               disabled={isRefetching}
             >
               <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-                  }`}
+                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+                  isRefetching ? 'animate-spin' : ''
+                }`}
               />
             </Button>
           </div>
@@ -94,11 +113,7 @@ export default function AllCampaignPage() {
             className="rounded-lg border border-white/20 bg-transparent px-3 py-2 text-sm text-white outline-none focus:border-primaryButton"
           >
             {STATUS_OPTIONS.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-                className="text-black"
-              >
+              <option key={option.value} value={option.value} className="text-black">
                 {option.label}
               </option>
             ))}
@@ -108,22 +123,29 @@ export default function AllCampaignPage() {
 
       <TableComponent
         header={[
-          "Company Name",
-          "Campaign Name",
-          "Source",
-          "Platform",
-          "Category",
-          "Followers",
-          "Country",
-          "Requested",
-          "Status",
-          "Created At",
-          "Chat",
-          "Action",
+          'Company Name',
+          'Campaign Name',
+          'Source',
+          'Platform',
+          'Category',
+          'Followers',
+          'Country',
+          'Requested',
+          'Status',
+          'Created At',
+          'Chat',
+          'Action',
+          'View Brief',
         ]}
-        imageUrls={campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign?.logo_url || null)}
-        statuses={campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign.status)}
-        campaignIds={campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign._id)}
+        imageUrls={campaigns.map(
+          (campaign: AdminAllCampaignApiResponse) => campaign?.logo_url || null,
+        )}
+        statuses={campaigns.map(
+          (campaign: AdminAllCampaignApiResponse) => campaign.status,
+        )}
+        campaignIds={campaigns.map(
+          (campaign: AdminAllCampaignApiResponse) => campaign._id,
+        )}
         subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
           <div key={`company-name-${campaign._id}`} className="truncate">
             {campaign?.company_name}
@@ -138,13 +160,13 @@ export default function AllCampaignPage() {
             <PlatformBadge platform={campaign?.platform} />
           </div>,
           <div key={`category-${campaign._id}`} className="truncate">
-            {campaign?.category?.join(", ") || "-"}
+            {campaign?.category?.join(', ') || '-'}
           </div>,
           <div key={`followers-${campaign._id}`} className="truncate">
-            {campaign?.followers?.join(", ") || "-"}
+            {campaign?.followers?.join(', ') || '-'}
           </div>,
           <div key={`country-${campaign._id}`} className="truncate">
-            {campaign?.country?.join(", ") || "-"}
+            {campaign?.country?.join(', ') || '-'}
           </div>,
           <div key={`requested-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.limit} />
@@ -163,14 +185,11 @@ export default function AllCampaignPage() {
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign.created_at).toLocaleDateString()}
           </div>,
-          <div
-            key={`share-${campaign._id}`}
-            className="truncate cursor-pointer"
-          >
-            {campaign?.user_type === "Website" ? (
-              <WhatsAppShareButton userId={campaign?.user_id ?? ""} />
+          <div key={`share-${campaign._id}`} className="truncate cursor-pointer">
+            {campaign?.user_type === 'Website' ? (
+              <WhatsAppShareButton userId={campaign?.user_id ?? ''} />
             ) : (
-              <WhatsAppShareButton userId={campaign?.user_id ?? ""} />
+              <WhatsAppShareButton userId={campaign?.user_id ?? ''} />
             )}
           </div>,
           <div key={`delete-${campaign._id}`} className="truncate">
@@ -185,11 +204,31 @@ export default function AllCampaignPage() {
               <Trash className="size-5 text-red-300 cursor-pointer" />
             </Button>
           </div>,
+          <div key={`view-brief-${campaign._id}`} className="truncate">
+            <Button
+              className="bg-secondaryButton hover:bg-secondaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+              disabled={!campaign.brief_id}
+              onClick={() => {
+                if (campaign.brief_id) {
+                  setSelectedBriefId(campaign.brief_id);
+                  setDialogOpen(true);
+                }
+              }}
+            >
+              View Brief
+            </Button>
+          </div>,
         ])}
         paginationstart={data?.page ?? currentPage}
         paginationend={totalPages}
         onPageChange={handlePageChange}
         isLoading={isLoading}
+      />
+      <CampaignBriefDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        briefData={adminBrief}
+        onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
       />
     </>
   );
