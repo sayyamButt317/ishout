@@ -52,6 +52,7 @@ export interface AdminAllCampaignApiResponse {
     logo_url: string;
     created_at: string;
     updated_at: string;
+    brief_id?: string; 
 }
 
 export interface CreateCampaignRequest {
@@ -80,6 +81,8 @@ export interface CompanyCampaignResponse {
     logo_url: string;
     created_at: string;
     updated_at: string;
+    brief_id?: string; 
+
 }
 
 export interface CampaignResponse {
@@ -112,4 +115,5 @@ export interface ApprovedCampaignResponse {
     status: string;
     logo_url: string;
     created_at: string;
+    brief_id?: string; 
 }
