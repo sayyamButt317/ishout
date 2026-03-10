@@ -6,6 +6,7 @@ export interface UserManagementResponse {
     phone: string;
     status: string;
     role: string;
+    logo_url?: string;
 }
 
 

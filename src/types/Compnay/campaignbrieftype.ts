@@ -1,5 +1,6 @@
 export interface CampaignBrief {
     id?: string;
+    title: string;
     brand_name_influencer_campaign_brief: string;
     campaign_overview: string[];
     campaign_objectives: string[];
@@ -14,11 +15,13 @@ export interface CampaignBrief {
     kpis_success_metrics: string[];
     usage_rights: string[];
     dos_donts: string[];
+    campaign_logo_url?: string | null;
 }
 
 // campaignbrieftype.ts
 export interface UpdateCampaignBrief {
     id: string; 
+    campaign_logo_url?: string | null;
     brand_name_influencer_campaign_brief: string;
     campaign_overview: string[];
     campaign_objectives: string[];
