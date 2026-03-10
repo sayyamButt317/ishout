@@ -44,3 +44,19 @@ export const verifyEmailApi = async (token: string) => {
   );
   return response.data;
 };
+
+export const uploadUserLogoApi = async (user_id: string, file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const response = await api.post(
+    AuthENDPOINT.UPLOAD_USER_LOGO(user_id),
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+  return response.data;
+};

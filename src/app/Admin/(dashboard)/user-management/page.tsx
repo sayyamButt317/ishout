@@ -3,11 +3,13 @@
 import { useState, type ComponentType } from 'react';
 import { Button } from '@/components/ui/button';
 import { UserStatus } from '@/src/app/component/custom-component/user-status';
+import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
 import TableComponent from '@/src/app/component/CustomTable';
 import AllUsersHook from '@/src/routes/Admin/Hooks/allusers-hook';
 import DeleteUserHook from '@/src/routes/Admin/Hooks/delete-user-hook';
 import UpdateUserStatusHook from '@/src/routes/Admin/Hooks/update-userstatus-hook';
 import CompanyUpdateProfileHook from '@/src/routes/Company/api/Hooks/update-profile.hook';
+import UploadUserLogoHook from '@/src/routes/Auth-Routes/Api/Auth-Hook/upload-user-logo-hook';
 import { UserManagementResponse } from '@/src/types/Admin-Type/usermanagment.type';
 import { RefreshCcw, Trash, Pencil, X, Loader2, Eye, EyeOff } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -129,6 +131,7 @@ export default function UserManagementPage() {
   const { data, isLoading, refetch, isRefetching } = AllUsersHook(currentPage);
   const deleteUserHook = DeleteUserHook();
   const updateUserStatus = UpdateUserStatusHook();
+  const uploadLogoHook = UploadUserLogoHook();
 
   const { mutate: updateProfile, isPending: isUpdating } = CompanyUpdateProfileHook(
     selectedUser?.user_id || '',
@@ -185,7 +188,24 @@ export default function UserManagementPage() {
           'Edit',
           'Role',
           'Status',
+          'chat',
         ]}
+        imageUrls={data?.users?.map(
+          (user: UserManagementResponse) => user.logo_url || null,
+        )}
+        onImageUpload={(rowIndex, file) => {
+          const user = data?.users?.[rowIndex];
+          if (user?.user_id) {
+            uploadLogoHook.mutate(
+              { user_id: user.user_id, file },
+              {
+                onSuccess: () => {
+                  refetch();
+                },
+              },
+            );
+          }
+        }}
         subheader={data?.users?.map((user: UserManagementResponse) => [
           <div key={`company-${user.user_id}`} className="truncate">
             {user.company_name}
@@ -224,6 +244,9 @@ export default function UserManagementPage() {
                 updateUserStatus.mutate({ user_id: user.user_id, status })
               }
             />
+          </div>,
+          <div key={`chat-${user.user_id}`}>
+            <WhatsAppShareButton phone={user.phone} contactPerson={user.contact_person} />
           </div>,
         ])}
         paginationstart={data?.page ?? currentPage}
