@@ -16,27 +16,37 @@ export const employeeSidebarLinks = [
   {
     label: 'Create Campaign',
     route: '/client/choose-campaign',
-    icon: <Plus className="w-5 h-5 text-secondarytext group-hover:text-primarytext transition-colors" />,
+    icon: (
+      <Plus className="w-5 h-5 text-secondarytext group-hover:text-primarytext transition-colors" />
+    ),
   },
   {
     label: 'Review Influencer',
     route: '/client/influencer-review',
-    icon: <UserCheck className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
+    icon: (
+      <UserCheck className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+    ),
   },
   {
     label: 'All Campaigns',
     route: '/client/all-campaign',
-    icon: <LayoutGrid className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
+    icon: (
+      <LayoutGrid className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+    ),
   },
   {
     label: 'Campaign Brief',
     route: '/client/briefs',
-    icon: <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
+    icon: (
+      <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+    ),
   },
   {
     label: 'Profile',
     route: '/client/profile',
-    icon: <User className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
+    icon: (
+      <User className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+    ),
   },
 ];
 
@@ -46,8 +56,16 @@ export const employeeSidebarLinks = [
 //   icon: <FileText className="w-5 h-5" />,
 // },
 
-
 export const adminSidebarLinks = [
+  {
+    label: 'All Campaigns',
+    route: '/Admin/all-campaign',
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
+        <LayoutGrid className="text-2xl text-white" />
+      </div>
+    ),
+  },
   {
     label: 'Pending Campaign',
     route: '/Admin/pending-campaign',
@@ -75,15 +93,7 @@ export const adminSidebarLinks = [
       </div>
     ),
   },
-  {
-    label: 'All Campaigns',
-    route: '/Admin/all-campaign',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-        <LayoutGrid className="text-2xl text-white" />
-      </div>
-    ),
-  },
+
   {
     label: 'User Management',
     route: '/Admin/user-management',

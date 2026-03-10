@@ -10,6 +10,10 @@ export const CompanyENDPOINT = {
     
   GET_CAMPAIGN_BRIEF_DETAIL: (brief_id: string) =>
     `/company/campaign-brief/detail/${brief_id}`,
+  
+UPLOAD_CAMPAIGN_LOGO: (brief_id: string) =>
+  `/company/update-brief-logo/${brief_id}`,
+  
   CAMPAIGN: `/company/campaigns`,
   CREATE_CAMPAIGN: `/company/campaigns`,
   CAMPAIGN_REJECTED_INFLUENCERS: `/company/campaigns/rejected-influencers`,

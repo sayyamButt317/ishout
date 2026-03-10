@@ -60,8 +60,18 @@ export const CompanyCampaignBreifApi = async (payload: {
 };
 
 export const UpdateCampaignBriefApi = async (brief: UpdateCampaignBrief) => {
-  const response = await api.patch(CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id),
-    brief
+  const formData = new FormData();
+
+  formData.append("data", JSON.stringify(brief));
+
+  const response = await api.patch(
+    CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id),
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
   );
   return response.data;
 };
@@ -124,6 +134,22 @@ export const CompanyApprovedCampaign = async (
   return response.data;
 };
 
+export const uploadCampaignLogoApi = async (brief_id: string, file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await api.post(
+    CompanyENDPOINT.UPLOAD_CAMPAIGN_LOGO(brief_id),
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+  return response.data; 
+};
+
 
 export const ReviewPendingInfluencers = async (campaign_id: string, page: number = 1) => {
   const response = await api.get(CompanyENDPOINT.REVIEW_PENDING_INFLUENCERS(campaign_id), {
@@ -168,6 +194,6 @@ export const CompanyResetPasswordApi = async (payload: ChangePasswordRequestProp
 }
 
 export const CompanyProfileChangePasswordApi = async (user_id: string, payload: ProfileChangePasswordRequestProps) => {
-  const response = await api.put(CompanyENDPOINT.CHANGE_PASSWORD(user_id), payload);
+  const response = await api.patch(CompanyENDPOINT.CHANGE_PASSWORD(user_id), payload);
   return response.data;
 }
