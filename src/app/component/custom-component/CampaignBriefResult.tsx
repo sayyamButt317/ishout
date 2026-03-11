@@ -51,7 +51,7 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
   updateBrief(
     {
       brief: payload,
-      product_image_urls: campaignImage,
+      product_image_urls: campaignImage, // this will now be sent as 'file'
     },
     {
       onSuccess: (data) => {

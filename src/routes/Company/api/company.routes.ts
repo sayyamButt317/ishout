@@ -70,11 +70,11 @@ export const CompanyCampaignBreifApi = async (payload: {
 
 export const UpdateCampaignBriefApi = async (
   brief: UpdateCampaignBrief,
-  product_image_urls?: File | null,
+  file?: File | null, // <- this must be 'file'
 ) => {
   const formData = new FormData();
   formData.append('data', JSON.stringify(brief));
-  if (product_image_urls) formData.append('product_image_urls', product_image_urls);
+  if (file) formData.append('file', file); // <-- must be 'file' to match backend
 
   const response = await api.patch(
     CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id),

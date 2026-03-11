@@ -1,6 +1,9 @@
 export interface CampaignBriefResponseContent {
   title: string;
   brand_name_influencer_campaign_brief: string;
+
+  product_image_urls?: string[] | null
+  video_links?: string[] | null
   campaign_overview: string[];
   campaign_objectives: string[];
   target_audience: string[];
