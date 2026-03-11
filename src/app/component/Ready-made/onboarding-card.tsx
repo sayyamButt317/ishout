@@ -1,21 +1,17 @@
-import { PlatformType } from "@/src/types/readymadeinfluencers-type";
-import Image from "next/image";
-import CustomButton from "../button";
-import {
-  MapPin,
-  Trash2,
-} from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer";
+import { PlatformType } from '@/src/types/readymadeinfluencers-type';
+import Image from 'next/image';
+import CustomButton from '../button';
+import { MapPin, Trash2 } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influencer';
 import {
   formatFollowers,
   formatEngagementRate,
   UsernameLink,
-} from "@/src/helper/followersformat";
-import { SiInstagram, SiTiktok, SiWhatsapp, SiYoutube } from "react-icons/si";
-import { useRouter } from "next/navigation";
-
+} from '@/src/helper/followersformat';
+import { SiInstagram, SiTiktok, SiWhatsapp, SiYoutube } from 'react-icons/si';
+import { useRouter } from 'next/navigation';
 
 interface OnboardingCardProps {
   influencer: ReviewInfluencerResponse;
@@ -41,14 +37,14 @@ const OnboardingCard = ({
   lastOfferedPrice,
 }: OnboardingCardProps) => {
   const router = useRouter();
-  
+
   const handleViewProfile = () => {
-    if (influencer?.platform === "instagram") {
-      window.open(`https://www.instagram.com/${influencer?.username}`, "_blank");
-    } else if (influencer?.platform === "tiktok") {
-      window.open(`https://www.tiktok.com/@${influencer?.username}`, "_blank");
-    } else if (influencer?.platform === "youtube") {
-      window.open(`https://www.youtube.com/@${influencer?.username}`, "_blank");
+    if (influencer?.platform === 'instagram') {
+      window.open(`https://www.instagram.com/${influencer?.username}`, '_blank');
+    } else if (influencer?.platform === 'tiktok') {
+      window.open(`https://www.tiktok.com/@${influencer?.username}`, '_blank');
+    } else if (influencer?.platform === 'youtube') {
+      window.open(`https://www.youtube.com/@${influencer?.username}`, '_blank');
     }
   };
 
@@ -78,27 +74,29 @@ const OnboardingCard = ({
                   window.open(
                     UsernameLink(
                       influencer?.platform as PlatformType,
-                      influencer?.username
+                      influencer?.username,
                     ),
-                    "_blank"
+                    '_blank',
                   )
                 }
               >
-                @{influencer?.username || "No name available"}
+                @{influencer?.username || 'No name available'}
               </div>
               <div className="mt-1 flex items-center gap-1.5 text-xs text-white/60 min-w-0">
                 <MapPin className="h-3.5 w-3.5 shrink-0" />
                 <span className="truncate">{influencer?.country}</span>
                 <span className="text-white/25 text-sm">|</span>
                 <span className="inline-flex items-center gap-1.5">
-                  {influencer?.platform === "instagram" ? (
+                  {influencer?.platform === 'instagram' ? (
                     <SiInstagram className="text-primarytext" size={14} />
-                  ) : influencer?.platform === "tiktok" ? (
+                  ) : influencer?.platform === 'tiktok' ? (
                     <SiTiktok className="text-white" size={14} />
                   ) : (
                     <SiYoutube className="text-red-500" size={14} />
                   )}
-                  <span className="text-white/60 capitalize text-xs">{influencer?.platform}</span>
+                  <span className="text-white/60 capitalize text-xs">
+                    {influencer?.platform}
+                  </span>
                 </span>
               </div>
             </div>
@@ -130,10 +128,7 @@ const OnboardingCard = ({
           <CustomButton
             className="h-10 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal text-sm"
             onClick={() => {
-              onMessage(
-                influencer?.platform as PlatformType,
-                influencer?.username
-              );
+              onMessage(influencer?.platform as PlatformType, influencer?.username);
             }}
           >
             Message
@@ -181,7 +176,10 @@ const OnboardingCard = ({
           <div className="py-3 text-center">
             <p className="text-sm text-white/75">Last Offered Price</p>
             <p className="mt-1 text-lg font-semibold text-white">
-              ${lastOfferedPrice !== null && lastOfferedPrice !== undefined ? lastOfferedPrice : 0}
+              $
+              {lastOfferedPrice !== null && lastOfferedPrice !== undefined
+                ? lastOfferedPrice
+                : 0}
             </p>
           </div>
         </div>
@@ -189,19 +187,21 @@ const OnboardingCard = ({
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
             <p className="text-sm text-white/75 whitespace-nowrap">Admin Status</p>
             <p
-              className={`mt-1 text-base font-normal ${influencer?.admin_approved ? "text-emerald-400" : "text-red-400"
-                } whitespace-nowrap`}
+              className={`mt-1 text-base font-normal ${
+                influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'
+              } whitespace-nowrap`}
             >
-              {influencer?.admin_approved ? "Approved" : "Not Approved"}
+              {influencer?.admin_approved ? 'Approved' : 'Not Approved'}
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
             <p className="text-sm text-white/75 whitespace-nowrap">Company Status</p>
             <p
-              className={`mt-1 text-base font-normal ${influencer?.company_approved ? "text-emerald-400" : "text-red-400"
-                } whitespace-nowrap`}
+              className={`mt-1 text-base font-normal ${
+                influencer?.company_approved ? 'text-emerald-400' : 'text-red-400'
+              } whitespace-nowrap`}
             >
-              {influencer?.company_approved ? "Approved" : "Not Approved"}
+              {influencer?.company_approved ? 'Approved' : 'Not Approved'}
             </p>
           </div>
         </div>
@@ -237,7 +237,11 @@ const OnboardingCard = ({
         {sendNegotiation && (
           <div className="mt-6 flex items-center gap-3">
             <CustomButton
-              disabled={influencer?.phone_number && influencer?.min_price && influencer?.max_price ? false : true}
+              disabled={
+                influencer?.phone_number && influencer?.min_price && influencer?.max_price
+                  ? false
+                  : true
+              }
               onClick={() => sendNegotiation(influencer)}
               className="flex-1 h-12 rounded-2xl bg-[#ED3E75] text-white italic"
             >
@@ -248,6 +252,6 @@ const OnboardingCard = ({
       </div>
     </Card>
   );
-}
+};
 
 export default OnboardingCard;

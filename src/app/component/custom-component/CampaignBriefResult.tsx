@@ -18,6 +18,8 @@ interface Props {
 }
 
 const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
+  const [campaignImage, setCampaignImage] = useState<File | null>(null);
+  const [video_links, setCampaignUrl] = useState('');
   const [copied, setCopied] = useState(false);
   const [editable, setEditable] = useState(false);
   const [localBrief, setLocalBrief] = useState<CampaignBrief>(brief);
@@ -35,24 +37,31 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
   };
 
   const handleSave = () => {
-    if (!localBrief.id) {
-      toast.error('Brief ID missing');
-      return;
-    }
+  if (!localBrief.id) {
+    toast.error('Brief ID missing');
+    return;
+  }
 
-    const payload: UpdateCampaignBrief = {
-      ...localBrief,
-      id: localBrief.id,
-    };
+  const payload: UpdateCampaignBrief = {
+    ...localBrief,
+    id: localBrief.id,
+    video_links: video_links ? [video_links] : [],
+  };
 
-    updateBrief(payload, {
+  updateBrief(
+    {
+      brief: payload,
+      product_image_urls: campaignImage, // this will now be sent as 'file'
+    },
+    {
       onSuccess: (data) => {
         setLocalBrief(data);
         setEditable(false);
         toast.success('Campaign brief updated');
       },
-    });
-  };
+    },
+  );
+};
 
   const handleApprove = () => {
     toast.success('Campaign approved');
@@ -225,6 +234,37 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
           editable={editable}
           onChange={(v) => updateSection('dos_donts', v)}
         />
+      </div>
+      {/* EXTRA FIELDS */}
+      <div className="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 mb-14 shadow-xl space-y-4">
+        {/* IMAGE FIELD */}
+        <div>
+          <label className="text-sm text-neutral-400 mb-2 block">Campaign Image</label>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files?.[0]) {
+                setCampaignImage(e.target.files[0]);
+              }
+            }}
+            className="text-sm text-white"
+          />
+        </div>
+
+        {/* URL FIELD */}
+        <div>
+          <label className="text-sm text-neutral-400 mb-2 block">Video Links</label>
+
+          <input
+            type="text"
+            placeholder="https://example.com"
+            value={video_links}
+            onChange={(e) => setCampaignUrl(e.target.value)}
+            className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm"
+          />
+        </div>
       </div>
     </div>
   );
