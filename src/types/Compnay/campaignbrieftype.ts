@@ -21,6 +21,7 @@ export interface CampaignBrief {
 // campaignbrieftype.ts
 export interface UpdateCampaignBrief {
     id: string; 
+    video_links?: string[] | null;
     campaign_logo_url?: string | null;
     brand_name_influencer_campaign_brief: string;
     campaign_overview: string[];
@@ -36,4 +37,10 @@ export interface UpdateCampaignBrief {
     kpis_success_metrics: string[];
     usage_rights: string[];
     dos_donts: string[];
+}
+
+// New payload type
+export interface UpdateCampaignBriefPayload {
+  brief: UpdateCampaignBrief;
+  product_image_urls?: File | null;
 }
