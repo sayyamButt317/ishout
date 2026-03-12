@@ -1,11 +1,11 @@
-import React from "react";
-import CustomButton from "../button";
-import Spinner from "../custom-component/spinner";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
-import { X, ChevronDown } from "lucide-react";
-import { toast } from "sonner";
-import CreateCampaignHook from "@/src/routes/Company/api/Hooks/create-campaign.hook";
-import useAuthStore from "@/src/store/AuthStore/authStore";
+import React from 'react';
+import CustomButton from '../button';
+import Spinner from '../custom-component/spinner';
+import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
+import { X, ChevronDown } from 'lucide-react';
+import { toast } from 'sonner';
+import CreateCampaignHook from '@/src/routes/Company/api/Hooks/create-campaign.hook';
+import useAuthStore from '@/src/store/AuthStore/authStore';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,19 +13,19 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Platforms } from "@/src/constant/platform";
-import { campaignNames } from "@/src/constant/campaignname";
-import { rangeOfFollowers } from "@/src/constant/rangeoffollowers";
-import { INSTAGRAM_INFLUENCERS_COUNTRIES } from "@/src/constant/country";
-import { NumberofFollowers } from "@/src/constant/numberofInfluencers";
+} from '@/components/ui/dropdown-menu';
+import { Platforms } from '@/src/constant/platform';
+import { campaignNames } from '@/src/constant/campaignname';
+import { rangeOfFollowers } from '@/src/constant/rangeoffollowers';
+import { INSTAGRAM_INFLUENCERS_COUNTRIES } from '@/src/constant/country';
+import { NumberofFollowers } from '@/src/constant/numberofInfluencers';
 
 interface SummaryPopupProps {
   onClose: () => void;
 }
 
 interface FieldConfig {
-  key: "platform" | "category" | "followers" | "country" | "limit";
+  key: 'platform' | 'category' | 'followers' | 'country' | 'limit';
   label: string;
   color: {
     dot: string;
@@ -42,74 +42,79 @@ interface FieldConfig {
 
 const fieldConfigs: FieldConfig[] = [
   {
-    key: "platform",
-    label: "Platform",
+    key: 'platform',
+    label: 'Platform',
     color: {
-      dot: "bg-blue-400",
-      gradient: "from-blue-500/20 to-cyan-500/20",
-      border: "border-blue-400/30",
-      text: "text-blue-100",
-      button: "bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 text-blue-100",
-      ring: "ring-blue-400/50",
+      dot: 'bg-blue-400',
+      gradient: 'from-blue-500/20 to-cyan-500/20',
+      border: 'border-blue-400/30',
+      text: 'text-blue-100',
+      button:
+        'bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 text-blue-100',
+      ring: 'ring-blue-400/50',
     },
-    placeholder: "Enter platform (e.g., Instagram)",
+    placeholder: 'Enter platform (e.g., Instagram)',
     isArray: true,
   },
   {
-    key: "category",
-    label: "Category",
+    key: 'category',
+    label: 'Category',
     color: {
-      dot: "bg-purple-400",
-      gradient: "from-purple-500/20 to-pink-500/20",
-      border: "border-purple-400/30",
-      text: "text-purple-100",
-      button: "bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/30 text-purple-100",
-      ring: "ring-purple-400/50",
+      dot: 'bg-purple-400',
+      gradient: 'from-purple-500/20 to-pink-500/20',
+      border: 'border-purple-400/30',
+      text: 'text-purple-100',
+      button:
+        'bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/30 text-purple-100',
+      ring: 'ring-purple-400/50',
     },
-    placeholder: "Enter category (e.g., Fashion)",
+    placeholder: 'Enter category (e.g., Fashion)',
     isArray: true,
   },
   {
-    key: "followers",
-    label: "Follower Range",
+    key: 'followers',
+    label: 'Follower Range',
     color: {
-      dot: "bg-amber-400",
-      gradient: "from-amber-500/20 to-orange-500/20",
-      border: "border-amber-400/30",
-      text: "text-amber-100",
-      button: "bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-amber-100",
-      ring: "ring-amber-400/50",
+      dot: 'bg-amber-400',
+      gradient: 'from-amber-500/20 to-orange-500/20',
+      border: 'border-amber-400/30',
+      text: 'text-amber-100',
+      button:
+        'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-amber-100',
+      ring: 'ring-amber-400/50',
     },
-    placeholder: "Enter follower range (e.g., 10k-50k)",
+    placeholder: 'Enter follower range (e.g., 10k-50k)',
     isArray: true,
   },
   {
-    key: "limit",
-    label: "Influencer Count",
+    key: 'limit',
+    label: 'Influencer Count',
     color: {
-      dot: "bg-emerald-400",
-      gradient: "from-emerald-500/20 to-teal-500/20",
-      border: "border-emerald-400/30",
-      text: "text-emerald-100",
-      button: "bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/30 text-emerald-100",
-      ring: "ring-emerald-400/50",
+      dot: 'bg-emerald-400',
+      gradient: 'from-emerald-500/20 to-teal-500/20',
+      border: 'border-emerald-400/30',
+      text: 'text-emerald-100',
+      button:
+        'bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/30 text-emerald-100',
+      ring: 'ring-emerald-400/50',
     },
-    placeholder: "Enter influencer count (e.g., 20)",
+    placeholder: 'Enter influencer count (e.g., 20)',
     isArray: false,
     displayValue: (value) => `${value} influencers`,
   },
   {
-    key: "country",
-    label: "Countries",
+    key: 'country',
+    label: 'Countries',
     color: {
-      dot: "bg-rose-400",
-      gradient: "from-rose-500/20 to-pink-500/20",
-      border: "border-rose-400/30",
-      text: "text-rose-100",
-      button: "bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-100",
-      ring: "ring-rose-400/50",
+      dot: 'bg-rose-400',
+      gradient: 'from-rose-500/20 to-pink-500/20',
+      border: 'border-rose-400/30',
+      text: 'text-rose-100',
+      button:
+        'bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-100',
+      ring: 'ring-rose-400/50',
     },
-    placeholder: "Enter country (e.g., Saudi Arabia)",
+    placeholder: 'Enter country (e.g., Saudi Arabia)',
     isArray: true,
   },
 ];
@@ -132,7 +137,9 @@ const EditableField = ({
   const [open, setOpen] = React.useState(false);
 
   const selectedItems = config.isArray
-    ? (Array.isArray(value) ? value : [])
+    ? Array.isArray(value)
+      ? value
+      : []
     : value
       ? [value]
       : [];
@@ -157,19 +164,23 @@ const EditableField = ({
       <div className="flex flex-wrap gap-1.5 lg:gap-2 min-h-[24px] lg:min-h-[28px] mb-2 lg:mb-3">
         {selectedItems.length > 0
           ? selectedItems.map((item, i) => (
-            <span
-              key={`${item}-${i}`}
-              className={`inline-flex items-center gap-1 rounded-full bg-gradient-to-r ${config.color.gradient} ${config.color.border} border px-2 py-1 ${config.color.text} text-[10px] lg:text-xs font-medium`}
-            >
-              {config.isArray ? item : config.displayValue ? config.displayValue(item) : item}
-              <button
-                className="hover:bg-white/20 rounded-full p-0.5 transition-colors duration-200"
-                onClick={() => onRemove(item)}
+              <span
+                key={`${item}-${i}`}
+                className={`inline-flex items-center gap-1 rounded-full bg-gradient-to-r ${config.color.gradient} ${config.color.border} border px-2 py-1 ${config.color.text} text-[10px] lg:text-xs font-medium`}
               >
-                <X className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
-              </button>
-            </span>
-          ))
+                {config.isArray
+                  ? item
+                  : config.displayValue
+                    ? config.displayValue(item)
+                    : item}
+                <button
+                  className="hover:bg-white/20 rounded-full p-0.5 transition-colors duration-200"
+                  onClick={() => onRemove(item)}
+                >
+                  <X className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
+                </button>
+              </span>
+            ))
           : null}
       </div>
       <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -265,15 +276,15 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
 
   const getOptionsForField = (key: string): string[] => {
     switch (key) {
-      case "platform":
+      case 'platform':
         return Platforms.map((p) => p.name);
-      case "category":
+      case 'category':
         return campaignNames;
-      case "followers":
+      case 'followers':
         return rangeOfFollowers;
-      case "country":
+      case 'country':
         return INSTAGRAM_INFLUENCERS_COUNTRIES;
-      case "limit":
+      case 'limit':
         return NumberofFollowers;
       default:
         return [];
@@ -282,7 +293,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
 
   const handleSelect = (config: FieldConfig, item: string) => {
     if (config.isArray) {
-      addToArray(config.key as "platform" | "category" | "followers" | "country", item);
+      addToArray(config.key as 'platform' | 'category' | 'followers' | 'country', item);
     } else {
       setField(config.key, item);
     }
@@ -290,9 +301,12 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
 
   const handleRemove = (config: FieldConfig, item: string) => {
     if (config.isArray) {
-      removeFromArray(config.key as "platform" | "category" | "followers" | "country" | "limit", item);
+      removeFromArray(
+        config.key as 'platform' | 'category' | 'followers' | 'country' | 'limit',
+        item,
+      );
     } else {
-      setField(config.key, "");
+      setField(config.key, '');
     }
   };
 
@@ -357,13 +371,12 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
 
             <div className="flex items-center gap-2 text-xs lg:text-sm mb-6">
               <div
-                className={`h-2 w-2 rounded-full ${isFormComplete ? "bg-primaryButton animate-pulse" : "bg-amber-400"
-                  }`}
+                className={`h-2 w-2 rounded-full ${
+                  isFormComplete ? 'bg-primaryButton animate-pulse' : 'bg-amber-400'
+                }`}
               />
-              <span
-                className={`${isFormComplete ? "text-green-200" : "text-amber-200"}`}
-              >
-                {isFormComplete ? "Ready to launch" : "Complete all fields"}
+              <span className={`${isFormComplete ? 'text-green-200' : 'text-amber-200'}`}>
+                {isFormComplete ? 'Ready to launch' : 'Complete all fields'}
               </span>
             </div>
 
@@ -391,10 +404,11 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                 <CustomButton
                   onClick={() => handleLaunchCampaign()}
                   disabled={!isFormComplete || isPending}
-                  className={`flex-1 px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 hover:scale-105 ${isFormComplete
-                    ? "bg-primaryButton hover:bg-primaryHover text-white"
-                    : "bg-slate-600 text-slate-400 cursor-not-allowed"
-                    }`}
+                  className={`flex-1 px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 hover:scale-105 ${
+                    isFormComplete
+                      ? 'bg-primaryButton hover:bg-primaryHover text-white'
+                      : 'bg-slate-600 text-slate-400 cursor-not-allowed'
+                  }`}
                 >
                   {isPending ? (
                     <div className="flex items-center justify-center gap-2">
@@ -402,18 +416,17 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                       Launching...
                     </div>
                   ) : (
-                    "Launch Campaign"
+                    'Launch Campaign'
                   )}
                 </CustomButton>
               </div>
               <div className="text-center">
                 <p className="text-xs lg:text-sm text-slate-400">
                   {isFormComplete
-                    ? "🎉 Your campaign is ready to launch!"
-                    : "Complete all fields above to launch your campaign"}
+                    ? '🎉 Your campaign is ready to launch!'
+                    : 'Complete all fields above to launch your campaign'}
                 </p>
               </div>
-
             </div>
           </div>
         </div>

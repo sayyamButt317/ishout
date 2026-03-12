@@ -37,34 +37,33 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
   };
 
   const handleSave = () => {
-  if (!localBrief.id) {
-    toast.error('Brief ID missing');
-    return;
-  }
+    if (!localBrief.id) {
+      toast.error('Brief ID missing');
+      return;
+    }
 
-  const payload: UpdateCampaignBrief = {
-    ...localBrief,
-    id: localBrief.id,
-    video_links: video_links ? [video_links] : [],
+    const payload: UpdateCampaignBrief = {
+      ...localBrief,
+      id: localBrief.id,
+      video_links: video_links ? [video_links] : [],
+    };
+
+    updateBrief(
+      {
+        brief: payload,
+        product_image_urls: campaignImage, // this will now be sent as 'file'
+      },
+      {
+        onSuccess: (data) => {
+          setLocalBrief(data);
+          setEditable(false);
+          toast.success('Campaign brief updated');
+        },
+      },
+    );
   };
 
-  updateBrief(
-    {
-      brief: payload,
-      product_image_urls: campaignImage, // this will now be sent as 'file'
-    },
-    {
-      onSuccess: (data) => {
-        setLocalBrief(data);
-        setEditable(false);
-        toast.success('Campaign brief updated');
-      },
-    },
-  );
-};
-
   const handleApprove = () => {
-    toast.success('Campaign approved');
     onApprove?.();
   };
 
@@ -244,12 +243,13 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
           <input
             type="file"
             accept="image/*"
+            disabled={!editable}
             onChange={(e) => {
               if (e.target.files?.[0]) {
                 setCampaignImage(e.target.files[0]);
               }
             }}
-            className="text-sm text-white"
+            className={`text-sm text-white ${!editable ? 'opacity-50 cursor-not-allowed' : ''}`}
           />
         </div>
 
@@ -261,8 +261,11 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
             type="text"
             placeholder="https://example.com"
             value={video_links}
+            disabled={!editable}
             onChange={(e) => setCampaignUrl(e.target.value)}
-            className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm"
+            className={`w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm ${
+              !editable ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           />
         </div>
       </div>
