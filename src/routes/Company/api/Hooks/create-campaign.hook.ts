@@ -1,28 +1,29 @@
-import { FindInfluencer } from "@/src/routes/Company/api/company.routes";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
-import { toast } from "sonner";
-import { FindInfluencerRequestProps } from "@/src/types/readymadeinfluencers-type";
-import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
-
+import { FindInfluencer } from '@/src/routes/Company/api/company.routes';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { toast } from 'sonner';
+import { FindInfluencerRequestProps } from '@/src/types/readymadeinfluencers-type';
+import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 
 export default function CreateCampaignHook() {
   const queryClient = useQueryClient();
   const { setResults } = useReadyMadeTemplateStore();
   return useMutation({
-    mutationFn: (influencerRequest: FindInfluencerRequestProps) => FindInfluencer(influencerRequest),
+    mutationFn: (influencerRequest: FindInfluencerRequestProps) =>
+      FindInfluencer(influencerRequest),
     onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['create-campaign'] });
       setResults(data);
-      toast.success('Influencers generated successfully', {
-        description: 'You will be notified when the influencers are approved',
+      toast.success('Campaign created successfully', {
+        // description: 'You will be notified when the influencers are approved',
       });
     },
     onError: (error) => {
       const axiosError = error as AxiosError<{ detail: string }>;
-      toast.error('Failed to find influencer', {
+      toast.error('Failed to Create Campaign', {
         description:
-          axiosError.response?.data?.detail || 'An error occurred during influencer finding.',
+          axiosError.response?.data?.detail ||
+          'An error occurred during influencer finding.',
       });
     },
   });

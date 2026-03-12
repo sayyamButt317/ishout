@@ -81,7 +81,7 @@ const ApprovedCampaignPage = () => {
           'Delete',
         ]}
         imageUrls={data?.campaigns?.map(
-          (campaign: ApprovedCampaignResponse) => campaign?.logo_url || null,
+          (campaign: ApprovedCampaignResponse) => campaign?.campaign_logo_url || null,
         )}
         statuses={data?.campaigns?.map(
           (campaign: ApprovedCampaignResponse) => campaign?.status,

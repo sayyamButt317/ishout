@@ -18,6 +18,9 @@ import CustomButton from '@/src/app/component/button';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
+import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
+import Image from 'next/image';
+import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: 'all' },
@@ -44,6 +47,8 @@ export default function AllCampaignPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
+  const [uploadModalOpen, setUploadModalOpen] = useState<string | null>(null);
+  const uploadLogoMutation = UploadCampaignLogoHook();
 
   const updateStatusHook = UpdateStatusHook();
 
@@ -137,88 +142,61 @@ export default function AllCampaignPage() {
           'Action',
           'View Brief',
         ]}
-        imageUrls={campaigns.map(
-          (campaign: AdminAllCampaignApiResponse) => campaign?.logo_url || null,
-        )}
-        statuses={campaigns.map(
-          (campaign: AdminAllCampaignApiResponse) => campaign.status,
-        )}
-        campaignIds={campaigns.map(
-          (campaign: AdminAllCampaignApiResponse) => campaign._id,
-        )}
-        subheader={campaigns.map((campaign: AdminAllCampaignApiResponse) => [
-          <div key={`company-name-${campaign._id}`} className="truncate">
-            {campaign?.company_name}
-          </div>,
-          <div key={`campaign-name-${campaign._id}`} className="truncate">
-            {campaign?.name}
-          </div>,
-          <div key={`source-${campaign._id}`} className="truncate">
-            {campaign?.user_type}
-          </div>,
-          <div key={`platform-${campaign._id}`} className="truncate">
-            <PlatformBadge platform={campaign?.platform} />
-          </div>,
-          <div key={`category-${campaign._id}`} className="truncate">
-            {campaign?.category?.join(', ') || '-'}
-          </div>,
-          <div key={`followers-${campaign._id}`} className="truncate">
-            {campaign?.followers?.join(', ') || '-'}
-          </div>,
-          <div key={`country-${campaign._id}`} className="truncate">
-            {campaign?.country?.join(', ') || '-'}
-          </div>,
-          <div key={`requested-${campaign._id}`} className="truncate">
-            <CountButton count={campaign?.limit} />
-          </div>,
-          <div key={`status-${campaign._id}`} className="truncate">
-            <DropDownCustomStatus
-              status={campaign.status}
-              updateStatus={(status: string) => {
-                updateStatusHook.mutate({
-                  campaign_id: campaign._id,
-                  status: status,
-                });
-              }}
-            />
-          </div>,
-          <div key={`created-at-${campaign._id}`} className="truncate">
-            {new Date(campaign.created_at).toLocaleDateString()}
-          </div>,
-          <div key={`share-${campaign._id}`} className="truncate cursor-pointer">
-            {campaign?.user_type === 'Website' ? (
-              <WhatsAppShareButton userId={campaign?.user_id ?? ''} />
-            ) : (
-              <WhatsAppShareButton userId={campaign?.user_id ?? ''} />
-            )}
-          </div>,
-          <div key={`delete-${campaign._id}`} className="truncate">
-            <Button
-              variant="ghost"
-              size="icon"
-              disabled={deleteCampaignHook.isPending}
-              onClick={() => {
-                deleteCampaignHook.mutate(campaign._id);
-              }}
-            >
-              <Trash className="size-5 text-red-300 cursor-pointer" />
-            </Button>
-          </div>,
-          <div key={`view-brief-${campaign._id}`} className="truncate">
-            <Button
-              className="bg-secondaryButton hover:bg-secondaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-              disabled={!campaign.brief_id}
-              onClick={() => {
-                if (campaign.brief_id) {
-                  setSelectedBriefId(campaign.brief_id);
-                  setDialogOpen(true);
-                }
-              }}
-            >
-              View Brief
-            </Button>
-          </div>,
+        imageUrls={campaigns.map((campaign) => campaign.campaign_logo_url || null)}
+        statuses={campaigns.map((campaign) => campaign.status)}
+        campaignIds={campaigns.map((campaign) => campaign._id)}
+        subheader={campaigns.map((campaign) => [
+          campaign.company_name,
+          campaign.name,
+          campaign.user_type,
+          <PlatformBadge key={campaign._id} platform={campaign.platform} />,
+          campaign.category?.join(', ') || '-',
+          campaign.followers?.join(', ') || '-',
+          campaign.country?.join(', ') || '-',
+          <CountButton key={campaign._id} count={campaign.limit} />,
+          <DropDownCustomStatus
+            key={campaign._id}
+            status={campaign.status}
+            updateStatus={(status: string) =>
+              updateStatusHook.mutate({ campaign_id: campaign._id, status })
+            }
+          />,
+          new Date(campaign.created_at).toLocaleDateString(),
+          <WhatsAppShareButton key={campaign._id} userId={campaign.user_id || ''} />,
+          <Button
+            key={campaign._id}
+            variant="ghost"
+            size="icon"
+            onClick={() => deleteCampaignHook.mutate(campaign._id)}
+          >
+            <Trash className="text-red-300" />
+          </Button>,
+          <Button
+            key={campaign._id}
+            className="bg-secondaryButton hover:bg-secondaryHover text-white text-xs px-3"
+            disabled={!campaign.brief_id}
+            onClick={() => {
+              if (campaign.brief_id) {
+                setSelectedBriefId(campaign.brief_id);
+                setDialogOpen(true);
+              }
+            }}
+          >
+            View Brief
+          </Button>,
         ])}
+        onImageUpload={(rowIndex, file) => {
+          const campaign = campaigns[rowIndex];
+          if (!campaign) return;
+          uploadLogoMutation.mutate(
+            { brief_id: campaign.brief_id!, file },
+            {
+              onSuccess: () => {
+                refetch();
+              },
+            },
+          );
+        }}
         paginationstart={data?.page ?? currentPage}
         paginationend={totalPages}
         onPageChange={handlePageChange}
@@ -229,6 +207,26 @@ export default function AllCampaignPage() {
         onOpenChange={setDialogOpen}
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
+      />
+      <ImageUploadModal
+        open={uploadModalOpen !== null}
+        onClose={() => setUploadModalOpen(null)}
+        onUpload={(file) => {
+          if (!uploadModalOpen) return;
+
+          uploadLogoMutation.mutate(
+            {
+              brief_id: uploadModalOpen,
+              file: file,
+            },
+            {
+              onSuccess: () => {
+                setUploadModalOpen(null);
+                refetch(); // refresh table
+              },
+            },
+          );
+        }}
       />
     </>
   );

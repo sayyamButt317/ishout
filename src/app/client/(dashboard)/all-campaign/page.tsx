@@ -1,34 +1,40 @@
-"use client";
-import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import StatusBadge from "@/src/app/component/custom-component/statusbadge";
-import TableComponent from "@/src/app/component/CustomTable";
-import CompanyCampaignHook from "@/src/routes/Company/api/Hooks/companyCampaign.hook";
-import { CompanyCampaignResponse } from "@/src/types/Admin-Type/Campaign.type";
-import { useState } from "react";
+'use client';
+import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
+import StatusBadge from '@/src/app/component/custom-component/statusbadge';
+import TableComponent from '@/src/app/component/CustomTable';
+import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.hook';
+import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
+import { useState } from 'react';
 
 export default function AllCampaign() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = CompanyCampaignHook(currentPage);
   return (
     <>
+      <h1 className="py-4 italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
+        All Campaigns
+      </h1>
       <TableComponent
         header={[
-          "Campaign Name",
-          "followers",
-          "Platform",
-          "Requested ",
+          'Campaign Name',
+          'followers',
+          'Platform',
+          'Requested ',
           // "Approved ",
           // "Rejected ",
-          "Status",
-          "Created At",
+          'Status',
+          'Created At',
           //   "View",
         ]}
+        imageUrls={data?.campaigns?.map(
+          (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
+        )}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
           <div key={`name-${campaign?.campaign_id}`} className="truncate">
             {campaign?.name}
           </div>,
           <div key={`followers-${campaign?.campaign_id}`} className="truncate">
-            {campaign?.followers?.join(", ")}
+            {campaign?.followers?.join(', ')}
           </div>,
           <div key={`platform-${campaign?.campaign_id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
