@@ -1,41 +1,41 @@
-"use client";
-import { useCallback, useState, useMemo, useEffect } from "react";
-import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
-import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer"
-import { ArrowLeft, RefreshCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { PlatformType } from "@/src/types/readymadeinfluencers-type";
-import { useParams } from "next/navigation";
-import CustomButton from "@/src/app/component/button";
-import { useRouter } from "next/navigation";
-import ChooseOptionDialog from "@/src/app/component/custom-component/choseoptionDialogue";
-import OnboardingCard from "@/src/app/component/Ready-made/onboarding-card";
-import SendNegotiationHook from "@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook";
-import NegotiationStatsHook from "@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook";
-
+'use client';
+import { useCallback, useState, useMemo, useEffect } from 'react';
+import OnboardingHook from '@/src/routes/Admin/Hooks/onboarding-hook';
+import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influencer';
+import { ArrowLeft, RefreshCcw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { PlatformType } from '@/src/types/readymadeinfluencers-type';
+import { useParams } from 'next/navigation';
+import CustomButton from '@/src/app/component/button';
+import { useRouter } from 'next/navigation';
+import ChooseOptionDialog from '@/src/app/component/custom-component/choseoptionDialogue';
+import OnboardingCard from '@/src/app/component/Ready-made/onboarding-card';
+import SendNegotiationHook from '@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook';
+import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
 
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
   const { mutate: sendNegotiationMutation, isPending } = SendNegotiationHook();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, refetch, isRefetching } = OnboardingHook(
-    Id,
-    currentPage
-  );
+  const { data, isLoading, refetch, isRefetching } = OnboardingHook(Id, currentPage);
   const { data: negotiationData } = NegotiationStatsHook(1, 100);
-  
-  const getNegotiationForInfluencer = useCallback((influencer: ReviewInfluencerResponse) => {
-    if (!negotiationData?.negotiation_controls) return null;
-    const negotiation = negotiationData.negotiation_controls.find((n: any) => 
-      n.influencer_id === influencer._id
-    );
-    return negotiation ? {
-      _id: negotiation._id,
-      last_offered_price: negotiation.last_offered_price,
-    } : null;
-  }, [negotiationData]);
 
+  const getNegotiationForInfluencer = useCallback(
+    (influencer: ReviewInfluencerResponse) => {
+      if (!negotiationData?.negotiation_controls) return null;
+      const negotiation = negotiationData.negotiation_controls.find(
+        (n: any) => n.influencer_id === influencer._id,
+      );
+      return negotiation
+        ? {
+            _id: negotiation._id,
+            last_offered_price: negotiation.last_offered_price,
+          }
+        : null;
+    },
+    [negotiationData],
+  );
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState<{
@@ -49,17 +49,13 @@ export default function OnboardingInfluencerByCampaignId() {
     max_price: number;
   } | null>(null);
 
-
-  const handleMessage = useCallback(
-    (platform: PlatformType, username: string) => {
-      if (platform === "instagram") {
-        window.open(`https://ig.me/m/${username}`, "_blank");
-      } else if (platform === "tiktok") {
-        window.open(`https://www.tiktok.com/@${username}`, "_blank");
-      }
-    },
-    []
-  );
+  const handleMessage = useCallback((platform: PlatformType, username: string) => {
+    if (platform === 'instagram') {
+      window.open(`https://ig.me/m/${username}`, '_blank');
+    } else if (platform === 'tiktok') {
+      window.open(`https://www.tiktok.com/@${username}`, '_blank');
+    }
+  }, []);
 
   const handleEdit = useCallback((influencer: ReviewInfluencerResponse) => {
     setSelectedInfluencer({
@@ -68,16 +64,19 @@ export default function OnboardingInfluencerByCampaignId() {
       platform: influencer.platform,
       picture: influencer.picture,
       influencer_id: influencer.influencer_id,
-      phone_number: influencer.phone_number || "",
+      phone_number: influencer.phone_number || '',
       min_price: influencer.min_price || 0,
       max_price: influencer.max_price || 0,
     });
     setDialogOpen(true);
   }, []);
 
-  const handleSendNegotiation = useCallback((influencer_id: string) => {
-    sendNegotiationMutation(influencer_id);
-  }, [sendNegotiationMutation]);
+  const handleSendNegotiation = useCallback(
+    (influencer_id: string) => {
+      sendNegotiationMutation(influencer_id);
+    },
+    [sendNegotiationMutation],
+  );
 
   return (
     <>
@@ -97,8 +96,9 @@ export default function OnboardingInfluencerByCampaignId() {
               disabled={isRefetching}
             >
               <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-                  }`}
+                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
+                  isRefetching ? 'animate-spin' : ''
+                }`}
               />
             </Button>
           </div>
@@ -126,7 +126,7 @@ export default function OnboardingInfluencerByCampaignId() {
       )}
 
       {data?.influencers?.length ? (
-        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-3 sm:gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
+        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
           {data?.influencers?.map((influencer: ReviewInfluencerResponse) => {
             const negotiation = getNegotiationForInfluencer(influencer);
             return (

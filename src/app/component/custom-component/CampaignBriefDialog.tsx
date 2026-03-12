@@ -122,15 +122,20 @@ export default function CampaignBriefDialog({
   const handleSave = () => {
     if (!localBrief?.id) return toast.error('Brief ID missing');
 
-    updateBrief(localBrief, {
-      onSuccess: (data) => {
-        toast.success('Campaign brief updated successfully');
-        setLocalBrief(data);
-        setEditable(false);
-        if (onUpdate) onUpdate(data);
+    updateBrief(
+      {
+        brief: localBrief,
       },
-      onError: () => toast.error('Failed to update campaign brief'),
-    });
+      {
+        onSuccess: (data) => {
+          toast.success('Campaign brief updated successfully');
+          setLocalBrief(data);
+          setEditable(false);
+          if (onUpdate) onUpdate(data);
+        },
+        onError: () => toast.error('Failed to update campaign brief'),
+      },
+    );
   };
 
   if (!localBrief) return null;
@@ -277,6 +282,52 @@ export default function CampaignBriefDialog({
             editable={editable}
             onChange={(v) => updateSection('dos_donts', v)}
           />
+        </div>
+        {/* MEDIA SECTION */}
+        <div className="px-10 pb-10 space-y-6">
+          {/* Product Images */}
+          {localBrief.product_image_urls && localBrief.product_image_urls.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-3">Product Images</h3>
+
+              <div className="flex flex-wrap gap-4">
+                {localBrief.product_image_urls.map((img: string, index: number) => (
+                  <div
+                    key={index}
+                    className="relative w-28 h-28 rounded-xl overflow-hidden border border-white/10"
+                  >
+                    <Image
+                      src={img}
+                      alt={`product-${index}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Video Links */}
+          {localBrief.video_links && localBrief.video_links.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-3">Video Links</h3>
+
+              <div className="flex flex-col gap-2">
+                {localBrief.video_links.map((link: string, index: number) => (
+                  <a
+                    key={index}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primaryButton hover:underline text-sm"
+                  >
+                    {link}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

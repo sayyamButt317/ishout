@@ -82,7 +82,13 @@ export default function OnboardingCampaignPage() {
           'Delete',
         ]}
         imageUrls={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign?.logo_url || null,
+          (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
+        )}
+        statuses={data?.campaigns?.map(
+          (campaign: CompanyCampaignResponse) => campaign.status,
+        )}
+        campaignIds={data?.campaigns?.map(
+          (campaign: CompanyCampaignResponse) => campaign._id,
         )}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
           <div key={`company-${campaign._id}`} className="truncate">
