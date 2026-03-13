@@ -133,6 +133,116 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
         </p>
       </div>
 
+      {/* EXTRA FIELDS */}
+      <div className="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 pt-10 mt-10 mb-14 shadow-xl space-y-8">
+        {/* IMAGE FIELD */}
+        <div>
+          {/* Label */}
+          <label className="text-2xl font-semibold text-white mb-4 block">
+            Campaign Images
+          </label>
+          <p className="text-sm text-neutral-400 mb-4">
+            Add reference images for campaign
+          </p>
+
+          {/* Image grid */}
+          <div className="flex flex-wrap gap-3">
+            {campaignImages.map((img, index) => (
+              <div key={index} className="relative w-24 h-24 rounded-lg overflow-hidden">
+                <Image
+                  src={URL.createObjectURL(img)}
+                  alt={`Selected ${index}`}
+                  fill
+                  className="object-cover"
+                />
+                {editable && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCampaignImages(campaignImages.filter((_, i) => i !== index))
+                    }
+                    className="absolute top-0.5 right-0.5 text-white rounded-full w-6 h-6 flex items-center justify-center text-xl"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+
+            {/* + Button to add more images */}
+            <label
+              htmlFor="image-upload"
+              className={`w-24 h-24 flex items-center justify-center border-2 rounded-lg transition text-white text-2xl font-bold
+          ${
+            editable
+              ? 'border-dashed border-white/30 hover:border-white/60 cursor-pointer'
+              : 'border-white/10 cursor-not-allowed opacity-50'
+          }`}
+            >
+              +
+            </label>
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              multiple
+              disabled={!editable}
+              onChange={(e) => {
+                if (e.target.files) {
+                  setCampaignImages([...campaignImages, ...Array.from(e.target.files)]);
+                }
+              }}
+              className="hidden"
+            />
+          </div>
+        </div>
+
+        {/* VIDEO LINKS */}
+        <div className="pt-6 border-t border-white/10 space-y-4">
+          <label className="text-2xl text-white mb-1 block">Video Links</label>
+          <p className="text-xs text-neutral-500 mb-2">
+            Add reference video links for campaign
+          </p>
+          {videoLinks.map((link, index) => (
+            <div key={index} className="flex gap-2">
+              <input
+                type="text"
+                placeholder="https://example.com"
+                value={link}
+                disabled={!editable}
+                onChange={(e) =>
+                  setVideoLinks(
+                    videoLinks.map((v, i) => (i === index ? e.target.value : v)),
+                  )
+                }
+                className={`w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm ${
+                  !editable ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              />
+              {editable && (
+                <button
+                  type="button"
+                  onClick={() => setVideoLinks(videoLinks.filter((_, i) => i !== index))}
+                  className="px-2 text-white text-2xl"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          ))}
+
+          {editable && (
+            <button
+              type="button"
+              onClick={() => setVideoLinks([...videoLinks, ''])}
+              className="px-3 py-1 bg-primaryButton text-white rounded-lg text-sm"
+            >
+              + Add Video Link
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* CAMPAIGN HEADER */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-start gap-4 mb-14 rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 shadow-xl">
         {localBrief.campaign_logo_url && (
@@ -233,95 +343,6 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
           editable={editable}
           onChange={(v) => updateSection('dos_donts', v)}
         />
-      </div>
-      {/* EXTRA FIELDS */}
-      <div className="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 pt-10 mt-10 mb-14 shadow-xl space-y-4">
-        {/* IMAGE FIELD */}
-        <div>
-          <label className="text-sm text-neutral-400 mb-2 block">Campaign Images</label>
-
-          <div className="flex flex-wrap gap-2">
-            {campaignImages.map((img, index) => (
-              <div key={index} className="relative w-24 h-24">
-                <Image
-                  src={URL.createObjectURL(img)}
-                  alt={`Selected ${index}`}
-                  fill
-                  className="object-cover rounded-lg"
-                />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setCampaignImages(campaignImages.filter((_, i) => i !== index))
-                  }
-                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-
-            {/* + Button to add more images */}
-            <label
-              htmlFor="image-upload"
-              className="w-16 h-16 flex items-center justify-center border-2 border-dashed border-white/30 rounded-full cursor-pointer hover:border-white/60 transition text-white text-xl font-bold"
-            >
-              +
-            </label>
-            <input
-              id="image-upload"
-              type="file"
-              accept="image/*"
-              multiple
-              disabled={!editable}
-              onChange={(e) => {
-                if (e.target.files) {
-                  setCampaignImages([...campaignImages, ...Array.from(e.target.files)]);
-                }
-              }}
-              className="hidden"
-            />
-          </div>
-        </div>
-
-        {/* VIDEO LINKS */}
-        <div>
-          <label className="text-sm text-neutral-400 mb-2 block">Video Links</label>
-
-          {videoLinks.map((link, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                placeholder="https://example.com"
-                value={link}
-                disabled={!editable}
-                onChange={(e) =>
-                  setVideoLinks(
-                    videoLinks.map((v, i) => (i === index ? e.target.value : v)),
-                  )
-                }
-                className={`w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm ${
-                  !editable ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              />
-              <button
-                type="button"
-                onClick={() => setVideoLinks(videoLinks.filter((_, i) => i !== index))}
-                className="px-2 text-white bg-red-500 rounded-lg"
-              >
-                ×
-              </button>
-            </div>
-          ))}
-
-          <button
-            type="button"
-            onClick={() => setVideoLinks([...videoLinks, ''])}
-            className="px-3 py-1 bg-primaryButton text-white rounded-lg text-sm"
-          >
-            + Add Video Link
-          </button>
-        </div>
       </div>
     </div>
   );
