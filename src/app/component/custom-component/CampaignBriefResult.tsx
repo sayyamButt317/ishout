@@ -18,8 +18,8 @@ interface Props {
 }
 
 const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
-  const [campaignImage, setCampaignImage] = useState<File | null>(null);
-  const [video_links, setCampaignUrl] = useState('');
+  const [campaignImages, setCampaignImages] = useState<File[]>([]);
+  const [videoLinks, setVideoLinks] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
   const [editable, setEditable] = useState(false);
   const [localBrief, setLocalBrief] = useState<CampaignBrief>(brief);
@@ -44,14 +44,14 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
 
     const payload: UpdateCampaignBrief = {
       ...localBrief,
-      id: localBrief.id,
-      video_links: video_links ? [video_links] : [],
+      id: localBrief.id as string,
+      video_links: videoLinks.filter(Boolean), // remove empty
     };
 
     updateBrief(
       {
         brief: payload,
-        product_image_urls: campaignImage, // this will now be sent as 'file'
+        product_image_urls: campaignImages, // array of files
       },
       {
         onSuccess: (data) => {
@@ -235,38 +235,92 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
         />
       </div>
       {/* EXTRA FIELDS */}
-      <div className="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 mb-14 shadow-xl space-y-4">
+      <div className="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 pt-10 mt-10 mb-14 shadow-xl space-y-4">
         {/* IMAGE FIELD */}
         <div>
-          <label className="text-sm text-neutral-400 mb-2 block">Campaign Image</label>
+          <label className="text-sm text-neutral-400 mb-2 block">Campaign Images</label>
 
-          <input
-            type="file"
-            accept="image/*"
-            disabled={!editable}
-            onChange={(e) => {
-              if (e.target.files?.[0]) {
-                setCampaignImage(e.target.files[0]);
-              }
-            }}
-            className={`text-sm text-white ${!editable ? 'opacity-50 cursor-not-allowed' : ''}`}
-          />
+          <div className="flex flex-wrap gap-2">
+            {campaignImages.map((img, index) => (
+              <div key={index} className="relative w-24 h-24">
+                <Image
+                  src={URL.createObjectURL(img)}
+                  alt={`Selected ${index}`}
+                  fill
+                  className="object-cover rounded-lg"
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCampaignImages(campaignImages.filter((_, i) => i !== index))
+                  }
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+
+            {/* + Button to add more images */}
+            <label
+              htmlFor="image-upload"
+              className="w-16 h-16 flex items-center justify-center border-2 border-dashed border-white/30 rounded-full cursor-pointer hover:border-white/60 transition text-white text-xl font-bold"
+            >
+              +
+            </label>
+            <input
+              id="image-upload"
+              type="file"
+              accept="image/*"
+              multiple
+              disabled={!editable}
+              onChange={(e) => {
+                if (e.target.files) {
+                  setCampaignImages([...campaignImages, ...Array.from(e.target.files)]);
+                }
+              }}
+              className="hidden"
+            />
+          </div>
         </div>
 
-        {/* URL FIELD */}
+        {/* VIDEO LINKS */}
         <div>
           <label className="text-sm text-neutral-400 mb-2 block">Video Links</label>
 
-          <input
-            type="text"
-            placeholder="https://example.com"
-            value={video_links}
-            disabled={!editable}
-            onChange={(e) => setCampaignUrl(e.target.value)}
-            className={`w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm ${
-              !editable ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          />
+          {videoLinks.map((link, index) => (
+            <div key={index} className="flex gap-2 mb-2">
+              <input
+                type="text"
+                placeholder="https://example.com"
+                value={link}
+                disabled={!editable}
+                onChange={(e) =>
+                  setVideoLinks(
+                    videoLinks.map((v, i) => (i === index ? e.target.value : v)),
+                  )
+                }
+                className={`w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm ${
+                  !editable ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              />
+              <button
+                type="button"
+                onClick={() => setVideoLinks(videoLinks.filter((_, i) => i !== index))}
+                className="px-2 text-white bg-red-500 rounded-lg"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => setVideoLinks([...videoLinks, ''])}
+            className="px-3 py-1 bg-primaryButton text-white rounded-lg text-sm"
+          >
+            + Add Video Link
+          </button>
         </div>
       </div>
     </div>

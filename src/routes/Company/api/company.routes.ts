@@ -70,11 +70,17 @@ export const CompanyCampaignBreifApi = async (payload: {
 
 export const UpdateCampaignBriefApi = async (
   brief: UpdateCampaignBrief,
-  file?: File | null, // <- this must be 'file'
+  files?: File[] | null, // now an array
 ) => {
   const formData = new FormData();
   formData.append('data', JSON.stringify(brief));
-  if (file) formData.append('file', file); // <-- must be 'file' to match backend
+
+  // Append multiple files
+  if (files && files.length > 0) {
+    files.forEach((file) => {
+      formData.append('files', file); // must match FastAPI parameter name
+    });
+  }
 
   const response = await api.patch(
     CompanyENDPOINT.UPDATE_CAMPAIGN_BRIEF(brief.id),
