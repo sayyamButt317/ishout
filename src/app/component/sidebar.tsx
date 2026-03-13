@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
-import { LogOut, Menu } from "lucide-react";
-import { useState, useMemo } from "react";
-import LogoutDialogue from "./logoutdialogue";
-import Image from "next/image";
+import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { LogOut, Menu } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import LogoutDialogue from './logoutdialogue';
+import Image from 'next/image';
 
 export interface SidebarLink {
   label: string;
@@ -30,7 +30,7 @@ export default function Sidebar({ links }: SidebarProps) {
       links.map((link) => {
         const isSelected =
           pathname === link.route ||
-          (link.route !== "/auth/login" && pathname.startsWith(link.route));
+          (link.route !== '/auth/login' && pathname.startsWith(link.route));
 
         return (
           <Link
@@ -38,10 +38,10 @@ export default function Sidebar({ links }: SidebarProps) {
             href={link.route}
             onClick={() => setMobileOpen(false)}
             className={cn(
-              "group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ease-out",
+              'group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ease-out',
               isSelected
-                ? "bg-white/5 backdrop-blur-xl border border-white/10 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)]"
-                : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent"
+                ? 'bg-white/5 backdrop-blur-xl border border-white/10 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)]'
+                : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent',
             )}
           >
             {isSelected && (
@@ -51,32 +51,31 @@ export default function Sidebar({ links }: SidebarProps) {
             {link.icon && (
               <div
                 className={cn(
-                  "flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300",
+                  'flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300',
                   isSelected
-                    ? "bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-white"
-                    : "bg-white/5 text-slate-400 group-hover:bg-white/10"
+                    ? 'bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-white'
+                    : 'bg-white/5 text-slate-400 group-hover:bg-white/10',
                 )}
               >
                 {link.icon}
               </div>
             )}
 
-            <span className="text-sm font-medium tracking-wide">
-              {link.label}
-            </span>
+            <span className="text-sm font-medium tracking-wide">{link.label}</span>
           </Link>
         );
       }),
-    [links, pathname]
+    [links, pathname],
   );
 
   return (
     <>
       {/* Desktop */}
-      <aside className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-[260px] flex-col 
+      <aside
+        className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-[260px] flex-col 
         rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10
-        shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
-
+        shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6"
+      >
         {/* Logo */}
         <a
           href="https://ishout.ae"
@@ -85,14 +84,15 @@ export default function Sidebar({ links }: SidebarProps) {
         >
           <div className="relative">
             <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
-            <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={80} height={80} className="relative z-10" unoptimized={true} />
+            <Image
+              src="/assets/iShout-gif-black-background.gif"
+              alt="logo"
+              width={70}
+              height={70}
+              className="relative z-10"
+              unoptimized={true}
+            />
           </div>
-          <h2 className="text-4xl font-bold text-white tracking-tight">
-            i
-            <span className="text-white font-extrabold">S</span>
-            hout
-            <span className="text-primarytext font-extrabold">.</span>
-          </h2>
         </a>
 
         {/* Links */}
@@ -135,12 +135,18 @@ export default function Sidebar({ links }: SidebarProps) {
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <a
               href="https://ishout.ae"
-              //    target="_blank" 
+              //    target="_blank"
               rel="noopener noreferrer"
               className="mb-6 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => setMobileOpen(false)}
             >
-              <Image src="/assets/iShout-gif-black-background.gif" alt="logo" width={36} height={36} unoptimized={true} />
+              <Image
+                src="/assets/iShout-gif-black-background.gif"
+                alt="logo"
+                width={36}
+                height={36}
+                unoptimized={true}
+              />
               <h2 className="text-xl font-bold text-white">iShout</h2>
             </a>
 

@@ -84,7 +84,7 @@ export default function AdminPendingCampaigns() {
           'Status',
           'Created At',
           'Generate/View-Generated',
-          'View',
+          'View Brief',
           'Delete',
         ]}
         imageUrls={data?.campaigns.map(
@@ -158,7 +158,7 @@ export default function AdminPendingCampaigns() {
               </CustomButton>
             ) : (
               <CustomButton
-                className="bg-secondaryButton hover:bg-secondaryHover text-white whitespace-nowrap text-xs px-3"
+                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
                 onClick={() => {
                   router.push(`/Admin/pending-campaign/${campaign._id}`);
                 }}
@@ -168,7 +168,8 @@ export default function AdminPendingCampaigns() {
             )}
           </div>,
           <div key={`view-brief-${campaign._id}`} className="min-w-[90px] pl-4">
-            <Button
+            <CustomButton
+              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
               onClick={() => {
                 if (!campaign.brief_id) return;
                 setSelectedBriefId(campaign.brief_id);
@@ -176,8 +177,8 @@ export default function AdminPendingCampaigns() {
               }}
               disabled={!campaign.brief_id}
             >
-              View
-            </Button>
+              View Brief
+            </CustomButton>
           </div>,
           <div key={`delete-${campaign._id}`} className="truncate">
             <Button
