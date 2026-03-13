@@ -13,6 +13,7 @@ import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBr
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
+import CustomButton from '@/src/app/component/button';
 import { Trash } from 'lucide-react';
 
 export default function OnboardingCampaignPage() {
@@ -137,8 +138,8 @@ export default function OnboardingCampaignPage() {
             </Button>
           </div>,
           <div key={`view-brief-${campaign._id}`} className="truncate">
-            <Button
-              className="bg-secondaryButton hover:bg-secondaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+            <CustomButton
+              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
               disabled={!campaign.brief_id}
               onClick={() => {
                 if (campaign.brief_id) {
@@ -148,7 +149,7 @@ export default function OnboardingCampaignPage() {
               }}
             >
               View Brief
-            </Button>
+            </CustomButton>
           </div>,
           <div key={`delete-${campaign._id}`} className="truncate">
             <Button
