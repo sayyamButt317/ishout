@@ -12,6 +12,8 @@ import {
 } from '@/src/helper/followersformat';
 import { SiInstagram, SiTiktok, SiWhatsapp, SiYoutube } from 'react-icons/si';
 import { useRouter } from 'next/navigation';
+import NegotiationPage from '../../Admin/(dashboard)/negotiation/page';
+import InfluencerCard from '@/src/app/component/Ready-made/influencer-card';
 
 interface OnboardingCardProps {
   influencer: ReviewInfluencerResponse;
@@ -174,34 +176,50 @@ const OnboardingCard = ({
             </p>
           </div>
           <div className="py-3 text-center">
-            <p className="text-sm text-white/75">Last Offered Price</p>
+            <p className="text-sm text-white/75">Approved Price</p>
             <p className="mt-1 text-lg font-semibold text-white">
               $
-              {lastOfferedPrice !== null && lastOfferedPrice !== undefined
-                ? lastOfferedPrice
+              {influencer.last_offered_price !== null &&
+              influencer.last_offered_price !== undefined
+                ? influencer.last_offered_price
                 : 0}
             </p>
           </div>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="mt-4 grid grid-cols-3 gap-3">
+          {/* iShout */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
-            <p className="text-sm text-white/75 whitespace-nowrap">Admin Status</p>
+            <p className="text-sm text-white/75 whitespace-nowrap">iShout</p>
             <p
-              className={`mt-1 text-base font-normal ${
+              className={`mt-1 text-xs font-normal ${
                 influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'
               } whitespace-nowrap`}
             >
               {influencer?.admin_approved ? 'Approved' : 'Not Approved'}
             </p>
           </div>
+
+          {/* Brand */}
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
-            <p className="text-sm text-white/75 whitespace-nowrap">Company Status</p>
+            <p className="text-sm text-white/75 whitespace-nowrap">Brand</p>
             <p
-              className={`mt-1 text-base font-normal ${
+              className={`mt-1 text-xs font-normal ${
                 influencer?.company_approved ? 'text-emerald-400' : 'text-red-400'
               } whitespace-nowrap`}
             >
               {influencer?.company_approved ? 'Approved' : 'Not Approved'}
+            </p>
+          </div>
+
+          {/* Influencer */}
+          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
+            <p className="text-sm text-white/75 whitespace-nowrap">Influencer</p>
+            <p
+              className={`mt-1 capitalize text-xs font-normal ${
+                influencer?.negotiation_status ? 'text-emerald-400' : 'text-red-400'
+              } whitespace-nowrap`}
+            >
+              {influencer?.negotiation_status ?? 'Pending'}
             </p>
           </div>
         </div>

@@ -171,9 +171,9 @@ export default function AllCampaignPage() {
           >
             <Trash className="text-red-300" />
           </Button>,
-          <Button
+          <CustomButton
             key={campaign._id}
-            className="bg-secondaryButton hover:bg-secondaryHover text-white text-xs px-3"
+            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
             disabled={!campaign.brief_id}
             onClick={() => {
               if (campaign.brief_id) {
@@ -183,7 +183,7 @@ export default function AllCampaignPage() {
             }}
           >
             View Brief
-          </Button>,
+          </CustomButton>,
         ])}
         onImageUpload={(rowIndex, file) => {
           const campaign = campaigns[rowIndex];
