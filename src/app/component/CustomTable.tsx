@@ -9,9 +9,11 @@ import { useRouter } from 'next/navigation';
 
 const STATUS_STEPS = [
   { key: 'pending', label: 'Pending', letter: 'P' },
-  { key: 'approved', label: 'Approved By Admin', letter: 'A' },
-  { key: 'processing', label: 'Approved By Brand', letter: 'B' },
-  { key: 'completed', label: 'Negotiated', letter: 'N' }
+  { key: 'approved', label: 'Ishout', letter: 'A' },
+  { key: 'processing', label: 'Brand', letter: 'B' },
+  { key: 'completed', label: 'Negotiated', letter: 'N' },
+  {key:'content',label:'Content',letter:'C'},
+  {key:'report',label:'Report',letter:'R'}
 ] as const;
 
 const STATUS_ORDER = ['pending', 'approved', 'processing', 'completed'] as const;
@@ -160,7 +162,7 @@ export default function TableComponent({
                             <div key={step.key} className="flex items-center">
                               <div 
                                 onClick={isClickable ? handleStepClick : undefined}
-                                className={`flex flex-col items-center ${isClickable ? 'cursor-pointer' : ''}`}
+                                className={`flex flex-col justify-center cursor-pointer items-center ${isClickable ? 'cursor-pointer' : ''}`}
                               >
                                 <div 
                                   className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${step.isActive
@@ -180,7 +182,7 @@ export default function TableComponent({
                                 </span>
                               </div>
                               {stepIndex < statusSteps.length - 1 && (
-                                <div className={`w-12 sm:w-64 h-0.5 mx-1 sm:mx-2 ${step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
+                                <div className={`w-6 sm:w-40 h-0.5 mx-1 sm:mx-2 ${step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
                                   }`} />
                               )}
                             </div>

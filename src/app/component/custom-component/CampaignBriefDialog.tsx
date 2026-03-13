@@ -1,5 +1,4 @@
 'use client';
-
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Pencil, Save } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -15,7 +14,7 @@ interface CampaignBriefDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   briefData: UpdateCampaignBrief | null;
-  onUpdate?: (updatedBrief: UpdateCampaignBrief) => void; // parent callback
+  onUpdate?: (updatedBrief: UpdateCampaignBrief) => void;
 }
 
 export default function CampaignBriefDialog({
@@ -145,7 +144,6 @@ export default function CampaignBriefDialog({
       <DialogContent className="!w-[95vw] !max-w-[1200px] h-[92vh] bg-gradient-to-br from-neutral-900 via-neutral-950 to-black border border-white/10 rounded-3xl overflow-y-auto p-0">
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between p-10 border-b border-white/10 gap-6">
-          {/* LEFT SIDE */}
           {/* LEFT SIDE */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             {/* Campaign Logo */}
