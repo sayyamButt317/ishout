@@ -5,6 +5,7 @@ interface MessageBubbleProps {
   message: string;
   sender: 'AI' | 'USER' | 'ADMIN' | 'SYSTEM';
   timestamp: string;
+   isPdf?: boolean;
 }
 
 export function MessageBubble({ message, sender, timestamp }: MessageBubbleProps) {
