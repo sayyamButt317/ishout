@@ -11,7 +11,8 @@ import UpdateUserStatusHook from '@/src/routes/Admin/Hooks/update-userstatus-hoo
 import CompanyUpdateProfileHook from '@/src/routes/Company/api/Hooks/update-profile.hook';
 import UploadUserLogoHook from '@/src/routes/Auth-Routes/Api/Auth-Hook/upload-user-logo-hook';
 import { UserManagementResponse } from '@/src/types/Admin-Type/usermanagment.type';
-import { RefreshCcw, Trash, Pencil, X, Loader2, Eye, EyeOff } from 'lucide-react';
+import { RefreshCcw, Trash, Pencil, X, Loader2, Eye, EyeOff, Users } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import PhoneInput from 'react-phone-number-input';
@@ -149,33 +150,23 @@ export default function UserManagementPage() {
 
   return (
     <>
-      {/* Header */}
-      <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <div className="flex flex-row items-center gap-2">
-            <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">
-              User Management
-            </h1>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => refetch()}
-              disabled={isRefetching}
-            >
-              <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text ${
-                  isRefetching ? 'animate-spin' : ''
-                }`}
-              />
-            </Button>
-          </div>
-
-          <p className="italic text-xs text-slate-200 mt-2">
-            Showing {data?.users?.length} of {data?.total} users
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="User Management"
+        description={`Showing ${data?.users?.length ?? 0} of ${data?.total ?? 0} users`}
+        icon={<Users className="size-5" />}
+        actions={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+            aria-label="Refresh list"
+          >
+            <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
+          </Button>
+        }
+      />
 
       {/* Table */}
       <TableComponent

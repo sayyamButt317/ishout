@@ -76,7 +76,7 @@ export const adminSidebarLinks = [
     ),
   },
   {
-    label: 'Approved Influencers',
+    label: 'Ishout Approved',
     route: '/Admin/approved-campaign',
     icon: (
       <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
@@ -85,11 +85,38 @@ export const adminSidebarLinks = [
     ),
   },
   {
-    label: 'OnBoarding',
+    label: 'Brand Approved',
+    route: '/Admin/brand-approved',
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
+        <UserCheck className="text-2xl text-white" />
+      </div>
+    ),
+  },
+  {
+    label: 'Negotiation',
     route: '/Admin/onboarding',
     icon: (
       <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
         <UserCheck className="text-2xl text-white" />
+      </div>
+    ),
+  },
+  {
+    label: 'Content',
+    route: '/Admin/content',
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
+        <FileText className="text-2xl text-white" />
+      </div>
+    ),
+  },
+  {
+    label: 'Report',
+    route: '/Admin/report',
+    icon: (
+      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
+        <FileText className="text-2xl text-white" />
       </div>
     ),
   },

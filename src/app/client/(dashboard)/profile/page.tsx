@@ -23,6 +23,7 @@ import {
   EyeOff,
   Lock,
 } from "lucide-react";
+import PageHeader from "@/src/app/component/PageHeader";
 import PhoneInput from 'react-phone-number-input';
 import {
   CompanyProfileFormSchema,
@@ -243,74 +244,63 @@ export default function CompanyProfilePage() {
   };
 
   return (
-    <div className=" bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950 flex items-center justify-center">
+    <div className="bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950">
+      <PageHeader
+        title="Profile"
+        description="Update your profile information and contact details"
+        icon={<User className="size-5" />}
+        actions={
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+              onClick={() => refetch()}
+              disabled={isRefetching}
+              aria-label="Refresh profile"
+            >
+              <RefreshCcw className={`size-4 ${isRefetching ? "animate-spin" : ""}`} />
+            </Button>
+            {isEditing && (
+              <Button
+                type="button"
+                onClick={() => {
+                  if (isDirty) {
+                    const confirmLeave = confirm(
+                      "You have unsaved changes. Do you want to discard them?"
+                    );
+                    if (!confirmLeave) return;
+                  }
+                  form.reset();
+                  setIsEditing(false);
+                }}
+                className="bg-gray-700 text-white h-9 px-4"
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              type={isEditing ? "submit" : "button"}
+              form="company-profile-form"
+              disabled={isEditing && (!isDirty || isPending)}
+              onClick={() => {
+                if (!isEditing) setIsEditing(true);
+              }}
+              className="bg-secondaryButton text-white h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isEditing ? (
+                isPending ? <Loader2 className="animate-spin" /> : "Save Profile"
+              ) : (
+                "Edit Profile"
+              )}
+            </Button>
+          </>
+        }
+      />
       <Card className="w-full rounded-2xl shadow-xl border border-white/10 bg-neutral-900/80 backdrop-blur">
         <CardContent>
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex flex-row items-center gap-2 justify-between">
-              <div className="flex flex-row items-center gap-2">
-                <h1 className="text-2xl md:text-3xl font-semibold text-white">
-                  Profile Information
-                </h1>
-                <Button
-                  className="cursor-pointer"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    refetch();
-                  }}
-                  disabled={isRefetching}
-                >
-                  <RefreshCcw
-                    className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-                      }`}
-                  />
-                </Button>
-              </div>
-              <div className="flex gap-2">
-                {isEditing && (
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      if (isDirty) {
-                        const confirmLeave = confirm(
-                          "You have unsaved changes. Do you want to discard them?"
-                        );
-                        if (!confirmLeave) return;
-                      }
-                      form.reset();
-                      setIsEditing(false);
-                    }}
-                    className="bg-gray-700 text-white h-9 px-4"
-                  >
-                    Cancel
-                  </Button>
-
-                )}
-
-                <Button
-                  type={isEditing ? "submit" : "button"}
-                  form="company-profile-form"
-                  disabled={isEditing && (!isDirty || isPending)}
-                  onClick={() => {
-                    if (!isEditing) setIsEditing(true);
-                  }}
-                  className="bg-secondaryButton text-white h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isEditing ? (
-                    isPending ? <Loader2 className="animate-spin" /> : "Save Profile"
-                  ) : (
-                    "Edit Profile"
-                  )}
-                </Button>
-
-              </div>
-
-            </div>
-            <p className="italic text-xs text-slate-200 mt-2">
-              Update your profile information and contact details
-            </p>
+          <div className="mb-6">
+            <h2 className="text-lg font-semibold text-white">Profile Information</h2>
           </div>
 
           <Form {...form}>

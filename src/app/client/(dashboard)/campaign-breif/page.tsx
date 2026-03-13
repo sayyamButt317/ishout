@@ -4,6 +4,7 @@ import CampaignBriefResult from '@/src/app/component/custom-component/CampaignBr
 import CampaignBreifHook from '@/src/routes/Company/api/Hooks/CampaignBreif-hook';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import { Loader2, Sparkles, X } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
 import { useCallback, useState, useRef } from 'react';
 import SummaryPopup from '@/src/app/component/Ready-made/SummaryPopup';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
@@ -135,7 +136,14 @@ const CampaignBreifPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0B0F19] via-[#0F172A] to-black text-white flex flex-col">
-      <div className="flex-1 flex items-center justify-center px-6 py-20">
+      <div className="px-4 md:px-6">
+        <PageHeader
+          title="Generate Campaign Brief"
+          description="Describe your brand, goals, and audience. Our AI will craft a structured influencer campaign brief."
+          icon={<Sparkles className="size-5" />}
+        />
+      </div>
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-4xl">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-sm text-white/70 mb-6">
@@ -143,13 +151,12 @@ const CampaignBreifPage = () => {
               AI-Powered Campaign Engine
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-semibold leading-tight tracking-tight">
+            <h2 className="text-3xl md:text-4xl font-semibold leading-tight tracking-tight text-white">
               Generate a Complete <span className="text-primarytext">Campaign Brief</span>{' '}
               in Seconds
-            </h1>
+            </h2>
             <p className="italic mt-6 text-white/60 text-base md:text-lg max-w-2xl mx-auto">
-              Describe your brand, goals, and audience. Our AI agent will craft a
-              structured influencer campaign brief ready for execution.
+              Describe your campaign below to get started.
             </p>
           </div>
 

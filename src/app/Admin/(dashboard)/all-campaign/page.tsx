@@ -3,7 +3,8 @@ import { Button } from '@/components/ui/button';
 import TableComponent from '@/src/app/component/CustomTable';
 import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
 import AllCampaignHook from '@/src/routes/Admin/Hooks/Allcampaign-hook';
-import { RefreshCcw, Trash } from 'lucide-react';
+import { RefreshCcw, Trash, LayoutList, Filter } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
 import React, { useState, useEffect } from 'react';
 import { AdminAllCampaignApiResponse } from '@/src/types/Admin-Type/Campaign.type';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
@@ -77,54 +78,46 @@ export default function AllCampaignPage() {
 
   return (
     <>
-      <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <div className="flex flex-row items-center gap-2">
-            <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">
-              Company Generated Campaigns
-            </h1>
+      <PageHeader
+        title="Company Generated Campaigns"
+        description={
+          <>
+            Showing <span className="font-medium text-white/80">{campaigns?.length}</span> of{' '}
+            <span className="font-medium text-white/80">{totalCount}</span> campaigns
+          </>
+        }
+        icon={<LayoutList className="size-5" />}
+        actions={
+          <>
             <Button
-              className="cursor-pointer"
               variant="ghost"
               size="icon"
-              onClick={() => {
-                refetch();
-              }}
+              className="size-8 shrink-0 text-white/70 hover:bg-white/10 hover:text-white"
+              onClick={() => refetch()}
               disabled={isRefetching}
+              aria-label="Refresh list"
             >
-              <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                  isRefetching ? 'animate-spin' : ''
-                }`}
-              />
+              <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
             </Button>
-          </div>
-          <p className="italic text-xs text-slate-200 mt-2">
-            Showing {campaigns?.length} of {totalCount} campaigns
-          </p>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <label
-            htmlFor="campaign-status-filter"
-            className="italic text-sm text-white/80"
-          >
-            Filter by status
-          </label>
-          <select
-            id="campaign-status-filter"
-            value={statusFilter}
-            onChange={handleStatusChange}
-            className="rounded-lg border border-white/20 bg-transparent px-3 py-2 text-sm text-white outline-none focus:border-primaryButton"
-          >
-            {STATUS_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value} className="text-black">
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+            <Filter className="size-4 text-white/50" aria-hidden />
+            <label htmlFor="campaign-status-filter" className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70">
+              Filter by status
+            </label>
+            <select
+              id="campaign-status-filter"
+              value={statusFilter}
+              onChange={handleStatusChange}
+              className="h-10 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
+            >
+              {STATUS_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value} className="bg-[#0d1320] text-white">
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </>
+        }
+      />
 
       <TableComponent
         header={[

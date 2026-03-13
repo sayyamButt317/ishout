@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import CustomButton from "@/src/app/component/button";
 import openWhatsApp from "@/src/app/component/custom-component/companywhastapp";
 import { Sparkles, MessageCircle } from "lucide-react";
+import PageHeader from "@/src/app/component/PageHeader";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -32,18 +33,13 @@ const options = [
 export default function ChooseCampaign() {
   const router = useRouter();
   return (
-    <div className="col-span-12 w-full flex justify-center px-4 sm:px-6 lg:px-10">
-      <Card className="w-full max-w-6xl rounded-4xl bg-transparent border-none shadow-2xl p-6 sm:p-10">
-        {/* Header */}
-        <div className="text-center">
-          <h1 className="text-2xl sm:text-4xl font-bold text-white italic text-center">
-            Choose how you want to create your Campaign
-          </h1>
-          <p className="mt-2 text-sm sm:text-base text-[#606778] italic max-w-2xl mx-auto">
-            Pick a quick template or WhatsApp flow to get started faster.
-          </p>
-        </div>
-
+    <div className="col-span-12 w-full flex flex-col justify-center px-4 sm:px-6 lg:px-10">
+      <PageHeader
+        title="Choose how you want to create your Campaign"
+        description="Pick a quick template or WhatsApp flow to get started faster."
+        icon={<Sparkles className="size-5" />}
+      />
+      <Card className="w-full max-w-6xl rounded-4xl bg-transparent border-none shadow-2xl p-6 sm:p-10 mt-6">
         {/* Cards */}
         <div className="mt-2 grid gap-6">
           {options?.map((option) => {

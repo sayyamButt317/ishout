@@ -2,7 +2,8 @@
 import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
 import CustomButton from "@/src/app/component/button";
-import { RefreshCcw } from "lucide-react";
+import { RefreshCcw, Handshake } from "lucide-react";
+import PageHeader from "@/src/app/component/PageHeader";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import NegotiationStatsHook from "@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook";
@@ -22,27 +23,23 @@ export default function NegotiationPage() {
 
     return (
         <>
-            <div className="flex flex-row ">
-                <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
-                    Influencer Negotiation
-                </h1>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                        refetch();
-                    }}
-                    disabled={isRefetching}
-                >
-                    <RefreshCcw
-                        className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-                            }`}
-                    />
-                </Button>
-            </div>
-            <p className="italic text-xs text-slate-200 mt-2 mb-2">
-                Showing {data?.negotiation_controls?.length || 0} of {data?.total || 0} user sessions
-            </p>
+            <PageHeader
+                title="Influencer Negotiation"
+                description={`Showing ${data?.negotiation_controls?.length ?? 0} of ${data?.total ?? 0} user sessions`}
+                icon={<Handshake className="size-5" />}
+                actions={
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+                        onClick={() => refetch()}
+                        disabled={isRefetching}
+                        aria-label="Refresh list"
+                    >
+                        <RefreshCcw className={`size-4 ${isRefetching ? "animate-spin" : ""}`} />
+                    </Button>
+                }
+            />
             <TableComponent
                 header={[
                     "Phone Number",

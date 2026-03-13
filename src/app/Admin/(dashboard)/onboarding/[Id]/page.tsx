@@ -2,7 +2,8 @@
 import { useCallback, useState, useMemo, useEffect } from 'react';
 import OnboardingHook from '@/src/routes/Admin/Hooks/onboarding-hook';
 import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influencer';
-import { ArrowLeft, RefreshCcw } from 'lucide-react';
+import { ArrowLeft, RefreshCcw, UserPlus } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
 import { Button } from '@/components/ui/button';
 import { PlatformType } from '@/src/types/readymadeinfluencers-type';
 import { useParams } from 'next/navigation';
@@ -81,42 +82,32 @@ export default function OnboardingInfluencerByCampaignId() {
 
   return (
     <>
-      <div>
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-row items-center gap-2">
-            <h1 className="italic text-2xl font-bold text-white">
-              Onboarded Influencers
-            </h1>
+      <PageHeader
+        title="Onboarded Influencers"
+        description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}
+        icon={<UserPlus className="size-5" />}
+        actions={
+          <>
             <Button
-              className="cursor-pointer"
               variant="ghost"
               size="icon"
-              onClick={() => {
-                refetch();
-              }}
+              className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+              onClick={() => refetch()}
               disabled={isRefetching}
+              aria-label="Refresh list"
             >
-              <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                  isRefetching ? 'animate-spin' : ''
-                }`}
-              />
+              <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
             </Button>
-          </div>
-          <CustomButton
-            className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-[160px]"
-            onClick={() => {
-              router.replace(`/Admin/onboarding`);
-            }}
-          >
-            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-            Back to Onboarding
-          </CustomButton>
-        </div>
-        <p className="italic text-xs text-slate-200 mt-2 mb-2">
-          Showing {data?.influencers.length} of {data?.total} influencers
-        </p>
-      </div>
+            <CustomButton
+              className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-[160px]"
+              onClick={() => router.replace('/Admin/onboarding')}
+            >
+              <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+              Back to Onboarding
+            </CustomButton>
+          </>
+        }
+      />
 
       {isLoading && (
         <div className="flex justify-center items-center min-h-[200px]">

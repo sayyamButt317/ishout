@@ -6,6 +6,8 @@ import TableComponent from "@/src/app/component/CustomTable";
 import WhatsappUserSessionHook from "@/src/routes/Admin/Hooks/usersession-hook";
 import { WhatsAppUserSessionResponse } from "@/src/types/Admin-Type/whatsapp-type";
 import { RefreshCcw, Trash } from "lucide-react";
+import { SiWhatsapp } from "react-icons/si";
+import PageHeader from "@/src/app/component/PageHeader";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWhatsAppChatStore } from "@/src/store/Campaign/chat.store";
@@ -24,27 +26,23 @@ export default function WhatsAppChat() {
 
   return (
     <>
-      <div className="flex flex-row ">
-        <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
-          WhatsApp User Sessions
-        </h1>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            refetch();
-          }}
-          disabled={isRefetching}
-        >
-          <RefreshCcw
-            className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-              }`}
-          />
-        </Button>
-      </div>
-      <p className="italic text-xs text-slate-200 mt-2 mb-2">
-        Showing {data?.users?.length} of {data?.total} user sessions
-      </p>
+      <PageHeader
+        title="WhatsApp User Sessions"
+        description={`Showing ${data?.users?.length ?? 0} of ${data?.total ?? 0} user sessions`}
+        icon={<SiWhatsapp className="size-5" />}
+        actions={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+            aria-label="Refresh list"
+          >
+            <RefreshCcw className={`size-4 ${isRefetching ? "animate-spin" : ""}`} />
+          </Button>
+        }
+      />
       <TableComponent
         header={[
           "User Name",

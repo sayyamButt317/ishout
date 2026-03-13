@@ -9,14 +9,14 @@ import { useRouter } from 'next/navigation';
 
 const STATUS_STEPS = [
   { key: 'pending', label: 'Pending', letter: 'P' },
-  { key: 'approved', label: 'Ishout', letter: 'A' },
+  { key: 'approved', label: 'Ishout', letter: 'I' },
   { key: 'processing', label: 'Brand', letter: 'B' },
   { key: 'completed', label: 'Negotiated', letter: 'N' },
-  {key:'content',label:'Content',letter:'C'},
-  {key:'report',label:'Report',letter:'R'}
+  { key: 'content', label: 'Content', letter: 'C' },
+  { key: 'report', label: 'Report', letter: 'R' }
 ] as const;
 
-const STATUS_ORDER = ['pending', 'approved', 'processing', 'completed'] as const;
+const STATUS_ORDER = ['pending', 'approved', 'processing', 'completed', 'content', 'report'] as const;
 
 function getStatusSteps(currentStatus: string) {
   const normalizedStatus = currentStatus.toLowerCase();

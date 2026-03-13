@@ -1,7 +1,14 @@
+import PageHeader from '@/src/app/component/PageHeader';
+import { BarChart3 } from 'lucide-react';
+
 export default function Analytics() {
   return (
     <div>
-      <h1>Analytics</h1>
+      <PageHeader
+        title="Analytics"
+        description="Campaign and performance insights"
+        icon={<BarChart3 className="size-5" />}
+      />
     </div>
   );
 }

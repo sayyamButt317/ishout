@@ -3,7 +3,8 @@ import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import TableComponent from '@/src/app/component/CustomTable';
 import React, { useState, useEffect } from 'react';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, UserPlus } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
 import { Button } from '@/components/ui/button';
 import OnboardingCampaignHook from '@/src/routes/Admin/Hooks/onboardingCampaign-hook';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
@@ -38,32 +39,23 @@ export default function OnboardingCampaignPage() {
 
   return (
     <>
-      <div className="mb-6">
-        <div className="flex flex-row items-center gap-2">
-          <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">
-            Onboarding Influencer
-          </h1>
+      <PageHeader
+        title="Onboarding Influencer"
+        description="Showing campaigns waiting for influencers to be onboarded"
+        icon={<UserPlus className="size-5" />}
+        actions={
           <Button
-            className="cursor-pointer"
             variant="ghost"
             size="icon"
-            onClick={() => {
-              refetch();
-            }}
+            className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+            onClick={() => refetch()}
             disabled={isRefetching}
+            aria-label="Refresh list"
           >
-            <RefreshCcw
-              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                isRefetching ? 'animate-spin' : ''
-              }`}
-            />
+            <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
           </Button>
-        </div>
-        <p className="italic text-xs text-slate-200 mt-2">
-          Showing {data?.campaigns?.length} onboarding campaigns that have waiting for
-          influencers to be onboarded
-        </p>
-      </div>
+        }
+      />
 
       <TableComponent
         header={[
