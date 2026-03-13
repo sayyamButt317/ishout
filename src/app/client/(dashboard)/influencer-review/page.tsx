@@ -9,7 +9,8 @@ import useAuthStore from '@/src/store/AuthStore/authStore';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, UserCheck } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
 
 export default function RevieInfluencer() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,30 +23,23 @@ export default function RevieInfluencer() {
   const router = useRouter();
   return (
     <>
-      <div className="flex flex-row ">
-        <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
-          Review Onboarded Influencers
-        </h1>
-        <Button
-          className="cursor-pointer"
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            refetch();
-          }}
-          disabled={isRefetching}
-        >
-          <RefreshCcw
-            className={`mt-2 w-2 h-2 text-primary-text cursor-pointer ${
-              isRefetching ? 'animate-spin' : ''
-            }`}
-          />
-        </Button>
-      </div>
-      <p className="italic text-xs text-slate-200 mt-2 mb-2">
-        Showing {data?.campaigns?.length} campaigns have onboarded influencers that need
-        to be reviewed
-      </p>
+      <PageHeader
+        title="Review Onboarded Influencers"
+        description="Campaigns with onboarded influencers that need to be reviewed"
+        icon={<UserCheck className="size-5" />}
+        actions={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+            aria-label="Refresh list"
+          >
+            <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
+          </Button>
+        }
+      />
       <TableComponent
         header={[
           'Campaign Name',

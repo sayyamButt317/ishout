@@ -5,15 +5,105 @@ import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
 import Spinner from "@/src/app/component/custom-component/spinner";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
 import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
-import { Download } from "lucide-react";
-import { useParams } from "next/navigation";
+import { ArrowLeft, ChevronRight, Download, UserCheck, UserX, Users } from "lucide-react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import CustomButton from "@/src/app/component/button";
 
 export default function CampaignByIdPage() {
   const { Id } = useParams<{ Id: string }>();
-
+  const router = useRouter();
   const { data, isLoading, isError } = CampaignByIdHook(Id ?? "");
+
+  const approvedCount = data?.approved_influencers?.length ?? 0;
+  const rejectedCount = data?.rejected_influencers?.length ?? 0;
+  const campaignTitle = (data as { name?: string } | undefined)?.name ?? "Campaign";
+  const totalCount = approvedCount + rejectedCount;
+
   return (
-    <div>
+    <div className="font-sans">
+      <header
+        className="mb-10 relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[var(--color-section-overlays)] shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset,0_24px_48px_-24px_rgba(0,0,0,0.4)]"
+        role="banner"
+      >
+        <div
+          className="pointer-events-none absolute -left-24 -top-24 h-56 w-56 rounded-full bg-[var(--color-primaryButton)] opacity-[0.08] blur-[60px]"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--color-primaryButton)] to-transparent opacity-60"
+          aria-hidden
+        />
+
+        <div className="relative px-6 py-6 sm:px-8 sm:py-7">
+          <nav className="mb-4 flex items-center gap-1.5 text-xs" aria-label="Breadcrumb">
+            <Link
+              href="/Admin/all-campaign"
+              className="font-medium text-white/45 transition-colors hover:text-primaryButton"
+            >
+              All Campaigns
+            </Link>
+            <ChevronRight className="size-3.5 text-white/25" aria-hidden />
+            <span className="font-medium text-white/60">{campaignTitle}</span>
+          </nav>
+
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-[var(--color-primaryButton)]/20 bg-[var(--color-primaryButton)]/[0.12] text-[var(--color-primaryButton)]"
+                  aria-hidden
+                >
+                  <Users className="size-7" />
+                </div>
+                <div className="min-w-0">
+                  <h1 className="truncate text-2xl font-semibold tracking-tight text-white sm:text-3xl tracking-[-0.03em]">
+                    {campaignTitle}
+                  </h1>
+                  <p className="mt-0.5 text-sm font-medium text-white/50">
+                    Influencers · {totalCount} total
+                  </p>
+                </div>
+              </div>
+
+              {/* Stat pills */}
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <div className="inline-flex items-center gap-2 rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-3.5 py-2">
+                  <UserCheck className="size-4 text-emerald-400" aria-hidden />
+                  <span className="text-sm font-semibold text-emerald-400">
+                    {approvedCount} approved
+                  </span>
+                </div>
+                <div className="inline-flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2">
+                  <UserX className="size-4 text-[var(--color-deleteButton)]" aria-hidden />
+                  <span className="text-sm font-semibold text-[var(--color-deleteButton)]">
+                    {rejectedCount} rejected
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: actions */}
+            <div className="flex shrink-0 flex-wrap items-center gap-2 sm:gap-3">
+              <CustomButton
+                className="h-11 gap-2 rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-colors hover:bg-white/10 hover:border-white/15"
+                onClick={() => router.push("/Admin/all-campaign")}
+              >
+                <ArrowLeft className="size-4" />
+                Back to list
+              </CustomButton>
+              <Button
+                className="h-11 gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 text-sm font-semibold text-white transition-all hover:opacity-95"
+                onClick={() => ExportToExcel()}
+              >
+                <Download className="size-4" />
+                Export
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {isLoading && (
         <div className="flex justify-center items-center min-h-[200px]">
           <Spinner size={20} />
@@ -28,19 +118,21 @@ export default function CampaignByIdPage() {
       )}
 
       {/* Approved section */}
-      <div className="flex flex-row gap-2">
-        <h2 className="text-2xl font-bold text-white mb-4">
+      <div className="flex flex-row items-center justify-between gap-3 mb-4">
+        <h2 className="text-lg font-semibold text-white">
           Approved Influencers
         </h2>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => {
-            ExportToExcel();
-          }}
-        >
-          <Download className="w-4 h-4 text-primary--text cursor-pointer" />
-        </Button>
+        {approvedCount > 0 && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-white/70 hover:text-white hover:bg-white/10 h-9 gap-1.5"
+            onClick={() => ExportToExcel()}
+          >
+            <Download className="size-4" />
+            Export
+          </Button>
+        )}
       </div>
 
       {data?.approved_influencers?.length ? (
@@ -64,7 +156,7 @@ export default function CampaignByIdPage() {
       )}
 
       {/* Rejected section */}
-      <h2 className="text-2xl font-bold text-white mb-4">
+      <h2 className="text-lg font-semibold text-white mb-4">
         Rejected Influencers
       </h2>
       {data?.rejected_influencers?.length ? (

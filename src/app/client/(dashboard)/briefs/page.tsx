@@ -4,6 +4,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown, Search, Trash } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
+import { FileText } from 'lucide-react';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import CampaignBriefHook, {
   DeleteCampaignBriefHook,
@@ -63,38 +65,32 @@ export default function CampaignBriefPage() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white px-4 md:px-12 py-10">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold">Campaign Briefs</h1>
-          <p className="text-neutral-400 mt-2">
-            Search, manage and download your AI-generated campaign strategies.
-          </p>
-        </div>
-
-        {/* Search + Sort */}
-        <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
-          <div className="relative w-full sm:w-72">
-            <Search className="absolute left-3 top-3 w-4 h-4 text-neutral-500" />
-
-            <input
-              placeholder="Search campaigns..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primaryButton"
-            />
+      <PageHeader
+        title="Campaign Briefs"
+        description="Search, manage and download your AI-generated campaign strategies."
+        icon={<FileText className="size-5" />}
+        actions={
+          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+            <div className="relative w-full sm:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+              <input
+                placeholder="Search campaigns..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full h-10 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primaryButton"
+              />
+            </div>
+            <Button
+              variant="outline"
+              className="border-white/10 bg-white/5 hover:bg-white/10 text-white h-10"
+              onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
+            >
+              <ArrowUpDown className="w-4 h-4 mr-2" />
+              {sortOrder === 'newest' ? 'Newest First' : 'Oldest First'}
+            </Button>
           </div>
-
-          <Button
-            variant="outline"
-            className="border-white/10 bg-white/5 hover:bg-white/10"
-            onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
-          >
-            <ArrowUpDown className="w-4 h-4 mr-2" />
-            {sortOrder === 'newest' ? 'Newest First' : 'Oldest First'}
-          </Button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Cards */}
       <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

@@ -5,15 +5,23 @@ import TableComponent from '@/src/app/component/CustomTable';
 import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.hook';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
 import { useState } from 'react';
+import PageHeader from '@/src/app/component/PageHeader';
+import { LayoutGrid } from 'lucide-react';
 
 export default function AllCampaign() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = CompanyCampaignHook(currentPage);
   return (
     <>
-      <h1 className="py-4 italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
-        All Campaigns
-      </h1>
+      <PageHeader
+        title="All Campaigns"
+        description={
+          data?.campaigns?.length != null && data?.total != null
+            ? `Showing ${data.campaigns.length} of ${data.total} campaigns`
+            : 'Your campaigns across all statuses'
+        }
+        icon={<LayoutGrid className="size-5" />}
+      />
       <TableComponent
         header={[
           'Campaign Name',

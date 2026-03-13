@@ -7,7 +7,8 @@ import TableComponent from '@/src/app/component/CustomTable';
 import ApprovedCampaignHook from '@/src/routes/Admin/Hooks/approvedCampaign-hook';
 import UpdateCampaignStatusHook from '@/src/routes/Admin/Hooks/updateCamapignStatus-hook';
 import { ApprovedCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, CircleCheck } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
@@ -39,30 +40,23 @@ const ApprovedCampaignPage = () => {
   const router = useRouter();
   return (
     <>
-      <div className="mb-6">
-        <div className="flex flex-row ">
-          <h1 className="italic text-xl md:text-3xl font-semibold text-white tracking-tight">
-            Approved Campaigns
-          </h1>
+      <PageHeader
+        title="Approved Campaigns"
+        description={`Showing ${data?.campaigns?.length ?? 0} of ${data?.total ?? 0} approved campaigns`}
+        icon={<CircleCheck className="size-5" />}
+        actions={
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => {
-              refetch();
-            }}
+            className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+            onClick={() => refetch()}
             disabled={isRefetching}
+            aria-label="Refresh list"
           >
-            <RefreshCcw
-              className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${
-                isRefetching ? 'animate-spin' : ''
-              }`}
-            />
+            <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
           </Button>
-        </div>
-        <p className="italic text-xs text-slate-200 mt-2">
-          Showing {data?.campaigns.length} of {data?.total} approved campaigns
-        </p>
-      </div>
+        }
+      />
       <TableComponent
         header={[
           'Company Name',

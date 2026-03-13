@@ -2,7 +2,8 @@
 import { Button } from "@/components/ui/button";
 import TableComponent from "@/src/app/component/CustomTable";
 import useAuthStore from "@/src/store/AuthStore/authStore";
-import { CircleCheckIcon, CircleXIcon } from "lucide-react";
+import { CircleCheckIcon, CircleXIcon, UserCheck } from "lucide-react";
+import PageHeader from "@/src/app/component/PageHeader";
 import Image from "next/image";
 import React, { useState } from "react";
 import StatusBadge from "@/src/app/component/custom-component/statusbadge";
@@ -157,13 +158,12 @@ export default function InfluencerReviewPage() {
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col space-y-4">
-        <h1 className="text-2xl font-bold text-white">Review Influencer</h1>
-        <p className="text-sm text-gray-400">
-          {data?.influencers?.length || 0} influencers available for review
-        </p>
-      </div>
-      
+      <PageHeader
+        title="Review Influencer"
+        description={`${data?.influencers?.length ?? 0} influencers available for review`}
+        icon={<UserCheck className="size-5" />}
+      />
+
       {isLoading ? (
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>

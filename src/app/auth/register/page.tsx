@@ -120,7 +120,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-[3fr_2fr]">
+    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-[4fr_2fr]">
       {/* Left - Gallery */}
       <div className="hidden lg:block h-full">
         <DomeGallery />
