@@ -20,6 +20,7 @@ export default function OnboardingInfluencerByCampaignId() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } = OnboardingHook(Id, currentPage);
   const { data: negotiationData } = NegotiationStatsHook(1, 100);
+  console.log('respinse data', data);
 
   const getNegotiationForInfluencer = useCallback(
     (influencer: ReviewInfluencerResponse) => {

@@ -6,7 +6,7 @@ import { UpdateCampaignBriefApi } from "../company.routes";
 export default function useUpdateCampaignBrief() {
   return useMutation({
     mutationFn: async ({ brief, product_image_urls }: UpdateCampaignBriefPayload) => {
-      // rename product_image_urls -> file for backend
+      // send multiple files to backend
       return await UpdateCampaignBriefApi(brief, product_image_urls);
     },
     onSuccess: () => {

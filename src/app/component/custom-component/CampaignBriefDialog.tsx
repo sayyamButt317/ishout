@@ -144,8 +144,10 @@ export default function CampaignBriefDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="!w-[95vw] !max-w-[1200px] h-[92vh] bg-gradient-to-br from-neutral-900 via-neutral-950 to-black border border-white/10 rounded-3xl overflow-y-auto p-0">
         {/* HEADER */}
-        <div className="flex items-center justify-between p-10 border-b border-white/10">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between p-10 border-b border-white/10 gap-6">
+          {/* LEFT SIDE */}
+          {/* LEFT SIDE */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             {/* Campaign Logo */}
             {localBrief.campaign_logo_url && (
               <div className="w-16 h-16 relative rounded-xl overflow-hidden bg-white/5 p-2 border border-white/10">
@@ -154,10 +156,11 @@ export default function CampaignBriefDialog({
                   alt="Campaign Logo"
                   fill
                   className="object-contain"
-                  priority // optional, if it's above the fold and important for LCP
+                  priority
                 />
               </div>
             )}
+
             {/* Campaign Description */}
             <div>
               <p className="text-neutral-400 max-w-3xl text-sm leading-relaxed">
@@ -166,7 +169,8 @@ export default function CampaignBriefDialog({
             </div>
           </div>
 
-          <div className="flex gap-2">
+          {/* BUTTONS */}
+          <div className="flex flex-col sm:flex-row gap-2">
             <Button
               size="sm"
               className="flex items-center gap-2 rounded-full bg-primaryButton hover:opacity-90"
