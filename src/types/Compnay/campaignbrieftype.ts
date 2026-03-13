@@ -42,5 +42,5 @@ export interface UpdateCampaignBrief {
 
 export interface UpdateCampaignBriefPayload {
   brief: UpdateCampaignBrief;
-  product_image_urls?: File | null;
+  product_image_urls?: File[] | null; // array now
 }
