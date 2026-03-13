@@ -80,7 +80,7 @@ export default function Sidebar({ links }: SidebarProps) {
         <a
           href="https://ishout.ae"
           rel="noopener noreferrer"
-          className="mb-8 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+          className="mb-8 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
         >
           <div className="relative">
             <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
