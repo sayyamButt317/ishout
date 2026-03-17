@@ -55,13 +55,6 @@ export default function CampaignBriefPage() {
       });
   }, [briefs, sortOrder, search]);
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-neutral-950 text-white">
-        Loading Campaign Briefs...
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-neutral-950 text-white px-4 md:px-12 py-10">

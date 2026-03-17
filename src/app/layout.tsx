@@ -7,6 +7,7 @@ import "react-phone-number-input/style.css";
 import QueryProvider from "@/src/context/QueryProvider";
 import CustomToast from "./component/customtoast";
 import ErrorBoundary from "@/src/errors/ErrorBoundary";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,7 +41,7 @@ export default function RootLayout({
           <Analytics />
           <SpeedInsights />
           <ErrorBoundary>{children}</ErrorBoundary>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryProvider>
       </body>
     </html>

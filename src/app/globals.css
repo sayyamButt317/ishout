@@ -240,15 +240,16 @@ html {
   width: 100%;
   height: 44px;
   padding: 0 12px;
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background-color: rgb(23, 23, 23) !important;
-  transition: all 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .profile-phone-input:focus-within {
-  border-color: rgba(255, 78, 126, 0.5) !important;
-  box-shadow: 0 0 0 2px rgba(255, 78, 126, 0.1);
+  border-color: var(--color-primaryButton) !important;
+  box-shadow: 0 0 0 2px rgba(255, 78, 126, 0.2);
+  background-color: rgba(255, 255, 255, 0.06) !important;
 }
 
 .profile-phone-input:disabled {
@@ -272,7 +273,7 @@ html {
 }
 
 .profile-phone-input .PhoneInputCountrySelect {
-  background-color: #0d0d1e;
+  background-color: var(--color-background);
   color-scheme: dark;
   border: none;
   outline: none;
@@ -283,7 +284,7 @@ html {
 }
 
 .profile-phone-input .PhoneInputCountrySelect option {
-  background-color: #0d0d1e;
+  background-color: var(--color-background);
   color: rgb(212, 212, 212);
 }
 

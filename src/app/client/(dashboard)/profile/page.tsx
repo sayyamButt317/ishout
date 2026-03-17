@@ -1,6 +1,4 @@
 "use client";
-
-import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -40,111 +38,8 @@ import {
   ChangePasswordFormValidator,
 } from "@/src/validators/Company/change-password-validation";
 import ProfileChangePasswordHook from "@/src/routes/Company/api/Hooks/profile-change-password.hook";
+import { MobileCountrySelect } from "@/src/app/component/custom-component/selectcountry";
 
-type CountryOption = { value?: string; label: string };
-type FlagIconComponent = ComponentType<{ country: string; title: string; className?: string }>;
-
-function MobileCountrySelect({
-  value,
-  onChange,
-  options,
-  iconComponent: FlagIcon,
-  disabled,
-}: {
-  value?: string;
-  onChange: (value?: string) => void;
-  options: CountryOption[];
-  iconComponent: FlagIconComponent;
-  disabled?: boolean;
-}) {
-  const [open, setOpen] = useState(false);
-  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => { if (!disabled) setOpen(true); }}
-        className={`flex items-center gap-1 rounded px-1 py-0.5 transition-colors ${
-          disabled ? 'cursor-not-allowed opacity-50' : 'hover:bg-white/10 cursor-pointer'
-        }`}
-      >
-        {value && <FlagIcon country={value} title={selectedLabel} />}
-        <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-        </svg>
-      </button>
-
-      {open && !disabled && typeof document !== 'undefined' && createPortal(
-        <>
-          <div
-            style={{ position: 'fixed', inset: 0, zIndex: 9998, background: 'rgba(0,0,0,0.6)' }}
-            onClick={() => setOpen(false)}
-          />
-          <div
-            style={{
-              position: 'fixed',
-              top: '15%',
-              bottom: 80,
-              left: 40,
-              right: 40,
-              zIndex: 9999,
-              display: 'flex',
-              flexDirection: 'column',
-              overflow: 'hidden',
-              borderRadius: '16px',
-              background: 'rgb(23,23,23)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 16px 8px', borderBottom: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
-              <span style={{ color: 'white', fontWeight: 600, fontSize: '14px' }}>Select Country</span>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                style={{ color: 'rgba(255,255,255,0.6)', background: 'none', border: 'none', cursor: 'pointer', padding: 4, display: 'flex', alignItems: 'center' }}
-              >
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
-            <ul style={{ flex: 1, overflowY: 'auto', margin: 0, padding: 0, listStyle: 'none' }}>
-              {options.filter((o) => o.value).map((o) => (
-                <li key={o.value}>
-                  <button
-                    type="button"
-                    style={{
-                      width: '100%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 12,
-                      padding: '10px 16px',
-                      fontSize: '14px',
-                      background: o.value === value ? 'rgba(255,255,255,0.1)' : 'transparent',
-                      color: o.value === value ? 'white' : 'rgb(212,212,212)',
-                      fontWeight: o.value === value ? 600 : 400,
-                      border: 'none',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                    }}
-                    onClick={() => { onChange(o.value); setOpen(false); }}
-                  >
-                    <FlagIcon country={o.value!} title={o.label} />
-                    <span>{o.label}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </>,
-        document.body
-      )}
-    </>
-  );
-}
 
 export default function CompanyProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -243,8 +138,11 @@ export default function CompanyProfilePage() {
     );
   };
 
+  const inputBase =
+    "h-11 rounded-xl border border-white/10 bg-white/[0.04] pl-10 text-white placeholder:text-white/40 transition-colors focus:border-[var(--color-primaryButton)] focus:ring-2 focus:ring-[var(--color-primaryButton)]/20 focus:bg-white/[0.06] disabled:opacity-60 disabled:cursor-not-allowed";
+
   return (
-    <div className="bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-950">
+    <div className="min-h-screen bg-[var(--color-background)] font-sans">
       <PageHeader
         title="Profile"
         description="Update your profile information and contact details"
@@ -254,7 +152,7 @@ export default function CompanyProfilePage() {
             <Button
               variant="ghost"
               size="icon"
-              className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+              className="size-8 cursor-pointer text-white/60 hover:bg-white/10 hover:text-[var(--color-primaryButton)] transition-colors"
               onClick={() => refetch()}
               disabled={isRefetching}
               aria-label="Refresh profile"
@@ -274,7 +172,7 @@ export default function CompanyProfilePage() {
                   form.reset();
                   setIsEditing(false);
                 }}
-                className="bg-gray-700 text-white h-9 px-4"
+                className="h-10 rounded-xl cursor-pointer border border-white/15 bg-white/5 px-4 text-sm font-medium text-white hover:bg-white/10 transition-colors"
               >
                 Cancel
               </Button>
@@ -286,10 +184,10 @@ export default function CompanyProfilePage() {
               onClick={() => {
                 if (!isEditing) setIsEditing(true);
               }}
-              className="bg-secondaryButton text-white h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-10 rounded-xl cursor-pointer bg-[var(--color-primaryButton)] px-4 text-sm font-semibold text-white hover:bg-[var(--color-primaryHover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-primaryButton)]"
             >
               {isEditing ? (
-                isPending ? <Loader2 className="animate-spin" /> : "Save Profile"
+                isPending ? <Loader2 className="size-4 animate-spin" /> : "Save Profile"
               ) : (
                 "Edit Profile"
               )}
@@ -297,10 +195,11 @@ export default function CompanyProfilePage() {
           </>
         }
       />
-      <Card className="w-full rounded-2xl shadow-xl border border-white/10 bg-neutral-900/80 backdrop-blur">
-        <CardContent>
+      <Card className="w-full rounded-2xl border border-white/[0.08] bg-[var(--color-section-overlays)] shadow-[0_1px_0_0_rgba(255,255,255,0.05)_inset]">
+        <CardContent className="p-6 sm:p-8">
           <div className="mb-6">
             <h2 className="text-lg font-semibold text-white">Profile Information</h2>
+            <p className="mt-1 text-sm text-white/50">Your company and contact details</p>
           </div>
 
           <Form {...form}>
@@ -315,22 +214,22 @@ export default function CompanyProfilePage() {
                   name="contact_person"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-neutral-300">
+                      <FormLabel className="text-white/70">
                         Contact Person
                       </FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                           <Input
                             {...field}
                             type="text"
                             placeholder={data?.user?.contact_person || ""}
                             disabled={!isEditing}
-                            className="pl-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
+                            className={inputBase}
                           />
                         </div>
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-red-400 text-xs" />
                     </FormItem>
                   )}
                 />
@@ -343,7 +242,7 @@ export default function CompanyProfilePage() {
                     const displayValue = normalizePhoneNumberForDisplay(field.value);
                     return (
                       <FormItem>
-                        <FormLabel className="text-neutral-300">
+                        <FormLabel className="text-white/70">
                           Phone Number
                         </FormLabel>
                         <FormControl>
@@ -381,7 +280,7 @@ export default function CompanyProfilePage() {
                             </div>
                           </div>
                         </FormControl>
-                        <FormMessage />
+                        <FormMessage className="text-red-400 text-xs" />
                       </FormItem>
                     );
                   }}
@@ -394,22 +293,22 @@ export default function CompanyProfilePage() {
                 name="company_name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-neutral-300">
+                    <FormLabel className="text-white/70">
                       Company Name
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                        <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                         <Input
                           {...field}
                           type="text"
                           placeholder="Your Company Name"
                           disabled={!isEditing}
-                          className="pl-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
+                          className={inputBase}
                         />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400 text-xs" />
                   </FormItem>
                 )}
               />
@@ -420,36 +319,36 @@ export default function CompanyProfilePage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-neutral-300">
+                    <FormLabel className="text-white/70">
                       Email Address
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                         <Input
                           {...field}
                           type="email"
                           placeholder="name@company.com"
                           disabled={!isEditing}
-                          className="pl-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
+                          className={inputBase}
                         />
                       </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-red-400 text-xs" />
                   </FormItem>
                 )}
               />
             </form>
           </Form>
 
-          <div className="mt-8 pt-8 border-t border-white/10">
+          <div className="mt-10 pt-8 border-t border-white/10">
             <div className="mb-6">
-              <div className="flex flex-row items-center gap-2 justify-between">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <h2 className="text-xl md:text-2xl font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-white">
                     Change Password
                   </h2>
-                  <p className="italic text-xs text-slate-200 mt-2">
+                  <p className="mt-1 text-sm text-white/50">
                     Update your account password
                   </p>
                 </div>
@@ -465,7 +364,7 @@ export default function CompanyProfilePage() {
                         passwordForm.clearErrors();
                         setIsEditingPassword(false);
                       }}
-                      className="bg-gray-700 text-white h-9 px-4"
+                      className="h-10 cursor-pointer rounded-xl border border-white/15 bg-white/5 px-4 text-sm font-medium text-white hover:bg-white/10 transition-colors"
                     >
                       Cancel
                     </Button>
@@ -491,7 +390,7 @@ export default function CompanyProfilePage() {
                         setIsEditingPassword(true);
                       }
                     }}
-                    className="bg-secondaryButton text-white h-9 px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="h-10 cursor-pointer rounded-xl bg-[var(--color-primaryButton)] px-4 text-sm font-semibold text-white hover:bg-[var(--color-primaryHover)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[var(--color-primaryButton)]"
                   >
                     {isEditingPassword ? (
                       isChangingPassword ? (
@@ -519,29 +418,29 @@ export default function CompanyProfilePage() {
                     name="old_password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-neutral-300">
+                        <FormLabel className="text-white/70">
                           Old Password
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                             <Input
                               type={showPassword ? "text" : "password"}
                               placeholder="Enter old password"
                               {...field}
                               value={field.value || ""}
                               disabled={!isEditingPassword}
-                              className="pl-10 pr-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
+                              className={`${inputBase} pr-10`}
                             />
                             <button
                               type="button"
                               onClick={() => setShowPassword((v) => !v)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-[var(--color-primaryButton)] transition-colors"
                             >
                               {showPassword ? (
-                                <EyeOff className="h-5 w-5" />
+                                <EyeOff className="h-5 w-5 cursor-pointer" />
                               ) : (
-                                <Eye className="h-5 w-5" />
+                                <Eye className="h-5 w-5 cursor-pointer" />
                               )}
                             </button>
                           </div>
@@ -558,29 +457,29 @@ export default function CompanyProfilePage() {
                     name="new_password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-neutral-300">
+                        <FormLabel className="text-white/70">
                           New Password
                         </FormLabel>
                         <FormControl>
                           <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                             <Input
                               type={showNewPassword ? "text" : "password"}
                               placeholder="Enter new password"
                               {...field}
                               value={field.value || ""}
                               disabled={!isEditingPassword}
-                              className="pl-10 pr-10 h-11 bg-neutral-950 border-white/10 text-white focus:ring-2 focus:ring-secondaryButton"
+                              className={`${inputBase} pr-10`}
                             />
                             <button
                               type="button"
                               onClick={() => setShowNewPassword((v) => !v)}
-                              className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-[var(--color-primaryButton)] transition-colors"
                             >
                               {showNewPassword ? (
-                                <EyeOff className="h-5 w-5" />
+                                <EyeOff className="h-5 w-5 cursor-pointer" />
                               ) : (
-                                <Eye className="h-5 w-5" />
+                                <Eye className="h-5 w-5 cursor-pointer" />
                               )}
                             </button>
                           </div>
