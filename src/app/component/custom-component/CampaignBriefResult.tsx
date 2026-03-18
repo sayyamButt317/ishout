@@ -134,21 +134,24 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
       </div>
 
       {/* EXTRA FIELDS */}
-      <div className="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-6 pt-10 mt-10 mb-14 shadow-xl space-y-8">
+      <div className="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-xl p-8 mt-10 mb-14 shadow-xl flex flex-col gap-10">
         {/* IMAGE FIELD */}
-        <div>
-          {/* Label */}
-          <label className="text-2xl font-semibold text-white mb-4 block">
-            Campaign Images
-          </label>
-          <p className="text-sm text-neutral-400 mb-4">
-            Add reference images for campaign
-          </p>
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold text-white leading-tight">
+              Campaign Images
+            </h3>
+            <p className="text-sm text-neutral-400">Click Edit button to make changes</p>
+            <p className="text-xs text-neutral-500 italic">Add Product Images</p>
+          </div>
 
           {/* Image grid */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4 pt-2">
             {campaignImages.map((img, index) => (
-              <div key={index} className="relative w-24 h-24 rounded-lg overflow-hidden">
+              <div
+                key={index}
+                className="relative w-24 h-24 rounded-xl overflow-hidden ring-1 ring-white/10 shadow-lg"
+              >
                 <Image
                   src={URL.createObjectURL(img)}
                   alt={`Selected ${index}`}
@@ -161,7 +164,7 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
                     onClick={() =>
                       setCampaignImages(campaignImages.filter((_, i) => i !== index))
                     }
-                    className="absolute top-0.5 right-0.5 text-white rounded-full w-6 h-6 flex items-center justify-center text-xl"
+                    className="absolute top-1 right-1 bg-black/60 hover:bg-red-500/80 backdrop-blur-md text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors"
                   >
                     ×
                   </button>
@@ -172,14 +175,14 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
             {/* + Button to add more images */}
             <label
               htmlFor="image-upload"
-              className={`w-24 h-24 flex items-center justify-center border-2 rounded-lg transition text-white text-2xl font-bold
+              className={`w-24 h-24 flex items-center justify-center border-2 rounded-xl transition-all text-white text-2xl
           ${
             editable
-              ? 'border-dashed border-white/30 hover:border-white/60 cursor-pointer'
+              ? 'border-dashed border-white/20 hover:border-white/50 hover:bg-white/5 cursor-pointer'
               : 'border-white/10 cursor-not-allowed opacity-50'
           }`}
             >
-              +
+              <span className="font-light">+</span>
             </label>
             <input
               id="image-upload"
@@ -198,48 +201,58 @@ const CampaignBriefResult = ({ brief, onRegenerate, onApprove }: Props) => {
         </div>
 
         {/* VIDEO LINKS */}
-        <div className="pt-6 border-t border-white/10 space-y-4">
-          <label className="text-2xl text-white mb-1 block">Video Links</label>
-          <p className="text-xs text-neutral-500 mb-2">
-            Add reference video links for campaign
-          </p>
-          {videoLinks.map((link, index) => (
-            <div key={index} className="flex gap-2">
-              <input
-                type="text"
-                placeholder="https://example.com"
-                value={link}
-                disabled={!editable}
-                onChange={(e) =>
-                  setVideoLinks(
-                    videoLinks.map((v, i) => (i === index ? e.target.value : v)),
-                  )
-                }
-                className={`w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm ${
-                  !editable ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              />
-              {editable && (
-                <button
-                  type="button"
-                  onClick={() => setVideoLinks(videoLinks.filter((_, i) => i !== index))}
-                  className="px-2 text-white text-2xl"
-                >
-                  ×
-                </button>
-              )}
-            </div>
-          ))}
+        <div className="pt-8 border-t border-white/10 space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold text-white leading-tight">Video Links</h3>
+            <p className="text-xs text-neutral-500 italic">
+              Add reference video links for campaign
+            </p>
+          </div>
 
-          {editable && (
-            <button
-              type="button"
-              onClick={() => setVideoLinks([...videoLinks, ''])}
-              className="px-3 py-1 bg-primaryButton text-white rounded-lg text-sm"
-            >
-              + Add Video Link
-            </button>
-          )}
+          <div className="space-y-3">
+            {videoLinks.map((link, index) => (
+              <div
+                key={index}
+                className="flex gap-3 animate-in fade-in slide-in-from-left-2"
+              >
+                <input
+                  type="text"
+                  placeholder="https://example.com"
+                  value={link}
+                  disabled={!editable}
+                  onChange={(e) =>
+                    setVideoLinks(
+                      videoLinks.map((v, i) => (i === index ? e.target.value : v)),
+                    )
+                  }
+                  className={`w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white text-sm transition-all focus:border-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 ${
+                    !editable ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/[0.07]'
+                  }`}
+                />
+                {editable && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setVideoLinks(videoLinks.filter((_, i) => i !== index))
+                    }
+                    className="px-2 text-neutral-400 hover:text-red-400 transition-colors text-2xl"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            ))}
+
+            {editable && (
+              <button
+                type="button"
+                onClick={() => setVideoLinks([...videoLinks, ''])}
+                className="mt-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white rounded-xl text-sm font-medium transition-all active:scale-95 flex items-center gap-2"
+              >
+                <span className="text-lg">+</span> Add Video Link
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
