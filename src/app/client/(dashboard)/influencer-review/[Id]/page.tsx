@@ -60,52 +60,55 @@ export default function InfluencerReviewPage() {
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => {
-                updateInfluencerStatus({
-                  campaign_id: influencer.campaign_id,
-                  influencer_id: influencer.influencer_id,
-                  platform: influencer.platform,
-                  status: 'approved',
-                  username: influencer.username,
-                  followers: influencer.followers,
-                  engagementRate: influencer.engagementRate,
-                  picture: influencer.picture,
-                  bio: influencer.bio,
-                  country: influencer.country,
-                  company_user_id: user_id,
-                });
-              }}
-              disabled={isUpdatingInfluencerStatus}
-              className="h-8 rounded-full border border-white/40 bg-white/[0.02] px-3 text-sm font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
-            >
-              <CircleCheckIcon className="h-4 w-4 text-emerald-500" />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                updateInfluencerStatus({
-                  campaign_id: influencer.campaign_id,
-                  influencer_id: influencer.influencer_id,
-                  platform: influencer.platform,
-                  status: 'rejected',
-                  username: influencer.username,
-                  followers: influencer.followers,
-                  engagementRate: influencer.engagementRate,
-                  picture: influencer.picture,
-                  bio: influencer.bio,
-                  country: influencer.country,
-                  company_user_id: user_id,
-                });
-              }}
-              disabled={isUpdatingInfluencerStatus}
-              className="h-8 rounded-full border border-white/40 bg-white/[0.02] px-3 text-sm font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
-            >
-              <CircleXIcon className="h-4 w-4 text-destructive" />
-            </Button>
-          </div>
+          {influencer?.company_approved === false && (
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  updateInfluencerStatus({
+                    campaign_id: influencer.campaign_id,
+                    influencer_id: influencer.influencer_id,
+                    platform: influencer.platform,
+                    status: 'approved',
+                    username: influencer.username,
+                    followers: influencer.followers,
+                    engagementRate: influencer.engagementRate,
+                    picture: influencer.picture,
+                    bio: influencer.bio,
+                    country: influencer.country,
+                    company_user_id: user_id,
+                  });
+                }}
+                disabled={isUpdatingInfluencerStatus}
+                className="h-8 rounded-full border border-white/40 bg-white/[0.02] px-3 text-sm font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
+              >
+                <CircleCheckIcon className="h-4 w-4 text-emerald-500" />
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={() => {
+                  updateInfluencerStatus({
+                    campaign_id: influencer.campaign_id,
+                    influencer_id: influencer.influencer_id,
+                    platform: influencer.platform,
+                    status: 'rejected',
+                    username: influencer.username,
+                    followers: influencer.followers,
+                    engagementRate: influencer.engagementRate,
+                    picture: influencer.picture,
+                    bio: influencer.bio,
+                    country: influencer.country,
+                    company_user_id: user_id,
+                  });
+                }}
+                disabled={isUpdatingInfluencerStatus}
+                className="h-8 rounded-full border border-white/40 bg-white/[0.02] px-3 text-sm font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
+              >
+                <CircleXIcon className="h-4 w-4 text-destructive" />
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] divide-x divide-white/10">
@@ -131,7 +134,7 @@ export default function InfluencerReviewPage() {
 
         <div className="mt-4 grid grid-cols-2 gap-4">
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-5 py-4 text-center">
-            <p className="text-sm text-white/75">Admin Status</p>
+            <p className="text-sm text-white/75">iShout</p>
             <p
               className={`mt-1 text-lg font-normal ${influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'}`}
             >
@@ -142,18 +145,22 @@ export default function InfluencerReviewPage() {
             <p className="text-sm text-white/75">Company Status</p>
             <p
               className={`mt-1 text-lg font-normal ${
-                influencer?.status === 'approved'
-                  ? 'text-emerald-400'
-                  : influencer?.status === 'rejected'
-                    ? 'text-red-400'
-                    : 'text-yellow-400'
+                influencer?.company_approved === false
+                  ? 'text-blue-400'
+                  : influencer?.status === 'approved'
+                    ? 'text-emerald-400'
+                    : influencer?.status === 'rejected'
+                      ? 'text-red-400'
+                      : 'text-blue-400'
               }`}
             >
-              {influencer?.status === 'approved'
-                ? 'Approved'
-                : influencer?.status === 'rejected'
-                  ? 'Rejected'
-                  : 'Pending'}
+              {influencer?.company_approved === false
+                ? 'Pending'
+                : influencer?.status === 'approved'
+                  ? 'Approved'
+                  : influencer?.status === 'rejected'
+                    ? 'Rejected'
+                    : 'Pending'}
             </p>
           </div>
         </div>
