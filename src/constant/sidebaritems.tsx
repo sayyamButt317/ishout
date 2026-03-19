@@ -43,26 +43,26 @@ export const employeeSidebarLinks = [
       <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
     ),
   },
-  {
-    label: 'Image Studio',
-    route: '/client/image-studio',
-    icon: (
-      <Image
-        src="/assets/studio.png"
-        alt="Image Studio"
-        width={50}
-        height={50}
-        className="w-full h-full rounded-full"
-      />
-    ),
-  },
-  {
-    label:'Video Studio',
-    route: '/client/video-studio',
-    icon: (
-      <Video className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
-    ),
-  },
+  // {
+  //   label: 'Image Studio',
+  //   route: '/client/image-studio',
+  //   icon: (
+  //     <Image
+  //       src="/assets/studio.png"
+  //       alt="Image Studio"
+  //       width={50}
+  //       height={50}
+  //       className="w-full h-full rounded-full"
+  //     />
+  //   ),
+  // },
+  // {
+  //   label:'Video Studio',
+  //   route: '/client/video-studio',
+  //   icon: (
+  //     <Video className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+  //   ),
+  // },
   {
     label: 'Content Feedback',
     route: '/client/content-feedback',
