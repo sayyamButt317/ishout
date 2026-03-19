@@ -158,12 +158,15 @@ export const uploadCampaignLogoApi = async (brief_id: string, file: File) => {
   return response.data;
 };
 
-export const ReviewPendingInfluencers = async (campaign_id: string, page: number = 1) => {
+export const ReviewPendingInfluencers = async (
+  campaign_id: string,
+  page: number = 1
+) => {
   const response = await api.get(
     CompanyENDPOINT.REVIEW_PENDING_INFLUENCERS(campaign_id),
     {
       params: { page },
-    },
+    }
   );
   return response.data;
 };

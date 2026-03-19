@@ -3,7 +3,7 @@ import { ReviewPendingInfluencers } from "../company.routes";
 
 export default function ApprovedCampaignHook(page: number = 1, campaign_id: string) {
     return useQuery({
-        queryKey: ['approved-campaign', page, campaign_id],
+        queryKey: ['campaign-influencers', page, campaign_id],
         queryFn: () => ReviewPendingInfluencers(campaign_id, page),
         enabled: !!campaign_id,
         refetchOnWindowFocus: false,

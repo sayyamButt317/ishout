@@ -22,7 +22,8 @@ UPLOAD_CAMPAIGN_LOGO: (brief_id: string) =>
   PROFILE_UPDATE: (user_id: string) => `/company/update-profile/${user_id}`,
 
   COMPANY_UPDATE_INFLUENCER_STATUS: `/company/campaigns/update-influencer-status`,
-  REVIEW_PENDING_INFLUENCERS: (campaign_id: string) => `/company/review-pending-influencers/${campaign_id}`,
+REVIEW_PENDING_INFLUENCERS: (campaign_id: string) =>
+  `/company/campaigns/${campaign_id}/campaign-influencers`,
   COMPNAY_APPROVED_CAMPAIGN: (user_id: string) => `/company/${user_id}/approved-campaign`,
   FORGOT_PASSWORD: `/auth/forgot-password`,
   VERIFY_OTP: `/auth/verify-otp`,
