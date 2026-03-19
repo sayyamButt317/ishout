@@ -36,8 +36,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CustomToast />
         <QueryProvider>
+        <CustomToast />
           <Analytics />
           <SpeedInsights />
           <ErrorBoundary>{children}</ErrorBoundary>

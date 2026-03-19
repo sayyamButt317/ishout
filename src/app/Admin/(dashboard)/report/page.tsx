@@ -1,9 +1,5 @@
-import React from 'react'
-
-const ContentReportGeneration = () => {
+export default function ContentReportGeneration() {
   return (
     <div>ContentReportGeneration</div>
   )
 }
-
-export default ContentReportGeneration
