@@ -1,15 +1,17 @@
 import {
+  CheckCircle,
   CircleCheck,
   FileText,
   Handshake,
-  // FileText,
   Hourglass,
   LayoutGrid,
   Plus,
   User,
   UserCheck,
   Users,
+  Video,
 } from 'lucide-react';
+import Image from 'next/image';
 import { SiWhatsapp } from 'react-icons/si';
 
 export const employeeSidebarLinks = [
@@ -39,6 +41,40 @@ export const employeeSidebarLinks = [
     route: '/client/briefs',
     icon: (
       <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+    ),
+  },
+  {
+    label: 'Image Studio',
+    route: '/client/image-studio',
+    icon: (
+      <Image
+        src="/assets/studio.png"
+        alt="Image Studio"
+        width={50}
+        height={50}
+        className="w-full h-full rounded-full"
+      />
+    ),
+  },
+  {
+    label:'Video Studio',
+    route: '/client/video-studio',
+    icon: (
+      <Video className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+    ),
+  },
+  {
+    label: 'Content Feedback',
+    route: '/client/content-feedback',
+    icon: (
+      <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+    ),
+  },
+  {
+    label: 'Approved Content',
+    route: '/client/approved-content',
+    icon: (
+      <CheckCircle className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
     ),
   },
   {

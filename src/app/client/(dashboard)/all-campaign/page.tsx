@@ -6,7 +6,9 @@ import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
 import { useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
-import { LayoutGrid } from 'lucide-react';
+import { Download, LayoutGrid } from 'lucide-react';
+import CustomButton from '@/src/app/component/button';
+import Button from '@/src/app/component/button';
 
 export default function AllCampaign() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -55,28 +57,10 @@ export default function AllCampaign() {
           </div>,
           <div key={`status-${campaign?.campaign_id}`} className="truncate">
             <StatusBadge status={campaign.status} />
-            {/* <StatusBadge status={campaign.status} /> */}
           </div>,
           <div key={`created-at-${campaign?.campaign_id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
-          //   <div key={`view-${campaign?.campaign_id}`} className="truncate">
-          //     <Button
-          //       className="cursor-pointer"
-          //       variant="outline"
-          //       size="icon"
-          //       onClick={() =>
-          //         router.push(`/Admin/pending-campaign/${campaign?.campaign_id}`)
-          //       }
-          //     >
-          //       <Eye className="w-4 h-4 text-primary-text cursor-pointer" />
-          //     </Button>
-          //   </div>,
-          // <div key={`delete-${campaign._id}`} className="truncate">
-          //   <Button variant="outline" size="icon">
-          //     <Download className="w-4 h-4 text-delete-text cursor-pointer" />
-          //   </Button>
-          // </div>,
         ])}
         paginationstart={data?.page ?? 1}
         paginationend={data?.total_pages ?? 1}

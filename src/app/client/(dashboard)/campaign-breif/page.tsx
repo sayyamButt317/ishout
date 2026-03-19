@@ -134,15 +134,16 @@ const CampaignBreifPage = () => {
     setShowSummaryPopup(true);
   }, [reset]);
 
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#0B0F19] via-[#0F172A] to-black text-white flex flex-col">
-      <div className="px-4 md:px-6">
+      {/* <div className="px-4 md:px-6">
         <PageHeader
           title="Generate Campaign Brief"
           description="Describe your brand, goals, and audience. Our AI will craft a structured influencer campaign brief."
           icon={<Sparkles className="size-5" />}
         />
-      </div>
+      </div> */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-4xl">
           <div className="text-center mb-14">
