@@ -211,6 +211,34 @@ export const WhatsAppUserMessagesApi = async (thread_id: string, { page, page_si
     return response.data;
 }
 
+export const WhatsAppAdminInfluencerMessagesApi = async (
+  thread_id: string,
+  { page, page_size }: { page: number; page_size: number }
+) => {
+  const response = await api.get(
+    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_BY_ID(thread_id),
+    {
+      params: {
+        page,
+        page_size,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+// inside src/routes/Admin/API/admin.routes.ts
+
+export const WhatsAppAdminSendHumanMessageApi = async (
+  thread_id: string,
+  message: string
+) => {
+  const response = await api.post(AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_SEND_HUMAN_MESSAGE(thread_id), { message });
+  return response.data;
+};
+
+
 export const HumanTakeoverApi = async (
     thread_id: string,
     enabled: boolean
