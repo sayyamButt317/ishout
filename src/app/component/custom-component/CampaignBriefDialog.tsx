@@ -43,7 +43,18 @@ export default function CampaignBriefDialog({
     setLocalBrief({ ...localBrief, [key]: value });
   };
 
-  const handleExportPDF = () => {
+  const getBase64FromUrl = async (url: string) => {
+    const res = await fetch(url);
+    const blob = await res.blob();
+
+    return new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+  };
+
+  const handleExportPDF = async () => {
     if (!localBrief) return;
 
     const doc = new jsPDF({
@@ -69,7 +80,9 @@ export default function CampaignBriefDialog({
 
     const addSection = (title: string, items: string[]) => {
       if (!items || items.length === 0) return;
+
       checkPageBreak(2);
+
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(14);
       doc.text(title, margin, y);
@@ -77,6 +90,7 @@ export default function CampaignBriefDialog({
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(11);
+
       items.forEach((item) => {
         const splitText = doc.splitTextToSize(`• ${item}`, textWidth);
         checkPageBreak(splitText.length);
@@ -87,7 +101,6 @@ export default function CampaignBriefDialog({
       y += 4;
     };
 
-    // Title
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(20);
     doc.text('Campaign Brief', margin, y);
@@ -95,10 +108,12 @@ export default function CampaignBriefDialog({
 
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
+
     const brandText = doc.splitTextToSize(
       localBrief.brand_name_influencer_campaign_brief || '',
       textWidth,
     );
+
     doc.text(brandText, margin, y);
     y += brandText.length * 6 + 5;
 
@@ -115,6 +130,54 @@ export default function CampaignBriefDialog({
     addSection('KPIs & Success Metrics', localBrief.kpis_success_metrics);
     addSection('Usage Rights', localBrief.usage_rights);
     addSection("Do's & Don'ts", localBrief.dos_donts);
+
+    if (localBrief.product_image_urls?.length) {
+      doc.addPage();
+      y = 20;
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text('Product Images', margin, y);
+      y += 10;
+
+      const imgSize = 40;
+      let x = margin;
+
+      for (let i = 0; i < localBrief.product_image_urls.length; i++) {
+        const imgUrl = localBrief.product_image_urls[i];
+
+        try {
+          const base64 = await getBase64FromUrl(imgUrl);
+          const format = base64.includes('image/png') ? 'PNG' : 'JPEG';
+          doc.addImage(base64, format, x, y, imgSize, imgSize);
+          x += imgSize + 5;
+          if (x + imgSize > pageWidth - margin) {
+            x = margin;
+            y += imgSize + 10;
+          }
+        } catch (err) {
+          console.error('Image load failed', err);
+        }
+      }
+    }
+    if (localBrief.video_links?.length) {
+      doc.addPage();
+      y = 20;
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text('Video Links', margin, y);
+      y += 10;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      localBrief.video_links.forEach((link: string) => {
+        const splitText = doc.splitTextToSize(link, textWidth);
+        doc.text(splitText, margin, y);
+        doc.link(margin, y - 4, textWidth, 6, { url: link });
+        y += splitText.length * 6 + 4;
+      });
+    }
 
     doc.save('campaign-brief.pdf');
   };
