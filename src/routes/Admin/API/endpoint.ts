@@ -41,6 +41,12 @@ export const AdminENDPOINT = {
   ADMIN_WHATSAPP_USERMESSAGE_BY_ID: (thread_id: string) =>
     `/admin/whatsapp-messages/${thread_id}`,
 
+  ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_BY_ID: (thread_id: string) =>
+    `/admin/whatsapp-admin-influencer-messages/${thread_id}`,
+
+    ADMIN_WHATSAPP_ADMIN_SEND_HUMAN_MESSAGE: (thread_id: string) =>
+    `/admin/whatsapp-admin-influencer/send-human-message/${thread_id}`,
+
   ADMIN_HUMAN_TAKEOVER: (thread_id: string) =>
     `/admin/whatsapp/toggle-takeover/${thread_id}`,
   ADMIN_SEND_WHATSAPP_MESSAGEl: (thread_id: string) =>
