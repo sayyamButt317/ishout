@@ -17,7 +17,6 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
-import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-send-message-hook';
 import useAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-hook';
 
 interface CardType {
@@ -62,59 +61,6 @@ const COLUMNS = [
   { id: 'approved', label: 'Approved', count: 28, color: 'emerald' },
 ];
 
-// const MOCK_CARDS = {
-//   drafts: [
-//     {
-//       id: '1',
-//       title: 'Summer24 - @alex_creatives',
-//       campaign: 'Summer Launch',
-//       type: 'video',
-//       rights: 'Full Rights',
-//       thumb:
-//         'https://lh3.googleusercontent.com/aida-public/AB6AXuDgZ3DmRxJgpDr-vZ5akw4hJ96IMzjon5qig09AKkuU2VUMyBx_seNE6Y46zsrEQ2OiQa1ApPYAPC-PNt4op-9CBHYz6eS5d3nAUNT6lUtQoeqUvR98B_L5DanH33COp4yirumB9348C2JvZPZyHMUN9VYbrvgN8JrDmjGIUSvoN8fDLIK_AM7150CI9WS7A-tk8rssqJZCFkjPCosUUN0GwSzH-sR2qsWO22_nof_zdGQqY61YvMKfPftgB2MpWWznINStG7CrXh0',
-//       avatar:
-//         'https://lh3.googleusercontent.com/aida-public/AB6AXuA9WYfN4-bwHM5ZxUjim5f986NPdbh41Dk7VidgvjCMvJmtbL0gy3zPdHBmqTQ60aYdd_SYWUrhdtVY1WifhcE1sKRRVsekkDOwD3Mt0eCSN1Ew1ycemhvzQu5-xQhEjbGRx_AA-coeGenNJzhB03Ob3BP72cUJBCvGKOQ6HtKC1x-blVGtJ-wS35w8saFVQNXhDMnMxSt9nUE0m0NsMxCGogQXrnD60b4RbL2Y5oqEKQL8RR5HCPPylFZe1omXb_UYny9HXHcleQI',
-//     },
-//   ],
-//   review: [
-//     {
-//       id: '2',
-//       title: 'Unboxing v1 - @tech_reviews',
-//       campaign: 'Tech Launch',
-//       type: 'video',
-//       rights: 'Full Rights',
-//       comments: 3,
-//       thumb:
-//         'https://lh3.googleusercontent.com/aida-public/AB6AXuARQT8XBdfBp_SJf2iVSPnRJoKkiEqan9teAuuR8QaqL1TpuoKk4OnM1cUmoiwEfSO6NC2S3JCWtUcEkAX3Ejn01015oNiUlDh0awpmgiYPpZesw2ypCUOnARNaA5YiSRGYrMD2znllP1sYwISlFGT4lCCrUxPrHplgDuFQ46Af2RAViIKPY_vfcFyB1F8XHM8nrdnmiq1KkJiz3vvFShBLS6LFffzxSDySgaQggpor_BUXW-8vQ9bujzC84-VYO1p7nmxgn83-HaU',
-//       avatar: '',
-//     },
-//   ],
-//   revision: [
-//     {
-//       id: '3',
-//       title: 'PastaNight - @foodie_ella',
-//       campaign: 'New Menu 2024',
-//       status: 'Waiting for v2',
-//       thumb:
-//         'https://lh3.googleusercontent.com/aida-public/AB6AXuD1OdMYpwbxkPxkmbkCR1FacZChhNv4pqZtRtk7yLRN8xoTSSFUtwmrkFg_6wglEWJIs5xc4Ak-I19BRRXNzc8inIyPAbUN7nLdiSKCGxpB5yYpxe2rV9W9HQXV45ejvnN8OJkH082Utb-3o-JmTlmhuleGBPb-fDQJ_FiIJOq8ssGNBWrxjOhMFmnHhvYR3d5zko7855B8MkiE2Ly3L8zB7CjNmF5Z0CuZCsTVxUZIISK0J1EFVfvwcjs_NaeX_6oVrzM6mM-JLXg',
-//       avatar:
-//         'https://lh3.googleusercontent.com/aida-public/AB6AXuABFF3c2x7pBYZZQ0phixYuQjfagNmecn_R0tK4GgVsjGkPDY7BUYesI1V4wUXrSRGIEkTzM_ryOlPJI4HeiPIueggX64c6hKZ81QnH3PZP-fDIxDCErnnJD3NdlVWqgUSZU28UXIPr-hFj_bvK0xZmwgaD4CKzwVff0iHZ5f2RpQ2D1EqhnQ1FhrJQgJ7ZkOpdNlrweNsYZsx8vmU78TxyR4RfW0BuMHPvaiXWZZnDHd6C1vtbn4qa9lQInO3dAJ7VajG_9PPcImo',
-//     },
-//   ],
-//   approved: [
-//     {
-//       id: '4',
-//       title: 'JapanVlog - @marina_travels',
-//       campaign: 'Global Series',
-//       rights: 'Full Rights',
-//       status: 'Ready to Post',
-//       thumb:
-//         'https://lh3.googleusercontent.com/aida-public/AB6AXuBHmX2silH_KC9VRGVX9Yrkwie9X3n_8gcTfsjQX4Q-zVCDysiCYWX5cXIlaq7tkEMPBxLsQp2OBjc-PJVlof5VNMNfhTDKwC4LFHc7toxLgrkuw254HZlVbudSjEOx2HCt5cy_zq8CQQFG2eFijcnL2VqW8YVRPxUacuTgkvid-QkImer-9yJ1vpRvQt6vWO6X2wgFD3hHrpGzQcbERsXB6QypF0ITNisqeFPr9S8u2dQX-6CI34gSIy6EojVx2foQmXQug9vp52Y',
-//       avatar: '',
-//     },
-//   ],
-// };
-
 const countStyles: Record<string, string> = {
   slate: 'bg-slate-100 border-slate-200 text-slate-600',
   primary: 'bg-[var(--color-primaryButton)] text-white',
@@ -131,18 +77,22 @@ export default function ContentFeedbackPage() {
     thread_id?: string;
   }
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
+
   const [feedback, setFeedback] = useState('');
   const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
 
-  // const threadId = selectedCard?.thread_id || '';
-  const threadId = '923364417022';
-  const { data: chatData, isLoading: chatLoading } = useAdminInfluencerMessagesHook(
-    threadId,
-    1,
-    20,
-  );
-  const { sendMessage } = useSendAdminMessage(threadId);
-  const [sending, setSending] = useState(false);
+  const threadId = selectedCard?.thread_id || '';
+  // const threadId = '923364417022';
+
+  const [isSending, setIsSending] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const {
+    data: chatData,
+    isLoading: chatLoading,
+    sendMessage,
+  } = useAdminInfluencerMessagesHook(threadId, 1, 20);
+
   const apiCards: CardType[] =
     data?.negotiation_controls
       ?.filter((item) => item.negotiation_status === 'agreed')
@@ -162,7 +112,6 @@ export default function ContentFeedbackPage() {
   );
 
   const videoUrl = videoMessage?.message;
-  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
     <div className="font-sans">
@@ -179,7 +128,7 @@ export default function ContentFeedbackPage() {
                 placeholder="Search content..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
               />
             </div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">
@@ -311,7 +260,7 @@ export default function ContentFeedbackPage() {
           onClick={() => setSelectedCard(null)}
         >
           <div
-            className="flex h-full max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-background)] shadow-2xl"
+            className="flex h-full max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-1 flex-col border-r border-white/10">
@@ -331,7 +280,7 @@ export default function ContentFeedbackPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-[var(--color-primaryButton)] focus:outline-none">
+                  <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-(--color-primaryButton) focus:outline-none">
                     <option>Version 1 (Active)</option>
                     <option disabled>Version 2 (Draft)</option>
                   </select>
@@ -341,7 +290,7 @@ export default function ContentFeedbackPage() {
                 </div>
               </div>
               <div className="flex flex-1 items-center justify-center overflow-hidden bg-slate-900 p-4">
-                <div className="relative aspect-9/16 h-[92%] max-h-150 overflow-hidden rounded-lg border border-white/10 bg-slate-800">
+                <div className="relative aspect-[9/16] h-[92%] max-h-150 overflow-hidden rounded-lg border border-white/10 bg-slate-800">
                   {videoUrl ? (
                     <>
                       {/* VIDEO ELEMENT */}
@@ -463,21 +412,22 @@ export default function ContentFeedbackPage() {
                     placeholder="Type your feedback..."
                     className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
                   />
-
                   <button
-                    disabled={sending}
                     onClick={async () => {
-                      if (!feedback.trim() || sending) return;
-
+                      if (!feedback.trim()) return;
+                      setIsSending(true);
                       try {
-                        setSending(true);
                         await sendMessage(feedback);
                         setFeedback('');
+                      } catch (error) {
+                        console.error('Failed to send message:', error);
                       } finally {
-                        setSending(false);
+                        setIsSending(false);
                       }
                     }}
-                    className="absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)] hover:bg-[var(--color-primaryButton)] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSending}
+                    className={`absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg transition-colors
+    ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)] hover:bg-[var(--color-primaryButton)] hover:text-white'}`}
                   >
                     <Send className="size-4" />
                   </button>
