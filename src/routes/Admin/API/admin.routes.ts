@@ -356,3 +356,13 @@ export const SendOnboardingMessage = async (
 
     return response.data;
 };
+
+export const WhatsAppAdminCompnayMessagesApi = async (thread_id: string, { page, page_size }: { page: number, page_size: number }) => {
+    const response = await api.get(AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_COMPANY_MESSAGES_BY_ID(thread_id), {
+        params: {
+            page,
+            page_size
+        }
+    });
+    return response.data;
+}

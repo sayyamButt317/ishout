@@ -18,41 +18,12 @@ import {
 import Image from 'next/image';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
 import useAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-hook';
-
-interface CardType {
-  id: string;
-  title: string;
-  campaign: string;
-  thumb: string;
-  thread_id?: string;
-  rights?: string;
-  comments?: number;
-  status?: string;
-}
-
-interface CampaignBrief {
-  title?: string;
-  campaign_logo_url?: string;
-}
-
-interface NegotiationItem {
-  _id: string;
-  name?: string;
-  thread_id?: string;
-  negotiation_status?: string;
-  campaign_brief?: CampaignBrief;
-}
-
-interface ChatMessage {
-  _id: string;
-  sender: 'ADMIN' | 'USER' | 'AI';
-  username?: string;
-  message: string;
-  timestamp: string;
-}
-interface NegotiationResponse {
-  negotiation_controls?: NegotiationItem[];
-}
+import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influncer-send-message-hook';
+import {
+  CardType,
+  ChatMessage,
+  NegotiationResponse,
+} from '@/src/types/Admin-Type/Content-type';
 
 const COLUMNS = [
   { id: 'drafts', label: 'Drafts', count: 5, color: 'slate' },
@@ -83,16 +54,12 @@ export default function ContentFeedbackPage() {
 
   const threadId = selectedCard?.thread_id || '';
   // const threadId = '923364417022';
-
-  const [isSending, setIsSending] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const {
-    data: chatData,
-    isLoading: chatLoading,
-    sendMessage,
-  } = useAdminInfluencerMessagesHook(threadId, 1, 20);
-
+  const { data: chatData, isLoading: chatLoading } = useAdminInfluencerMessagesHook(
+    threadId,
+    1,
+    20,
+  );
+  const { sendMessage } = useSendAdminMessage(threadId);
   const apiCards: CardType[] =
     data?.negotiation_controls
       ?.filter((item) => item.negotiation_status === 'agreed')
@@ -112,6 +79,9 @@ export default function ContentFeedbackPage() {
   );
 
   const videoUrl = videoMessage?.message;
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const [isSending, setIsSending] = useState(false);
 
   return (
     <div className="font-sans">
@@ -128,7 +98,7 @@ export default function ContentFeedbackPage() {
                 placeholder="Search content..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
+                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
               />
             </div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">
@@ -260,7 +230,7 @@ export default function ContentFeedbackPage() {
           onClick={() => setSelectedCard(null)}
         >
           <div
-            className="flex h-full max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl"
+            className="flex h-full max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-background)] shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-1 flex-col border-r border-white/10">
@@ -280,7 +250,7 @@ export default function ContentFeedbackPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-(--color-primaryButton) focus:outline-none">
+                  <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-[var(--color-primaryButton)] focus:outline-none">
                     <option>Version 1 (Active)</option>
                     <option disabled>Version 2 (Draft)</option>
                   </select>
@@ -290,7 +260,7 @@ export default function ContentFeedbackPage() {
                 </div>
               </div>
               <div className="flex flex-1 items-center justify-center overflow-hidden bg-slate-900 p-4">
-                <div className="relative aspect-[9/16] h-[92%] max-h-150 overflow-hidden rounded-lg border border-white/10 bg-slate-800">
+                <div className="relative aspect-9/16 h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
                   {videoUrl ? (
                     <>
                       {/* VIDEO ELEMENT */}
@@ -391,7 +361,7 @@ export default function ContentFeedbackPage() {
                           <div
                             className={`rounded-2xl p-3 text-xs ${
                               isAdmin
-                                ? 'bg-[var(--color-primaryButton)] text-white rounded-tr-none'
+                                ? 'bg-(--color-primaryButton) text-white rounded-tr-none'
                                 : 'bg-white/5 text-white/70 rounded-tl-none'
                             }`}
                           >
