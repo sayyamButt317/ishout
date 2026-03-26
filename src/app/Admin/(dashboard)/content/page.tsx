@@ -359,13 +359,24 @@ export default function ContentFeedbackPage() {
                           </div>
 
                           <div
-                            className={`rounded-2xl p-3 text-xs ${
+                            className={`rounded-2xl p-2 text-xs overflow-hidden max-w-[85%] sm:max-w-[75%] md:max-w-[65%] ${
                               isAdmin
-                                ? 'bg-(--color-primaryButton) text-white rounded-tr-none'
+                                ? 'bg-(--color-primaryButton) text-white rounded-tr-none ml-auto'
                                 : 'bg-white/5 text-white/70 rounded-tl-none'
                             }`}
                           >
-                            {msg.message}
+                            {typeof msg.message === 'string' &&
+                            msg.message.match(/\.(mp4|webm|ogg)(\?.*)?$/i) ? (
+                              <video
+                                src={msg.message}
+                                controls
+                                className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
+                              />
+                            ) : (
+                              <p className="break-words whitespace-pre-wrap">
+                                {msg.message}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
