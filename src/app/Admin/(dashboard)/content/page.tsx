@@ -132,6 +132,38 @@ export default function ContentFeedbackPage() {
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
 
   const [feedback, setFeedback] = useState('');
+  const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
+
+  // const threadId = selectedCard?.thread_id || '';
+  const threadId = '923364417022';
+  const { data: chatData, isLoading: chatLoading } = useAdminInfluencerMessagesHook(
+    threadId,
+    1,
+    20,
+  );
+  const { sendMessage } = useSendAdminMessage(threadId);
+  const [sending, setSending] = useState(false);
+  const apiCards: CardType[] =
+    data?.negotiation_controls
+      ?.filter((item) => item.negotiation_status === 'agreed')
+      .map((item) => ({
+        id: item._id,
+        title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
+        campaign: item.campaign_brief?.title ?? 'Campaign',
+        rights: 'Full Rights',
+        status: 'Ready to Post',
+        thumb:
+          item.campaign_brief?.campaign_logo_url ?? 'https://via.placeholder.com/300',
+        thread_id: item.thread_id,
+      })) ?? [];
+      
+
+  const videoMessage = chatData?.messages?.find(
+    (msg: ChatMessage) => typeof msg.message === 'string' && msg.message.includes('.mp4'),
+  );
+
+  const videoUrl = videoMessage?.message;
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
   const [isSending, setIsSending] = useState(false);
@@ -429,6 +461,7 @@ export default function ContentFeedbackPage() {
                 )}
               </div>
               <div className="space-y-4 border-t border-white/10 p-5">
+                {' '}
                 <div className="relative">
                   <textarea
                     value={feedback}
