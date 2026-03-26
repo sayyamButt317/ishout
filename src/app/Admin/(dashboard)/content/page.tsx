@@ -17,7 +17,6 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
-import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-send-message-hook';
 import useAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-hook';
 
 interface CardType {
@@ -131,6 +130,7 @@ export default function ContentFeedbackPage() {
     thread_id?: string;
   }
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
+
   const [feedback, setFeedback] = useState('');
   const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
 
@@ -164,6 +164,32 @@ export default function ContentFeedbackPage() {
 
   const videoUrl = videoMessage?.message;
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
+  const [isSending, setIsSending] = useState(false);
+
+  // const threadId = selectedCard?.thread_id || '';
+  const threadId = '923364417022';
+
+  const {
+    data: chatData,
+    isLoading: chatLoading,
+    sendMessage,
+  } = useAdminInfluencerMessagesHook(threadId, 1, 20);
+
+  const apiCards: CardType[] =
+    data?.negotiation_controls
+      ?.filter((item) => item.negotiation_status === 'agreed')
+      .map((item) => ({
+        id: item._id,
+        title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
+        campaign: item.campaign_brief?.title ?? 'Campaign',
+        rights: 'Full Rights',
+        status: 'Ready to Post',
+        thumb:
+          item.campaign_brief?.campaign_logo_url ?? 'https://via.placeholder.com/300',
+        thread_id: item.thread_id,
+      })) ?? [];
 
   return (
     <div className="font-sans">
@@ -346,36 +372,12 @@ export default function ContentFeedbackPage() {
               </div>
               <div className="flex flex-1 items-center justify-center overflow-hidden bg-slate-900 p-4">
                 <div className="relative aspect-[9/16] h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
-                  {videoUrl ? (
-                    <>
-                      {/* VIDEO ELEMENT */}
-                      <video
-                        src={videoUrl}
-                        className="h-full w-full object-cover"
-                        controls={isPlaying}
-                      />
-
-                      {/* PLAY BUTTON OVERLAY */}
-                      {!isPlaying && (
-                        <div
-                          onClick={() => setIsPlaying(true)}
-                          className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer"
-                        >
-                          <Play
-                            className="size-16 text-white/80 hover:text-white hover:scale-110 transition-all"
-                            fill="currentColor"
-                          />
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    // fallback if no video
-                    <div className="flex h-full items-center justify-center text-white/50 text-sm">
-                      No video available
-                    </div>
-                  )}
-
-                  {/* PROGRESS BAR (fake for now) */}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer">
+                    <Play
+                      className="size-16 text-white/80 hover:text-white hover:scale-110 transition-all"
+                      fill="currentColor"
+                    />
+                  </div>
                   <div className="absolute bottom-6 left-6 right-6 h-1.5 overflow-hidden rounded-full bg-white/20">
                     <div className="h-full w-1/3 rounded-full bg-[var(--color-primaryButton)]" />
                   </div>
@@ -467,21 +469,22 @@ export default function ContentFeedbackPage() {
                     placeholder="Type your feedback..."
                     className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
                   />
-
                   <button
-                    disabled={sending}
                     onClick={async () => {
-                      if (!feedback.trim() || sending) return;
-
+                      if (!feedback.trim()) return;
+                      setIsSending(true);
                       try {
-                        setSending(true);
                         await sendMessage(feedback);
                         setFeedback('');
+                      } catch (error) {
+                        console.error('Failed to send message:', error);
                       } finally {
-                        setSending(false);
+                        setIsSending(false);
                       }
                     }}
-                    className="absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)] hover:bg-[var(--color-primaryButton)] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSending}
+                    className={`absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg transition-colors
+    ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)] hover:bg-[var(--color-primaryButton)] hover:text-white'}`}
                   >
                     <Send className="size-4" />
                   </button>
