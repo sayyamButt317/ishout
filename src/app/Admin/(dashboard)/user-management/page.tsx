@@ -73,7 +73,7 @@ function MobileCountrySelect({
 
       {open && (
         <div
-          className="fixed inset-0 z-[200] flex items-end justify-center"
+          className="fixed inset-0 z-200 flex items-end justify-center"
           onClick={() => setOpen(false)}
         >
           <div className="absolute inset-0 bg-black/60" aria-hidden="true" />
