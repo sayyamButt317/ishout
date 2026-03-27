@@ -19,6 +19,7 @@ import Image from 'next/image';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
 import useAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-hook';
 import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influncer-send-message-hook';
+import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
 import {
   CardType,
   ChatMessage,
@@ -60,6 +61,8 @@ export default function ContentFeedbackPage() {
     20,
   );
   const { sendMessage } = useSendAdminMessage(threadId);
+  const { mutate: approveNegotiation, isPending: isApproving } =
+    useAdminNegotiationApprovalStatus();
   const apiCards: CardType[] =
     data?.negotiation_controls
       ?.filter((item) => item.negotiation_status === 'agreed')
@@ -418,9 +421,20 @@ export default function ContentFeedbackPage() {
                     <RefreshCw className="size-4" />
                     Revision
                   </button>
-                  <button className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity">
+                  <button
+                    onClick={() => {
+                      if (threadId) {
+                        approveNegotiation({
+                          thread_id: threadId,
+                          payload: { admin_approved: 'Approved',},
+                        });
+                      }
+                    }}
+                    disabled={isApproving}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     <Check className="size-4" />
-                    Approve
+                    {isApproving ? 'Approving...' : 'Approve'}
                   </button>
                 </div>
               </div>
