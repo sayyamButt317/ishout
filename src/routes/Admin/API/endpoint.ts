@@ -41,12 +41,6 @@ export const AdminENDPOINT = {
   ADMIN_WHATSAPP_USERMESSAGE_BY_ID: (thread_id: string) =>
     `/admin/whatsapp-messages/${thread_id}`,
 
-  ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_BY_ID: (thread_id: string) =>
-    `/admin/whatsapp-admin-influencer-messages/${thread_id}`,
-
-  ADMIN_WHATSAPP_ADMIN_SEND_HUMAN_MESSAGE: (thread_id: string) =>
-    `/admin/whatsapp-admin-influencer/send-human-message/${thread_id}`,
-
   ADMIN_HUMAN_TAKEOVER: (thread_id: string) =>
     `/admin/whatsapp/toggle-takeover/${thread_id}`,
   ADMIN_SEND_WHATSAPP_MESSAGEl: (thread_id: string) =>
@@ -65,7 +59,22 @@ export const AdminENDPOINT = {
   SENDNEGOTITIONTEMPLATE: `/admin/negotiation-initial-message`,
   NEGOTIATION_STATS: `/admin/negotiation-controls`,
   NEGOTIATION_CHAT_DETAIL: `/admin/negotiation-chat-detail`,
+  ADMIN_NEGOTIATION_HUMAN_TAKEOVER: (thread_id: string) =>
+    `/api/admin/negotiation/toggle-takeover/${thread_id}`,
+
+  ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_BY_ID: (thread_id: string) =>
+    `/admin/whatsapp-admin-influencer-messages/${thread_id}`,
+
+  ADMIN_WHATSAPP_ADMIN_SEND_HUMAN_MESSAGE: (thread_id: string) =>
+    `/admin/whatsapp-admin-influencer/send-human-message/${thread_id}`,
+
+  ADMIN_WHATSAPP_COMPANY_ADMIN_SEND_HUMAN_MESSAGE: (user_id: string) =>
+    `/admin/whatsapp-admin-company/send-company-admin-message/${user_id}`,
 
   ADMIN_WHATSAPP_ADMIN_COMPANY_MESSAGES_BY_ID: (thread_id: string) =>
-    `/admin/whatsapp-admin-company/send-human-message/${thread_id}`,
+    `/admin/whatsapp-admin-company-messages/${thread_id}`,
+
+  DELETE_NEGOTIATION: (thread_id: string) => `/admin/negotiation-controls/${thread_id}`,
+  ADMIN_NEGOTIATION_APPROVAL_STATUS: (thread_id: string) =>
+    `/admin/negotiation/approval-status/${thread_id}`,
 };
