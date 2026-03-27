@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
 
@@ -15,44 +16,16 @@ import {
   Maximize2,
 } from 'lucide-react';
 import Image from 'next/image';
+import useAuthStore from '@/src/store/AuthStore/authStore';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
-import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-send-message-hook';
 import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-hook';
-
-interface CardType {
-  id: string;
-  title: string;
-  campaign: string;
-  thumb: string;
-  thread_id?: string;
-  rights?: string;
-  comments?: number;
-  status?: string;
-}
-
-interface CampaignBrief {
-  title?: string;
-  campaign_logo_url?: string;
-}
-
-interface NegotiationItem {
-  _id: string;
-  name?: string;
-  thread_id?: string;
-  negotiation_status?: string;
-  campaign_brief?: CampaignBrief;
-}
-
-interface ChatMessage {
-  _id: string;
-  sender: 'ADMIN' | 'USER' | 'AI';
-  username?: string;
-  message: string;
-  timestamp: string;
-}
-interface NegotiationResponse {
-  negotiation_controls?: NegotiationItem[];
-}
+import useSendCompanyAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-company-admin-send-message-hook';
+import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
+import {
+  CardType,
+  ChatMessage,
+  NegotiationResponse,
+} from '@/src/types//Compnay/feeedback-content-type';
 
 const COLUMNS = [
   { id: 'drafts', label: 'Drafts', count: 5, color: 'slate' },
@@ -60,59 +33,6 @@ const COLUMNS = [
   { id: 'revision', label: 'Revision', count: 3, color: 'amber' },
   { id: 'approved', label: 'Approved', count: 28, color: 'emerald' },
 ];
-
-const MOCK_CARDS = {
-  drafts: [
-    {
-      id: '1',
-      title: 'Summer24 - @alex_creatives',
-      campaign: 'Summer Launch',
-      type: 'video',
-      rights: 'Full Rights',
-      thumb:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuDgZ3DmRxJgpDr-vZ5akw4hJ96IMzjon5qig09AKkuU2VUMyBx_seNE6Y46zsrEQ2OiQa1ApPYAPC-PNt4op-9CBHYz6eS5d3nAUNT6lUtQoeqUvR98B_L5DanH33COp4yirumB9348C2JvZPZyHMUN9VYbrvgN8JrDmjGIUSvoN8fDLIK_AM7150CI9WS7A-tk8rssqJZCFkjPCosUUN0GwSzH-sR2qsWO22_nof_zdGQqY61YvMKfPftgB2MpWWznINStG7CrXh0',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuA9WYfN4-bwHM5ZxUjim5f986NPdbh41Dk7VidgvjCMvJmtbL0gy3zPdHBmqTQ60aYdd_SYWUrhdtVY1WifhcE1sKRRVsekkDOwD3Mt0eCSN1Ew1ycemhvzQu5-xQhEjbGRx_AA-coeGenNJzhB03Ob3BP72cUJBCvGKOQ6HtKC1x-blVGtJ-wS35w8saFVQNXhDMnMxSt9nUE0m0NsMxCGogQXrnD60b4RbL2Y5oqEKQL8RR5HCPPylFZe1omXb_UYny9HXHcleQI',
-    },
-  ],
-  review: [
-    {
-      id: '2',
-      title: 'Unboxing v1 - @tech_reviews',
-      campaign: 'Tech Launch',
-      type: 'video',
-      rights: 'Full Rights',
-      comments: 3,
-      thumb:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuARQT8XBdfBp_SJf2iVSPnRJoKkiEqan9teAuuR8QaqL1TpuoKk4OnM1cUmoiwEfSO6NC2S3JCWtUcEkAX3Ejn01015oNiUlDh0awpmgiYPpZesw2ypCUOnARNaA5YiSRGYrMD2znllP1sYwISlFGT4lCCrUxPrHplgDuFQ46Af2RAViIKPY_vfcFyB1F8XHM8nrdnmiq1KkJiz3vvFShBLS6LFffzxSDySgaQggpor_BUXW-8vQ9bujzC84-VYO1p7nmxgn83-HaU',
-      avatar: '',
-    },
-  ],
-  revision: [
-    {
-      id: '3',
-      title: 'PastaNight - @foodie_ella',
-      campaign: 'New Menu 2024',
-      status: 'Waiting for v2',
-      thumb:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuD1OdMYpwbxkPxkmbkCR1FacZChhNv4pqZtRtk7yLRN8xoTSSFUtwmrkFg_6wglEWJIs5xc4Ak-I19BRRXNzc8inIyPAbUN7nLdiSKCGxpB5yYpxe2rV9W9HQXV45ejvnN8OJkH082Utb-3o-JmTlmhuleGBPb-fDQJ_FiIJOq8ssGNBWrxjOhMFmnHhvYR3d5zko7855B8MkiE2Ly3L8zB7CjNmF5Z0CuZCsTVxUZIISK0J1EFVfvwcjs_NaeX_6oVrzM6mM-JLXg',
-      avatar:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuABFF3c2x7pBYZZQ0phixYuQjfagNmecn_R0tK4GgVsjGkPDY7BUYesI1V4wUXrSRGIEkTzM_ryOlPJI4HeiPIueggX64c6hKZ81QnH3PZP-fDIxDCErnnJD3NdlVWqgUSZU28UXIPr-hFj_bvK0xZmwgaD4CKzwVff0iHZ5f2RpQ2D1EqhnQ1FhrJQgJ7ZkOpdNlrweNsYZsx8vmU78TxyR4RfW0BuMHPvaiXWZZnDHd6C1vtbn4qa9lQInO3dAJ7VajG_9PPcImo',
-    },
-  ],
-  approved: [
-    {
-      id: '4',
-      title: 'JapanVlog - @marina_travels',
-      campaign: 'Global Series',
-      rights: 'Full Rights',
-      status: 'Ready to Post',
-      thumb:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuBHmX2silH_KC9VRGVX9Yrkwie9X3n_8gcTfsjQX4Q-zVCDysiCYWX5cXIlaq7tkEMPBxLsQp2OBjc-PJVlof5VNMNfhTDKwC4LFHc7toxLgrkuw254HZlVbudSjEOx2HCt5cy_zq8CQQFG2eFijcnL2VqW8YVRPxUacuTgkvid-QkImer-9yJ1vpRvQt6vWO6X2wgFD3hHrpGzQcbERsXB6QypF0ITNisqeFPr9S8u2dQX-6CI34gSIy6EojVx2foQmXQug9vp52Y',
-      avatar: '',
-    },
-  ],
-};
 
 const countStyles: Record<string, string> = {
   slate: 'bg-slate-100 border-slate-200 text-slate-600',
@@ -130,18 +50,20 @@ export default function ContentFeedbackPage() {
     thread_id?: string;
   }
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
+  const { company_user_id } = useAuthStore();
   const [feedback, setFeedback] = useState('');
   const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
-
-  // const threadId = selectedCard?.thread_id || '';
-  const threadId = '923154299080';
+  const { mutate: approveNegotiation, isPending: isApproving } =
+    useAdminNegotiationApprovalStatus();
+  const threadId = selectedCard?.thread_id || '';
+  // const threadId = '923364417022';
   const { data: chatData, isLoading: chatLoading } = useAdminCompanyMessagesHook(
     threadId,
     1,
     20,
   );
-  const { sendMessage } = useSendAdminMessage(threadId);
-  const [sending, setSending] = useState(false);
+
+  const { sendMessage } = useSendCompanyAdminMessage(company_user_id);
   const apiCards: CardType[] =
     data?.negotiation_controls
       ?.filter((item) => item.negotiation_status === 'agreed')
@@ -163,6 +85,8 @@ export default function ContentFeedbackPage() {
   const videoUrl = videoMessage?.message;
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const [isSending, setIsSending] = useState(false);
+
   return (
     <div className="font-sans">
       <PageHeader
@@ -178,7 +102,7 @@ export default function ContentFeedbackPage() {
                 placeholder="Search content..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
               />
             </div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">
@@ -191,15 +115,12 @@ export default function ContentFeedbackPage() {
 
       <div className="flex gap-6 overflow-x-auto pb-4">
         {COLUMNS.map((col) => {
-          const staticCards = MOCK_CARDS[col.id as keyof typeof MOCK_CARDS] ?? [];
-
-          const combinedCards: CardType[] =
-            col.id === 'approved' ? [...staticCards, ...apiCards] : staticCards;
+          const combinedCards: CardType[] = col.id === 'approved' ? [...apiCards] : [];
 
           return (
             <div
               key={col.id}
-              className="flex w-80 shrink-0 flex-col gap-4 rounded-xl border border-white/10 bg-white/[0.02] p-4"
+              className="flex w-80 shrink-0 flex-col gap-4 rounded-xl border border-white/10 bg-white/2 p-4"
             >
               <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-2">
@@ -209,7 +130,7 @@ export default function ContentFeedbackPage() {
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                       col.color === 'primary'
-                        ? 'bg-[var(--color-primaryButton)] text-white'
+                        ? 'bg-(--color-primaryButton) text-white'
                         : countStyles[col.color]
                     }`}
                   >
@@ -222,7 +143,7 @@ export default function ContentFeedbackPage() {
               </div>
 
               <div className="flex flex-col gap-3 overflow-y-auto">
-                {combinedCards.map((card) => (
+                {combinedCards?.map((card) => (
                   <div
                     key={card.id}
                     onClick={() =>
@@ -235,13 +156,13 @@ export default function ContentFeedbackPage() {
                     }
                     className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
                       col.id === 'review'
-                        ? 'border-2 border-[var(--color-primaryButton)]'
+                        ? 'border-2 border-(--color-primaryButton)'
                         : col.id === 'revision'
                           ? 'border-l-4 border-l-amber-400 border-white/10'
-                          : 'border-white/10 hover:border-[var(--color-primaryButton)]/30'
+                          : 'border-white/10 hover:border-(--color-primaryButton)/30'
                     }`}
                   >
-                    <div className="relative aspect-[4/3] overflow-hidden rounded-lg ">
+                    <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
                       <Image
                         src={card.thumb}
                         alt={card.title}
@@ -251,9 +172,9 @@ export default function ContentFeedbackPage() {
                       />
 
                       {col.id === 'review' && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-primaryButton)]/10">
+                        <div className="absolute inset-0 flex items-center justify-center bg-(--color-primaryButton)/10">
                           <Play
-                            className="size-10 text-[var(--color-primaryButton)]"
+                            className="size-10 text-(--color-primaryButton)"
                             fill="currentColor"
                           />
                         </div>
@@ -343,7 +264,7 @@ export default function ContentFeedbackPage() {
                 </div>
               </div>
               <div className="flex flex-1 items-center justify-center overflow-hidden bg-slate-900 p-4">
-                <div className="relative aspect-[9/16] h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
+                <div className="relative aspect-9/16 h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
                   {videoUrl ? (
                     <>
                       {/* VIDEO ELEMENT */}
@@ -375,7 +296,7 @@ export default function ContentFeedbackPage() {
 
                   {/* PROGRESS BAR (fake for now) */}
                   <div className="absolute bottom-6 left-6 right-6 h-1.5 overflow-hidden rounded-full bg-white/20">
-                    <div className="h-full w-1/3 rounded-full bg-[var(--color-primaryButton)]" />
+                    <div className="h-full w-1/3 rounded-full bg-(--color-primaryButton)" />
                   </div>
                 </div>
               </div>
@@ -397,7 +318,7 @@ export default function ContentFeedbackPage() {
                     <p className="text-[10px] font-bold uppercase text-white/40">
                       Usage Rights
                     </p>
-                    <span className="inline-block rounded border border-[var(--color-primaryButton)]/20 bg-[var(--color-primaryButton)]/10 px-2 py-0.5 text-[10px] font-bold text-[var(--color-primaryButton)]">
+                    <span className="inline-block rounded border border-(--color-primaryButton)/20 bg-(--color-primaryButton)/10 px-2 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
                       Standard Commercial
                     </span>
                   </div>
@@ -407,13 +328,13 @@ export default function ContentFeedbackPage() {
                 </div>
               </div>
             </div>
-            <div className="flex w-[400px] shrink-0 flex-col bg-white/[0.02]">
+            <div className="flex w-100 shrink-0 flex-col bg-white/2">
               <div className="flex items-center justify-between border-b border-white/10 p-4">
                 <h4 className="flex items-center gap-2 text-sm font-bold text-white">
-                  <MessageSquare className="size-4 text-[var(--color-primaryButton)]" />
+                  <MessageSquare className="size-4 text-(--color-primaryButton)" />
                   Feedback
                 </h4>
-                <span className="rounded-full bg-[var(--color-primaryButton)]/10 px-2.5 py-0.5 text-[10px] font-bold text-[var(--color-primaryButton)]">
+                <span className="rounded-full bg-(--color-primaryButton)/10 px-2.5 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
                   3 UNREAD
                 </span>
               </div>
@@ -442,13 +363,24 @@ export default function ContentFeedbackPage() {
                           </div>
 
                           <div
-                            className={`rounded-2xl p-3 text-xs ${
+                            className={`rounded-2xl p-2 text-xs overflow-hidden max-w-[85%] sm:max-w-[75%] md:max-w-[65%] ${
                               isAdmin
-                                ? 'bg-[var(--color-primaryButton)] text-white rounded-tr-none'
+                                ? 'bg-(--color-primaryButton) text-white rounded-tr-none ml-auto'
                                 : 'bg-white/5 text-white/70 rounded-tl-none'
                             }`}
                           >
-                            {msg.message}
+                            {typeof msg.message === 'string' &&
+                            msg.message.match(/\.(mp4|webm|ogg)(\?.*)?$/i) ? (
+                              <video
+                                src={msg.message}
+                                controls
+                                className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
+                              />
+                            ) : (
+                              <p className="break-words whitespace-pre-wrap">
+                                {msg.message}
+                              </p>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -465,21 +397,22 @@ export default function ContentFeedbackPage() {
                     placeholder="Type your feedback..."
                     className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
                   />
-
                   <button
-                    disabled={sending}
                     onClick={async () => {
-                      if (!feedback.trim() || sending) return;
-
+                      if (!feedback.trim()) return;
+                      setIsSending(true);
                       try {
-                        setSending(true);
                         await sendMessage(feedback);
                         setFeedback('');
+                      } catch (error) {
+                        console.error('Failed to send message:', error);
                       } finally {
-                        setSending(false);
+                        setIsSending(false);
                       }
                     }}
-                    className="absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)] hover:bg-[var(--color-primaryButton)] hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isSending}
+                    className={`absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg transition-colors
+    ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)] hover:bg-[var(--color-primaryButton)] hover:text-white'}`}
                   >
                     <Send className="size-4" />
                   </button>
@@ -489,9 +422,20 @@ export default function ContentFeedbackPage() {
                     <RefreshCw className="size-4" />
                     Revision
                   </button>
-                  <button className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity">
+                  <button
+                    onClick={() => {
+                      if (threadId) {
+                        approveNegotiation({
+                          thread_id: threadId,
+                          payload: { Brand_approved: 'Approved' },
+                        });
+                      }
+                    }}
+                    disabled={isApproving}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     <Check className="size-4" />
-                    Approve
+                    {isApproving ? 'Approving...' : 'Approve'}
                   </button>
                 </div>
               </div>
