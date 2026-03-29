@@ -1,32 +1,26 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   WhatsAppAdminInfluencerMessagesApi,
-  WhatsAppAdminSendHumanMessageApi,
 } from "../../API/admin.routes";
 
 export default function useAdminInfluencerMessagesHook(
   thread_id: string,
   page: number = 1,
-  page_size: number = 20
+  page_size: number = 20,
+  enabled: boolean = true,
 ) {
   const queryClient = useQueryClient();
 
-  // Fetch messages
   const messagesQuery = useQuery({
-    queryKey: ["admin-influencer-messages", thread_id],
+    queryKey: ["admin-influencer-messages", thread_id, page, page_size],
     queryFn: () =>
       WhatsAppAdminInfluencerMessagesApi(thread_id, { page, page_size }),
-    enabled: !!thread_id,
+    enabled: enabled && !!thread_id,
     refetchOnWindowFocus: false,
+    placeholderData: (prev) => prev, // ✅ for pagination (v5)
   });
 
-  // Send message and refresh messages for this thread
-  const sendMessage = async (message: string) => {
-    if (!thread_id || !message) return;
-
-    await WhatsAppAdminSendHumanMessageApi(thread_id, message);
-
-    // Invalidate only by thread_id to refetch messages
+  const refetchMessages = () => {
     queryClient.invalidateQueries({
       queryKey: ["admin-influencer-messages", thread_id],
     });
@@ -34,6 +28,6 @@ export default function useAdminInfluencerMessagesHook(
 
   return {
     ...messagesQuery,
-    sendMessage,
+    refetchMessages,
   };
 }
