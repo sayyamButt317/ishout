@@ -292,46 +292,7 @@ export const WhatsAppUserMessagesApi = async (
   return response.data;
 };
 
-export const WhatsAppAdminInfluencerMessagesApi = async (
-  thread_id: string,
-  { page, page_size }: { page: number; page_size: number },
-) => {
-  const response = await api.get(
-    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_BY_ID(thread_id),
-    {
-      params: {
-        page,
-        page_size,
-      },
-    },
-  );
-
-  return response.data;
-};
-
 // inside src/routes/Admin/API/admin.routes.ts
-
-export const WhatsAppAdminSendHumanMessageApi = async (
-  thread_id: string,
-  message: string,
-) => {
-  const response = await api.post(
-    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_SEND_HUMAN_MESSAGE(thread_id),
-    { message },
-  );
-  return response.data;
-};
-
-export const WhatsAppCompanyAdminSendHumanMessageApi = async (
-  User_id: string,
-  message: string,
-) => {
-  const response = await api.post(
-    AdminENDPOINT.ADMIN_WHATSAPP_COMPANY_ADMIN_SEND_HUMAN_MESSAGE(User_id),
-    { message },
-  );
-  return response.data;
-};
 
 export const HumanTakeoverApi = async (thread_id: string, enabled: boolean) => {
   const response = await api.post(AdminENDPOINT.ADMIN_HUMAN_TAKEOVER(thread_id), {
@@ -411,6 +372,7 @@ export const NegotiationStatsApi = async (page: number = 1, page_size: number = 
       page_size,
     },
   });
+  console.log('✅ API RESPONSE:', response.data);
   return response.data;
 };
 
@@ -456,7 +418,20 @@ export const SendOnboardingMessage = async (
   return response.data;
 };
 
-export const WhatsAppAdminCompnayMessagesApi = async (
+export const AdminNegotiationApprovalStatusApi = async (
+  thread_id: string,
+  payload: { admin_approved?: string; Brand_approved?: string },
+) => {
+  const response = await api.patch(
+    AdminENDPOINT.ADMIN_NEGOTIATION_APPROVAL_STATUS(thread_id),
+    payload,
+  );
+  return response.data;
+};
+
+// Content -feedback
+
+export const WhatsAppAdminCompanyMessagesApi = async (
   thread_id: string,
   { page, page_size }: { page: number; page_size: number },
 ) => {
@@ -472,13 +447,53 @@ export const WhatsAppAdminCompnayMessagesApi = async (
   return response.data;
 };
 
-export const AdminNegotiationApprovalStatusApi = async (
-  thread_id: string,
-  payload: { admin_approved?: string; Brand_approved?: string },
+export const WhatsAppCompanyAdminSendHumanMessageApi = async (
+  User_id: string,
+  message: string,
 ) => {
-  const response = await api.patch(
-    AdminENDPOINT.ADMIN_NEGOTIATION_APPROVAL_STATUS(thread_id),
-    payload,
+  const response = await api.post(
+    AdminENDPOINT.ADMIN_WHATSAPP_COMPANY_ADMIN_SEND_HUMAN_MESSAGE(User_id),
+    { message },
   );
+  return response.data;
+};
+
+export const WhatsAppAdminInfuencerSendHumanMessageApi = async (
+  thread_id: string,
+  message: string,
+) => {
+  const response = await api.post(
+    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_SEND_HUMAN_MESSAGE(thread_id),
+    { message },
+  );
+  return response.data;
+};
+
+export const WhatsAppAdminCompanySendHumanMessageApi = async (
+  thread_id: string,
+  message: string,
+) => {
+  const response = await api.post(
+    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_COMPANY_SEND_HUMAN_MESSAGE(thread_id),
+    { message },
+  );
+  return response.data;
+};
+
+
+export const WhatsAppAdminInfluencerMessagesApi = async (
+  thread_id: string,
+  { page, page_size }: { page: number; page_size: number },
+) => {
+  const response = await api.get(
+    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_BY_ID(thread_id),
+    {
+      params: {
+        page,
+        page_size,
+      },
+    },
+  );
+
   return response.data;
 };

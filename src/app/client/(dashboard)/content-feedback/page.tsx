@@ -48,6 +48,8 @@ export default function ContentFeedbackPage() {
     title: string;
     campaign: string;
     thread_id?: string;
+    brand_thread_id?: string;
+    Brand_approved?: string | null;
   }
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
   const { company_user_id } = useAuthStore();
@@ -56,28 +58,36 @@ export default function ContentFeedbackPage() {
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
   const threadId = selectedCard?.thread_id || '';
-  // const threadId = '923364417022';
-  const { data: chatData, isLoading: chatLoading } = useAdminCompanyMessagesHook(
-    threadId,
-    1,
-    20,
-  );
+  const brandThreadId = selectedCard?.brand_thread_id || '';
+  const {
+    data: chatData,
+    isLoading: chatLoading,
+    refetch: refetchChat,
+  } = useAdminCompanyMessagesHook(brandThreadId, 1, 20);
 
   const { sendMessage } = useSendCompanyAdminMessage(company_user_id);
   const apiCards: CardType[] =
     data?.negotiation_controls
-      ?.filter((item) => item.negotiation_status === 'agreed')
+      ?.filter(
+        (item) =>
+          item.negotiation_status === 'agreed' && item.admin_approved === 'Approved',
+      )
       .map((item) => ({
         id: item._id,
         title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
         campaign: item.campaign_brief?.title ?? 'Campaign',
         rights: 'Full Rights',
         status: 'Ready to Post',
-        thumb:
-          item.campaign_brief?.campaign_logo_url ?? 'https://via.placeholder.com/300',
-        thread_id: item.thread_id,
-      })) ?? [];
 
+        thumb:
+          item.campaign_logo_url ??
+          item.campaign_brief?.campaign_logo_url ??
+          'https://via.placeholder.com/300',
+
+        thread_id: item.thread_id,
+        brand_thread_id: item.brand_thread_id,
+        Brand_approved: item.Brand_approved,
+      })) ?? [];
   const videoMessage = chatData?.messages?.find(
     (msg: ChatMessage) => typeof msg.message === 'string' && msg.message.includes('.mp4'),
   );
@@ -86,6 +96,9 @@ export default function ContentFeedbackPage() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [isSending, setIsSending] = useState(false);
+
+  const isBrandAlreadyApproved =
+    (selectedCard?.Brand_approved ?? '').toLowerCase() === 'approved';
 
   return (
     <div className="font-sans">
@@ -151,7 +164,9 @@ export default function ContentFeedbackPage() {
                         id: card.id,
                         title: card.title,
                         campaign: card.campaign,
-                        thread_id: card.thread_id, // 👈 important
+                        thread_id: card.thread_id,
+                        brand_thread_id: card.brand_thread_id,
+                        Brand_approved: card.Brand_approved,
                       })
                     }
                     className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
@@ -344,13 +359,14 @@ export default function ContentFeedbackPage() {
                 ) : (
                   chatData?.messages?.map((msg: ChatMessage) => {
                     const isAdmin = msg.sender === 'ADMIN';
+                    const isBrand = !isAdmin;
 
                     return (
                       <div
                         key={msg._id}
-                        className={`flex gap-3 ${isAdmin ? 'justify-end' : ''}`}
+                        className={`flex gap-3 ${isBrand ? 'justify-end' : 'justify-start'}`}
                       >
-                        {!isAdmin && <div className="size-8 rounded-full bg-slate-600" />}
+                        {isAdmin && <div className="size-8 rounded-full bg-slate-600" />}
 
                         <div className="max-w-[80%] space-y-1">
                           <div className="flex items-center justify-between">
@@ -364,7 +380,7 @@ export default function ContentFeedbackPage() {
 
                           <div
                             className={`rounded-2xl p-2 text-xs overflow-hidden max-w-[85%] sm:max-w-[75%] md:max-w-[65%] ${
-                              isAdmin
+                              isBrand
                                 ? 'bg-(--color-primaryButton) text-white rounded-tr-none ml-auto'
                                 : 'bg-white/5 text-white/70 rounded-tl-none'
                             }`}
@@ -383,6 +399,8 @@ export default function ContentFeedbackPage() {
                             )}
                           </div>
                         </div>
+
+                        {isBrand && <div className="size-8 rounded-full bg-slate-600" />}
                       </div>
                     );
                   })
@@ -404,6 +422,7 @@ export default function ContentFeedbackPage() {
                       try {
                         await sendMessage(feedback);
                         setFeedback('');
+                        await refetchChat();
                       } catch (error) {
                         console.error('Failed to send message:', error);
                       } finally {
@@ -424,18 +443,22 @@ export default function ContentFeedbackPage() {
                   </button>
                   <button
                     onClick={() => {
-                      if (threadId) {
+                      if (threadId && !isBrandAlreadyApproved) {
                         approveNegotiation({
                           thread_id: threadId,
                           payload: { Brand_approved: 'Approved' },
                         });
                       }
                     }}
-                    disabled={isApproving}
+                    disabled={isApproving || isBrandAlreadyApproved}
                     className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Check className="size-4" />
-                    {isApproving ? 'Approving...' : 'Approve'}
+                    {isBrandAlreadyApproved
+                      ? 'Approved'
+                      : isApproving
+                        ? 'Approving...'
+                        : 'Approve'}
                   </button>
                 </div>
               </div>
