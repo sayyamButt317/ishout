@@ -372,7 +372,6 @@ export const NegotiationStatsApi = async (page: number = 1, page_size: number = 
       page_size,
     },
   });
-  console.log('✅ API RESPONSE:', response.data);
   return response.data;
 };
 
@@ -479,7 +478,6 @@ export const WhatsAppAdminCompanySendHumanMessageApi = async (
   );
   return response.data;
 };
-
 
 export const WhatsAppAdminInfluencerMessagesApi = async (
   thread_id: string,
