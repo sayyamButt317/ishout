@@ -4,9 +4,12 @@ export interface CardType {
   campaign: string;
   thumb: string;
   thread_id?: string;
+  brand_thread_id?: string;
+  Brand_approved?: string | null;
   rights?: string;
   comments?: number;
   status?: string;
+ 
 }
 
 export interface CampaignBrief {
@@ -20,6 +23,10 @@ export interface NegotiationItem {
   thread_id?: string;
   negotiation_status?: string;
   campaign_brief?: CampaignBrief;
+  brand_thread_id?: string;
+  campaign_logo_url?: string;
+  Brand_approved?: string | null;
+  admin_approved?: string | null;
 }
 
 export interface ChatMessage {

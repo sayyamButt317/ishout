@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
 
 import {
@@ -18,8 +18,11 @@ import {
 import Image from 'next/image';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
 import useAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-hook';
+import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-hook';
 import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influncer-send-message-hook';
+import useSendAdminCompanyMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-send-message-hook';
 import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
+
 import {
   CardType,
   ChatMessage,
@@ -47,35 +50,66 @@ export default function ContentFeedbackPage() {
     title: string;
     campaign: string;
     thread_id?: string;
+    brand_thread_id?: string;
+    admin_approved?: string | null;
   }
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
+  const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
 
   const [feedback, setFeedback] = useState('');
   const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
 
   const threadId = selectedCard?.thread_id || '';
-  // const threadId = '923364417022';
-  const { data: chatData, isLoading: chatLoading } = useAdminInfluencerMessagesHook(
+  const brandThreadId = selectedCard?.brand_thread_id || '';
+
+  const influencerChatQuery = useAdminInfluencerMessagesHook(
     threadId,
     1,
     20,
+    chatMode === 'influencer',
   );
-  const { sendMessage } = useSendAdminMessage(threadId);
+  const companyChatQuery = useAdminCompanyMessagesHook(
+    brandThreadId,
+    1,
+    20,
+    chatMode === 'brand',
+  );
+
+  const chatData =
+    chatMode === 'influencer' ? influencerChatQuery.data : companyChatQuery.data;
+  const chatLoading =
+    chatMode === 'influencer'
+      ? influencerChatQuery.isLoading
+      : companyChatQuery.isLoading;
+
+  const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(threadId);
+  const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(brandThreadId);
+
+  useEffect(() => {
+    setChatMode('influencer');
+  }, [selectedCard?.id]);
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
+
   const apiCards: CardType[] =
     data?.negotiation_controls
       ?.filter((item) => item.negotiation_status === 'agreed')
-      .map((item) => ({
-        id: item._id,
-        title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
-        campaign: item.campaign_brief?.title ?? 'Campaign',
-        rights: 'Full Rights',
-        status: 'Ready to Post',
-        thumb:
-          item.campaign_brief?.campaign_logo_url ?? 'https://via.placeholder.com/300',
-        thread_id: item.thread_id,
-      })) ?? [];
+      .map((item) => {
+        return {
+          id: item._id,
+          title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
+          campaign: item.campaign_brief?.title ?? 'Campaign',
+          rights: 'Full Rights',
+          status: 'Ready to Post',
+          thumb:
+            item.campaign_logo_url ??
+            item.campaign_brief?.campaign_logo_url ??
+            'https://via.placeholder.com/300',
+          thread_id: item.thread_id,
+          brand_thread_id: item.brand_thread_id,
+          admin_approved: item.admin_approved,
+        };
+      }) ?? [];
 
   const videoMessage = chatData?.messages?.find(
     (msg: ChatMessage) => typeof msg.message === 'string' && msg.message.includes('.mp4'),
@@ -85,6 +119,9 @@ export default function ContentFeedbackPage() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [isSending, setIsSending] = useState(false);
+
+  const isAdminAlreadyApproved =
+    (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
 
   return (
     <div className="font-sans">
@@ -150,7 +187,9 @@ export default function ContentFeedbackPage() {
                         id: card.id,
                         title: card.title,
                         campaign: card.campaign,
-                        thread_id: card.thread_id, // 👈 important
+                        thread_id: card.thread_id,
+                        brand_thread_id: card.brand_thread_id,
+                        admin_approved: card.admin_approved,
                       })
                     }
                     className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
@@ -337,9 +376,39 @@ export default function ContentFeedbackPage() {
                   3 UNREAD
                 </span>
               </div>
+              <div className="border-b border-white/10 px-4 pb-3 pt-2">
+                <div className="mx-auto flex max-w-md rounded-full border border-white/10 bg-white/5 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setChatMode('influencer')}
+                    className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
+                      chatMode === 'influencer'
+                        ? 'bg-white/15 text-white shadow-sm'
+                        : 'text-white/45 hover:text-white/70'
+                    }`}
+                  >
+                    Influencer Chat
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChatMode('brand')}
+                    className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
+                      chatMode === 'brand'
+                        ? 'bg-white/15 text-white shadow-sm'
+                        : 'text-white/45 hover:text-white/70'
+                    }`}
+                  >
+                    Brand Chat
+                  </button>
+                </div>
+              </div>
               <div className="flex-1 space-y-4 overflow-y-auto p-5">
                 {chatLoading ? (
                   <p className="text-white/50 text-sm">Loading...</p>
+                ) : chatMode === 'brand' && !brandThreadId ? (
+                  <p className="text-white/50 text-sm">
+                    No brand thread for this negotiation.
+                  </p>
                 ) : (
                   chatData?.messages?.map((msg: ChatMessage) => {
                     const isAdmin = msg.sender === 'ADMIN';
@@ -399,9 +468,16 @@ export default function ContentFeedbackPage() {
                   <button
                     onClick={async () => {
                       if (!feedback.trim()) return;
+                      if (chatMode === 'brand' && !brandThreadId) return;
                       setIsSending(true);
                       try {
-                        await sendMessage(feedback);
+                        if (chatMode === 'influencer') {
+                          await sendInfluencerMessage(feedback);
+                          await influencerChatQuery.refetch();
+                        } else {
+                          await sendCompanyMessage(feedback);
+                          await companyChatQuery.refetch();
+                        }
                         setFeedback('');
                       } catch (error) {
                         console.error('Failed to send message:', error);
@@ -423,18 +499,22 @@ export default function ContentFeedbackPage() {
                   </button>
                   <button
                     onClick={() => {
-                      if (threadId) {
+                      if (threadId && !isAdminAlreadyApproved) {
                         approveNegotiation({
                           thread_id: threadId,
-                          payload: { admin_approved: 'Approved',},
+                          payload: { admin_approved: 'Approved' },
                         });
                       }
                     }}
-                    disabled={isApproving}
+                    disabled={isApproving || isAdminAlreadyApproved}
                     className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Check className="size-4" />
-                    {isApproving ? 'Approving...' : 'Approve'}
+                    {isAdminAlreadyApproved
+                      ? 'Approved'
+                      : isApproving
+                        ? 'Approving...'
+                        : 'Approve'}
                   </button>
                 </div>
               </div>
