@@ -309,11 +309,6 @@ export default function ContentFeedbackPage() {
                       No video available
                     </div>
                   )}
-
-                  {/* PROGRESS BAR (fake for now) */}
-                  <div className="absolute bottom-6 left-6 right-6 h-1.5 overflow-hidden rounded-full bg-white/20">
-                    <div className="h-full w-1/3 rounded-full bg-(--color-primaryButton)" />
-                  </div>
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-white/10 p-4">
@@ -392,6 +387,17 @@ export default function ContentFeedbackPage() {
                                 src={msg.message}
                                 controls
                                 className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
+                              />
+                            ) : typeof msg.message === 'string' &&
+                              msg.message.match(
+                                /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i,
+                              ) ? (
+                              <Image
+                                src={msg.message}
+                                alt="Chat image"
+                                width={360}
+                                height={420}
+                                className="w-auto max-w-full h-auto max-h-[420px] rounded-lg object-contain bg-black/20"
                               />
                             ) : (
                               <p className="break-words whitespace-pre-wrap">
