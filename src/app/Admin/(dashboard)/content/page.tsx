@@ -22,6 +22,7 @@ import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whats
 import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influncer-send-message-hook';
 import useSendAdminCompanyMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-send-message-hook';
 import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
+import useWhatsAppAdminCompanyApproveVideo from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-approve-video-hook';
 
 import {
   CardType,
@@ -61,6 +62,7 @@ export default function ContentFeedbackPage() {
 
   const threadId = selectedCard?.thread_id || '';
   const brandThreadId = selectedCard?.brand_thread_id || '';
+  const negotiationId = selectedCard?.id || '';
 
   const influencerChatQuery = useAdminInfluencerMessagesHook(
     threadId,
@@ -70,6 +72,7 @@ export default function ContentFeedbackPage() {
   );
   const companyChatQuery = useAdminCompanyMessagesHook(
     brandThreadId,
+    negotiationId,
     1,
     20,
     chatMode === 'brand',
@@ -83,7 +86,12 @@ export default function ContentFeedbackPage() {
       : companyChatQuery.isLoading;
 
   const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(threadId);
-  const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(brandThreadId);
+  const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(
+    brandThreadId,
+    negotiationId,
+  );
+
+  const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
 
   useEffect(() => {
     setChatMode('influencer');
@@ -338,8 +346,8 @@ export default function ContentFeedbackPage() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between border-t border-white/10 p-4">
-                <div className="flex gap-8">
+              <div className="flex items-center justify-between border-t border-white/10 p-3">
+                <div className="flex gap-6">
                   <div>
                     <p className="text-[10px] font-bold uppercase text-white/40">
                       Duration
@@ -361,8 +369,44 @@ export default function ContentFeedbackPage() {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-white/50">
-                  <span className="text-xs font-bold">unboxing_draft_v1.mp4 (42MB)</span>
+                <div className="flex flex-col items-end gap-2 text-white/50">
+                  <div className="flex items-center gap-2">
+                    <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
+                      <RefreshCw className="size-4" />
+                      Revision
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (threadId && brandThreadId && negotiationId && videoUrl) {
+                          // If negotiation is not approved yet, approve it first.
+                          // Video approval into brand chat should still work even when
+                          // negotiation was already marked as approved.
+                          if (!isAdminAlreadyApproved) {
+                            approveNegotiation({
+                              thread_id: threadId,
+                              payload: { admin_approved: 'Approved' },
+                            });
+                          }
+                          approveVideoMutation.mutate({
+                            brand_thread_id: brandThreadId,
+                            negotiation_id: negotiationId,
+                            video_url: videoUrl,
+                            video_status: 'admin_approved',
+                          });
+                        }
+                      }}
+                      disabled={
+                        isApproving || approveVideoMutation.isPending || !videoUrl
+                      }
+                      className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Check className="size-4" />
+                      Video Approve
+                    </button>
+                  </div>
+                  <span className="text-[11px] font-bold leading-tight">
+                    unboxing_draft_v1.mp4 (42MB)
+                  </span>
                 </div>
               </div>
             </div>
@@ -492,11 +536,7 @@ export default function ContentFeedbackPage() {
                     <Send className="size-4" />
                   </button>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-3 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
-                    <RefreshCw className="size-4" />
-                    Revision
-                  </button>
+                <div className="flex flex-col gap-3">
                   <button
                     onClick={() => {
                       if (threadId && !isAdminAlreadyApproved) {
@@ -507,7 +547,7 @@ export default function ContentFeedbackPage() {
                       }
                     }}
                     disabled={isApproving || isAdminAlreadyApproved}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Check className="size-4" />
                     {isAdminAlreadyApproved

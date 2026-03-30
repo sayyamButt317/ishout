@@ -59,13 +59,14 @@ export default function ContentFeedbackPage() {
     useAdminNegotiationApprovalStatus();
   const threadId = selectedCard?.thread_id || '';
   const brandThreadId = selectedCard?.brand_thread_id || '';
+  const negotiationId = selectedCard?.id || '';
   const {
     data: chatData,
     isLoading: chatLoading,
     refetch: refetchChat,
-  } = useAdminCompanyMessagesHook(brandThreadId, 1, 20);
+  } = useAdminCompanyMessagesHook(brandThreadId, negotiationId, 1, 20);
 
-  const { sendMessage } = useSendCompanyAdminMessage(company_user_id);
+  const { sendMessage } = useSendCompanyAdminMessage(company_user_id, negotiationId);
   const apiCards: CardType[] =
     data?.negotiation_controls
       ?.filter(
