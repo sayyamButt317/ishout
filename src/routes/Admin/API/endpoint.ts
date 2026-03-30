@@ -73,6 +73,8 @@ export const AdminENDPOINT = {
    ADMIN_WHATSAPP_ADMIN_COMPANY_MESSAGES_BY_ID: (thread_id: string) =>
     `/admin/whatsapp-admin-company-messages/${thread_id}`,
 
+  ADMIN_WHATSAPP_ADMIN_COMPANY_APPROVE_VIDEO: `/admin/whatsapp-admin-company/approve-video`,
+
   ADMIN_WHATSAPP_ADMIN_INFLUENCER_SEND_HUMAN_MESSAGE: (thread_id: string) =>
     `/admin/whatsapp-admin-influencer/send-human-message/${thread_id}`,
 

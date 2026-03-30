@@ -432,6 +432,7 @@ export const AdminNegotiationApprovalStatusApi = async (
 
 export const WhatsAppAdminCompanyMessagesApi = async (
   thread_id: string,
+  negotiation_id: string,
   { page, page_size }: { page: number; page_size: number },
 ) => {
   const response = await api.get(
@@ -440,6 +441,7 @@ export const WhatsAppAdminCompanyMessagesApi = async (
       params: {
         page,
         page_size,
+        negotiation_id,
       },
     },
   );
@@ -449,10 +451,11 @@ export const WhatsAppAdminCompanyMessagesApi = async (
 export const WhatsAppCompanyAdminSendHumanMessageApi = async (
   User_id: string,
   message: string,
+  negotiation_id: string,
 ) => {
   const response = await api.post(
     AdminENDPOINT.ADMIN_WHATSAPP_COMPANY_ADMIN_SEND_HUMAN_MESSAGE(User_id),
-    { message },
+    { message, negotiation_id },
   );
   return response.data;
 };
@@ -471,11 +474,31 @@ export const WhatsAppAdminInfuencerSendHumanMessageApi = async (
 export const WhatsAppAdminCompanySendHumanMessageApi = async (
   thread_id: string,
   message: string,
+  negotiation_id: string,
 ) => {
   const response = await api.post(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_COMPANY_SEND_HUMAN_MESSAGE(thread_id),
-    { message },
+    { message, negotiation_id },
   );
+  return response.data;
+};
+
+export const WhatsAppAdminCompanyApproveVideoApi = async (
+  brand_thread_id: string,
+  negotiation_id: string,
+  video_url: string,
+  video_status: string,
+) => {
+  const response = await api.post(
+    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_COMPANY_APPROVE_VIDEO,
+    {
+      negotiation_id,
+      video_url,
+      video_status,
+      brand_thread_id,
+    },
+  );
+
   return response.data;
 };
 
