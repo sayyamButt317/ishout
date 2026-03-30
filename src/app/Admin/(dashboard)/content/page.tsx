@@ -93,9 +93,6 @@ export default function ContentFeedbackPage() {
 
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
 
-  useEffect(() => {
-    setChatMode('influencer');
-  }, [selectedCard?.id]);
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
 
@@ -119,17 +116,59 @@ export default function ContentFeedbackPage() {
         };
       }) ?? [];
 
-  const videoMessage = chatData?.messages?.find(
-    (msg: ChatMessage) => typeof msg.message === 'string' && msg.message.includes('.mp4'),
-  );
+  const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
+  const isImageUrl = (value: string) =>
+    /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
 
-  const videoUrl = videoMessage?.message;
+  const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
+    null,
+  );
+  const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
+    'video' | 'image' | null
+  >(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [isSending, setIsSending] = useState(false);
 
   const isAdminAlreadyApproved =
     (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
+
+  useEffect(() => {
+    setChatMode('influencer');
+    setSelectedPreviewMediaUrl(null);
+    setSelectedPreviewMediaType(null);
+    setIsPlaying(false);
+  }, [selectedCard?.id]);
+
+  useEffect(() => {
+    const mediaMessages =
+      chatData?.messages?.filter(
+        (msg: ChatMessage) =>
+          typeof msg.message === 'string' &&
+          (isVideoUrl(msg.message) || isImageUrl(msg.message)),
+      ) ?? [];
+
+    if (mediaMessages.length === 0) {
+      setSelectedPreviewMediaUrl(null);
+      setSelectedPreviewMediaType(null);
+      setIsPlaying(false);
+      return;
+    }
+
+    // Keep current selected media if it still exists in this conversation.
+    if (
+      selectedPreviewMediaUrl &&
+      mediaMessages.some((msg: ChatMessage) => msg.message === selectedPreviewMediaUrl)
+    ) {
+      return;
+    }
+
+    // Otherwise default to the latest media message.
+    const latestMedia = mediaMessages[mediaMessages.length - 1];
+    setSelectedPreviewMediaUrl(latestMedia.message);
+    setSelectedPreviewMediaType(isVideoUrl(latestMedia.message) ? 'video' : 'image');
+    setIsPlaying(false);
+  }, [chatData, selectedPreviewMediaUrl]);
 
   return (
     <div className="font-sans">
@@ -311,39 +350,44 @@ export default function ContentFeedbackPage() {
               </div>
               <div className="flex flex-1 items-center justify-center overflow-hidden bg-slate-900 p-4">
                 <div className="relative aspect-9/16 h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
-                  {videoUrl ? (
-                    <>
-                      {/* VIDEO ELEMENT */}
-                      <video
-                        src={videoUrl}
-                        className="h-full w-full object-cover"
-                        controls={isPlaying}
+                  {selectedPreviewMediaUrl ? (
+                    selectedPreviewMediaType === 'image' ? (
+                      <Image
+                        src={selectedPreviewMediaUrl}
+                        alt="Selected chat image"
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 1280px) 100vw, 600px"
                       />
+                    ) : (
+                      <>
+                        {/* VIDEO ELEMENT */}
+                        <video
+                          src={selectedPreviewMediaUrl}
+                          className="h-full w-full object-cover"
+                          controls={isPlaying}
+                        />
 
-                      {/* PLAY BUTTON OVERLAY */}
-                      {!isPlaying && (
-                        <div
-                          onClick={() => setIsPlaying(true)}
-                          className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer"
-                        >
-                          <Play
-                            className="size-16 text-white/80 hover:text-white hover:scale-110 transition-all"
-                            fill="currentColor"
-                          />
-                        </div>
-                      )}
-                    </>
+                        {/* PLAY BUTTON OVERLAY */}
+                        {!isPlaying && (
+                          <div
+                            onClick={() => setIsPlaying(true)}
+                            className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer"
+                          >
+                            <Play
+                              className="size-16 text-white/80 hover:text-white hover:scale-110 transition-all"
+                              fill="currentColor"
+                            />
+                          </div>
+                        )}
+                      </>
+                    )
                   ) : (
-                    // fallback if no video
+                    // fallback if no media
                     <div className="flex h-full items-center justify-center text-white/50 text-sm">
-                      No video available
+                      No media available
                     </div>
                   )}
-
-                  {/* PROGRESS BAR (fake for now) */}
-                  <div className="absolute bottom-6 left-6 right-6 h-1.5 overflow-hidden rounded-full bg-white/20">
-                    <div className="h-full w-1/3 rounded-full bg-(--color-primaryButton)" />
-                  </div>
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-white/10 p-3">
@@ -377,7 +421,12 @@ export default function ContentFeedbackPage() {
                     </button>
                     <button
                       onClick={() => {
-                        if (threadId && brandThreadId && negotiationId && videoUrl) {
+                        if (
+                          threadId &&
+                          brandThreadId &&
+                          negotiationId &&
+                          selectedPreviewMediaUrl
+                        ) {
                           // If negotiation is not approved yet, approve it first.
                           // Video approval into brand chat should still work even when
                           // negotiation was already marked as approved.
@@ -390,18 +439,22 @@ export default function ContentFeedbackPage() {
                           approveVideoMutation.mutate({
                             brand_thread_id: brandThreadId,
                             negotiation_id: negotiationId,
-                            video_url: videoUrl,
+                            video_url: selectedPreviewMediaUrl,
                             video_status: 'admin_approved',
                           });
                         }
                       }}
                       disabled={
-                        isApproving || approveVideoMutation.isPending || !videoUrl
+                        isApproving ||
+                        approveVideoMutation.isPending ||
+                        !selectedPreviewMediaUrl
                       }
                       className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Check className="size-4" />
-                      Video Approve
+                      {selectedPreviewMediaType === 'image'
+                        ? 'Image Approve'
+                        : 'Video Approve'}
                     </button>
                   </div>
                   <span className="text-[11px] font-bold leading-tight">
@@ -482,12 +535,41 @@ export default function ContentFeedbackPage() {
                             }`}
                           >
                             {typeof msg.message === 'string' &&
-                            msg.message.match(/\.(mp4|webm|ogg)(\?.*)?$/i) ? (
-                              <video
-                                src={msg.message}
-                                controls
-                                className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
-                              />
+                            isVideoUrl(msg.message) ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedPreviewMediaUrl(msg.message);
+                                  setSelectedPreviewMediaType('video');
+                                  setIsPlaying(false);
+                                }}
+                                className="w-full text-left cursor-pointer"
+                              >
+                                <video
+                                  src={msg.message}
+                                  controls
+                                  className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
+                                />
+                              </button>
+                            ) : typeof msg.message === 'string' &&
+                              isImageUrl(msg.message) ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedPreviewMediaUrl(msg.message);
+                                  setSelectedPreviewMediaType('image');
+                                  setIsPlaying(false);
+                                }}
+                                className="w-full text-left cursor-pointer"
+                              >
+                                <Image
+                                  src={msg.message}
+                                  alt="Chat image"
+                                  width={360}
+                                  height={420}
+                                  className="w-auto max-w-full h-auto max-h-[420px] rounded-lg object-contain bg-black/20"
+                                />
+                              </button>
                             ) : (
                               <p className="break-words whitespace-pre-wrap">
                                 {msg.message}
