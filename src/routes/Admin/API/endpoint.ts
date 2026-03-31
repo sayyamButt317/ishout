@@ -83,4 +83,8 @@ export const AdminENDPOINT = {
 
   ADMIN_WHATSAPP_ADMIN_COMPANY_SEND_HUMAN_MESSAGE: (thread_id: string) =>
     `/admin/whatsapp-admin-company/send-human-message/${thread_id}`,
+
+  ADMIN_CONTENT_FEEDBACK: `/admin/content-feedback`,
+  ADMIN_CONTENT_FEEDBACK_ADMIN_READ: `/admin/content-feedback/admin`,
+  ADMIN_CONTENT_FEEDBACK_BRAND_READ: `/admin/content-feedback/brand`,
 };

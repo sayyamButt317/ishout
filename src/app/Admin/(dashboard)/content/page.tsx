@@ -23,6 +23,8 @@ import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admi
 import useSendAdminCompanyMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-send-message-hook';
 import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
 import useWhatsAppAdminCompanyApproveVideo from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-approve-video-hook';
+import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
+import useAdminContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-admin-read-hook';
 
 import {
   CardType,
@@ -48,6 +50,7 @@ export default function ContentFeedbackPage() {
   const [search, setSearch] = useState('');
   interface SelectedCardType {
     id: string;
+    campaign_id?: string;
     title: string;
     campaign: string;
     thread_id?: string;
@@ -58,6 +61,7 @@ export default function ContentFeedbackPage() {
   const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
 
   const [feedback, setFeedback] = useState('');
+  const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
   const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
 
   const threadId = selectedCard?.thread_id || '';
@@ -102,14 +106,12 @@ export default function ContentFeedbackPage() {
       .map((item) => {
         return {
           id: item._id,
+          campaign_id: item.campaign_id,
           title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
           campaign: item.campaign_brief?.title ?? 'Campaign',
           rights: 'Full Rights',
           status: 'Ready to Post',
-          thumb:
-            item.campaign_logo_url ??
-            item.campaign_brief?.campaign_logo_url ??
-            'https://via.placeholder.com/300',
+          thumb: item.campaign_logo_url ?? '/assets/logo.svg',
           thread_id: item.thread_id,
           brand_thread_id: item.brand_thread_id,
           admin_approved: item.admin_approved,
@@ -129,9 +131,22 @@ export default function ContentFeedbackPage() {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const [isSending, setIsSending] = useState(false);
+  const [feedbackIdMap, setFeedbackIdMap] = useState<Record<string, string>>({});
 
   const isAdminAlreadyApproved =
     (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
+  const feedbackStorageKey = 'admin-content-feedback-id-map';
+  const activeFeedbackKey =
+    negotiationId && selectedPreviewMediaUrl
+      ? `${negotiationId}::${selectedPreviewMediaUrl}`
+      : '';
+  const activeFeedbackId = activeFeedbackKey
+    ? (feedbackIdMap[activeFeedbackKey] ?? '')
+    : '';
+
+  const saveContentFeedbackMutation = useSaveContentFeedbackHook();
+  const { data: adminFeedbackData, refetch: refetchAdminFeedback } =
+    useAdminContentFeedbackReadHook(activeFeedbackId, !!activeFeedbackId);
 
   useEffect(() => {
     setChatMode('influencer');
@@ -139,6 +154,21 @@ export default function ContentFeedbackPage() {
     setSelectedPreviewMediaType(null);
     setIsPlaying(false);
   }, [selectedCard?.id]);
+
+  useEffect(() => {
+    const raw = sessionStorage.getItem(feedbackStorageKey);
+    if (!raw) return;
+    try {
+      const parsed = JSON.parse(raw) as Record<string, string>;
+      setFeedbackIdMap(parsed);
+    } catch {
+      setFeedbackIdMap({});
+    }
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem(feedbackStorageKey, JSON.stringify(feedbackIdMap));
+  }, [feedbackIdMap]);
 
   useEffect(() => {
     const mediaMessages =
@@ -232,6 +262,7 @@ export default function ContentFeedbackPage() {
                     onClick={() =>
                       setSelectedCard({
                         id: card.id,
+                        campaign_id: card.campaign_id,
                         title: card.title,
                         campaign: card.campaign,
                         thread_id: card.thread_id,
@@ -348,8 +379,8 @@ export default function ContentFeedbackPage() {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-1 items-center justify-center overflow-hidden bg-slate-900 p-4">
-                <div className="relative aspect-9/16 h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
+              <div className="flex flex-1 flex-col lg:flex-row items-start lg:items-stretch justify-start lg:justify-center overflow-y-auto lg:overflow-hidden bg-slate-900 p-4 gap-4">
+                <div className="relative shrink-0 aspect-9/16 h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
                   {selectedPreviewMediaUrl ? (
                     selectedPreviewMediaType === 'image' ? (
                       <Image
@@ -388,6 +419,102 @@ export default function ContentFeedbackPage() {
                       No media available
                     </div>
                   )}
+                </div>
+                <div className="flex w-full lg:w-72 shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+                  <div className="relative">
+                    <textarea
+                      value={selectedContentFeedback}
+                      onChange={(e) => setSelectedContentFeedback(e.target.value)}
+                      placeholder="Type feedback on selected content..."
+                      className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                    />
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (
+                          !selectedContentFeedback.trim() ||
+                          !selectedPreviewMediaUrl ||
+                          !negotiationId ||
+                          !selectedCard?.campaign_id
+                        ) {
+                          return;
+                        }
+
+                        try {
+                          const response = await saveContentFeedbackMutation.mutateAsync({
+                            negotiation_id: negotiationId,
+                            campaign_id: selectedCard.campaign_id,
+                            content_url: selectedPreviewMediaUrl,
+                            msg: selectedContentFeedback.trim(),
+                            review_side: 'admin_review',
+                          });
+                          const newFeedbackId = response?.feedback?.feedback_id as
+                            | string
+                            | undefined;
+                          if (newFeedbackId && activeFeedbackKey) {
+                            setFeedbackIdMap((prev) => ({
+                              ...prev,
+                              [activeFeedbackKey]: newFeedbackId,
+                            }));
+                          }
+                          setSelectedContentFeedback('');
+                          if (newFeedbackId || activeFeedbackId) {
+                            await refetchAdminFeedback();
+                          }
+                        } catch (error) {
+                          console.error('Failed to save content feedback:', error);
+                        }
+                      }}
+                      disabled={saveContentFeedbackMutation.isPending}
+                      className="mt-2 w-full rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {saveContentFeedbackMutation.isPending
+                        ? 'Saving...'
+                        : 'Save Admin Feedback'}
+                    </button>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs font-bold uppercase tracking-wider text-white/50">
+                      Brand feedback
+                    </p>
+                    <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
+                      {adminFeedbackData?.feedback?.brand_review?.message?.length ? (
+                        adminFeedbackData.feedback.brand_review.message.map(
+                          (message: string, index: number) => (
+                            <p
+                              key={`brand-feedback-${index}`}
+                              className="text-sm text-white/70"
+                            >
+                              {message}
+                            </p>
+                          ),
+                        )
+                      ) : (
+                        <p className="text-sm text-white/70">No brand feedback yet.</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs font-bold uppercase tracking-wider text-white/50">
+                      Admin feedback
+                    </p>
+                    <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
+                      {adminFeedbackData?.feedback?.admin_Rewiew?.message?.length ? (
+                        adminFeedbackData.feedback.admin_Rewiew.message.map(
+                          (message: string, index: number) => (
+                            <p
+                              key={`admin-feedback-${index}`}
+                              className="text-sm text-white/70"
+                            >
+                              {message}
+                            </p>
+                          ),
+                        )
+                      ) : (
+                        <p className="text-sm text-white/70">No admin feedback yet.</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-white/10 p-3">
@@ -440,7 +567,7 @@ export default function ContentFeedbackPage() {
                             brand_thread_id: brandThreadId,
                             negotiation_id: negotiationId,
                             video_url: selectedPreviewMediaUrl,
-                            video_status: 'admin_approved',
+                            video_approve_admin: 'approved',
                           });
                         }
                       }}
