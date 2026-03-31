@@ -7,8 +7,9 @@ interface CustomButtonProps {
   disabled?: boolean;
   loading?: boolean;
   children: React.ReactNode;
-  className?: React.ReactNode;
+  className?: string;
   style?: React.CSSProperties;
+  asChild?: boolean;
 }
 
 const CustomButton = ({
@@ -17,9 +18,11 @@ const CustomButton = ({
   children,
   className,
   style,
+  asChild = false,
 }: CustomButtonProps) => {
   return (
     <Button
+      asChild={asChild}
       disabled={disabled}
       onClick={onClick}
       style={style}

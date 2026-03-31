@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import CustomButton from "./button";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -34,7 +34,9 @@ const Header = () => {
               alt="logo"
               width={200}
               height={52}
-              className="w-[200px] h-[52px] object-contain"
+              className="w-[200px] h-auto object-contain"
+              loading="eager"
+              priority
               unoptimized={true}
             />
           </div>
@@ -69,17 +71,23 @@ const Header = () => {
 
           {!token ? (
             <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
-              <Link href="/auth/login">
-                <CustomButton className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap">
+              <CustomButton
+                asChild
+                className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap"
+              >
+                <Link href="/auth/login">
                   Login
-                </CustomButton>
-              </Link>
+                </Link>
+              </CustomButton>
 
-              <Link href="/auth/register">
-                <CustomButton className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap">
+              <CustomButton
+                asChild
+                className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap"
+              >
+                <Link href="/auth/register">
                   Register
-                </CustomButton>
-              </Link>
+                </Link>
+              </CustomButton>
             </div>
           ) : (
             <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
@@ -89,7 +97,10 @@ const Header = () => {
               >
                 Dashboard
               </CustomButton>
-              <CustomButton className="px-3 sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap">
+              <CustomButton
+                asChild
+                className="px-3 sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap"
+              >
                 <Link
                   href="/auth/login"
                   onClick={() => clearAuthTokenProvider()}
