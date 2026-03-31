@@ -1,5 +1,6 @@
 export interface CardType {
   id: string;
+  campaign_id?: string;
   title: string;
   campaign: string;
   thumb: string;
@@ -19,6 +20,7 @@ export interface CampaignBrief {
 
 export interface NegotiationItem {
   _id: string;
+  campaign_id?: string;
   name?: string;
   thread_id?: string;
   negotiation_status?: string;
@@ -35,6 +37,10 @@ export interface ChatMessage {
   username?: string;
   message: string;
   timestamp: string;
+  video_status?: string | null;
+  video_url?: string | null;
+  video_approve_admin?: string | null;
+  video_approve_brand?: string | null;
 }
 export interface NegotiationResponse {
   negotiation_controls?: NegotiationItem[];
