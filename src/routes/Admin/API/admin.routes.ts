@@ -483,22 +483,63 @@ export const WhatsAppAdminCompanySendHumanMessageApi = async (
   return response.data;
 };
 
+export type WhatsAppAdminCompanyApproveVideoPayload = {
+  brand_thread_id: string;
+  negotiation_id: string;
+  video_url: string;
+  video_approve_admin?: string;
+  video_approve_brand?: string;
+};
+
 export const WhatsAppAdminCompanyApproveVideoApi = async (
-  brand_thread_id: string,
-  negotiation_id: string,
-  video_url: string,
-  video_status: string,
+  payload: WhatsAppAdminCompanyApproveVideoPayload,
 ) => {
+  const body: Record<string, string> = {
+    negotiation_id: payload.negotiation_id,
+    video_url: payload.video_url,
+    brand_thread_id: payload.brand_thread_id,
+  };
+  if (payload.video_approve_admin != null) {
+    body.video_approve_admin = payload.video_approve_admin;
+  }
+  if (payload.video_approve_brand != null) {
+    body.video_approve_brand = payload.video_approve_brand;
+  }
+
   const response = await api.post(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_COMPANY_APPROVE_VIDEO,
-    {
-      negotiation_id,
-      video_url,
-      video_status,
-      brand_thread_id,
-    },
+    body,
   );
 
+  return response.data;
+};
+
+type ContentFeedbackReviewSide = 'admin_review' | 'brand_review';
+
+type SaveContentFeedbackPayload = {
+  negotiation_id: string;
+  campaign_id: string;
+  content_url: string;
+  msg: string;
+  review_side: ContentFeedbackReviewSide;
+};
+
+export const SaveContentFeedbackApi = async (payload: SaveContentFeedbackPayload) => {
+  const response = await api.post(AdminENDPOINT.ADMIN_CONTENT_FEEDBACK, payload);
+  return response.data;
+};
+
+export const GetAdminContentFeedbackApi = async (feedback_id: string) => {
+  const response = await api.get(AdminENDPOINT.ADMIN_CONTENT_FEEDBACK_ADMIN_READ, {
+    params: { feedback_id },
+  });
+  return response.data;
+};
+
+export const GetBrandContentFeedbackApi = async (feedback_id: string) => {
+  const response = await api.get(AdminENDPOINT.ADMIN_CONTENT_FEEDBACK_BRAND_READ, {
+    params: { feedback_id },
+  });
   return response.data;
 };
 

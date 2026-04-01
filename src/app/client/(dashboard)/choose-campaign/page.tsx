@@ -1,34 +1,32 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import CustomButton from "@/src/app/component/button";
-import openWhatsApp from "@/src/app/component/custom-component/companywhastapp";
-import { Sparkles, MessageCircle } from "lucide-react";
-import PageHeader from "@/src/app/component/PageHeader";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { Card, CardContent } from '@/components/ui/card';
+import CustomButton from '@/src/app/component/button';
+import openWhatsApp from '@/src/app/component/custom-component/companywhastapp';
+import { Sparkles, MessageCircle } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const options = [
-
   {
-    id: "campaign-breif",
-    title: "Generate Campaign",
+    id: 'campaign-breif',
+    title: 'Generate Campaign',
     description:
-      "Start fast with a ready-made campaign template to launch quickly and save time.",
+      'Start fast with a ready-made campaign template to launch quickly and save time.',
     icon: Sparkles,
-    route: "/client/campaign-breif",
-    img: "/assets/quick-template.png",
+    route: '/client/campaign-breif',
+    img: '/assets/quick-template.png',
   },
   {
-    id: "whatsapp",
-    title: "WhatsApp Campaign",
+    id: 'whatsapp',
+    title: 'WhatsApp Campaign',
     description:
-      "Create and manage a full WhatsApp campaign easily with AI support to help you create a campaign or by directly messaging the ishout on this number : +971 50 305 4372",
+      'Create and manage a full WhatsApp campaign easily with AI support to help you create a campaign or by directly messaging the ishout on this number : +971 50 305 4372',
     icon: MessageCircle,
-    img: "/assets/whatsapp-campaign.png",
+    img: '/assets/whatsapp-campaign.png',
   },
 ];
-
 
 export default function ChooseCampaign() {
   const router = useRouter();
@@ -69,10 +67,10 @@ export default function ChooseCampaign() {
 
                       <CustomButton
                         onClick={() => {
-                          if (option.id === "whatsapp") {
+                          if (option.id === 'whatsapp') {
                             openWhatsApp();
                           } else {
-                            router.push(option.route ?? "");
+                            router.push(option.route ?? '');
                           }
                         }}
                         className="mt-6 px-6 py-2 italic font-semibold bg-primaryButton hover:bg-primaryHover"
@@ -82,10 +80,11 @@ export default function ChooseCampaign() {
                     </div>
 
                     {/* RIGHT IMAGE */}
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <Image
                         src={option.img}
                         alt={option.title}
+                        priority
                         width={250}
                         height={180}
                         className="rounded-xl object-contain"

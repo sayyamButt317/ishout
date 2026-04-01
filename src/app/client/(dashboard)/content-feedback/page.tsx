@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
 
 import {
@@ -21,6 +21,11 @@ import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationS
 import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-hook';
 import useSendCompanyAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-company-admin-send-message-hook';
 import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
+import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
+import useBrandContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-brand-read-hook';
+import useWhatsAppAdminCompanyApproveVideo from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-approve-video-hook';
+import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-map';
+import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages-list';
 import {
   CardType,
   ChatMessage,
@@ -45,6 +50,7 @@ export default function ContentFeedbackPage() {
   const [search, setSearch] = useState('');
   interface SelectedCardType {
     id: string;
+    campaign_id?: string;
     title: string;
     campaign: string;
     thread_id?: string;
@@ -54,6 +60,7 @@ export default function ContentFeedbackPage() {
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
   const { company_user_id } = useAuthStore();
   const [feedback, setFeedback] = useState('');
+  const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
   const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
@@ -67,6 +74,7 @@ export default function ContentFeedbackPage() {
   } = useAdminCompanyMessagesHook(brandThreadId, negotiationId, 1, 20);
 
   const { sendMessage } = useSendCompanyAdminMessage(company_user_id, negotiationId);
+  const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
   const apiCards: CardType[] =
     data?.negotiation_controls
       ?.filter(
@@ -75,6 +83,7 @@ export default function ContentFeedbackPage() {
       )
       .map((item) => ({
         id: item._id,
+        campaign_id: item.campaign_id,
         title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
         campaign: item.campaign_brief?.title ?? 'Campaign',
         rights: 'Full Rights',
@@ -89,17 +98,93 @@ export default function ContentFeedbackPage() {
         brand_thread_id: item.brand_thread_id,
         Brand_approved: item.Brand_approved,
       })) ?? [];
-  const videoMessage = chatData?.messages?.find(
-    (msg: ChatMessage) => typeof msg.message === 'string' && msg.message.includes('.mp4'),
+  const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
+  const isImageUrl = (value: string) =>
+    /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
+  const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
+    null,
   );
-
-  const videoUrl = videoMessage?.message;
+  const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
+    'video' | 'image' | null
+  >(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
+  const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
 
   const [isSending, setIsSending] = useState(false);
 
   const isBrandAlreadyApproved =
     (selectedCard?.Brand_approved ?? '').toLowerCase() === 'approved';
+  const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
+    'brand-content-feedback-id-map',
+  );
+  const activeFeedbackId = getFeedbackId(negotiationId, selectedPreviewMediaUrl);
+
+  const saveContentFeedbackMutation = useSaveContentFeedbackHook();
+  const { data: brandFeedbackData, refetch: refetchBrandFeedback } =
+    useBrandContentFeedbackReadHook(activeFeedbackId, !!activeFeedbackId);
+
+  const isBrandContentApprovedInBrandChat = useMemo(() => {
+    const url = selectedPreviewMediaUrl;
+    if (!url || !chatData?.messages) return false;
+    return chatData.messages.some((msg: ChatMessage) => {
+      const contentUrl =
+        typeof msg.message === 'string' &&
+        (isVideoUrl(msg.message) || isImageUrl(msg.message))
+          ? msg.message
+          : (msg.video_url ?? '');
+      const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
+      return contentUrl === url && brandOk;
+    });
+  }, [chatData, selectedPreviewMediaUrl]);
+
+  useEffect(() => {
+    setSelectedPreviewMediaUrl(null);
+    setSelectedPreviewMediaType(null);
+    setIsPlaying(false);
+    setSelectedVideoDuration(null);
+    setSelectedVideoResolution('—');
+  }, [selectedCard?.id]);
+
+  useEffect(() => {
+    const mediaMessages =
+      chatData?.messages?.filter(
+        (msg: ChatMessage) =>
+          typeof msg.message === 'string' &&
+          (isVideoUrl(msg.message) || isImageUrl(msg.message)),
+      ) ?? [];
+
+    if (mediaMessages.length === 0) {
+      setSelectedPreviewMediaUrl(null);
+      setSelectedPreviewMediaType(null);
+      setIsPlaying(false);
+      setSelectedVideoDuration(null);
+      setSelectedVideoResolution('—');
+      return;
+    }
+
+    if (
+      selectedPreviewMediaUrl &&
+      mediaMessages.some((msg: ChatMessage) => msg.message === selectedPreviewMediaUrl)
+    ) {
+      return;
+    }
+
+    const latestMedia = mediaMessages[mediaMessages.length - 1];
+    setSelectedPreviewMediaUrl(latestMedia.message);
+    setSelectedPreviewMediaType(isVideoUrl(latestMedia.message) ? 'video' : 'image');
+    setIsPlaying(false);
+    setSelectedVideoDuration(null);
+    setSelectedVideoResolution('—');
+  }, [chatData, selectedPreviewMediaUrl]);
+
+  const formatVideoDuration = (seconds: number | null) => {
+    if (!seconds || Number.isNaN(seconds)) return '--:--';
+    const total = Math.max(0, Math.floor(seconds));
+    const mins = Math.floor(total / 60);
+    const secs = total % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className="font-sans">
@@ -163,6 +248,7 @@ export default function ContentFeedbackPage() {
                     onClick={() =>
                       setSelectedCard({
                         id: card.id,
+                        campaign_id: card.campaign_id,
                         title: card.title,
                         campaign: card.campaign,
                         thread_id: card.thread_id,
@@ -279,51 +365,152 @@ export default function ContentFeedbackPage() {
                   </button>
                 </div>
               </div>
-              <div className="flex flex-1 items-center justify-center overflow-hidden bg-slate-900 p-4">
-                <div className="relative aspect-9/16 h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
-                  {videoUrl ? (
-                    <>
-                      {/* VIDEO ELEMENT */}
-                      <video
-                        src={videoUrl}
-                        className="h-full w-full object-cover"
-                        controls={isPlaying}
+              <div className="flex flex-1 flex-col lg:flex-row items-start lg:items-stretch justify-start lg:justify-center overflow-y-auto lg:overflow-hidden bg-slate-900 p-4 gap-4">
+                <div className="relative shrink-0 aspect-9/16 h-[92%] max-h-[600px] overflow-hidden rounded-lg border border-white/10 bg-slate-800">
+                  {selectedPreviewMediaUrl ? (
+                    selectedPreviewMediaType === 'image' ? (
+                      <Image
+                        src={selectedPreviewMediaUrl}
+                        alt="Selected chat image"
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 1280px) 100vw, 600px"
                       />
-
-                      {/* PLAY BUTTON OVERLAY */}
-                      {!isPlaying && (
-                        <div
-                          onClick={() => setIsPlaying(true)}
-                          className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer"
-                        >
-                          <Play
-                            className="size-16 text-white/80 hover:text-white hover:scale-110 transition-all"
-                            fill="currentColor"
-                          />
-                        </div>
-                      )}
-                    </>
+                    ) : (
+                      <>
+                        <video
+                          src={selectedPreviewMediaUrl}
+                          className="h-full w-full object-cover"
+                          controls={isPlaying}
+                          onLoadedMetadata={(event) => {
+                            const media = event.currentTarget;
+                            setSelectedVideoDuration(media.duration || null);
+                            if (media.videoWidth && media.videoHeight) {
+                              setSelectedVideoResolution(
+                                `${media.videoWidth} × ${media.videoHeight}`,
+                              );
+                            } else {
+                              setSelectedVideoResolution('—');
+                            }
+                          }}
+                        />
+                        {!isPlaying && (
+                          <div
+                            onClick={() => setIsPlaying(true)}
+                            className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer"
+                          >
+                            <Play
+                              className="size-16 text-white/80 hover:text-white hover:scale-110 transition-all"
+                              fill="currentColor"
+                            />
+                          </div>
+                        )}
+                      </>
+                    )
                   ) : (
-                    // fallback if no video
                     <div className="flex h-full items-center justify-center text-white/50 text-sm">
-                      No video available
+                      No media available
                     </div>
                   )}
                 </div>
+                <div className="flex w-full lg:w-72 shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+                  <div className="relative">
+                    <textarea
+                      value={selectedContentFeedback}
+                      onChange={(e) => setSelectedContentFeedback(e.target.value)}
+                      placeholder="Type feedback on selected content..."
+                      className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                    />
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        if (
+                          !selectedContentFeedback.trim() ||
+                          !selectedPreviewMediaUrl ||
+                          !negotiationId ||
+                          !selectedCard?.campaign_id
+                        ) {
+                          return;
+                        }
+
+                        try {
+                          const response = await saveContentFeedbackMutation.mutateAsync({
+                            negotiation_id: negotiationId,
+                            campaign_id: selectedCard.campaign_id,
+                            content_url: selectedPreviewMediaUrl,
+                            msg: selectedContentFeedback.trim(),
+                            review_side: 'brand_review',
+                          });
+                          const newFeedbackId = response?.feedback?.feedback_id as
+                            | string
+                            | undefined;
+                          if (newFeedbackId) {
+                            setFeedbackId(
+                              negotiationId,
+                              selectedPreviewMediaUrl,
+                              newFeedbackId,
+                            );
+                          }
+                          setSelectedContentFeedback('');
+                          if (newFeedbackId || activeFeedbackId) {
+                            await refetchBrandFeedback();
+                          }
+                        } catch (error) {
+                          console.error('Failed to save content feedback:', error);
+                        }
+                      }}
+                      disabled={saveContentFeedbackMutation.isPending}
+                      className="mt-2 w-full rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {saveContentFeedbackMutation.isPending
+                        ? 'Saving...'
+                        : 'Save Brand Feedback'}
+                    </button>
+                  </div>
+                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                    <p className="text-xs font-bold uppercase tracking-wider text-white/50">
+                      Brand feedback
+                    </p>
+                    <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
+                      {brandFeedbackData?.feedback?.brand_review?.message?.length ? (
+                        brandFeedbackData.feedback.brand_review.message.map(
+                          (message: string, index: number) => (
+                            <p
+                              key={`brand-feedback-${index}`}
+                              className="text-sm text-white/70"
+                            >
+                              {message}
+                            </p>
+                          ),
+                        )
+                      ) : (
+                        <p className="text-sm text-white/70">No brand feedback yet.</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center justify-between border-t border-white/10 p-4">
-                <div className="flex gap-8">
+              <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-4">
+                <div className="flex gap-8 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
                   <div>
                     <p className="text-[10px] font-bold uppercase text-white/40">
                       Duration
                     </p>
-                    <p className="text-sm font-bold text-white">0:45</p>
+                    <p className="text-sm font-bold text-white">
+                      {selectedPreviewMediaType === 'video'
+                        ? formatVideoDuration(selectedVideoDuration)
+                        : '--:--'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase text-white/40">
                       Resolution
                     </p>
-                    <p className="text-sm font-bold text-white">1080 × 1920</p>
+                    <p className="text-sm font-bold text-white">
+                      {selectedPreviewMediaType === 'video'
+                        ? selectedVideoResolution
+                        : 'Image'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase text-white/40">
@@ -334,8 +521,44 @@ export default function ContentFeedbackPage() {
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-white/50">
-                  <span className="text-xs font-bold">unboxing_draft_v1.mp4 (42MB)</span>
+                <div className="flex flex-col items-end gap-2 text-white/50">
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors"
+                    >
+                      <RefreshCw className="size-4" />
+                      Revision
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (brandThreadId && negotiationId && selectedPreviewMediaUrl) {
+                          approveVideoMutation.mutate({
+                            brand_thread_id: brandThreadId,
+                            negotiation_id: negotiationId,
+                            video_url: selectedPreviewMediaUrl,
+                            video_approve_brand: 'approved',
+                          });
+                        }
+                      }}
+                      disabled={
+                        approveVideoMutation.isPending ||
+                        !selectedPreviewMediaUrl ||
+                        !brandThreadId ||
+                        isBrandContentApprovedInBrandChat
+                      }
+                      className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Check className="size-4" />
+                      {selectedPreviewMediaType === 'image'
+                        ? 'Image Approve'
+                        : 'Video Approve'}
+                    </button>
+                  </div>
+                  <span className="text-[11px] font-bold leading-tight">
+                    unboxing_draft_v1.mp4 (42MB)
+                  </span>
                 </div>
               </div>
             </div>
@@ -350,68 +573,18 @@ export default function ContentFeedbackPage() {
                 </span>
               </div>
               <div className="flex-1 space-y-4 overflow-y-auto p-5">
-                {chatLoading ? (
-                  <p className="text-white/50 text-sm">Loading...</p>
-                ) : (
-                  chatData?.messages?.map((msg: ChatMessage) => {
-                    const isAdmin = msg.sender === 'ADMIN';
-                    const isBrand = !isAdmin;
-
-                    return (
-                      <div
-                        key={msg._id}
-                        className={`flex gap-3 ${isBrand ? 'justify-end' : 'justify-start'}`}
-                      >
-                        {isAdmin && <div className="size-8 rounded-full bg-slate-600" />}
-
-                        <div className="max-w-[80%] space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-white">
-                              {msg.username || msg.sender}
-                            </span>
-                            <span className="text-[10px] text-white/40">
-                              {new Date(msg.timestamp).toLocaleTimeString()}
-                            </span>
-                          </div>
-
-                          <div
-                            className={`rounded-2xl p-2 text-xs overflow-hidden max-w-[85%] sm:max-w-[75%] md:max-w-[65%] ${
-                              isBrand
-                                ? 'bg-(--color-primaryButton) text-white rounded-tr-none ml-auto'
-                                : 'bg-white/5 text-white/70 rounded-tl-none'
-                            }`}
-                          >
-                            {typeof msg.message === 'string' &&
-                            msg.message.match(/\.(mp4|webm|ogg)(\?.*)?$/i) ? (
-                              <video
-                                src={msg.message}
-                                controls
-                                className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
-                              />
-                            ) : typeof msg.message === 'string' &&
-                              msg.message.match(
-                                /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i,
-                              ) ? (
-                              <Image
-                                src={msg.message}
-                                alt="Chat image"
-                                width={360}
-                                height={420}
-                                className="w-auto max-w-full h-auto max-h-[420px] rounded-lg object-contain bg-black/20"
-                              />
-                            ) : (
-                              <p className="break-words whitespace-pre-wrap">
-                                {msg.message}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        {isBrand && <div className="size-8 rounded-full bg-slate-600" />}
-                      </div>
-                    );
-                  })
-                )}
+                <ChatMessagesList
+                  messages={chatData?.messages}
+                  isLoading={chatLoading}
+                  isRightMessage={(msg) => msg.sender !== 'ADMIN'}
+                  isVideoUrl={isVideoUrl}
+                  isImageUrl={isImageUrl}
+                  onSelectMedia={(url, type) => {
+                    setSelectedPreviewMediaUrl(url);
+                    setSelectedPreviewMediaType(type);
+                    setIsPlaying(false);
+                  }}
+                />
               </div>
               <div className="space-y-4 border-t border-white/10 p-5">
                 {' '}
