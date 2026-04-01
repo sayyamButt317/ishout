@@ -24,6 +24,8 @@ import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp
 import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
 import useBrandContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-brand-read-hook';
 import useWhatsAppAdminCompanyApproveVideo from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-approve-video-hook';
+import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-map';
+import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages-list';
 import {
   CardType,
   ChatMessage,
@@ -106,20 +108,17 @@ export default function ContentFeedbackPage() {
     'video' | 'image' | null
   >(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
+  const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
 
   const [isSending, setIsSending] = useState(false);
-  const [feedbackIdMap, setFeedbackIdMap] = useState<Record<string, string>>({});
 
   const isBrandAlreadyApproved =
     (selectedCard?.Brand_approved ?? '').toLowerCase() === 'approved';
-  const feedbackStorageKey = 'brand-content-feedback-id-map';
-  const activeFeedbackKey =
-    negotiationId && selectedPreviewMediaUrl
-      ? `${negotiationId}::${selectedPreviewMediaUrl}`
-      : '';
-  const activeFeedbackId = activeFeedbackKey
-    ? (feedbackIdMap[activeFeedbackKey] ?? '')
-    : '';
+  const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
+    'brand-content-feedback-id-map',
+  );
+  const activeFeedbackId = getFeedbackId(negotiationId, selectedPreviewMediaUrl);
 
   const saveContentFeedbackMutation = useSaveContentFeedbackHook();
   const { data: brandFeedbackData, refetch: refetchBrandFeedback } =
@@ -143,22 +142,9 @@ export default function ContentFeedbackPage() {
     setSelectedPreviewMediaUrl(null);
     setSelectedPreviewMediaType(null);
     setIsPlaying(false);
+    setSelectedVideoDuration(null);
+    setSelectedVideoResolution('—');
   }, [selectedCard?.id]);
-
-  useEffect(() => {
-    const raw = sessionStorage.getItem(feedbackStorageKey);
-    if (!raw) return;
-    try {
-      const parsed = JSON.parse(raw) as Record<string, string>;
-      setFeedbackIdMap(parsed);
-    } catch {
-      setFeedbackIdMap({});
-    }
-  }, []);
-
-  useEffect(() => {
-    sessionStorage.setItem(feedbackStorageKey, JSON.stringify(feedbackIdMap));
-  }, [feedbackIdMap]);
 
   useEffect(() => {
     const mediaMessages =
@@ -172,6 +158,8 @@ export default function ContentFeedbackPage() {
       setSelectedPreviewMediaUrl(null);
       setSelectedPreviewMediaType(null);
       setIsPlaying(false);
+      setSelectedVideoDuration(null);
+      setSelectedVideoResolution('—');
       return;
     }
 
@@ -186,7 +174,17 @@ export default function ContentFeedbackPage() {
     setSelectedPreviewMediaUrl(latestMedia.message);
     setSelectedPreviewMediaType(isVideoUrl(latestMedia.message) ? 'video' : 'image');
     setIsPlaying(false);
+    setSelectedVideoDuration(null);
+    setSelectedVideoResolution('—');
   }, [chatData, selectedPreviewMediaUrl]);
+
+  const formatVideoDuration = (seconds: number | null) => {
+    if (!seconds || Number.isNaN(seconds)) return '--:--';
+    const total = Math.max(0, Math.floor(seconds));
+    const mins = Math.floor(total / 60);
+    const secs = total % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className="font-sans">
@@ -384,6 +382,17 @@ export default function ContentFeedbackPage() {
                           src={selectedPreviewMediaUrl}
                           className="h-full w-full object-cover"
                           controls={isPlaying}
+                          onLoadedMetadata={(event) => {
+                            const media = event.currentTarget;
+                            setSelectedVideoDuration(media.duration || null);
+                            if (media.videoWidth && media.videoHeight) {
+                              setSelectedVideoResolution(
+                                `${media.videoWidth} × ${media.videoHeight}`,
+                              );
+                            } else {
+                              setSelectedVideoResolution('—');
+                            }
+                          }}
                         />
                         {!isPlaying && (
                           <div
@@ -435,11 +444,12 @@ export default function ContentFeedbackPage() {
                           const newFeedbackId = response?.feedback?.feedback_id as
                             | string
                             | undefined;
-                          if (newFeedbackId && activeFeedbackKey) {
-                            setFeedbackIdMap((prev) => ({
-                              ...prev,
-                              [activeFeedbackKey]: newFeedbackId,
-                            }));
+                          if (newFeedbackId) {
+                            setFeedbackId(
+                              negotiationId,
+                              selectedPreviewMediaUrl,
+                              newFeedbackId,
+                            );
                           }
                           setSelectedContentFeedback('');
                           if (newFeedbackId || activeFeedbackId) {
@@ -480,19 +490,27 @@ export default function ContentFeedbackPage() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between border-t border-white/10 p-4">
-                <div className="flex gap-8">
+              <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-4">
+                <div className="flex gap-8 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
                   <div>
                     <p className="text-[10px] font-bold uppercase text-white/40">
                       Duration
                     </p>
-                    <p className="text-sm font-bold text-white">0:45</p>
+                    <p className="text-sm font-bold text-white">
+                      {selectedPreviewMediaType === 'video'
+                        ? formatVideoDuration(selectedVideoDuration)
+                        : '--:--'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase text-white/40">
                       Resolution
                     </p>
-                    <p className="text-sm font-bold text-white">1080 × 1920</p>
+                    <p className="text-sm font-bold text-white">
+                      {selectedPreviewMediaType === 'video'
+                        ? selectedVideoResolution
+                        : 'Image'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase text-white/40">
@@ -555,86 +573,18 @@ export default function ContentFeedbackPage() {
                 </span>
               </div>
               <div className="flex-1 space-y-4 overflow-y-auto p-5">
-                {chatLoading ? (
-                  <p className="text-white/50 text-sm">Loading...</p>
-                ) : (
-                  chatData?.messages?.map((msg: ChatMessage) => {
-                    const isAdmin = msg.sender === 'ADMIN';
-                    const isBrand = !isAdmin;
-
-                    return (
-                      <div
-                        key={msg._id}
-                        className={`flex gap-3 ${isBrand ? 'justify-end' : 'justify-start'}`}
-                      >
-                        {isAdmin && <div className="size-8 rounded-full bg-slate-600" />}
-
-                        <div className="max-w-[80%] space-y-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-white">
-                              {msg.username || msg.sender}
-                            </span>
-                            <span className="text-[10px] text-white/40">
-                              {new Date(msg.timestamp).toLocaleTimeString()}
-                            </span>
-                          </div>
-
-                          <div
-                            className={`rounded-2xl p-2 text-xs overflow-hidden max-w-[85%] sm:max-w-[75%] md:max-w-[65%] ${
-                              isBrand
-                                ? 'bg-(--color-primaryButton) text-white rounded-tr-none ml-auto'
-                                : 'bg-white/5 text-white/70 rounded-tl-none'
-                            }`}
-                          >
-                            {typeof msg.message === 'string' &&
-                            isVideoUrl(msg.message) ? (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setSelectedPreviewMediaUrl(msg.message);
-                                  setSelectedPreviewMediaType('video');
-                                  setIsPlaying(false);
-                                }}
-                                className="w-full text-left cursor-pointer"
-                              >
-                                <video
-                                  src={msg.message}
-                                  controls
-                                  className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
-                                />
-                              </button>
-                            ) : typeof msg.message === 'string' &&
-                              isImageUrl(msg.message) ? (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setSelectedPreviewMediaUrl(msg.message);
-                                  setSelectedPreviewMediaType('image');
-                                  setIsPlaying(false);
-                                }}
-                                className="w-full text-left cursor-pointer"
-                              >
-                                <Image
-                                  src={msg.message}
-                                  alt="Chat image"
-                                  width={360}
-                                  height={420}
-                                  className="w-auto max-w-full h-auto max-h-[420px] rounded-lg object-contain bg-black/20"
-                                />
-                              </button>
-                            ) : (
-                              <p className="break-words whitespace-pre-wrap">
-                                {msg.message}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        {isBrand && <div className="size-8 rounded-full bg-slate-600" />}
-                      </div>
-                    );
-                  })
-                )}
+                <ChatMessagesList
+                  messages={chatData?.messages}
+                  isLoading={chatLoading}
+                  isRightMessage={(msg) => msg.sender !== 'ADMIN'}
+                  isVideoUrl={isVideoUrl}
+                  isImageUrl={isImageUrl}
+                  onSelectMedia={(url, type) => {
+                    setSelectedPreviewMediaUrl(url);
+                    setSelectedPreviewMediaType(type);
+                    setIsPlaying(false);
+                  }}
+                />
               </div>
               <div className="space-y-4 border-t border-white/10 p-5">
                 {' '}
