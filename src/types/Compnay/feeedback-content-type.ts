@@ -43,5 +43,8 @@ export interface ChatMessage {
   video_approve_brand?: string | null;
 }
 export interface NegotiationResponse {
+  campaign_id?: string;
+  negotiations?: NegotiationItem[];
+  total?: number;
   negotiation_controls?: NegotiationItem[];
 }
