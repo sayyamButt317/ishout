@@ -10,6 +10,8 @@ type SaveContentFeedbackPayload = {
   content_url: string;
   msg: string;
   review_side: ContentFeedbackReviewSide;
+  timestamp: number;
+  snapshot: string;
 };
 
 export default function useSaveContentFeedbackHook() {
