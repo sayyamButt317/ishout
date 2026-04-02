@@ -1,5 +1,4 @@
 'use client';
-
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
@@ -128,7 +127,6 @@ function ContentFeedbackPageContent() {
   const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
   const isImageUrl = (value: string) =>
     /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
-
 
   const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
     null,
@@ -655,8 +653,10 @@ function ContentFeedbackPageContent() {
                     messages={chatData?.messages}
                     isLoading={chatLoading}
                     isRightMessage={(msg) => msg.sender === 'ADMIN'}
-                    isVideoUrl={isVideoUrl}
-                    isImageUrl={isImageUrl}
+                    roleLabels={{
+                      right: 'Admin',
+                      left: chatMode === 'brand' ? 'Brand' : 'Influencer',
+                    }}
                     onSelectMedia={(url, type) => {
                       setSelectedPreviewMediaUrl(url);
                       setSelectedPreviewMediaType(type);
