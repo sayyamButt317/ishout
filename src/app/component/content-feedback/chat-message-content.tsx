@@ -1,25 +1,130 @@
 'use client';
+
 import Image from 'next/image';
 import Waveform from './audiowave';
-import { AnalyzeURL } from '@/src/utils/video-duration';
+import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
+import { parseTimedFeedbackMessage } from '@/src/utils/content-feedback-chat';
+
+type ChatMessageType = {
+  text?: string;
+  snapshot?: string;
+  timestamp?: number;
+  mediaUrl?: string;
+};
 
 type ChatMessageContentProps = {
-  message: string;
+  message: unknown;
   onSelectMedia: (url: string, type: 'video' | 'image') => void;
+  onSeekToTime?: (time: number) => void;
 };
 
-const getMediaUrlFromMessage = (raw: string) => {
-  const value = raw.trim();
-  const match = value.match(/https?:\/\/\S+/i);
-  const url = match ? match[0] : value;
-  return url.replace(/[),.;!?]+$/, '');
-};
+function normalizeMessage(raw: unknown): ChatMessageType {
+  if (raw != null && typeof raw === 'object' && !Array.isArray(raw)) {
+    return raw as ChatMessageType;
+  }
+  if (typeof raw === 'string') {
+    const parsed = parseTimedFeedbackMessage(raw);
+    if (parsed) {
+      return {
+        text: parsed.m,
+        timestamp: parsed.t,
+        snapshot: parsed.s,
+        mediaUrl: parsed.u,
+      };
+    }
+    return { text: raw };
+  }
+  return { text: String(raw ?? '') };
+}
+
+function isDataUrl(src: string) {
+  return src.startsWith('data:');
+}
 
 export default function ChatMessageContent({
   message,
   onSelectMedia,
+  onSeekToTime,
 }: ChatMessageContentProps) {
-  const mediaUrl = getMediaUrlFromMessage(message);
+  const msg = normalizeMessage(message);
+
+  const hasTimedStamp =
+    msg.timestamp != null && Number.isFinite(msg.timestamp);
+
+  if (hasTimedStamp) {
+    return (
+      <div className="w-fit max-w-full space-y-2 text-left">
+        <button
+          type="button"
+          onClick={() => onSeekToTime?.(msg.timestamp!)}
+          className="block w-full cursor-pointer rounded-lg text-left outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-(--color-primaryButton)"
+        >
+          {msg.snapshot ? (
+            <div className="relative w-full max-w-[320px]">
+              <Image
+                src={msg.snapshot}
+                alt="Video frame"
+                width={360}
+                height={200}
+                unoptimized={isDataUrl(msg.snapshot)}
+                className="max-h-[200px] w-full rounded-lg object-cover"
+              />
+              <div className="absolute bottom-1 right-1 rounded bg-black/70 px-2 py-1 text-xs text-white">
+                {formatVideoDuration(msg.timestamp)}
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-lg border border-white/15 bg-white/10 px-3 py-2">
+              <span className="text-xs font-bold text-(--color-primaryButton)">
+                {formatVideoDuration(msg.timestamp)}
+              </span>
+              <span className="ml-2 text-xs text-white/60">
+                Tap to jump to this moment
+              </span>
+            </div>
+          )}
+        </button>
+        {msg.text ? (
+          <p className="whitespace-pre-wrap text-sm text-white/85">{msg.text}</p>
+        ) : null}
+      </div>
+    );
+  }
+
+  if (msg?.snapshot) {
+    return (
+      <div className="relative w-fit max-w-full">
+        <button
+          type="button"
+          onClick={() => {
+            if (onSeekToTime && msg.timestamp !== undefined) {
+              onSeekToTime(msg.timestamp);
+            }
+          }}
+          className="cursor-pointer"
+        >
+          <Image
+            src={msg.snapshot}
+            alt="Snapshot"
+            width={360}
+            height={200}
+            unoptimized={isDataUrl(msg.snapshot)}
+            className="rounded-lg object-cover"
+          />
+          {msg.timestamp !== undefined && (
+            <div className="absolute bottom-1 right-1 rounded bg-black/70 px-2 py-1 text-xs text-white">
+              {formatVideoDuration(msg.timestamp)}
+            </div>
+          )}
+        </button>
+        {msg.text && (
+          <p className="mt-1 text-sm text-white/80">{msg.text}</p>
+        )}
+      </div>
+    );
+  }
+
+  const mediaUrl = msg?.mediaUrl || msg?.text || '';
   const analyzed = AnalyzeURL(mediaUrl);
 
   if (analyzed.isVideoUrl) {
@@ -27,32 +132,29 @@ export default function ChatMessageContent({
       <button
         type="button"
         onClick={() => onSelectMedia(mediaUrl, 'video')}
-        className="w-full text-left cursor-pointer"
+        className="w-full text-left"
       >
         <video
           src={mediaUrl}
-          autoPlay={false}
-          preload="auto"
-          poster={mediaUrl}
-          controls={true}
-          className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
+          controls
+          className="w-full max-h-[400px] rounded-lg bg-black"
         />
       </button>
     );
   }
+
   if (analyzed.isImageUrl) {
     return (
       <button
         type="button"
         onClick={() => onSelectMedia(mediaUrl, 'image')}
-        className="w-full text-left cursor-pointer"
       >
         <Image
           src={mediaUrl}
           alt="Chat image"
           width={360}
           height={420}
-          className="w-auto max-w-full h-auto max-h-[420px] rounded-lg object-contain bg-black/20"
+          className="max-h-[420px] rounded-lg object-contain"
         />
       </button>
     );
@@ -60,12 +162,11 @@ export default function ChatMessageContent({
 
   if (analyzed.isAudioUrl) {
     return (
-      <div className="w-full min-w-[200px] max-w-[min(100%,360px)] py-0.5">
+      <div className="w-full max-w-full min-w-[min(100%,380px)]">
         <Waveform key={mediaUrl} recordedVoiceURL={mediaUrl} />
       </div>
     );
   }
 
-  return <p className="whitespace-pre-wrap break-normal">{message}</p>;
+  return <p className="whitespace-pre-wrap">{msg.text}</p>;
 }
-

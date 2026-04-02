@@ -1,31 +1,8 @@
 import useAdminContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-admin-read-hook';
 import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
+import { ContentFeedbackPanelProps } from '@/src/types/Admin-Type/Feedback-Type';
 import React from 'react';
 
-
-interface SelectedCardType {
-    id: string;
-    campaign_id?: string;
-    title: string;
-    campaign: string;
-    thread_id?: string;
-    brand_thread_id?: string;
-    admin_approved?: string | null;
-}
-
-type ContentFeedbackPanelProps = {
-    activeFeedbackId: string;
-    selectedContentFeedback: string;
-    setSelectedContentFeedback: (value: string) => void;
-    selectedPreviewMediaUrl: string | null;
-    negotiationId: string;
-    selectedCard: SelectedCardType;
-    setFeedbackId: (
-        negotiationId: string,
-        contentUrl: string | null,
-        feedbackId: string,
-    ) => void;
-};
 
 const normalizeMessages = (messages?: string[]) =>
     (messages ?? [])

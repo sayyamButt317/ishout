@@ -1,115 +1,77 @@
-'use client'
+'use client';
+
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { CirclePause, CirclePlay } from 'lucide-react';
-import AudioStore from '@/src/store/Feedback/audio-store';
 
 interface WaveformProps {
     recordedVoiceURL: string;
-    seconds?: number;
     onReady?: () => void;
 }
 
-
-const activeWavesurfers = new Map<string, WaveSurfer>();
-
-const AudioDurationFormat = (totalSeconds: number): string => {
+const formatTime = (totalSeconds: number): string => {
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = Math.floor(totalSeconds % 60);
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };
 
 export const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onReady }) => {
-    const waveformRef = useRef<HTMLDivElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const wavesurferRef = useRef<WaveSurfer | null>(null);
-    const [duration, setDuration] = useState(0);
+    const onReadyRef = useRef(onReady);
+    useEffect(() => {
+        onReadyRef.current = onReady;
+    }, [onReady]);
+
+    const [totalTime, setTotalTime] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [playing, setPlaying] = useState(false);
     const [hasError, setHasError] = useState(false);
 
-    const {
-        isPlaying,
-        currentlyPlayingId,
-        setIsPlaying,
-        setCurrentlyPlayingId,
-    } = AudioStore();
-
     useEffect(() => {
-        if (!recordedVoiceURL || !waveformRef.current) return;
-        setHasError(false);
+        if (!recordedVoiceURL || !containerRef.current) return;
 
-        const wavesurfer = WaveSurfer.create({
-            container: waveformRef.current,
+        const ws = WaveSurfer.create({
+            container: containerRef.current,
+            height: 48,
+            width: '100%',
+            fillParent: true,
+            waveColor: '#C4C4C4',
+            progressColor: '#FF6F7F',
+            cursorWidth: 1,
+            cursorColor: 'transparent',
             barWidth: 3,
             barRadius: 3,
             barGap: 2,
-            cursorWidth: 1,
-            cursorColor: 'transparent',
-            backend: 'WebAudio',
-            height: 40,
-            waveColor: '#C4C4C4',
-            progressColor: '#1e4b8e',
-            url: recordedVoiceURL,
             normalize: true,
+            url: recordedVoiceURL,
+            backend: 'MediaElement',
         });
 
-        wavesurferRef.current = wavesurfer;
-        activeWavesurfers.set(recordedVoiceURL, wavesurfer);
+        wavesurferRef.current = ws;
 
-        // Show clip duration
-        wavesurfer.on('ready', () => {
-            setDuration(wavesurfer.getDuration());
-            onReady?.();
+        ws.on('ready', (duration) => {
+            setTotalTime(duration);
+            setCurrentTime(0);
+            onReadyRef.current?.();
         });
-        wavesurfer.on('audioprocess', () => {
-            setDuration(wavesurfer.getCurrentTime());
+        ws.on('timeupdate', (t) => setCurrentTime(t));
+        ws.on('seeking', (t) => setCurrentTime(t));
+        ws.on('play', () => setPlaying(true));
+        ws.on('pause', () => setPlaying(false));
+        ws.on('finish', () => {
+            setPlaying(false);
         });
-
-        wavesurfer.on('play', () => {
-            // Stop all other wavesurfers
-            activeWavesurfers.forEach((ws, url) => {
-                if (url !== recordedVoiceURL && ws.isPlaying()) {
-                    ws.pause();
-                }
-            });
-            setIsPlaying(true);
-            setCurrentlyPlayingId(recordedVoiceURL);
-        });
-        wavesurfer.on('pause', () => {
-            setIsPlaying(false);
-            setCurrentlyPlayingId(null);
-        });
-        wavesurfer.on('finish', () => {
-            setIsPlaying(false);
-            setCurrentlyPlayingId(null);
-        });
-        wavesurfer.on('error', () => {
+        ws.on('error', () => {
             setHasError(true);
-            setIsPlaying(false);
-            setCurrentlyPlayingId(null);
+            setPlaying(false);
         });
 
         return () => {
-            wavesurfer.destroy();
+            ws.destroy();
             wavesurferRef.current = null;
-            activeWavesurfers.delete(recordedVoiceURL);
         };
-    }, [recordedVoiceURL, setIsPlaying, setDuration, setCurrentlyPlayingId, onReady]);
-
-    const togglePlayback = () => {
-        const ws = wavesurferRef.current;
-        if (!ws) return;
-
-        // If another audio is playing, stop it first
-        if (currentlyPlayingId && currentlyPlayingId !== recordedVoiceURL) {
-            const currentWavesurfer = activeWavesurfers.get(currentlyPlayingId);
-            if (currentWavesurfer) {
-                currentWavesurfer.pause();
-            }
-        }
-
-        ws.playPause();
-    };
-
-    const isThisAudioPlaying = currentlyPlayingId === recordedVoiceURL && isPlaying;
+    }, [recordedVoiceURL]);
 
     if (hasError) {
         return (
@@ -117,30 +79,33 @@ export const Waveform: React.FC<WaveformProps> = ({ recordedVoiceURL = '', onRea
                 src={recordedVoiceURL}
                 controls
                 preload="metadata"
-                className="w-full rounded-lg"
+                className="w-full min-h-12 rounded-lg"
             />
         );
     }
 
+    const timeLabel =
+        totalTime > 0 ? `${formatTime(currentTime)} / ${formatTime(totalTime)}` : '00:00';
+
     return (
-        <div className="w-full overflow-hidden">
-            <div className="flex items-center gap-2 w-full">
-                <div ref={waveformRef} className="flex-1 min-w-0" />
-                <span className="text-[#1e4b8e] min-w-[50px] text-center">
-                    {duration ? AudioDurationFormat(duration) : '00:00'}
-                </span>
-                <button
-                    onClick={togglePlayback}
-                    className="p-1"
-                    aria-label={isThisAudioPlaying ? 'Pause' : 'Play'}
-                >
-                    {isThisAudioPlaying ? (
-                        <CirclePause className="w-10 h-8" color="#1e4b8e" />
-                    ) : (
-                        <CirclePlay className="w-10 h-8" color="#1e4b8e" />
-                    )}
-                </button>
-            </div>
+        <div className="flex w-full min-w-[min(100%,360px)] max-w-full items-center gap-3">
+            <div
+                ref={containerRef}
+                className="h-12 min-h-12 min-w-[240px] w-full flex-1 overflow-hidden rounded-sm"
+            />
+            <span className="shrink-0 text-center text-xs text-[#1e4b8e] tabular-nums">{timeLabel}</span>
+            <button
+                type="button"
+                onClick={() => wavesurferRef.current?.playPause()}
+                className="shrink-0 p-1"
+                aria-label={playing ? 'Pause' : 'Play'}
+            >
+                {playing ? (
+                    <CirclePause className="h-8 w-10" color="#1e4b8e" />
+                ) : (
+                    <CirclePlay className="h-8 w-10" color="#1e4b8e" />
+                )}
+            </button>
         </div>
     );
 };
