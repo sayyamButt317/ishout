@@ -332,7 +332,7 @@ export default function ContentFeedbackDetailPage() {
                                 <div className="flex items-center gap-2">
                                     <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
                                         <RefreshCw className="size-4" />
-                                        Revision
+                                        Request Revision
                                     </button>
                                     <button
                                         onClick={() => {
@@ -364,9 +364,7 @@ export default function ContentFeedbackDetailPage() {
                                         className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Check className="size-4" />
-                                        {selectedPreviewMediaType === 'image'
-                                            ? 'Image Approve'
-                                            : 'Video Approve'}
+                                        Approve for Brand
                                     </button>
                                 </div>
                                 <span className="text-[11px] font-bold leading-tight">
