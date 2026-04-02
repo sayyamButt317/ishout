@@ -244,8 +244,8 @@ function ContentFeedbackPageContent() {
                   </h3>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
-                        ? 'bg-(--color-primaryButton) text-white'
-                        : countStyles[col.color]
+                      ? 'bg-(--color-primaryButton) text-white'
+                      : countStyles[col.color]
                       }`}
                   >
                     {col.count}
@@ -272,10 +272,10 @@ function ContentFeedbackPageContent() {
                       })
                     }
                     className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${col.id === 'review'
-                        ? 'border-2 border-(--color-primaryButton)'
-                        : col.id === 'revision'
-                          ? 'border-l-4 border-l-amber-400 border-white/10'
-                          : 'border-white/10 hover:border-(--color-primaryButton)/30'
+                      ? 'border-2 border-(--color-primaryButton)'
+                      : col.id === 'revision'
+                        ? 'border-l-4 border-l-amber-400 border-white/10'
+                        : 'border-white/10 hover:border-(--color-primaryButton)/30'
                       }`}
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
@@ -350,7 +350,7 @@ function ContentFeedbackPageContent() {
           onClick={() => setSelectedCard(null)}
         >
           <div
-            className="flex h-full max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-background)] shadow-2xl"
+            className="flex h-full max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-1 flex-col border-r border-white/10">
@@ -474,7 +474,7 @@ function ContentFeedbackPageContent() {
                         }
                       }}
                       disabled={saveContentFeedbackMutation.isPending}
-                      className="mt-2 w-full rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="mt-2 w-full rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {saveContentFeedbackMutation.isPending
                         ? 'Saving...'
@@ -566,7 +566,7 @@ function ContentFeedbackPageContent() {
                         !effectiveBrandThreadId ||
                         isBrandContentApprovedInBrandChat
                       }
-                      className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Check className="size-4" />
                       {selectedPreviewMediaType === 'image'
