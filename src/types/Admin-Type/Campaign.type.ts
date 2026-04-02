@@ -65,7 +65,8 @@ export interface CreateCampaignRequest {
 }
 
 export interface CompanyCampaignResponse {
-    _id: string;
+    /** Present on some list responses; company `/campaigns` may only send `campaign_id`. */
+    _id?: string;
     campaign_id: string;
     company_name: string;
     category: string[];

@@ -150,7 +150,7 @@ export default function OnboardingCampaignPage() {
               disabled={deleteCampaignHook.isPending}
               onClick={() => {
                 if (confirm('Are you sure you want to delete this campaign?')) {
-                  deleteCampaignHook.mutate(campaign._id);
+                  deleteCampaignHook.mutate(campaign.campaign_id);
                 }
               }}
             >

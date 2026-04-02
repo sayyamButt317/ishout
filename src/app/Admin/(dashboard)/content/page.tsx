@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
 
 import {
@@ -16,7 +17,7 @@ import {
   Maximize2,
 } from 'lucide-react';
 import Image from 'next/image';
-import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
+import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import useAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-hook';
 import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-hook';
 import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influncer-send-message-hook';
@@ -49,6 +50,9 @@ const countStyles: Record<string, string> = {
 };
 
 export default function ContentFeedbackPage() {
+  const searchParams = useSearchParams();
+  const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
+
   const [search, setSearch] = useState('');
   interface SelectedCardType {
     id: string;
@@ -64,7 +68,9 @@ export default function ContentFeedbackPage() {
 
   const [feedback, setFeedback] = useState('');
   const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
-  const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
+  const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
+    data?: NegotiationResponse;
+  };
 
   const threadId = selectedCard?.thread_id || '';
   const brandThreadId = selectedCard?.brand_thread_id || '';
@@ -102,28 +108,28 @@ export default function ContentFeedbackPage() {
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
 
-  const apiCards: CardType[] =
-    data?.negotiation_controls
-      ?.filter((item) => item.negotiation_status === 'agreed')
-      .map((item) => {
-        return {
-          id: item._id,
-          campaign_id: item.campaign_id,
-          title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
-          campaign: item.campaign_brief?.title ?? 'Campaign',
-          rights: 'Full Rights',
-          status: 'Ready to Post',
-          thumb: item.campaign_logo_url ?? '/assets/logo.svg',
-          thread_id: item.thread_id,
-          brand_thread_id: item.brand_thread_id,
-          admin_approved: item.admin_approved,
-        };
-      }) ?? [];
+  const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
+
+  const apiCards: CardType[] = negotiationItems
+    .filter((item) => !item.negotiation_status || item.negotiation_status === 'agreed')
+    .map((item) => {
+      return {
+        id: item._id,
+        campaign_id: item.campaign_id,
+        title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
+        campaign: item.campaign_brief?.title ?? 'Campaign',
+        rights: 'Full Rights',
+        status: 'Ready to Post',
+        thumb: item.campaign_logo_url ?? '/assets/logo.svg',
+        thread_id: item.thread_id,
+        brand_thread_id: item.brand_thread_id,
+        admin_approved: item.admin_approved,
+      };
+    });
 
   const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
   const isImageUrl = (value: string) =>
     /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
-  
 
   const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
     null,

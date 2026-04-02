@@ -65,7 +65,7 @@ export const employeeSidebarLinks = [
   },
   {
     label: 'Content Feedback',
-    route: '/client/content-feedback',
+    route: '/client/influncers-content',
     icon: (
       <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
     ),
@@ -140,7 +140,7 @@ export const adminSidebarLinks = [
   },
   {
     label: 'Content',
-    route: '/Admin/content',
+    route: '/Admin/content/influncers_content',
     icon: (
       <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
         <FileText className="text-2xl text-white" />
