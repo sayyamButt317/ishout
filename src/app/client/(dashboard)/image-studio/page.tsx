@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { ComingSoon } from '@/src/app/component/comingsoon';
 
 const THEMES = [
   { id: 'all', label: 'All Themes', icon: Grid3X3, active: true },
@@ -61,7 +62,9 @@ export default function ImageStudioPage() {
   const router = useRouter();
 
   return (
+    
     <div className="font-sans">
+      
       <PageHeader
         title="Image Studio"
         description="AI-powered image generation with industry templates"
@@ -76,12 +79,23 @@ export default function ImageStudioPage() {
               onChange={(e) => setSearch(e.target.value)}
               className="h-11 w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
             />
+            
           </div>
         }
       />
+      
+<div className='flex flex-row item-center justify-center '>
+  <ComingSoon
+      enabled={true}
+      title="Image Studio"
+      message="AI-powered image generation is on its way. This feature will be available shortly."
+      badge="Coming Soon"
+    >
 
+    </ComingSoon>
+    </div>
       {/* Theme filters */}
-      <section className="mb-10 flex gap-3 overflow-x-auto pb-2">
+      {/* <section className="mb-10 flex gap-3 overflow-x-auto pb-2">
         {THEMES.map((t) => (
           <button
             key={t.id}
@@ -96,11 +110,11 @@ export default function ImageStudioPage() {
             {t.label}
           </button>
         ))}
-      </section>
+      </section> 
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-        {/* Sidebar */}
-        <aside className="space-y-8">
+         Sidebar */}
+        {/* <aside className="space-y-8">
           <div>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-white/60">
               Style & Settings
@@ -173,14 +187,14 @@ export default function ImageStudioPage() {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                     sizes="160px"
-                  /> */}
+                  /> 
                 </div>
               ))}
             </div>
           </div>
-        </aside>
+        </aside> */}
 
-        {/* Main grid */}
+        {/* Main grid 
         <div className="lg:col-span-3">
           <div className="mb-6 flex items-center justify-between">
             <div>
@@ -248,7 +262,7 @@ export default function ImageStudioPage() {
         </div>
       </div>
 
-      {/* Live feed carousel */}
+      Live feed carousel 
       <div
         className={`fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-black/80 py-4 px-6 backdrop-blur-md transition-transform duration-500 ${
           carouselOpen ? 'translate-y-0' : 'translate-y-full hover:translate-y-0'
@@ -280,7 +294,7 @@ export default function ImageStudioPage() {
             <ChevronUp className={`size-4 transition-transform ${carouselOpen ? 'rotate-180' : ''}`} />
           </button>
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 }

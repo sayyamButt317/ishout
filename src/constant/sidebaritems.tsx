@@ -1,19 +1,15 @@
+// employee + adminSidebarLinks.tsx
 import {
-  CheckCircle,
+  LayoutGrid, CheckCircle,
   CircleCheck,
-  FileText,
-  Handshake,
   Hourglass,
-  LayoutGrid,
   Plus,
   User,
   UserCheck,
-  Users,
   Video,
+  FileText, Users, Handshake, MessageCircle,
 } from 'lucide-react';
 import Image from 'next/image';
-import { SiWhatsapp } from 'react-icons/si';
-
 export const employeeSidebarLinks = [
   {
     label: 'Create Campaign',
@@ -94,112 +90,37 @@ export const employeeSidebarLinks = [
 
 export const adminSidebarLinks = [
   {
-    label: 'All Campaigns',
-    route: '/Admin/all-campaign',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-        <LayoutGrid className="text-2xl text-white" />
-      </div>
-    ),
+    label: 'Campaigns',
+    icon: <LayoutGrid size={15} />,
+    iconBg: 'bg-violet-500/20',
+    iconColor: 'text-violet-400',
+    children: [
+      { label: 'All Campaigns',    route: '/Admin/all-campaign' },
+      { label: 'Pending',          route: '/Admin/pending-campaign' },
+      { label: 'iShout Approved',  route: '/Admin/approved-campaign' },
+      { label: 'Brand Approved',   route: '/Admin/brand-approved' },
+    ],
   },
   {
-    label: 'Pending Campaign',
-    route: '/Admin/pending-campaign',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-        <Hourglass className="text-2xl text-white" />
-      </div>
-    ),
+    label: 'Workflow',
+    icon: <CircleCheck size={15} />,
+    iconBg: 'bg-emerald-500/20',
+    iconColor: 'text-emerald-400',
+    children: [
+      { label: 'Negotiation', route: '/Admin/onboarding' },
+      { label: 'Content',     route: '/Admin/content' },
+      { label: 'Report',      route: '/Admin/report' },
+    ],
   },
   {
-    label: 'Ishout Approved',
-    route: '/Admin/approved-campaign',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
-        <CircleCheck className="text-2xl text-white" />
-      </div>
-    ),
+    label: 'Users & Messaging',
+    icon: <Users size={15} />,
+    iconBg: 'bg-blue-500/20',
+    iconColor: 'text-blue-400',
+    children: [
+      { label: 'User Management', route: '/Admin/user-management' },
+      { label: 'WhatsApp',        route: '/Admin/whatsapp-chat' },
+      { label: 'Negotiation',     route: '/Admin/negotiation' },
+    ],
   },
-  {
-    label: 'Brand Approved',
-    route: '/Admin/brand-approved',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
-        <UserCheck className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  {
-    label: 'Negotiation',
-    route: '/Admin/onboarding',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
-        <UserCheck className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  {
-    label: 'Content',
-    route: '/Admin/content',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
-        <FileText className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  {
-    label: 'Report',
-    route: '/Admin/report',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
-        <FileText className="text-2xl text-white" />
-      </div>
-    ),
-  },
-
-  {
-    label: 'User Management',
-    route: '/Admin/user-management',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-        <Users className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  {
-    label: 'WhatsApp',
-    route: '/Admin/whatsapp-chat',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
-        <SiWhatsapp className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  // {
-  //   label: "Instagram",
-  //   route: "/Admin/messages",
-  //   icon: (
-  //     <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
-  //       <SiInstagram className="text-2xl text-white" />
-  //     </div>
-  //   ),
-  // },
-  {
-    label: 'Negotiation',
-    route: '/Admin/negotiation',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
-        <Handshake className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  // {
-  //   label: "Analytics",
-  //   route: "/Admin/analytics",
-  //   icon: (
-  //     <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-  //       <BarChart3 className="text-2xl text-white" />
-  //     </div>
-  //   ),
-  // },
 ];

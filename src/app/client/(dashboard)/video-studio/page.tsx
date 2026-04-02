@@ -4,6 +4,7 @@ import PageHeader from '@/src/app/component/PageHeader';
 import { Search, Play, Maximize2, TrendingUp, Zap } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { ComingSoon } from '@/src/app/component/comingsoon';
 
 const TABS = [
   { id: 'fashion', label: 'Fashion & Beauty' },
@@ -79,9 +80,18 @@ export default function VideoStudioPage() {
           </div>
         }
       />
+      <div className='flex flex-row item-center justify-center '>
+          <ComingSoon
+              enabled={true}
+              title="Video Studio"
+              message="AI-powered video generation is on its way. This feature will be available shortly."
+              badge="Coming Soon"
+            >
+        
+            </ComingSoon>
+      </div>
 
-      {/* Hero */}
-      <div className="mb-8">
+      {/* <div className="mb-8">
         <h1 className="mb-3 text-3xl font-bold leading-tight text-white tracking-tight md:text-4xl">
           Industry-Specific Video Templates
         </h1>
@@ -89,10 +99,10 @@ export default function VideoStudioPage() {
           Browse high-fidelity, AI-optimized templates curated for your industry. Each layout is
           tested for high engagement across social platforms.
         </p>
-      </div>
+      </div> */}
 
       {/* Tabs & Filters */}
-      <div className="mb-10 flex flex-col gap-6 border-b border-white/10 md:flex-row md:items-center md:justify-between">
+      {/* <div className="mb-10 flex flex-col gap-6 border-b border-white/10 md:flex-row md:items-center md:justify-between">
         <div className="flex gap-4 overflow-x-auto pb-4 md:gap-8">
           {TABS.map((tab) => (
             <button
@@ -135,18 +145,18 @@ export default function VideoStudioPage() {
             </select>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Section header */}
-      <div className="mb-8 flex items-center gap-3">
+      {/* <div className="mb-8 flex items-center gap-3">
         <h3 className="text-xl font-bold text-white">Trending in Fashion</h3>
         <span className="rounded bg-[var(--color-primaryButton)]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--color-primaryButton)]">
           24 New Templates
         </span>
-      </div>
+      </div> */}
 
       {/* Template grid */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      {/* <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {TEMPLATES.map((tpl) => (
           <div
             key={tpl.id}
@@ -199,7 +209,7 @@ export default function VideoStudioPage() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
