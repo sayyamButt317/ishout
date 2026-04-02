@@ -31,9 +31,9 @@ export default function OnboardingInfluencerByCampaignId() {
       );
       return negotiation
         ? {
-            _id: negotiation._id,
-            last_offered_price: negotiation.last_offered_price,
-          }
+          _id: negotiation._id,
+          last_offered_price: negotiation.last_offered_price,
+        }
         : null;
     },
     [negotiationData],
@@ -118,7 +118,7 @@ export default function OnboardingInfluencerByCampaignId() {
       )}
 
       {data?.influencers?.length ? (
-        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
+        <div className="w-full flex flex-row flex-wrap gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
           {data?.influencers?.map((influencer: ReviewInfluencerResponse) => {
             const negotiation = getNegotiationForInfluencer(influencer);
             return (
