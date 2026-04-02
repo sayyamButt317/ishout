@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
 
 import {
@@ -17,7 +18,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import useAuthStore from '@/src/store/AuthStore/authStore';
-import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
+import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-hook';
 import useSendCompanyAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-company-admin-send-message-hook';
 import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
@@ -30,7 +31,7 @@ import {
   CardType,
   ChatMessage,
   NegotiationResponse,
-} from '@/src/types//Compnay/feeedback-content-type';
+} from '@/src/types/Compnay/feeedback-content-type';
 
 const COLUMNS = [
   { id: 'drafts', label: 'Drafts', count: 5, color: 'slate' },
@@ -47,6 +48,9 @@ const countStyles: Record<string, string> = {
 };
 
 export default function ContentFeedbackPage() {
+  const searchParams = useSearchParams();
+  const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
+
   const [search, setSearch] = useState('');
   interface SelectedCardType {
     id: string;
@@ -61,43 +65,55 @@ export default function ContentFeedbackPage() {
   const { company_user_id } = useAuthStore();
   const [feedback, setFeedback] = useState('');
   const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
-  const { data } = NegotiationStatsHook(1, 50) as { data?: NegotiationResponse };
+  const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
+    data?: NegotiationResponse;
+  };
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
   const threadId = selectedCard?.thread_id || '';
   const brandThreadId = selectedCard?.brand_thread_id || '';
+  const effectiveBrandThreadId = brandThreadId || threadId;
   const negotiationId = selectedCard?.id || '';
   const {
     data: chatData,
     isLoading: chatLoading,
     refetch: refetchChat,
-  } = useAdminCompanyMessagesHook(brandThreadId, negotiationId, 1, 20);
+  } = useAdminCompanyMessagesHook(
+    effectiveBrandThreadId,
+    negotiationId,
+    1,
+    20,
+  );
 
   const { sendMessage } = useSendCompanyAdminMessage(company_user_id, negotiationId);
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
-  const apiCards: CardType[] =
-    data?.negotiation_controls
-      ?.filter(
-        (item) =>
-          item.negotiation_status === 'agreed' && item.admin_approved === 'Approved',
-      )
-      .map((item) => ({
-        id: item._id,
-        campaign_id: item.campaign_id,
-        title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
-        campaign: item.campaign_brief?.title ?? 'Campaign',
-        rights: 'Full Rights',
-        status: 'Ready to Post',
 
-        thumb:
-          item.campaign_logo_url ??
-          item.campaign_brief?.campaign_logo_url ??
-          'https://via.placeholder.com/300',
+  const negotiationItems =
+    data?.negotiations ?? data?.negotiation_controls ?? [];
 
-        thread_id: item.thread_id,
-        brand_thread_id: item.brand_thread_id,
-        Brand_approved: item.Brand_approved,
-      })) ?? [];
+  const apiCards: CardType[] = negotiationItems
+    .filter(
+      (item) =>
+        (!item.negotiation_status || item.negotiation_status === 'agreed') &&
+        item.admin_approved === 'Approved',
+    )
+    .map((item) => ({
+      id: item._id,
+      campaign_id: item.campaign_id,
+      title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
+      campaign: item.campaign_brief?.title ?? 'Campaign',
+      rights: 'Full Rights',
+      status: 'Ready to Post',
+
+      thumb:
+        item.campaign_logo_url ??
+        item.campaign_brief?.campaign_logo_url ??
+        '/assets/logo.svg',
+
+      thread_id: item.thread_id,
+      brand_thread_id: item.brand_thread_id,
+      Brand_approved: item.Brand_approved,
+    }));
   const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
   const isImageUrl = (value: string) =>
     /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
@@ -533,9 +549,13 @@ export default function ContentFeedbackPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        if (brandThreadId && negotiationId && selectedPreviewMediaUrl) {
+                        if (
+                          effectiveBrandThreadId &&
+                          negotiationId &&
+                          selectedPreviewMediaUrl
+                        ) {
                           approveVideoMutation.mutate({
-                            brand_thread_id: brandThreadId,
+                            brand_thread_id: effectiveBrandThreadId,
                             negotiation_id: negotiationId,
                             video_url: selectedPreviewMediaUrl,
                             video_approve_brand: 'approved',
@@ -545,7 +565,7 @@ export default function ContentFeedbackPage() {
                       disabled={
                         approveVideoMutation.isPending ||
                         !selectedPreviewMediaUrl ||
-                        !brandThreadId ||
+                        !effectiveBrandThreadId ||
                         isBrandContentApprovedInBrandChat
                       }
                       className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"

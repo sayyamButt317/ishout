@@ -58,6 +58,8 @@ export const AdminENDPOINT = {
     `/admin/delete-whatsapp-chat/${thread_id}`,
   SENDNEGOTITIONTEMPLATE: `/admin/negotiation-initial-message`,
   NEGOTIATION_STATS: `/admin/negotiation-controls`,
+  NEGOTIATION_AGREED_BY_CAMPAIGN: (campaign_id: string) =>
+    `/admin/negotiation-controls/agreed/${campaign_id}`,
   NEGOTIATION_CHAT_DETAIL: `/admin/negotiation-chat-detail`,
   ADMIN_NEGOTIATION_HUMAN_TAKEOVER: (thread_id: string) =>
     `/api/admin/negotiation/toggle-takeover/${thread_id}`,
