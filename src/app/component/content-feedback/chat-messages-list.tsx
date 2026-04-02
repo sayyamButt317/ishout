@@ -18,6 +18,7 @@ type ChatMessagesListProps = {
   isVideoUrl: (value: string) => boolean;
   isImageUrl: (value: string) => boolean;
   onSelectMedia: (url: string, type: 'video' | 'image') => void;
+  bubbleMaxWidthClassName?: string;
 };
 
 export default function ChatMessagesList({
@@ -28,6 +29,7 @@ export default function ChatMessagesList({
   isVideoUrl,
   isImageUrl,
   onSelectMedia,
+  bubbleMaxWidthClassName,
 }: ChatMessagesListProps) {
   if (isLoading) return <p className="text-white/50 text-sm">Loading...</p>;
   if (!messages?.length) {
@@ -41,20 +43,20 @@ export default function ChatMessagesList({
         return (
           <div key={msg._id} className={`flex gap-3 ${isRight ? 'justify-end' : 'justify-start'}`}>
             {!isRight && <div className="size-8 rounded-full bg-slate-600" />}
-            <div className="w-full max-w-[80%] space-y-1">
+            <div
+              className={`w-full ${bubbleMaxWidthClassName ?? 'max-w-[80%]'} space-y-1`}
+            >
               <span
-                className={`block text-xs font-bold text-white/85 ${
-                  isRight ? 'text-right' : 'text-left'
-                }`}
+                className={`block text-xs font-bold text-white/85 ${isRight ? 'text-right' : 'text-left'
+                  }`}
               >
                 {msg.username || msg.sender}
               </span>
               <div
-                className={`w-fit max-w-full rounded-2xl p-2 text-xs overflow-hidden ${
-                  isRight
+                className={`w-fit max-w-full rounded-2xl p-2 text-xs overflow-hidden ${isRight
                     ? 'bg-(--color-primaryButton) text-white rounded-tr-none ml-auto'
                     : 'bg-white/5 text-white/70 rounded-tl-none'
-                }`}
+                  }`}
               >
                 {typeof msg.message === 'string' && isVideoUrl(msg.message) ? (
                   <button
