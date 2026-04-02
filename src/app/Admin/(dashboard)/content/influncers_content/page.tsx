@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
 
@@ -46,7 +46,7 @@ const countStyles: Record<string, string> = {
   emerald: 'bg-emerald-100 border-emerald-200 text-emerald-700',
 };
 
-export default function ContentFeedbackPage() {
+function ContentFeedbackPageContent() {
   const searchParams = useSearchParams();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
   const router = useRouter();
@@ -728,5 +728,13 @@ export default function ContentFeedbackPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function InfluncersContentPage() {
+  return (
+    <Suspense fallback={<div className="p-4 text-white/60">Loading content...</div>}>
+      <ContentFeedbackPageContent />
+    </Suspense>
   );
 }
