@@ -43,6 +43,7 @@
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",
     "use-sound": "^5.0.0",
+    "wavesurfer.js": "^7.12.5",
     "zod": "^4.1.12",
     "zustand": "^5.0.8"
   },

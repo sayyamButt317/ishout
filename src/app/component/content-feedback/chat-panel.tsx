@@ -30,8 +30,8 @@ type ChatPanelProps = {
   messagesUnavailableText?: string;
 
   isRightMessage: (msg: ChatMessageItem) => boolean;
-  isVideoUrl: (value: string) => boolean;
-  isImageUrl: (value: string) => boolean;
+  /** Override default labels when using modeToggle (default: Admin right, Brand/Influencer left). */
+  messageRoleLabels?: { right: string; left: string };
   onSelectMedia: (url: string, type: 'video' | 'image') => void;
 
   sendEnabled: boolean;
@@ -51,8 +51,7 @@ export default function ChatPanel({
   messagesAvailable = true,
   messagesUnavailableText = 'No messages.',
   isRightMessage,
-  isVideoUrl,
-  isImageUrl,
+  messageRoleLabels,
   onSelectMedia,
   sendEnabled,
   onSend,
@@ -61,6 +60,15 @@ export default function ChatPanel({
 }: ChatPanelProps) {
   const [draft, setDraft] = useState('');
   const [isSending, setIsSending] = useState(false);
+
+  const resolvedRoleLabels =
+    messageRoleLabels ??
+    (modeToggle
+      ? {
+          right: 'Admin',
+          left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
+        }
+      : undefined);
 
   const handleSend = async () => {
     const text = draft.trim();
@@ -123,8 +131,7 @@ export default function ChatPanel({
             messages={messages}
             isLoading={isLoading}
             isRightMessage={isRightMessage}
-            isVideoUrl={isVideoUrl}
-            isImageUrl={isImageUrl}
+            roleLabels={resolvedRoleLabels}
             onSelectMedia={onSelectMedia}
             bubbleMaxWidthClassName={bubbleMaxWidthClassName}
           />

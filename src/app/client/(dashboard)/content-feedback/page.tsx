@@ -117,6 +117,7 @@ function ContentFeedbackPageContent() {
   const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
   const isImageUrl = (value: string) =>
     /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
+
   const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
     null,
   );
@@ -595,8 +596,7 @@ function ContentFeedbackPageContent() {
                   messages={chatData?.messages}
                   isLoading={chatLoading}
                   isRightMessage={(msg) => msg.sender !== 'ADMIN'}
-                  isVideoUrl={isVideoUrl}
-                  isImageUrl={isImageUrl}
+                  roleLabels={{ right: 'Brand', left: 'Admin' }}
                   onSelectMedia={(url, type) => {
                     setSelectedPreviewMediaUrl(url);
                     setSelectedPreviewMediaType(type);
@@ -629,7 +629,7 @@ function ContentFeedbackPageContent() {
                     }}
                     disabled={isSending}
                     className={`absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg transition-colors
-    ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)] hover:bg-[var(--color-primaryButton)] hover:text-white'}`}
+    ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'}`}
                   >
                     <Send className="size-4" />
                   </button>

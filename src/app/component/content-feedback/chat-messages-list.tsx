@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import ChatMessageContent from './chat-message-content';
 
 type MessageItem = {
   _id: string;
@@ -15,8 +15,8 @@ type ChatMessagesListProps = {
   isLoading: boolean;
   emptyMessage?: string;
   isRightMessage: (message: MessageItem) => boolean;
-  isVideoUrl: (value: string) => boolean;
-  isImageUrl: (value: string) => boolean;
+  /** When set, header above each bubble uses these fixed names (e.g. Admin right, Brand/Influencer left). */
+  roleLabels?: { right: string; left: string };
   onSelectMedia: (url: string, type: 'video' | 'image') => void;
   bubbleMaxWidthClassName?: string;
 };
@@ -26,8 +26,7 @@ export default function ChatMessagesList({
   isLoading,
   emptyMessage,
   isRightMessage,
-  isVideoUrl,
-  isImageUrl,
+  roleLabels,
   onSelectMedia,
   bubbleMaxWidthClassName,
 }: ChatMessagesListProps) {
@@ -40,52 +39,36 @@ export default function ChatMessagesList({
     <>
       {messages.map((msg) => {
         const isRight = isRightMessage(msg);
+        const headerLabel = roleLabels
+          ? isRight
+            ? roleLabels.right
+            : roleLabels.left
+          : msg.username || msg.sender;
+
         return (
-          <div key={msg._id} className={`flex gap-3 ${isRight ? 'justify-end' : 'justify-start'}`}>
-            {!isRight && <div className="size-8 rounded-full bg-slate-600" />}
+          <div
+            key={msg._id}
+            className={`flex items-end gap-3 ${isRight ? 'flex-row-reverse' : 'flex-row'}`}
+          >
             <div
-              className={`w-full ${bubbleMaxWidthClassName ?? 'max-w-[80%]'} space-y-1`}
+              className="size-8 shrink-0 rounded-full bg-slate-600"
+              aria-hidden
+            />
+            <div
+              className={`space-y-1 ${bubbleMaxWidthClassName ?? 'max-w-[80%]'} min-w-0 shrink`}
             >
               <span
-                className={`block text-xs font-bold text-white/85 ${isRight ? 'text-right' : 'text-left'
-                  }`}
+                className={`block text-xs font-bold text-white/85 ${isRight ? 'text-right' : 'text-left'}`}
               >
-                {msg.username || msg.sender}
+                {headerLabel}
               </span>
               <div
-                className={`w-fit max-w-full rounded-2xl p-2 text-xs overflow-hidden ${isRight
-                    ? 'bg-(--color-primaryButton) text-white rounded-tr-none ml-auto'
-                    : 'bg-white/5 text-white/70 rounded-tl-none'
-                  }`}
+                className={`w-fit max-w-full rounded-2xl p-2 text-xs overflow-hidden ${isRight ? 'ml-auto' : 'mr-auto'}`}
               >
-                {typeof msg.message === 'string' && isVideoUrl(msg.message) ? (
-                  <button
-                    type="button"
-                    onClick={() => onSelectMedia(msg.message, 'video')}
-                    className="w-full text-left cursor-pointer"
-                  >
-                    <video
-                      src={msg.message}
-                      controls
-                      className="w-full h-auto max-h-[300px] sm:max-h-[350px] md:max-h-[400px] rounded-lg bg-black"
-                    />
-                  </button>
-                ) : typeof msg.message === 'string' && isImageUrl(msg.message) ? (
-                  <button
-                    type="button"
-                    onClick={() => onSelectMedia(msg.message, 'image')}
-                    className="w-full text-left cursor-pointer"
-                  >
-                    <Image
-                      src={msg.message}
-                      alt="Chat image"
-                      width={360}
-                      height={420}
-                      className="w-auto max-w-full h-auto max-h-[420px] rounded-lg object-contain bg-black/20"
-                    />
-                  </button>
+                {typeof msg.message === 'string' ? (
+                  <ChatMessageContent message={msg.message} onSelectMedia={onSelectMedia} />
                 ) : (
-                  <p className="whitespace-pre-wrap break-normal">{msg.message}</p>
+                  <p className="whitespace-pre-wrap break-normal">{String(msg.message ?? '')}</p>
                 )}
               </div>
               <span

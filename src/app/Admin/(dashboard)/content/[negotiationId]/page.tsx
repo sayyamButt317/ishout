@@ -1,6 +1,5 @@
 'use client';
-
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
     Check,
@@ -28,18 +27,8 @@ import {
 } from '@/src/types/Admin-Type/Content-type';
 import VideoPanel from '@/src/app/component/content-feedback/video-panel';
 import ContentFeedbackPanel from '@/src/app/component/content-feedback/feedback';
+import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
 
-const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
-const isImageUrl = (value: string) =>
-    /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
-
-const formatVideoDuration = (seconds: number | null) => {
-    if (!seconds || Number.isNaN(seconds)) return '--:--';
-    const total = Math.max(0, Math.floor(seconds));
-    const mins = Math.floor(total / 60);
-    const secs = total % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
 
 export default function ContentFeedbackDetailPage() {
     const router = useRouter();
@@ -143,6 +132,9 @@ export default function ContentFeedbackDetailPage() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
     const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
+
+    const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
+    const isImageUrl = useCallback((value: string) => AnalyzeURL(value).isImageUrl, []);
     const isAdminAlreadyApproved =
         (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
 
@@ -183,12 +175,17 @@ export default function ContentFeedbackDetailPage() {
         }
 
         const latestMedia = mediaMessages[mediaMessages.length - 1];
+        const analyzed = AnalyzeURL(latestMedia.message ?? '');
         setSelectedPreviewMediaUrl(latestMedia.message);
-        setSelectedPreviewMediaType(isVideoUrl(latestMedia.message) ? 'video' : 'image');
+        setSelectedPreviewMediaType(
+            analyzed.type === 'video' || analyzed.type === 'image'
+                ? analyzed.type
+                : null,
+        );
+        setSelectedVideoResolution(analyzed.resolution);
         setIsPlaying(false);
         setSelectedVideoDuration(null);
-        setSelectedVideoResolution('—');
-    }, [chatData, selectedPreviewMediaUrl]);
+    }, [chatData, selectedPreviewMediaUrl, isImageUrl, isVideoUrl]);
 
     const sendEnabled =
         chatMode === 'influencer'
@@ -303,7 +300,7 @@ export default function ContentFeedbackDetailPage() {
                                         Duration
                                     </p>
                                     <p className="text-sm font-bold text-white">
-                                        {selectedPreviewMediaType === 'video'
+                                        {AnalyzeURL(selectedPreviewMediaUrl ?? '')?.type === 'video'
                                             ? formatVideoDuration(selectedVideoDuration)
                                             : '--:--'}
                                     </p>
@@ -383,8 +380,6 @@ export default function ContentFeedbackDetailPage() {
                         messagesAvailable={!(chatMode === 'brand' && !brandThreadId)}
                         messagesUnavailableText="No brand thread for this negotiation."
                         isRightMessage={(msg) => msg.sender === 'ADMIN'}
-                        isVideoUrl={isVideoUrl}
-                        isImageUrl={isImageUrl}
                         onSelectMedia={(url, type) => {
                             setSelectedPreviewMediaUrl(url);
                             setSelectedPreviewMediaType(type);

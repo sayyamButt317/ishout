@@ -1,13 +1,12 @@
-// employee + adminSidebarLinks.tsx
 import {
   LayoutGrid, CheckCircle,
   CircleCheck,
-  Hourglass,
   Plus,
   User,
   UserCheck,
   Video,
-  FileText, Users, Handshake, MessageCircle,
+  FileText,
+  Users,
 } from 'lucide-react';
 import Image from 'next/image';
 export const employeeSidebarLinks = [
@@ -95,10 +94,10 @@ export const adminSidebarLinks = [
     iconBg: 'bg-violet-500/20',
     iconColor: 'text-violet-400',
     children: [
-      { label: 'All Campaigns',    route: '/Admin/all-campaign' },
-      { label: 'Pending',          route: '/Admin/pending-campaign' },
-      { label: 'iShout Approved',  route: '/Admin/approved-campaign' },
-      { label: 'Brand Approved',   route: '/Admin/brand-approved' },
+      { label: 'All Campaigns', route: '/Admin/all-campaign' },
+      { label: 'Pending', route: '/Admin/pending-campaign' },
+      { label: 'iShout Approved', route: '/Admin/approved-campaign' },
+      { label: 'Brand Approved', route: '/Admin/brand-approved' },
     ],
   },
   {
@@ -108,8 +107,8 @@ export const adminSidebarLinks = [
     iconColor: 'text-emerald-400',
     children: [
       { label: 'Negotiation', route: '/Admin/onboarding' },
-      { label: 'Content',     route: '/Admin/content' },
-      { label: 'Report',      route: '/Admin/report' },
+      { label: 'Content', route: '/Admin/content' },
+      { label: 'Report', route: '/Admin/report' },
     ],
   },
   {
@@ -119,8 +118,8 @@ export const adminSidebarLinks = [
     iconColor: 'text-blue-400',
     children: [
       { label: 'User Management', route: '/Admin/user-management' },
-      { label: 'WhatsApp',        route: '/Admin/whatsapp-chat' },
-      { label: 'Negotiation',     route: '/Admin/negotiation' },
+      { label: 'WhatsApp', route: '/Admin/whatsapp-chat' },
+      { label: 'Negotiation', route: '/Admin/negotiation' },
     ],
   },
 ];
