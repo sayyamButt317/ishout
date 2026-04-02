@@ -70,7 +70,7 @@ export default function OnboardingCampaignPage() {
           'Onboarded',
           'Status',
           'Created At',
-          'View',
+          'View Influencers',
           'View Brief',
           'Delete',
         ]}
@@ -126,7 +126,7 @@ export default function OnboardingCampaignPage() {
                 router.push(`/Admin/onboarding/${campaign?._id}`);
               }}
             >
-              View
+              View Influencers
             </Button>
           </div>,
           <div key={`view-brief-${campaign._id}`} className="truncate">
@@ -150,7 +150,7 @@ export default function OnboardingCampaignPage() {
               disabled={deleteCampaignHook.isPending}
               onClick={() => {
                 if (confirm('Are you sure you want to delete this campaign?')) {
-                  deleteCampaignHook.mutate(campaign._id);
+                  deleteCampaignHook.mutate(campaign.campaign_id);
                 }
               }}
             >

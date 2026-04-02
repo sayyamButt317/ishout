@@ -375,6 +375,11 @@ export const NegotiationStatsApi = async (page: number = 1, page_size: number = 
   return response.data;
 };
 
+export const NegotiationAgreedByCampaignApi = async (campaign_id: string) => {
+  const response = await api.get(AdminENDPOINT.NEGOTIATION_AGREED_BY_CAMPAIGN(campaign_id));
+  return response.data;
+};
+
 export const NegotiationChatDetailApi = async (_id: string) => {
   const response = await api.get(AdminENDPOINT.NEGOTIATION_CHAT_DETAIL, {
     params: {

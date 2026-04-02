@@ -1,7 +1,7 @@
 'use client';
 
-import { Suspense, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
 
 import {
@@ -17,26 +17,25 @@ import {
   Maximize2,
 } from 'lucide-react';
 import Image from 'next/image';
-import useAuthStore from '@/src/store/AuthStore/authStore';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
+import useAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influencer-hook';
 import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-hook';
-import useSendCompanyAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-company-admin-send-message-hook';
+import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-influncer-send-message-hook';
+import useSendAdminCompanyMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-send-message-hook';
 import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
-import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
-import useBrandContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-brand-read-hook';
 import useWhatsAppAdminCompanyApproveVideo from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-approve-video-hook';
+import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
+import useAdminContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-admin-read-hook';
 import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-map';
 import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages-list';
+
 import {
   CardType,
   ChatMessage,
   NegotiationResponse,
-} from '@/src/types/Compnay/feeedback-content-type';
+} from '@/src/types/Admin-Type/Content-type';
 
 const COLUMNS = [
-  { id: 'drafts', label: 'Drafts', count: 5, color: 'slate' },
-  { id: 'review', label: 'Under Review', count: 12, color: 'primary' },
-  { id: 'revision', label: 'Revision', count: 3, color: 'amber' },
   { id: 'approved', label: 'Approved', count: 28, color: 'emerald' },
 ];
 
@@ -50,6 +49,7 @@ const countStyles: Record<string, string> = {
 function ContentFeedbackPageContent() {
   const searchParams = useSearchParams();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
+  const router = useRouter();
 
   const [search, setSearch] = useState('');
   interface SelectedCardType {
@@ -59,64 +59,77 @@ function ContentFeedbackPageContent() {
     campaign: string;
     thread_id?: string;
     brand_thread_id?: string;
-    Brand_approved?: string | null;
+    admin_approved?: string | null;
   }
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
-  const { company_user_id } = useAuthStore();
+  const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
+
   const [feedback, setFeedback] = useState('');
   const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
     data?: NegotiationResponse;
   };
-  const { mutate: approveNegotiation, isPending: isApproving } =
-    useAdminNegotiationApprovalStatus();
+
   const threadId = selectedCard?.thread_id || '';
   const brandThreadId = selectedCard?.brand_thread_id || '';
-  const effectiveBrandThreadId = brandThreadId || threadId;
   const negotiationId = selectedCard?.id || '';
-  const {
-    data: chatData,
-    isLoading: chatLoading,
-    refetch: refetchChat,
-  } = useAdminCompanyMessagesHook(
-    effectiveBrandThreadId,
+
+  const influencerChatQuery = useAdminInfluencerMessagesHook(
+    threadId,
+    1,
+    20,
+    chatMode === 'influencer',
+  );
+  const companyChatQuery = useAdminCompanyMessagesHook(
+    brandThreadId,
     negotiationId,
     1,
     20,
+    chatMode === 'brand',
   );
 
-  const { sendMessage } = useSendCompanyAdminMessage(company_user_id, negotiationId);
+  const chatData =
+    chatMode === 'influencer' ? influencerChatQuery.data : companyChatQuery.data;
+  const chatLoading =
+    chatMode === 'influencer'
+      ? influencerChatQuery.isLoading
+      : companyChatQuery.isLoading;
+
+  const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(threadId);
+  const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(
+    brandThreadId,
+    negotiationId,
+  );
+
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
 
-  const negotiationItems =
-    data?.negotiations ?? data?.negotiation_controls ?? [];
+  const { mutate: approveNegotiation, isPending: isApproving } =
+    useAdminNegotiationApprovalStatus();
+
+  const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
 
   const apiCards: CardType[] = negotiationItems
-    .filter(
-      (item) =>
-        (!item.negotiation_status || item.negotiation_status === 'agreed') &&
-        item.admin_approved === 'Approved',
-    )
-    .map((item) => ({
-      id: item._id,
-      campaign_id: item.campaign_id,
-      title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
-      campaign: item.campaign_brief?.title ?? 'Campaign',
-      rights: 'Full Rights',
-      status: 'Ready to Post',
+    .filter((item) => !item.negotiation_status || item.negotiation_status === 'agreed')
+    .map((item) => {
+      return {
+        id: item._id,
+        campaign_id: item.campaign_id,
+        title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
+        campaign: item.campaign_brief?.title ?? 'Campaign',
+        rights: 'Full Rights',
+        status: 'Ready to Post',
+        thumb: item.campaign_logo_url ?? '/assets/logo.svg',
+        thread_id: item.thread_id,
+        brand_thread_id: item.brand_thread_id,
+        admin_approved: item.admin_approved,
+      };
+    });
 
-      thumb:
-        item.campaign_logo_url ??
-        item.campaign_brief?.campaign_logo_url ??
-        '/assets/logo.svg',
-
-      thread_id: item.thread_id,
-      brand_thread_id: item.brand_thread_id,
-      Brand_approved: item.Brand_approved,
-    }));
   const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
   const isImageUrl = (value: string) =>
     /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
+
+
   const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
     null,
   );
@@ -129,32 +142,19 @@ function ContentFeedbackPageContent() {
 
   const [isSending, setIsSending] = useState(false);
 
-  const isBrandAlreadyApproved =
-    (selectedCard?.Brand_approved ?? '').toLowerCase() === 'approved';
+  const isAdminAlreadyApproved =
+    (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
   const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
-    'brand-content-feedback-id-map',
+    'admin-content-feedback-id-map',
   );
   const activeFeedbackId = getFeedbackId(negotiationId, selectedPreviewMediaUrl);
 
   const saveContentFeedbackMutation = useSaveContentFeedbackHook();
-  const { data: brandFeedbackData, refetch: refetchBrandFeedback } =
-    useBrandContentFeedbackReadHook(activeFeedbackId, !!activeFeedbackId);
-
-  const isBrandContentApprovedInBrandChat = useMemo(() => {
-    const url = selectedPreviewMediaUrl;
-    if (!url || !chatData?.messages) return false;
-    return chatData.messages.some((msg: ChatMessage) => {
-      const contentUrl =
-        typeof msg.message === 'string' &&
-          (isVideoUrl(msg.message) || isImageUrl(msg.message))
-          ? msg.message
-          : (msg.video_url ?? '');
-      const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
-      return contentUrl === url && brandOk;
-    });
-  }, [chatData, selectedPreviewMediaUrl]);
+  const { data: adminFeedbackData, refetch: refetchAdminFeedback } =
+    useAdminContentFeedbackReadHook(activeFeedbackId, !!activeFeedbackId);
 
   useEffect(() => {
+    setChatMode('influencer');
     setSelectedPreviewMediaUrl(null);
     setSelectedPreviewMediaType(null);
     setIsPlaying(false);
@@ -217,7 +217,7 @@ function ContentFeedbackPageContent() {
                 placeholder="Search content..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
               />
             </div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">
@@ -244,8 +244,8 @@ function ContentFeedbackPageContent() {
                   </h3>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
-                        ? 'bg-(--color-primaryButton) text-white'
-                        : countStyles[col.color]
+                      ? 'bg-(--color-primaryButton) text-white'
+                      : countStyles[col.color]
                       }`}
                   >
                     {col.count}
@@ -261,21 +261,22 @@ function ContentFeedbackPageContent() {
                   <div
                     key={card.id}
                     onClick={() =>
-                      setSelectedCard({
-                        id: card.id,
-                        campaign_id: card.campaign_id,
-                        title: card.title,
-                        campaign: card.campaign,
-                        thread_id: card.thread_id,
-                        brand_thread_id: card.brand_thread_id,
-                        Brand_approved: card.Brand_approved,
-                      })
+                      (() => {
+                        const campaignId =
+                          card.campaign_id ?? campaignIdFromQuery;
+                        if (!campaignId) return;
+                        router.push(
+                          `/Admin/content/${encodeURIComponent(
+                            card.id,
+                          )}?campaign_id=${encodeURIComponent(campaignId)}`,
+                        );
+                      })()
                     }
                     className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${col.id === 'review'
-                        ? 'border-2 border-(--color-primaryButton)'
-                        : col.id === 'revision'
-                          ? 'border-l-4 border-l-amber-400 border-white/10'
-                          : 'border-white/10 hover:border-(--color-primaryButton)/30'
+                      ? 'border-2 border-(--color-primaryButton)'
+                      : col.id === 'revision'
+                        ? 'border-l-4 border-l-amber-400 border-white/10'
+                        : 'border-white/10 hover:border-(--color-primaryButton)/30'
                       }`}
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
@@ -343,14 +344,13 @@ function ContentFeedbackPageContent() {
         })}
       </div>
 
-      {/* Preview & Feedback modal */}
       {selectedCard && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
           onClick={() => setSelectedCard(null)}
         >
           <div
-            className="flex h-full max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-[var(--color-background)] shadow-2xl"
+            className="flex h-full max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-1 flex-col border-r border-white/10">
@@ -370,7 +370,7 @@ function ContentFeedbackPageContent() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-[var(--color-primaryButton)] focus:outline-none">
+                  <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-(--color-primaryButton) focus:outline-none">
                     <option>Version 1 (Active)</option>
                     <option disabled>Version 2 (Draft)</option>
                   </select>
@@ -392,6 +392,7 @@ function ContentFeedbackPageContent() {
                       />
                     ) : (
                       <>
+                        {/* VIDEO ELEMENT */}
                         <video
                           src={selectedPreviewMediaUrl}
                           className="h-full w-full object-cover"
@@ -408,6 +409,8 @@ function ContentFeedbackPageContent() {
                             }
                           }}
                         />
+
+                        {/* PLAY BUTTON OVERLAY */}
                         {!isPlaying && (
                           <div
                             onClick={() => setIsPlaying(true)}
@@ -422,90 +425,113 @@ function ContentFeedbackPageContent() {
                       </>
                     )
                   ) : (
+                    // fallback if no media
                     <div className="flex h-full items-center justify-center text-white/50 text-sm">
                       No media available
                     </div>
                   )}
                 </div>
-                <div className="flex w-full lg:w-72 shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
-                  <div className="relative">
-                    <textarea
-                      value={selectedContentFeedback}
-                      onChange={(e) => setSelectedContentFeedback(e.target.value)}
-                      placeholder="Type feedback on selected content..."
-                      className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
-                    />
-                    <button
-                      type="button"
-                      onClick={async () => {
-                        if (
-                          !selectedContentFeedback.trim() ||
-                          !selectedPreviewMediaUrl ||
-                          !negotiationId ||
-                          !selectedCard?.campaign_id
-                        ) {
-                          return;
-                        }
+              </div>
+              <div className="flex w-full lg:w-72 shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+                <div className="relative">
+                  <textarea
+                    value={selectedContentFeedback}
+                    onChange={(e) => setSelectedContentFeedback(e.target.value)}
+                    placeholder="Type feedback on selected content..."
+                    className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
+                  />
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      if (
+                        !selectedContentFeedback.trim() ||
+                        !selectedPreviewMediaUrl ||
+                        !negotiationId ||
+                        !selectedCard?.campaign_id
+                      ) {
+                        return;
+                      }
 
-                        try {
-                          const response = await saveContentFeedbackMutation.mutateAsync({
-                            negotiation_id: negotiationId,
-                            campaign_id: selectedCard.campaign_id,
-                            content_url: selectedPreviewMediaUrl,
-                            msg: selectedContentFeedback.trim(),
-                            review_side: 'brand_review',
-                          });
-                          const newFeedbackId = response?.feedback?.feedback_id as
-                            | string
-                            | undefined;
-                          if (newFeedbackId) {
-                            setFeedbackId(
-                              negotiationId,
-                              selectedPreviewMediaUrl,
-                              newFeedbackId,
-                            );
-                          }
-                          setSelectedContentFeedback('');
-                          if (newFeedbackId || activeFeedbackId) {
-                            await refetchBrandFeedback();
-                          }
-                        } catch (error) {
-                          console.error('Failed to save content feedback:', error);
+                      try {
+                        const response = await saveContentFeedbackMutation.mutateAsync({
+                          negotiation_id: negotiationId,
+                          campaign_id: selectedCard.campaign_id,
+                          content_url: selectedPreviewMediaUrl,
+                          msg: selectedContentFeedback.trim(),
+                          review_side: 'admin_review',
+                        });
+                        const newFeedbackId = response?.feedback?.feedback_id as
+                          | string
+                          | undefined;
+                        if (newFeedbackId) {
+                          setFeedbackId(
+                            negotiationId,
+                            selectedPreviewMediaUrl,
+                            newFeedbackId,
+                          );
                         }
-                      }}
-                      disabled={saveContentFeedbackMutation.isPending}
-                      className="mt-2 w-full rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {saveContentFeedbackMutation.isPending
-                        ? 'Saving...'
-                        : 'Save Brand Feedback'}
-                    </button>
+                        setSelectedContentFeedback('');
+                        if (newFeedbackId || activeFeedbackId) {
+                          await refetchAdminFeedback();
+                        }
+                      } catch (error) {
+                        console.error('Failed to save content feedback:', error);
+                      }
+                    }}
+                    disabled={saveContentFeedbackMutation.isPending}
+                    className="mt-2 w-full rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {saveContentFeedbackMutation.isPending
+                      ? 'Saving...'
+                      : 'Save Admin Feedback'}
+                  </button>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <p className="text-xs font-bold uppercase tracking-wider text-white/50">
+                    Brand feedback
+                  </p>
+                  <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
+                    {adminFeedbackData?.feedback?.brand_review?.message?.length ? (
+                      adminFeedbackData.feedback.brand_review.message.map(
+                        (message: string, index: number) => (
+                          <p
+                            key={`brand-feedback-${index}`}
+                            className="text-sm text-white/70"
+                          >
+                            {message}
+                          </p>
+                        ),
+                      )
+                    ) : (
+                      <p className="text-sm text-white/70">No brand feedback yet.</p>
+                    )}
                   </div>
-                  <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                    <p className="text-xs font-bold uppercase tracking-wider text-white/50">
-                      Brand feedback
-                    </p>
-                    <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
-                      {brandFeedbackData?.feedback?.brand_review?.message?.length ? (
-                        brandFeedbackData.feedback.brand_review.message.map(
-                          (message: string, index: number) => (
-                            <p
-                              key={`brand-feedback-${index}`}
-                              className="text-sm text-white/70"
-                            >
-                              {message}
-                            </p>
-                          ),
-                        )
-                      ) : (
-                        <p className="text-sm text-white/70">No brand feedback yet.</p>
-                      )}
-                    </div>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+                  <p className="text-xs font-bold uppercase tracking-wider text-white/50">
+                    Admin feedback
+                  </p>
+                  <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
+                    {adminFeedbackData?.feedback?.admin_Rewiew?.message?.length ? (
+                      adminFeedbackData.feedback.admin_Rewiew.message.map(
+                        (message: string, index: number) => (
+                          <p
+                            key={`admin-feedback-${index}`}
+                            className="text-sm text-white/70"
+                          >
+                            {message}
+                          </p>
+                        ),
+                      )
+                    ) : (
+                      <p className="text-sm text-white/70">No admin feedback yet.</p>
+                    )}
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-4">
-                <div className="flex gap-8 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+
+              <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-3">
+                <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
                   <div>
                     <p className="text-[10px] font-bold uppercase text-white/40">
                       Duration
@@ -537,36 +563,41 @@ function ContentFeedbackPageContent() {
                 </div>
                 <div className="flex flex-col items-end gap-2 text-white/50">
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors"
-                    >
+                    <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
                       <RefreshCw className="size-4" />
                       Revision
                     </button>
                     <button
-                      type="button"
                       onClick={() => {
                         if (
-                          effectiveBrandThreadId &&
+                          threadId &&
+                          brandThreadId &&
                           negotiationId &&
                           selectedPreviewMediaUrl
                         ) {
+                          // If negotiation is not approved yet, approve it first.
+                          // Video approval into brand chat should still work even when
+                          // negotiation was already marked as approved.
+                          if (!isAdminAlreadyApproved) {
+                            approveNegotiation({
+                              thread_id: threadId,
+                              payload: { admin_approved: 'Approved' },
+                            });
+                          }
                           approveVideoMutation.mutate({
-                            brand_thread_id: effectiveBrandThreadId,
+                            brand_thread_id: brandThreadId,
                             negotiation_id: negotiationId,
                             video_url: selectedPreviewMediaUrl,
-                            video_approve_brand: 'approved',
+                            video_approve_admin: 'approved',
                           });
                         }
                       }}
                       disabled={
+                        isApproving ||
                         approveVideoMutation.isPending ||
-                        !selectedPreviewMediaUrl ||
-                        !effectiveBrandThreadId ||
-                        isBrandContentApprovedInBrandChat
+                        !selectedPreviewMediaUrl
                       }
-                      className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Check className="size-4" />
                       {selectedPreviewMediaType === 'image'
@@ -590,19 +621,49 @@ function ContentFeedbackPageContent() {
                   3 UNREAD
                 </span>
               </div>
+              <div className="border-b border-white/10 px-4 pb-3 pt-2">
+                <div className="mx-auto flex max-w-md rounded-full border border-white/10 bg-white/5 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setChatMode('influencer')}
+                    className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${chatMode === 'influencer'
+                      ? 'bg-white/15 text-white shadow-sm'
+                      : 'text-white/45 hover:text-white/70'
+                      }`}
+                  >
+                    Influencer Chat
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setChatMode('brand')}
+                    className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${chatMode === 'brand'
+                      ? 'bg-white/15 text-white shadow-sm'
+                      : 'text-white/45 hover:text-white/70'
+                      }`}
+                  >
+                    Brand Chat
+                  </button>
+                </div>
+              </div>
               <div className="flex-1 space-y-4 overflow-y-auto p-5">
-                <ChatMessagesList
-                  messages={chatData?.messages}
-                  isLoading={chatLoading}
-                  isRightMessage={(msg) => msg.sender !== 'ADMIN'}
-                  isVideoUrl={isVideoUrl}
-                  isImageUrl={isImageUrl}
-                  onSelectMedia={(url, type) => {
-                    setSelectedPreviewMediaUrl(url);
-                    setSelectedPreviewMediaType(type);
-                    setIsPlaying(false);
-                  }}
-                />
+                {chatMode === 'brand' && !brandThreadId ? (
+                  <p className="text-white/50 text-sm">
+                    No brand thread for this negotiation.
+                  </p>
+                ) : (
+                  <ChatMessagesList
+                    messages={chatData?.messages}
+                    isLoading={chatLoading}
+                    isRightMessage={(msg) => msg.sender === 'ADMIN'}
+                    isVideoUrl={isVideoUrl}
+                    isImageUrl={isImageUrl}
+                    onSelectMedia={(url, type) => {
+                      setSelectedPreviewMediaUrl(url);
+                      setSelectedPreviewMediaType(type);
+                      setIsPlaying(false);
+                    }}
+                  />
+                )}
               </div>
               <div className="space-y-4 border-t border-white/10 p-5">
                 {' '}
@@ -611,16 +672,22 @@ function ContentFeedbackPageContent() {
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
                     placeholder="Type your feedback..."
-                    className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                    className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
                   />
                   <button
                     onClick={async () => {
                       if (!feedback.trim()) return;
+                      if (chatMode === 'brand' && !brandThreadId) return;
                       setIsSending(true);
                       try {
-                        await sendMessage(feedback);
+                        if (chatMode === 'influencer') {
+                          await sendInfluencerMessage(feedback);
+                          await influencerChatQuery.refetch();
+                        } else {
+                          await sendCompanyMessage(feedback);
+                          await companyChatQuery.refetch();
+                        }
                         setFeedback('');
-                        await refetchChat();
                       } catch (error) {
                         console.error('Failed to send message:', error);
                       } finally {
@@ -629,30 +696,26 @@ function ContentFeedbackPageContent() {
                     }}
                     disabled={isSending}
                     className={`absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg transition-colors
-    ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)] hover:bg-[var(--color-primaryButton)] hover:text-white'}`}
+    ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'}`}
                   >
                     <Send className="size-4" />
                   </button>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-3 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
-                    <RefreshCw className="size-4" />
-                    Revision
-                  </button>
+                <div className="flex flex-col gap-3">
                   <button
                     onClick={() => {
-                      if (threadId && !isBrandAlreadyApproved) {
+                      if (threadId && !isAdminAlreadyApproved) {
                         approveNegotiation({
                           thread_id: threadId,
-                          payload: { Brand_approved: 'Approved' },
+                          payload: { admin_approved: 'Approved' },
                         });
                       }
                     }}
-                    disabled={isApproving || isBrandAlreadyApproved}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isApproving || isAdminAlreadyApproved}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Check className="size-4" />
-                    {isBrandAlreadyApproved
+                    {isAdminAlreadyApproved
                       ? 'Approved'
                       : isApproving
                         ? 'Approving...'
@@ -668,9 +731,9 @@ function ContentFeedbackPageContent() {
   );
 }
 
-export default function ContentFeedbackPage() {
+export default function InfluncersContentPage() {
   return (
-    <Suspense fallback={<div className="p-4 text-white/60">Loading content...</div>}>
+    <Suspense fallback={<div className="p-4 text-white/60">Loading...</div>}>
       <ContentFeedbackPageContent />
     </Suspense>
   );
