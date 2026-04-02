@@ -104,7 +104,7 @@ export default function BrandApprovedPage() {
             </button>
             <button
               type="button"
-              className="rounded-xl bg-[var(--color-primaryButton)] px-6 py-3 text-sm font-semibold text-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] hover:opacity-90 active:scale-[0.99] transition-transform"
+              className="rounded-xl bg-(--color-primaryButton) px-6 py-3 text-sm font-semibold text-white shadow-[0_8px_30px_rgba(0,0,0,0.15)] hover:opacity-90 active:scale-[0.99] transition-transform"
             >
               Launch Campaign
             </button>

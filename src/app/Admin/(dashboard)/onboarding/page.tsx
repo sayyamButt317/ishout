@@ -70,7 +70,7 @@ export default function OnboardingCampaignPage() {
           'Onboarded',
           'Status',
           'Created At',
-          'View',
+          'View Influencers',
           'View Brief',
           'Delete',
         ]}
@@ -126,7 +126,7 @@ export default function OnboardingCampaignPage() {
                 router.push(`/Admin/onboarding/${campaign?._id}`);
               }}
             >
-              View
+              View Influencers
             </Button>
           </div>,
           <div key={`view-brief-${campaign._id}`} className="truncate">

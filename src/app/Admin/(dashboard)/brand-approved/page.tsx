@@ -39,15 +39,15 @@ export default function BrandApprovedCampaignIdPage() {
           </div>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+        <div className="rounded-xl border border-white/10 bg-white/2 p-5">
           <p className="text-xs font-bold uppercase tracking-widest text-white/40">
             Avg Engagement
           </p>
-          <p className="mt-2 text-2xl font-bold text-[var(--color-primaryButton)]">4.8%</p>
+          <p className="mt-2 text-2xl font-bold text-(--color-primaryButton)">4.8%</p>
           <p className="mt-2 text-sm text-white/60">Based on last 14 days</p>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+        <div className="rounded-xl border border-white/10 bg-white/2 p-5">
           <p className="text-xs font-bold uppercase tracking-widest text-white/40">
             Budget Used
           </p>
@@ -135,10 +135,10 @@ export default function BrandApprovedCampaignIdPage() {
               <span className="text-[10px] text-outline font-bold uppercase tracking-wider">Creators</span>
               <span className="text-sm font-bold text-on-surface">15 Total</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[10px] text-outline font-bold uppercase tracking-wider">Avg. Engagement</span>
-              <span className="text-sm font-bold text-primary">6.1%</span>
-            </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] text-outline font-bold uppercase tracking-wider">Avg. Engagement</span>
+                <span className="text-sm font-bold text-primary">6.1%</span>
+              </div>
             </div>
             <div className="mt-auto space-y-4">
               <div className="bg-surface-container-low rounded-lg p-4">
@@ -151,16 +151,16 @@ export default function BrandApprovedCampaignIdPage() {
                 </div>
               </div>
               <div className="flex justify-end gap-2 mb-2">
-                <button className="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors opacity-60" 
-                title="Settings">
+                <button className="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors opacity-60"
+                  title="Settings">
                   <span className="material-symbols-outlined text-[20px]">settings</span>
                 </button>
-                <button className="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors" 
-                title="Analytics">
+                <button className="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors"
+                  title="Analytics">
                   <span className="material-symbols-outlined text-[20px]">monitoring</span>
                 </button>
-                <button className="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors opacity-60" 
-                title="Chat">
+                <button className="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors opacity-60"
+                  title="Chat">
                   <span className="material-symbols-outlined text-[20px]">chat_bubble</span></button></div><a className="w-full py-3 bg-surface-container-high text-on-surface-variant rounded-md font-semibold text-sm flex justify-center items-center gap-2 transition-all duration-300 hover:bg-slate-200" href="{{DATA:SCREEN:SCREEN_63}}">
                 View Campaign Results
                 <span className="material-symbols-outlined text-lg">insights</span>

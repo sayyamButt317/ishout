@@ -37,42 +37,41 @@ export default function Sidebar({ links }: SidebarProps) {
 
   const renderLink = useCallback(
     (link: SidebarLink) => {
-    const isSelected =
-      pathname === link.route ||
-      (link.route !== '/auth/login' && pathname.startsWith(link.route));
+      const isSelected =
+        pathname === link.route ||
+        (link.route !== '/auth/login' && pathname.startsWith(link.route));
 
-    return (
-      <Link
-        key={link.route}
-        href={link.route}
-        onClick={() => setMobileOpen(false)}
-        className={cn(
-          'group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ease-out',
-          isSelected
-            ? 'bg-white/5 backdrop-blur-xl border border-white/10 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)]'
-            : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent',
-        )}
-      >
-        {isSelected && (
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-transparent blur-xl opacity-80 -z-10" />
-        )}
+      return (
+        <Link
+          key={link.route}
+          href={link.route}
+          onClick={() => setMobileOpen(false)}
+          className={cn(
+            'group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ease-out',
+            isSelected
+              ? 'bg-white/5 backdrop-blur-xl border border-white/10 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)]'
+              : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent',
+          )}
+        >
+          {isSelected && (
+            <div className="absolute inset-0 rounded-2xl bg-linear-to-r from-indigo-500/10 via-purple-500/10 to-transparent blur-xl opacity-80 -z-10" />
+          )}
 
-        {link.icon && (
-          <div
-            className={cn(
-              'flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300',
-              isSelected
-                ? 'bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-white'
-                : 'bg-white/5 text-slate-400 group-hover:bg-white/10',
-            )}
-          >
-            {link.icon}
-          </div>
-        )}
-
-        <span className="text-sm font-medium tracking-wide">{link.label}</span>
-      </Link>
-    );
+          {link.icon && (
+            <div
+              className={cn(
+                'flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300',
+                isSelected
+                  ? 'bg-linear-to-br from-indigo-500/20 to-purple-500/20 text-white'
+                  : 'bg-white/5 text-slate-400 group-hover:bg-white/10',
+              )}
+            >
+              {link.icon}
+            </div>
+          )}
+          <span className="text-sm font-medium tracking-wide">{link.label}</span>
+        </Link>
+      );
     },
     [pathname],
   );
@@ -117,7 +116,6 @@ export default function Sidebar({ links }: SidebarProps) {
         {/* Links */}
         <nav className="flex flex-col gap-2 flex-1 overflow-y-auto pr-1">
           {primaryRenderedLinks}
-
           {adminToolsRenderedLinks.length > 0 && (
             <>
               <div className="pt-4 pb-1 px-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
@@ -166,7 +164,6 @@ export default function Sidebar({ links }: SidebarProps) {
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <a
               href="https://ishout.ae"
-              //    target="_blank"
               rel="noopener noreferrer"
               className="mb-6 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => setMobileOpen(false)}
@@ -183,7 +180,6 @@ export default function Sidebar({ links }: SidebarProps) {
 
             <nav className="flex flex-col gap-2 flex-1 overflow-y-auto">
               {primaryRenderedLinks}
-
               {adminToolsRenderedLinks.length > 0 && (
                 <>
                   <div className="pt-4 pb-1 px-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
@@ -196,7 +192,6 @@ export default function Sidebar({ links }: SidebarProps) {
                 </>
               )}
             </nav>
-
             <div className="pt-6 border-t border-white/10">
               <Button
                 variant="ghost"
