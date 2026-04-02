@@ -733,7 +733,7 @@ function ContentFeedbackPageContent() {
 
 export default function InfluncersContentPage() {
   return (
-    <Suspense fallback={<div className="p-4 text-white/60">Loading content...</div>}>
+    <Suspense fallback={<div className="p-4 text-white/60">Loading...</div>}>
       <ContentFeedbackPageContent />
     </Suspense>
   );

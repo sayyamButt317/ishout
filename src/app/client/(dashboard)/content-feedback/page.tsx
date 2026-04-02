@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
 
@@ -47,7 +47,7 @@ const countStyles: Record<string, string> = {
   emerald: 'bg-emerald-100 border-emerald-200 text-emerald-700',
 };
 
-export default function ContentFeedbackPage() {
+function ContentFeedbackPageContent() {
   const searchParams = useSearchParams();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
 
@@ -146,7 +146,7 @@ export default function ContentFeedbackPage() {
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-        (isVideoUrl(msg.message) || isImageUrl(msg.message))
+          (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
@@ -243,11 +243,10 @@ export default function ContentFeedbackPage() {
                     {col.label}
                   </h3>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                      col.color === 'primary'
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
                         ? 'bg-(--color-primaryButton) text-white'
                         : countStyles[col.color]
-                    }`}
+                      }`}
                   >
                     {col.count}
                   </span>
@@ -272,13 +271,12 @@ export default function ContentFeedbackPage() {
                         Brand_approved: card.Brand_approved,
                       })
                     }
-                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
-                      col.id === 'review'
+                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${col.id === 'review'
                         ? 'border-2 border-(--color-primaryButton)'
                         : col.id === 'revision'
                           ? 'border-l-4 border-l-amber-400 border-white/10'
                           : 'border-white/10 hover:border-(--color-primaryButton)/30'
-                    }`}
+                      }`}
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
                       <Image
@@ -667,5 +665,13 @@ export default function ContentFeedbackPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ContentFeedbackPage() {
+  return (
+    <Suspense fallback={<div className="p-4 text-white/60">Loading content...</div>}>
+      <ContentFeedbackPageContent />
+    </Suspense>
   );
 }
