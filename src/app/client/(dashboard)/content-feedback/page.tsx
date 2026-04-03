@@ -141,7 +141,7 @@ function ContentFeedbackPageContent() {
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-        (isVideoUrl(msg.message) || isImageUrl(msg.message))
+          (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
@@ -212,7 +212,7 @@ function ContentFeedbackPageContent() {
                 placeholder="Search content..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
               />
             </div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">
@@ -238,11 +238,10 @@ function ContentFeedbackPageContent() {
                     {col.label}
                   </h3>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                      col.color === 'primary'
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
                         ? 'bg-(--color-primaryButton) text-white'
                         : countStyles[col.color]
-                    }`}
+                      }`}
                   >
                     {col.count}
                   </span>
@@ -267,13 +266,12 @@ function ContentFeedbackPageContent() {
                         Brand_approved: card.Brand_approved,
                       })
                     }
-                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
-                      col.id === 'review'
+                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${col.id === 'review'
                         ? 'border-2 border-(--color-primaryButton)'
                         : col.id === 'revision'
                           ? 'border-l-4 border-l-amber-400 border-white/10'
                           : 'border-white/10 hover:border-(--color-primaryButton)/30'
-                    }`}
+                      }`}
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
                       <Image

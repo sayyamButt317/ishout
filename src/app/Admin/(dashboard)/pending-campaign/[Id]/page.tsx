@@ -84,7 +84,7 @@ export default function PendingCampaignByIdPage() {
         <div className="bg-black/20 backdrop-blur-sm border border-white/10 rounded-xl p-4 sm:p-5 shadow-lg">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 flex-wrap">
             {/* Status Section */}
-            <div className="flex items-center gap-3 flex-shrink-0 w-full sm:w-auto">
+            <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
               <label className="text-sm font-semibold text-white whitespace-nowrap">
                 Status:
               </label>
@@ -108,7 +108,7 @@ export default function PendingCampaignByIdPage() {
             {ApprovedInfluencersStore.getState().approvedInfluencers.length >
               0 && (
                 <CustomButton
-                  className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
+                  className="w-full sm:w-auto bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
                   onClick={() => ExportToExcel()}
                 >
                   <Download className="h-4 w-4" />
@@ -118,7 +118,7 @@ export default function PendingCampaignByIdPage() {
           </div>
           {/* Generate More Influencers Button */}
           <CustomButton
-            className="w-full mt-2 sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
+            className="w-full mt-2 sm:w-auto bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
             onClick={() =>
               generateMoreInfluencers.mutate({ campaign_id: Id ?? "" })
             }

@@ -61,7 +61,7 @@ export default function LandingPage() {
     italic
     text-white
     
-    /* Default state: No shadow */
+    /* Default state: No */
     shadow-none
 
     /* Hover state: Multi-layered glow */

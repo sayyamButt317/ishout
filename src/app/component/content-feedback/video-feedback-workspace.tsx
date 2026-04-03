@@ -287,7 +287,7 @@ export default function VideoFeedbackWorkspace({
 
             {showVideoTools && scrubHover && selectedPreviewMediaUrl && (
                 <div
-                    className="pointer-events-none fixed z-[200] flex flex-col items-center gap-1 drop-shadow-2xl"
+                    className="pointer-events-none fixed z-200 flex flex-col items-center gap-1 drop-shadow-2xl"
                     style={{
                         width: SCRUB_PREVIEW_MAX_W,
                         left: Math.min(

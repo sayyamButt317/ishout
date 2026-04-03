@@ -79,7 +79,7 @@ export default function TableComponent({
   error,
 }: TableProps) {
   const router = useRouter();
-  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   const [uploadedImages, setUploadedImages] = useState<{ [key: number]: string }>({});
   const [uploadModalOpen, setUploadModalOpen] = useState<number | null>(null);

@@ -204,7 +204,7 @@ export default function CampaignBriefDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="!w-[95vw] !max-w-[1200px] h-[92vh] bg-gradient-to-br from-neutral-900 via-neutral-950 to-black border border-white/10 rounded-3xl overflow-y-auto p-0">
+      <DialogContent className="w-[95vw]! max-w-[1200px]! h-[92vh] bg-linear-to-br from-neutral-900 via-neutral-950 to-black border border-white/10 rounded-3xl overflow-y-auto p-0">
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between p-10 border-b border-white/10 gap-6">
           {/* LEFT SIDE */}

@@ -70,7 +70,7 @@ const Header = () => {
           </div>
 
           {!token ? (
-            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
+            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center shrink-0">
               <CustomButton
                 asChild
                 className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap"
@@ -90,7 +90,7 @@ const Header = () => {
               </CustomButton>
             </div>
           ) : (
-            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
+            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center shrink-0">
               <CustomButton
                 onClick={() => DashboardRedirect()}
                 className="px-3 sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap"

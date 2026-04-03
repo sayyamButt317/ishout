@@ -4,12 +4,10 @@ import CampaignBriefResult from '@/src/app/component/custom-component/CampaignBr
 import CampaignBreifHook from '@/src/routes/Company/api/Hooks/CampaignBreif-hook';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import { Loader2, Sparkles, X } from 'lucide-react';
-import PageHeader from '@/src/app/component/PageHeader';
 import { useCallback, useState, useRef } from 'react';
 import SummaryPopup from '@/src/app/component/Ready-made/SummaryPopup';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 import { rangeOfFollowers } from '@/src/constant/rangeoffollowers';
-import Image from 'next/image';
 interface CampaignBriefResponse {
   id: string;
   platform: string[];
@@ -136,7 +134,7 @@ const CampaignBreifPage = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0B0F19] via-[#0F172A] to-black text-white flex flex-col">
+    <div className="min-h-screen bg-linear-to-b from-[#0B0F19] via-[#0F172A] to-black text-white flex flex-col">
       {/* <div className="px-4 md:px-6">
         <PageHeader
           title="Generate Campaign Brief"

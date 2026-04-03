@@ -32,7 +32,7 @@ export default function NotFound() {
         <div className="space-y-4">
           <Button
             asChild
-            className="w-full text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-gradient-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]"
+            className="w-full text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 bg-linear-to-br from-[#f7941D] via-[#ffbfbf] to-[#1e4b8e]"
           >
             <Link href="/" className="flex items-center justify-center gap-2">
               <Home className="w-5 h-5 " />
