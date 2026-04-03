@@ -69,7 +69,6 @@ export default function AdminPendingCampaigns() {
         header={[
           'Company Name',
           'Campaign Name',
-          'Source',
           'Platform',
           'Category',
           'Followers',
@@ -91,9 +90,6 @@ export default function AdminPendingCampaigns() {
           </div>,
           <div key={`campaign-name-${campaign._id}`} className="truncate">
             {campaign?.name}
-          </div>,
-          <div key={`source-${campaign._id}`} className="truncate">
-            {campaign?.user_type}
           </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />

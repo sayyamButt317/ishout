@@ -22,7 +22,7 @@ export const WhatsAppShareButton = ({
   phone,
   contactPerson,
   country,
-  fallbackMessage = 'this is from Ishout.',
+  fallbackMessage = 'this is from iShout.',
   variant = 'ghost',
   size = 'icon',
   className,

@@ -61,7 +61,6 @@ const ApprovedCampaignPage = () => {
         header={[
           'Company Name',
           'Campaign Name',
-          'Source',
           'Platform',
           'Category',
           'Followers',
@@ -89,9 +88,6 @@ const ApprovedCampaignPage = () => {
           </div>,
           <div key={`campaign-name-${campaign?.campaign_id}`} className="truncate">
             {campaign?.name}
-          </div>,
-          <div key={`source-${campaign?._id}`} className="truncate">
-            {campaign?.user_type}
           </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />

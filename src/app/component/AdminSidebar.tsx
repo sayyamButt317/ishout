@@ -27,7 +27,7 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
     setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
 
   return (
-    <nav className="flex flex-col gap-1 flex-1 overflow-y-auto scrollbar-hide pr-1">
+    <nav className="flex flex-col gap-1 flex-1 overflow-y-auto no-scrollbar pr-1">
       {adminSidebarLinks.map((group) => {
         const isOpen = !!openGroups[group.label];
         const isGroupActive = group.children.some((c) => pathname === c.route);
@@ -39,7 +39,7 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
             <button
               onClick={() => toggle(group.label)}
               className={cn(
-                'w-full group relative flex items-center gap-3 px-4 py-4 rounded-2xl transition-all duration-300 ease-out',
+                'w-full group relative flex items-center gap-3 py-4 rounded-2xl transition-all duration-300 ease-out',
                 isGroupActive && !isOpen
                   ? 'bg-white/5 border border-white/10 text-white'
                   : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent',
@@ -47,7 +47,7 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
             >
               <div
                 className={cn(
-                  'flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-300 flex-shrink-0',
+                  'flex h-9 w-9 items-center justify-center rounded-2xl transition-all duration-300 flex-shrink-0',
                   isGroupActive && !isOpen
                     ? 'bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-white'
                     : cn('text-slate-400 group-hover:bg-white/10', group.iconBg),
@@ -159,7 +159,7 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Desktop */}
-      <aside className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-[240px] flex-col rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
+      <aside className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-[280px] flex-col rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
         {sidebarContent()}
       </aside>
 
