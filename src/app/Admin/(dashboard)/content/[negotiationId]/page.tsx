@@ -302,7 +302,7 @@ export default function ContentFeedbackDetailPage() {
 
     return (
         <div className="font-sans">
-            <div className="w-full mt-4">
+            <div className="w-full">
                 <PageHeader
                     title="Content Review & Feedback Pipeline"
                     description="Review content from influencers and provide feedback"
@@ -317,8 +317,8 @@ export default function ContentFeedbackDetailPage() {
                         </button>
                     }
                 />
-                <div className="mt-4 flex h-full max-h-[90vh] w-full overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl">
-                    <div className="flex flex-1 flex-col border-r border-white/10">
+                <div className=" flex h-full max-h-[min(920px,96vh)] w-full min-h-0 overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl">
+                    <div className="flex min-h-0 min-w-0 flex-1 flex-col border-r border-white/10">
                         <div className="flex items-center justify-between border-b border-white/10 p-4">
                             <div className="flex items-center gap-3">
                                 <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
@@ -344,34 +344,37 @@ export default function ContentFeedbackDetailPage() {
                             </div> */}
                         </div>
 
-                        <div className="relative px-2 pt-2">
-                            <VideoFeedbackWorkspace
-                                videoRef={videoRef}
-                                selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-                                selectedPreviewMediaType={selectedPreviewMediaType}
-                                isPlaying={isPlaying}
-                                setIsPlaying={setIsPlaying}
-                                setSelectedVideoDuration={setSelectedVideoDuration}
-                                setSelectedVideoResolution={setSelectedVideoResolution}
-                                duration={selectedVideoDuration}
-                                markers={timelineMarkers}
-                                sendEnabled={sendEnabled}
-                                contentUrl={selectedPreviewMediaUrl}
-                                onSubmitTimedFeedback={handleTimedFeedbackSubmit}
-                                onMarkerSeek={handleSeekPreviewToTime}
-                            />
+                        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-2 pt-2 lg:flex-row lg:items-stretch">
+                            <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto lg:min-h-[min(580px,70vh)]">
+                                <VideoFeedbackWorkspace
+                                    videoRef={videoRef}
+                                    selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                                    selectedPreviewMediaType={selectedPreviewMediaType}
+                                    isPlaying={isPlaying}
+                                    setIsPlaying={setIsPlaying}
+                                    setSelectedVideoDuration={setSelectedVideoDuration}
+                                    setSelectedVideoResolution={setSelectedVideoResolution}
+                                    duration={selectedVideoDuration}
+                                    markers={timelineMarkers}
+                                    sendEnabled={sendEnabled}
+                                    contentUrl={selectedPreviewMediaUrl}
+                                    onSubmitTimedFeedback={handleTimedFeedbackSubmit}
+                                    onMarkerSeek={handleSeekPreviewToTime}
+                                />
+                            </div>
+                            <aside className="flex min-h-0 w-full shrink-0 flex-col border-t border-white/10 pt-4 lg:w-72 lg:border-l lg:border-t-0 lg:pl-4 lg:pt-0 xl:w-80">
+                                <ContentFeedbackPanel
+                                    videoRef={videoRef}
+                                    activeFeedbackId={activeFeedbackId2}
+                                    selectedContentFeedback={selectedContentFeedback}
+                                    setSelectedContentFeedback={setSelectedContentFeedback}
+                                    selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                                    negotiationId={negotiationId}
+                                    selectedCard={selectedCard}
+                                    setFeedbackId={setFeedbackId}
+                                />
+                            </aside>
                         </div>
-                        {/* feedback section */}
-                        <ContentFeedbackPanel
-                            videoRef={videoRef}
-                            activeFeedbackId={activeFeedbackId2}
-                            selectedContentFeedback={selectedContentFeedback}
-                            setSelectedContentFeedback={setSelectedContentFeedback}
-                            selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-                            negotiationId={negotiationId}
-                            selectedCard={selectedCard}
-                            setFeedbackId={setFeedbackId}
-                        />
                         <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-3">
                             <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
                                 <div>
@@ -443,7 +446,6 @@ export default function ContentFeedbackDetailPage() {
 
                     <ChatPanel
                         title="Feedback"
-                        unreadText="3 UNREAD"
                         modeToggle={{ value: chatMode, onChange: setChatMode }}
                         messages={chatData?.messages}
                         isLoading={chatLoading}

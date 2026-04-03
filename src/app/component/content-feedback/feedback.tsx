@@ -58,7 +58,7 @@ export default function ContentFeedbackPanel({
     };
 
     return (
-        <div className="flex w-full shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+        <div className="flex h-full min-h-0 w-full shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
             <div className="relative">
                 <textarea
                     value={selectedContentFeedback}

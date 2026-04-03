@@ -43,8 +43,6 @@ type ChatPanelProps = {
 };
 
 export default function ChatPanel({
-  title = 'Feedback',
-  unreadText = '0 UNREAD',
   className,
   modeToggle,
   messages,
@@ -90,16 +88,6 @@ export default function ChatPanel({
     <div
       className={`flex w-1/2 shrink-0 flex-col bg-white/2 ${className ?? ''}`}
     >
-      <div className="flex items-center justify-between border-b border-white/10 p-4">
-        <h4 className="flex items-center gap-2 text-sm font-bold text-white">
-          <MessageSquare className="size-4 text-(--color-primaryButton)" />
-          {title}
-        </h4>
-        <span className="rounded-full bg-(--color-primaryButton)/10 px-2.5 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
-          {unreadText}
-        </span>
-      </div>
-
       {modeToggle && (
         <div className="border-b border-white/10 px-4 pt-3 pb-2">
           <div className="mx-auto flex max-w-md rounded-full border border-white/10 bg-white/5 p-1">

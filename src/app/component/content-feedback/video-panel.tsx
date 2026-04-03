@@ -21,8 +21,8 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoP
   ref,
 ) {
   return (
-    <div className="flex max-h-[min(600px,72vh)] min-h-[min(360px,45vh)] w-full flex-col overflow-hidden rounded-lg border border-white/10 bg-slate-800">
-      <div className="relative flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-black">
+    <div className="flex min-h-[min(560px,68vh)] w-full flex-1 flex-col overflow-hidden rounded-lg border border-white/10 bg-slate-800">
+      <div className="relative flex min-h-[min(480px,56vh)] flex-1 items-center justify-center overflow-hidden bg-black">
         {selectedPreviewMediaUrl ? (
           selectedPreviewMediaType === 'image' ? (
             <Image
@@ -95,7 +95,7 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoP
             </>
           )
         ) : (
-          <div className="flex h-full min-h-[320px] items-center justify-center text-sm text-white/50">
+          <div className="flex min-h-[min(480px,56vh)] w-full items-center justify-center text-sm text-white/50">
             No media available
           </div>
         )}

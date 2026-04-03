@@ -239,8 +239,8 @@ function ContentFeedbackPageContent() {
                   </h3>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
-                        ? 'bg-(--color-primaryButton) text-white'
-                        : countStyles[col.color]
+                      ? 'bg-(--color-primaryButton) text-white'
+                      : countStyles[col.color]
                       }`}
                   >
                     {col.count}
@@ -267,10 +267,10 @@ function ContentFeedbackPageContent() {
                       })
                     }
                     className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${col.id === 'review'
-                        ? 'border-2 border-(--color-primaryButton)'
-                        : col.id === 'revision'
-                          ? 'border-l-4 border-l-amber-400 border-white/10'
-                          : 'border-white/10 hover:border-(--color-primaryButton)/30'
+                      ? 'border-2 border-(--color-primaryButton)'
+                      : col.id === 'revision'
+                        ? 'border-l-4 border-l-amber-400 border-white/10'
+                        : 'border-white/10 hover:border-(--color-primaryButton)/30'
                       }`}
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
@@ -566,15 +566,6 @@ function ContentFeedbackPageContent() {
               </div>
             </div>
             <div className="flex w-100 shrink-0 flex-col bg-white/2">
-              <div className="flex items-center justify-between border-b border-white/10 p-4">
-                <h4 className="flex items-center gap-2 text-sm font-bold text-white">
-                  <MessageSquare className="size-4 text-(--color-primaryButton)" />
-                  Feedback
-                </h4>
-                <span className="rounded-full bg-(--color-primaryButton)/10 px-2.5 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
-                  3 UNREAD
-                </span>
-              </div>
               <div className="flex-1 space-y-4 overflow-y-auto p-5">
                 <ChatMessagesList
                   messages={chatData?.messages}

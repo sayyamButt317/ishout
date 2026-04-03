@@ -191,7 +191,7 @@ export default function VideoFeedbackWorkspace({
         duration > 0;
 
     return (
-        <div className="space-y-2">
+        <div className="flex min-h-0 w-full flex-1 flex-col gap-2">
             {showVideoTools && (
                 <div className="flex flex-wrap items-center gap-2 px-1">
                     <Button
