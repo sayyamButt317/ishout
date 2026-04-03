@@ -14,11 +14,12 @@ import {
   UpdateCampaignStatusRequestProps,
   UpdateInfluencerStatusRequestProps,
   UpdateInfluencerStatusResponseProps,
-} from '@/src/types/Admin-Type/Campaign.type';
+} from '@/src/types/Admin-Type/Campaign-type';
 import { MessageTemplate } from '@/src/types/meta.type';
 import { UpdateUserStatusResponse } from '@/src/types/Admin-Type/usermanagment.type';
 import { RejectandRegenerateInfluencerRequest } from '@/src/types/Admin-Type/reject-influencers.type';
 import { AddInfluencersNumberRequest } from '@/src/types/Admin-Type/review-influencer';
+import { SaveContentFeedbackPayload } from '@/src/types/Admin-Type/Content-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -521,16 +522,6 @@ export const WhatsAppAdminCompanyApproveVideoApi = async (
   );
 
   return response.data;
-};
-
-type ContentFeedbackReviewSide = 'admin_review' | 'brand_review';
-
-type SaveContentFeedbackPayload = {
-  negotiation_id: string;
-  campaign_id: string;
-  content_url: string;
-  msg: string;
-  review_side: ContentFeedbackReviewSide;
 };
 
 export const SaveContentFeedbackApi = async (payload: SaveContentFeedbackPayload) => {

@@ -13,7 +13,7 @@ import {
   Circle,
 } from 'lucide-react';
 import DeleteInfluencerhook from '@/src/routes/Admin/Hooks/deleteinfluencer-hook';
-import { UpdateInfluencerStatusRequestProps } from '@/src/types/Admin-Type/Campaign.type';
+import { UpdateInfluencerStatusRequestProps } from '@/src/types/Admin-Type/Campaign-type';
 import { useParams } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { ApprovedInfluencersStore } from '@/src/store/Campaign/influencers.store';

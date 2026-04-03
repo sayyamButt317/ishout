@@ -7,7 +7,7 @@ import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import {
   UpdateInfluencerStatusRequestProps,
   UpdateInfluencerStatusResponseProps,
-} from '@/src/types/Admin-Type/Campaign.type';
+} from '@/src/types/Admin-Type/Campaign-type';
 import {
   CompanyProfileDetailsResponseProps,
   UpdateProfileRequestProps,
