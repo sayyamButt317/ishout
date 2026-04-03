@@ -1,21 +1,6 @@
-/** Prefix for JSON payloads in chat (version 1). */
+import { TimedFeedbackPayloadV1, TimelineMarkerData } from "../types/Admin-Type/timeline-type";
+
 export const TIMED_FEEDBACK_PREFIX_V1 = '__CFB1__';
-
-export type TimedFeedbackPayloadV1 = {
-  t: number;
-  m: string;
-  s?: string;
-  u?: string;
-};
-
-export type TimelineMarkerData = {
-  id: string;
-  timestamp: number;
-  text: string;
-  snapshot?: string;
-  contentUrl?: string;
-};
-
 export function serializeTimedFeedbackMessage(payload: TimedFeedbackPayloadV1): string {
   const body: Record<string, unknown> = {
     t: payload.t,
@@ -47,7 +32,6 @@ export function parseTimedFeedbackMessage(raw: string): TimedFeedbackPayloadV1 |
   }
 }
 
-/** Resize frame to limit chat / JSON payload size (JPEG). */
 export function captureVideoFrameDataUrl(
   video: HTMLVideoElement,
   maxWidth = 480,

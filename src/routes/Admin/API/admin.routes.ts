@@ -14,11 +14,12 @@ import {
   UpdateCampaignStatusRequestProps,
   UpdateInfluencerStatusRequestProps,
   UpdateInfluencerStatusResponseProps,
-} from '@/src/types/Admin-Type/Campaign.type';
+} from '@/src/types/Admin-Type/Campaign-type';
 import { MessageTemplate } from '@/src/types/meta.type';
 import { UpdateUserStatusResponse } from '@/src/types/Admin-Type/usermanagment.type';
 import { RejectandRegenerateInfluencerRequest } from '@/src/types/Admin-Type/reject-influencers.type';
 import { AddInfluencersNumberRequest } from '@/src/types/Admin-Type/review-influencer';
+import { SaveContentFeedbackPayload } from '@/src/types/Admin-Type/Content-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -376,7 +377,9 @@ export const NegotiationStatsApi = async (page: number = 1, page_size: number = 
 };
 
 export const NegotiationAgreedByCampaignApi = async (campaign_id: string) => {
-  const response = await api.get(AdminENDPOINT.NEGOTIATION_AGREED_BY_CAMPAIGN(campaign_id));
+  const response = await api.get(
+    AdminENDPOINT.NEGOTIATION_AGREED_BY_CAMPAIGN(campaign_id),
+  );
   return response.data;
 };
 
@@ -490,6 +493,7 @@ export const WhatsAppAdminCompanySendHumanMessageApi = async (
 
 export type WhatsAppAdminCompanyApproveVideoPayload = {
   brand_thread_id: string;
+  campaign_id: string;
   negotiation_id: string;
   video_url: string;
   video_approve_admin?: string;
@@ -501,6 +505,7 @@ export const WhatsAppAdminCompanyApproveVideoApi = async (
 ) => {
   const body: Record<string, string> = {
     negotiation_id: payload.negotiation_id,
+    campaign_id: payload.campaign_id,
     video_url: payload.video_url,
     brand_thread_id: payload.brand_thread_id,
   };
@@ -517,16 +522,6 @@ export const WhatsAppAdminCompanyApproveVideoApi = async (
   );
 
   return response.data;
-};
-
-type ContentFeedbackReviewSide = 'admin_review' | 'brand_review';
-
-type SaveContentFeedbackPayload = {
-  negotiation_id: string;
-  campaign_id: string;
-  content_url: string;
-  msg: string;
-  review_side: ContentFeedbackReviewSide;
 };
 
 export const SaveContentFeedbackApi = async (payload: SaveContentFeedbackPayload) => {

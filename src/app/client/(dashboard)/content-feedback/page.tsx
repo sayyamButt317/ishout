@@ -78,18 +78,12 @@ function ContentFeedbackPageContent() {
     data: chatData,
     isLoading: chatLoading,
     refetch: refetchChat,
-  } = useAdminCompanyMessagesHook(
-    effectiveBrandThreadId,
-    negotiationId,
-    1,
-    20,
-  );
+  } = useAdminCompanyMessagesHook(effectiveBrandThreadId, negotiationId, 1, 20);
 
   const { sendMessage } = useSendCompanyAdminMessage(company_user_id, negotiationId);
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
 
-  const negotiationItems =
-    data?.negotiations ?? data?.negotiation_controls ?? [];
+  const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
 
   const apiCards: CardType[] = negotiationItems
     .filter(
@@ -147,7 +141,7 @@ function ContentFeedbackPageContent() {
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-          (isVideoUrl(msg.message) || isImageUrl(msg.message))
+        (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
@@ -244,10 +238,11 @@ function ContentFeedbackPageContent() {
                     {col.label}
                   </h3>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
-                      ? 'bg-(--color-primaryButton) text-white'
-                      : countStyles[col.color]
-                      }`}
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                      col.color === 'primary'
+                        ? 'bg-(--color-primaryButton) text-white'
+                        : countStyles[col.color]
+                    }`}
                   >
                     {col.count}
                   </span>
@@ -272,12 +267,13 @@ function ContentFeedbackPageContent() {
                         Brand_approved: card.Brand_approved,
                       })
                     }
-                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${col.id === 'review'
-                      ? 'border-2 border-(--color-primaryButton)'
-                      : col.id === 'revision'
-                        ? 'border-l-4 border-l-amber-400 border-white/10'
-                        : 'border-white/10 hover:border-(--color-primaryButton)/30'
-                      }`}
+                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
+                      col.id === 'review'
+                        ? 'border-2 border-(--color-primaryButton)'
+                        : col.id === 'revision'
+                          ? 'border-l-4 border-l-amber-400 border-white/10'
+                          : 'border-white/10 hover:border-(--color-primaryButton)/30'
+                    }`}
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
                       <Image
@@ -527,14 +523,6 @@ function ContentFeedbackPageContent() {
                         : 'Image'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase text-white/40">
-                      Usage Rights
-                    </p>
-                    <span className="inline-block rounded border border-(--color-primaryButton)/20 bg-(--color-primaryButton)/10 px-2 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
-                      Standard Commercial
-                    </span>
-                  </div>
                 </div>
                 <div className="flex flex-col items-end gap-2 text-white/50">
                   <div className="flex items-center gap-2">
@@ -555,6 +543,7 @@ function ContentFeedbackPageContent() {
                         ) {
                           approveVideoMutation.mutate({
                             brand_thread_id: effectiveBrandThreadId,
+                            campaign_id: selectedCard.campaign_id ?? '',
                             negotiation_id: negotiationId,
                             video_url: selectedPreviewMediaUrl,
                             video_approve_brand: 'approved',
@@ -575,9 +564,6 @@ function ContentFeedbackPageContent() {
                         : 'Video Approve'}
                     </button>
                   </div>
-                  <span className="text-[11px] font-bold leading-tight">
-                    unboxing_draft_v1.mp4 (42MB)
-                  </span>
                 </div>
               </div>
             </div>

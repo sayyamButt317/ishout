@@ -7,7 +7,7 @@ import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import {
   UpdateInfluencerStatusRequestProps,
   UpdateInfluencerStatusResponseProps,
-} from '@/src/types/Admin-Type/Campaign.type';
+} from '@/src/types/Admin-Type/Campaign-type';
 import {
   CompanyProfileDetailsResponseProps,
   UpdateProfileRequestProps,
@@ -22,6 +22,7 @@ import {
   CampaignBriefItem,
 } from '@/src/types/Compnay/campaign-brief.types';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
+import { ApprovedContentsResponse } from '@/src/types/Compnay/approved-content-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -130,6 +131,15 @@ export const CompanyCampaign = async (page: number = 1) => {
   return response.data;
 };
 
+export const getApprovedContentsApi = async (
+  campaign_id: string,
+): Promise<ApprovedContentsResponse> => {
+  const response = await api.get<ApprovedContentsResponse>(CompanyENDPOINT.APPROVED_CONTENT, {
+    params: { campaign_id },
+  });
+  return response.data;
+};
+
 export const CampaignRejectedInfluencers = async () => {
   const response = await api.put(CompanyENDPOINT.CAMPAIGN_REJECTED_INFLUENCERS);
   return response.data;
@@ -158,15 +168,12 @@ export const uploadCampaignLogoApi = async (brief_id: string, file: File) => {
   return response.data;
 };
 
-export const ReviewPendingInfluencers = async (
-  campaign_id: string,
-  page: number = 1
-) => {
+export const ReviewPendingInfluencers = async (campaign_id: string, page: number = 1) => {
   const response = await api.get(
     CompanyENDPOINT.REVIEW_PENDING_INFLUENCERS(campaign_id),
     {
       params: { page },
-    }
+    },
   );
   return response.data;
 };

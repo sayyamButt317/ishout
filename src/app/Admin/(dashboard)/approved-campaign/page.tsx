@@ -6,7 +6,7 @@ import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import TableComponent from '@/src/app/component/CustomTable';
 import ApprovedCampaignHook from '@/src/routes/Admin/Hooks/approvedCampaign-hook';
 import UpdateCampaignStatusHook from '@/src/routes/Admin/Hooks/updateCamapignStatus-hook';
-import { ApprovedCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
+import { ApprovedCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { RefreshCcw, CircleCheck } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { useRouter } from 'next/navigation';

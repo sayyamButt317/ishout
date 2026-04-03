@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { UpdateStatusApi } from "../API/admin.routes";
 import { toast } from "sonner";
-import { UpdateInfluencerStatusResponseProps } from "@/src/types/Admin-Type/Campaign.type";
+import { UpdateInfluencerStatusResponseProps } from "@/src/types/Admin-Type/Campaign-type";
 import { useMutation } from "@tanstack/react-query";
 
 

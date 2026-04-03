@@ -162,7 +162,7 @@ export default function ChatMessageContent({
 
   if (analyzed.isAudioUrl) {
     return (
-      <div className="w-full max-w-full min-w-[min(100%,380px)]">
+      <div className="w-full ">
         <Waveform key={mediaUrl} recordedVoiceURL={mediaUrl} />
       </div>
     );
