@@ -1,5 +1,6 @@
 import {
-  LayoutGrid, CheckCircle,
+  LayoutGrid,
+  CheckCircle,
   CircleCheck,
   Plus,
   User,
@@ -65,13 +66,21 @@ export const employeeSidebarLinks = [
       <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
     ),
   },
+
   {
     label: 'Approved Content',
-    route: '/client/approved-contents',
+    route: '/client/approved-contents/all-campaigns',
     icon: (
       <CheckCircle className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
     ),
   },
+  // {
+  //   label: 'Approved Content',
+  //   route: '/client/approved-contents',
+  //   icon: (
+  //     <CheckCircle className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />
+  //   ),
+  // },
   {
     label: 'Profile',
     route: '/client/profile',

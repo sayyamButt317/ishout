@@ -377,7 +377,9 @@ export const NegotiationStatsApi = async (page: number = 1, page_size: number = 
 };
 
 export const NegotiationAgreedByCampaignApi = async (campaign_id: string) => {
-  const response = await api.get(AdminENDPOINT.NEGOTIATION_AGREED_BY_CAMPAIGN(campaign_id));
+  const response = await api.get(
+    AdminENDPOINT.NEGOTIATION_AGREED_BY_CAMPAIGN(campaign_id),
+  );
   return response.data;
 };
 
@@ -491,6 +493,7 @@ export const WhatsAppAdminCompanySendHumanMessageApi = async (
 
 export type WhatsAppAdminCompanyApproveVideoPayload = {
   brand_thread_id: string;
+  campaign_id: string;
   negotiation_id: string;
   video_url: string;
   video_approve_admin?: string;
@@ -502,6 +505,7 @@ export const WhatsAppAdminCompanyApproveVideoApi = async (
 ) => {
   const body: Record<string, string> = {
     negotiation_id: payload.negotiation_id,
+    campaign_id: payload.campaign_id,
     video_url: payload.video_url,
     brand_thread_id: payload.brand_thread_id,
   };

@@ -20,7 +20,11 @@ export default function useWhatsAppAdminCompanyApproveVideo() {
 
       // Mark the matching brand chat query as stale so it refreshes.
       queryClient.invalidateQueries({
-        queryKey: ['admin-company-messages', variables.brand_thread_id, variables.negotiation_id],
+        queryKey: [
+          'admin-company-messages',
+          variables.brand_thread_id,
+          variables.negotiation_id,
+        ],
       });
     },
     onError: () => {
@@ -28,4 +32,3 @@ export default function useWhatsAppAdminCompanyApproveVideo() {
     },
   });
 }
-
