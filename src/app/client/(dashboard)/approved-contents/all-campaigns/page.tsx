@@ -1,15 +1,14 @@
 'use client';
-
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import TableComponent from '@/src/app/component/CustomTable';
 import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.hook';
-import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
 import { useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { LayoutGrid } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 
 export default function ClientInfluencersContentPage() {
   const [currentPage, setCurrentPage] = useState(1);
