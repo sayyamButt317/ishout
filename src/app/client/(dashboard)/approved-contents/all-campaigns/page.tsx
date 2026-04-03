@@ -4,7 +4,7 @@ import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import TableComponent from '@/src/app/component/CustomTable';
 import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.hook';
-import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
+import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
 import { useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { LayoutGrid } from 'lucide-react';
@@ -69,7 +69,7 @@ export default function ClientInfluencersContentPage() {
                 className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
                 onClick={() => {
                   router.push(
-                    `/client/content-feedback?campaign_id=${campaign.campaign_id}`,
+                    `/client/approved-contents?campaign_id=${campaign.campaign_id}`,
                   );
                 }}
               >
