@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 const STATUS_STEPS = [
   { key: 'pending', label: 'Pending', letter: 'P' },
-  { key: 'approved', label: 'Ishout', letter: 'I' },
+  { key: 'approved', label: 'iShout', letter: 'I' },
   { key: 'processing', label: 'Brand', letter: 'B' },
   { key: 'completed', label: 'Negotiated', letter: 'N' },
   { key: 'content', label: 'Content', letter: 'C' },

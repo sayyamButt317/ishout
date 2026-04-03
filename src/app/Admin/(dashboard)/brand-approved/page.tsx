@@ -41,7 +41,7 @@ export default function OnboardingCampaignPage() {
     <>
       <PageHeader
         title="Brand Approved Influencer"
-        description="Showing campaigns waiting for influencers to be onboarded"
+        description="Showing campaigns with influencers approved by the brand, pending onboarding."
         icon={<UserPlus className="size-5" />}
         actions={
           <Button
@@ -61,18 +61,16 @@ export default function OnboardingCampaignPage() {
         header={[
           'Company Name',
           'Campaign Name',
-          'Source',
           'Platform',
           'Category',
-          'Followers',
           'Country',
+          'Status',
           'Requested',
           'Onboarded',
-          'Status',
           'Created At',
-          'View',
-          'View Brief',
-          'Delete',
+          ' ',
+          ' ',
+          ' ',
         ]}
         imageUrls={data?.campaigns?.map(
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
@@ -90,22 +88,17 @@ export default function OnboardingCampaignPage() {
           <div key={`campaign-name-${campaign._id}`} className="truncate">
             {campaign?.name}
           </div>,
-          <div key={`source-${campaign._id}`} className="truncate">
-            {campaign?.user_type || '-'}
-          </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
           </div>,
           <div key={`category-${campaign._id}`} className="truncate">
             {campaign?.category?.join(', ') || '-'}
           </div>,
-          <div key={`followers-${campaign._id}`} className="truncate">
-            {Array.isArray(campaign?.followers)
-              ? campaign.followers.map((f: number) => `${f}`).join(', ')
-              : '-'}
-          </div>,
           <div key={`country-${campaign._id}`} className="truncate">
             {campaign?.country?.join(', ') || '-'}
+          </div>,
+           <div key={`status-${campaign._id}`} className="truncate">
+            <StatusBadge status={campaign?.status} />
           </div>,
           <div key={`requested-influencers-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.limit} />
@@ -113,9 +106,7 @@ export default function OnboardingCampaignPage() {
           <div key={`onboarding-influencers-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.approved_influencer_count} />
           </div>,
-          <div key={`status-${campaign._id}`} className="truncate">
-            <StatusBadge status={campaign?.status} />
-          </div>,
+      
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
@@ -126,7 +117,7 @@ export default function OnboardingCampaignPage() {
                 router.push(`/Admin/brand-approved/${campaign?._id}`);
               }}
             >
-              View
+              View Influencers
             </Button>
           </div>,
           <div key={`view-brief-${campaign._id}`} className="truncate">
@@ -154,7 +145,7 @@ export default function OnboardingCampaignPage() {
                 }
               }}
             >
-              <Trash className="size-5 text-red-300 cursor-pointer" />
+              <Trash className="size-6 text-red-300 cursor-pointer" />
             </Button>
           </div>,
         ])}
