@@ -9,7 +9,7 @@ import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import CountButton from '@/src/app/component/custom-component/countbutton';
 import { usePendingCampaigns } from '@/src/routes/Admin/Hooks/pendingCampaign-hook';
 import AdminGenerateInfluencersHook from '@/src/routes/Admin/Hooks/generateInfluencers-hook';
-import { AdminAllCampaignApiResponse } from '@/src/types/Admin-Type/Campaign.type';
+import { AdminAllCampaignApiResponse } from '@/src/types/Admin-Type/Campaign-type';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import CustomButton from '@/src/app/component/button';

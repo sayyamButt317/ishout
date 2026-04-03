@@ -20,7 +20,7 @@ const STATUS_ORDER = ['pending', 'approved', 'processing', 'completed', 'content
 
 function getStatusSteps(currentStatus: string) {
   const normalizedStatus = currentStatus.toLowerCase();
-  const currentIndex = STATUS_ORDER.indexOf(normalizedStatus as any);
+  const currentIndex = STATUS_ORDER.indexOf(normalizedStatus as (typeof STATUS_ORDER)[number]);
 
   if (currentIndex === -1) {
     return STATUS_STEPS.map((step, index) => ({
@@ -157,14 +157,14 @@ export default function TableComponent({
                               router.push(`/Admin/approved-campaign/${campaignId}`);
                             }
                           };
-                          
+
                           return (
                             <div key={step.key} className="flex items-center">
-                              <div 
+                              <div
                                 onClick={isClickable ? handleStepClick : undefined}
                                 className={`flex flex-col justify-center cursor-pointer items-center ${isClickable ? 'cursor-pointer' : ''}`}
                               >
-                                <div 
+                                <div
                                   className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${step.isActive
                                     ? 'bg-[#FF3B8D] text-white'
                                     : 'bg-white/10 text-white/40 border border-white/20'
@@ -175,7 +175,7 @@ export default function TableComponent({
                                     step.letter
                                   )}
                                 </div>
-                                <span 
+                                <span
                                   className={`text-[8px] sm:text-[10px] mt-1 whitespace-nowrap ${step.isActive ? 'text-white/80' : 'text-white/40'
                                     } ${isClickable ? 'hover:text-white' : ''}`}>
                                   {step.label}
@@ -193,7 +193,7 @@ export default function TableComponent({
                   )}
 
                   <div className="sm:hidden mb-3">
-                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-linear-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
                       <input
                         type="file"
                         accept="image/*"
@@ -270,7 +270,7 @@ export default function TableComponent({
 
                   <div className="flex gap-5">
                     <div className="hidden sm:flex shrink-0 items-center">
-                      <div className="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
+                      <div className="w-20 h-20 rounded-xl overflow-hidden bg-linear-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
                         <input
                           type="file"
                           accept="image/*"
@@ -355,7 +355,7 @@ export default function TableComponent({
                               <p className="text-[10px] sm:text-xs text-white/60 mb-1 sm:mb-1.5 truncate font-medium">
                                 {header[cellIndex] || `Field ${cellIndex + 1}`}
                               </p>
-                              <div className="text-xs sm:text-sm text-white font-medium break-words">
+                              <div className="text-xs sm:text-sm text-white font-medium wrap-break-word">
                                 {cell}
                               </div>
                             </div>

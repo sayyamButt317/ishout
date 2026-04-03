@@ -1,3 +1,5 @@
+import { TimelineMarkerData } from "./timeline-type";
+
 export interface CardType {
   id: string;
   campaign_id?: string;
@@ -46,3 +48,47 @@ export interface NegotiationResponse {
   total?: number;
   negotiation_controls?: NegotiationItem[];
 }
+
+export interface SelectedCardType {
+  id: string;
+  campaign_id?: string;
+  title: string;
+  campaign: string;
+  thread_id?: string;
+  brand_thread_id?: string;
+  admin_approved?: string | null;
+}
+
+export type ContentFeedbackReviewSide = 'admin_review' | 'brand_review';
+
+export interface SaveContentFeedbackPayload {
+  msg: string;
+  review_side: ContentFeedbackReviewSide;
+  negotiation_id?: string;
+  campaign_id?: string;
+  content_url?: string | null;
+  snapshot?: string | null;
+  /** Video timecode for timed feedback; optional for plain textarea saves. */
+  timestamp?: number;
+}
+
+
+export interface VideoFeedbackWorkspaceProps {
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  selectedPreviewMediaUrl: string | null;
+  selectedPreviewMediaType: 'video' | 'image' | null;
+  isPlaying: boolean;
+  setIsPlaying: (v: boolean) => void;
+  setSelectedVideoDuration: (v: number | null) => void;
+  setSelectedVideoResolution: (v: string) => void;
+  duration: number | null;
+  markers: TimelineMarkerData[];
+  sendEnabled: boolean;
+  contentUrl: string | null;
+  onSubmitTimedFeedback: (payload: {
+    text: string;
+    timestamp: number;
+    snapshotDataUrl: string | null;
+  }) => Promise<void>;
+  onMarkerSeek?: (timestamp: number) => void;
+};

@@ -16,7 +16,6 @@ const getVideoResolution = (value: string) => {
     return `${video.width} × ${video.height}`;
 };
 
-
 export const isVideoUrl = (value: string) => /\.(mp4|webm)(\?.*)?$/i.test(value);
 export const isImageUrl = (value: string) =>
     /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
@@ -27,4 +26,11 @@ export const AnalyzeURL = (value: string) => {
     const type = isVideoUrl(value) ? 'video' : isImageUrl(value) ? 'image' : isAudioUrl(value) ? 'audio' : null;
     const resolution = isVideoUrl(value) ? getVideoResolution(value) : '—';
     return { type, url: value, isVideoUrl: isVideoUrl(value), isImageUrl: isImageUrl(value), isAudioUrl: isAudioUrl(value), resolution };
+};
+
+
+export const AudioDurationFormat = (totalSeconds: number): string => {
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = Math.floor(totalSeconds % 60);
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 };

@@ -25,14 +25,14 @@ import {
     ChatMessage,
     NegotiationResponse,
 } from '@/src/types/Admin-Type/Content-type';
-import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/video-feedback-workspace';
+import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/feedback-dialogue';
 import ContentFeedbackPanel from '@/src/app/component/content-feedback/feedback';
 import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
 import {
     extractTimelineMarkersFromMessages,
     serializeTimedFeedbackMessage,
-    type TimelineMarkerData,
 } from '@/src/utils/content-feedback-chat';
+import { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
 
 export default function ContentFeedbackDetailPage() {
     const router = useRouter();
@@ -339,7 +339,7 @@ export default function ContentFeedbackDetailPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            {/* <div className="flex items-center gap-2">
                                 <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-(--color-primaryButton) focus:outline-none">
                                     <option>Version 1 (Active)</option>
                                     <option disabled>Version 2 (Draft)</option>
@@ -347,7 +347,7 @@ export default function ContentFeedbackDetailPage() {
                                 <button className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors">
                                     <Maximize2 className="size-5" />
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="relative px-2 pt-2">
@@ -369,6 +369,7 @@ export default function ContentFeedbackDetailPage() {
                         </div>
                         {/* feedback section */}
                         <ContentFeedbackPanel
+                            videoRef={videoRef}
                             activeFeedbackId={activeFeedbackId2}
                             selectedContentFeedback={selectedContentFeedback}
                             setSelectedContentFeedback={setSelectedContentFeedback}
@@ -399,22 +400,14 @@ export default function ContentFeedbackDetailPage() {
                                             : 'Image'}
                                     </p>
                                 </div>
-                                <div>
-                                    <p className="text-[10px] font-bold uppercase text-white/40">
-                                        Usage Rights
-                                    </p>
-                                    <span className="inline-block rounded border border-(--color-primaryButton)/20 bg-(--color-primaryButton)/10 px-2 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
-                                        Standard Commercial
-                                    </span>
-                                </div>
                             </div>
 
                             <div className="flex flex-col items-end gap-2 text-white/50">
                                 <div className="flex items-center gap-2">
-                                    <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
+                                    {/* <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
                                         <RefreshCw className="size-4" />
                                         Request Revision
-                                    </button>
+                                    </button> */}
                                     <button
                                         onClick={() => {
                                             if (
@@ -448,9 +441,6 @@ export default function ContentFeedbackDetailPage() {
                                         Approve for Brand
                                     </button>
                                 </div>
-                                <span className="text-[11px] font-bold leading-tight">
-                                    unboxing_draft_v1.mp4 (42MB)
-                                </span>
                             </div>
                         </div>
                     </div>

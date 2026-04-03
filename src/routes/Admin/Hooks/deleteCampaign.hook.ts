@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { DeleteCampaignApi } from "../API/admin.routes";
-import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
+import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign-type";
 
 
 export default function DeleteCampaignHook() {

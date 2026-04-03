@@ -15,8 +15,8 @@ export type ContentFeedbackPanelProps = {
     selectedPreviewMediaUrl: string | null;
     negotiationId: string;
     selectedCard: SelectedCardType;
-    videoRef: React.RefObject<HTMLVideoElement | null>;
-    setFeedbackId: (
+    videoRef?: React.RefObject<HTMLVideoElement | null>;
+    setFeedbackId?: (
         negotiationId: string,
         contentUrl: string | null,
         feedbackId: string,

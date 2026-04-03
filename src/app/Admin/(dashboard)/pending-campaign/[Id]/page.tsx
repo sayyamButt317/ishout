@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
 import UpdateInfluencerStatusHook from "@/src/routes/Admin/Hooks/updateinfluencerstatus-hook";
-import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign.type";
+import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign-type";
 import { Download, Loader2Icon } from "lucide-react";
 import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
 import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
@@ -107,14 +107,14 @@ export default function PendingCampaignByIdPage() {
             {/* Export Button */}
             {ApprovedInfluencersStore.getState().approvedInfluencers.length >
               0 && (
-              <CustomButton
-                className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
-                onClick={() => ExportToExcel()}
-              >
-                <Download className="h-4 w-4" />
-                <span>Export Approved Influencers</span>
-              </CustomButton>
-            )}
+                <CustomButton
+                  className="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-emerald-500/30"
+                  onClick={() => ExportToExcel()}
+                >
+                  <Download className="h-4 w-4" />
+                  <span>Export Approved Influencers</span>
+                </CustomButton>
+              )}
           </div>
           {/* Generate More Influencers Button */}
           <CustomButton
