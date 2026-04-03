@@ -10,7 +10,7 @@ type ChatMessageItem = {
   _id: string;
   sender: string;
   username?: string;
-  message: string;
+  message: unknown;
   timestamp: string;
 };
 
@@ -33,6 +33,7 @@ type ChatPanelProps = {
   /** Override default labels when using modeToggle (default: Admin right, Brand/Influencer left). */
   messageRoleLabels?: { right: string; left: string };
   onSelectMedia: (url: string, type: 'video' | 'image') => void;
+  onSeekToTime?: (time: number) => void;
 
   sendEnabled: boolean;
   onSend: (text: string) => Promise<void> | void;
@@ -53,6 +54,7 @@ export default function ChatPanel({
   isRightMessage,
   messageRoleLabels,
   onSelectMedia,
+  onSeekToTime,
   sendEnabled,
   onSend,
   afterComposer,
@@ -65,9 +67,9 @@ export default function ChatPanel({
     messageRoleLabels ??
     (modeToggle
       ? {
-          right: 'Admin',
-          left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
-        }
+        right: 'Admin',
+        left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
+      }
       : undefined);
 
   const handleSend = async () => {
@@ -133,6 +135,7 @@ export default function ChatPanel({
             isRightMessage={isRightMessage}
             roleLabels={resolvedRoleLabels}
             onSelectMedia={onSelectMedia}
+            onSeekToTime={onSeekToTime}
             bubbleMaxWidthClassName={bubbleMaxWidthClassName}
           />
         ) : (

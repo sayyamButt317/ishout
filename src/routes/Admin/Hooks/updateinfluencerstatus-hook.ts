@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { UpdateInfluencerStatusApi } from '../API/admin.routes';
-import { UpdateInfluencerStatusRequestProps } from '@/src/types/Admin-Type/Campaign.type';
+import { UpdateInfluencerStatusRequestProps } from '@/src/types/Admin-Type/Campaign-type';
 
 export default function UpdateInfluencerStatusHook() {
     const queryClient = useQueryClient();

@@ -2,7 +2,6 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
-
 import {
   MessageSquare,
   MoreHorizontal,
@@ -32,18 +31,17 @@ import {
   CardType,
   ChatMessage,
   NegotiationResponse,
+  SelectedCardType,
 } from '@/src/types/Admin-Type/Content-type';
+import { formatVideoDuration, isImageUrl, isVideoUrl } from '@/src/utils/video-duration';
+import { countStyles } from '@/src/utils/countStyle';
+import { toast } from 'sonner';
+import ContentFeedbackPanel from '@/src/app/component/content-feedback/feedback';
 
 const COLUMNS = [
   { id: 'approved', label: 'Approved', count: 28, color: 'emerald' },
 ];
 
-const countStyles: Record<string, string> = {
-  slate: 'bg-slate-100 border-slate-200 text-slate-600',
-  primary: 'bg-[var(--color-primaryButton)] text-white',
-  amber: 'bg-amber-100 border-amber-200 text-amber-700',
-  emerald: 'bg-emerald-100 border-emerald-200 text-emerald-700',
-};
 
 function ContentFeedbackPageContent() {
   const searchParams = useSearchParams();
@@ -51,18 +49,19 @@ function ContentFeedbackPageContent() {
   const router = useRouter();
 
   const [search, setSearch] = useState('');
-  interface SelectedCardType {
-    id: string;
-    campaign_id?: string;
-    title: string;
-    campaign: string;
-    thread_id?: string;
-    brand_thread_id?: string;
-    admin_approved?: string | null;
-  }
   const [selectedCard, setSelectedCard] = useState<SelectedCardType | null>(null);
   const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
+  const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
+    null,
+  );
+  const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
+    'video' | 'image' | null
+  >(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
+  const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
 
+  const [isSending, setIsSending] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
@@ -99,9 +98,7 @@ function ContentFeedbackPageContent() {
     brandThreadId,
     negotiationId,
   );
-
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
-
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
 
@@ -123,22 +120,6 @@ function ContentFeedbackPageContent() {
         admin_approved: item.admin_approved,
       };
     });
-
-  const isVideoUrl = (value: string) => /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
-  const isImageUrl = (value: string) =>
-    /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
-
-  const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
-    null,
-  );
-  const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
-    'video' | 'image' | null
-  >(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
-  const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
-
-  const [isSending, setIsSending] = useState(false);
 
   const isAdminAlreadyApproved =
     (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
@@ -192,12 +173,33 @@ function ContentFeedbackPageContent() {
     setSelectedVideoResolution('—');
   }, [chatData, selectedPreviewMediaUrl]);
 
-  const formatVideoDuration = (seconds: number | null) => {
-    if (!seconds || Number.isNaN(seconds)) return '--:--';
-    const total = Math.max(0, Math.floor(seconds));
-    const mins = Math.floor(total / 60);
-    const secs = total % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+
+  const SubmitFeedback = async (payload: {
+    text: string;
+    timestamp: number;
+    snapshotDataUrl: string | null;
+  }) => {
+    if (!selectedContentFeedback.trim() ||
+      !selectedPreviewMediaUrl ||
+      !negotiationId ||
+      !selectedCard?.campaign_id
+    ) {
+      return;
+    }
+    try {
+      await saveContentFeedbackMutation.mutateAsync({
+        negotiation_id: negotiationId,
+        campaign_id: selectedCard.campaign_id,
+        content_url: selectedPreviewMediaUrl,
+        snapshot: payload.snapshotDataUrl,
+        msg: payload.text,
+        review_side: 'admin_review',
+        timestamp: payload.timestamp,
+      });
+    }
+    catch (error) {
+      toast.error(`Failed to save content feedback: ${error}`);
+    }
   };
 
   return (
@@ -430,103 +432,14 @@ function ContentFeedbackPageContent() {
                   )}
                 </div>
               </div>
-              <div className="flex w-full lg:w-72 shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
-                <div className="relative">
-                  <textarea
-                    value={selectedContentFeedback}
-                    onChange={(e) => setSelectedContentFeedback(e.target.value)}
-                    placeholder="Type feedback on selected content..."
-                    className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
-                  />
-                  <button
-                    type="button"
-                    onClick={async () => {
-                      if (
-                        !selectedContentFeedback.trim() ||
-                        !selectedPreviewMediaUrl ||
-                        !negotiationId ||
-                        !selectedCard?.campaign_id
-                      ) {
-                        return;
-                      }
-
-                      try {
-                        const response = await saveContentFeedbackMutation.mutateAsync({
-                          negotiation_id: negotiationId,
-                          campaign_id: selectedCard.campaign_id,
-                          content_url: selectedPreviewMediaUrl,
-                          msg: selectedContentFeedback.trim(),
-                          review_side: 'admin_review',
-                        });
-                        const newFeedbackId = response?.feedback?.feedback_id as
-                          | string
-                          | undefined;
-                        if (newFeedbackId) {
-                          setFeedbackId(
-                            negotiationId,
-                            selectedPreviewMediaUrl,
-                            newFeedbackId,
-                          );
-                        }
-                        setSelectedContentFeedback('');
-                        if (newFeedbackId || activeFeedbackId) {
-                          await refetchAdminFeedback();
-                        }
-                      } catch (error) {
-                        console.error('Failed to save content feedback:', error);
-                      }
-                    }}
-                    disabled={saveContentFeedbackMutation.isPending}
-                    className="mt-2 w-full rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {saveContentFeedbackMutation.isPending
-                      ? 'Saving...'
-                      : 'Save Admin Feedback'}
-                  </button>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-white/50">
-                    Brand feedback
-                  </p>
-                  <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
-                    {adminFeedbackData?.feedback?.brand_review?.message?.length ? (
-                      adminFeedbackData.feedback.brand_review.message.map(
-                        (message: string, index: number) => (
-                          <p
-                            key={`brand-feedback-${index}`}
-                            className="text-sm text-white/70"
-                          >
-                            {message}
-                          </p>
-                        ),
-                      )
-                    ) : (
-                      <p className="text-sm text-white/70">No brand feedback yet.</p>
-                    )}
-                  </div>
-                </div>
-                <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-bold uppercase tracking-wider text-white/50">
-                    Admin feedback
-                  </p>
-                  <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
-                    {adminFeedbackData?.feedback?.admin_Rewiew?.message?.length ? (
-                      adminFeedbackData.feedback.admin_Rewiew.message.map(
-                        (message: string, index: number) => (
-                          <p
-                            key={`admin-feedback-${index}`}
-                            className="text-sm text-white/70"
-                          >
-                            {message}
-                          </p>
-                        ),
-                      )
-                    ) : (
-                      <p className="text-sm text-white/70">No admin feedback yet.</p>
-                    )}
-                  </div>
-                </div>
-              </div>
+              <ContentFeedbackPanel
+                activeFeedbackId={activeFeedbackId}
+                selectedContentFeedback={selectedContentFeedback}
+                setSelectedContentFeedback={setSelectedContentFeedback}
+                selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                negotiationId={negotiationId}
+                selectedCard={selectedCard}
+              />
 
               <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-3">
                 <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
@@ -550,14 +463,7 @@ function ContentFeedbackPageContent() {
                         : 'Image'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase text-white/40">
-                      Usage Rights
-                    </p>
-                    <span className="inline-block rounded border border-(--color-primaryButton)/20 bg-(--color-primaryButton)/10 px-2 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
-                      Standard Commercial
-                    </span>
-                  </div>
+
                 </div>
                 <div className="flex flex-col items-end gap-2 text-white/50">
                   <div className="flex items-center gap-2">
@@ -573,9 +479,6 @@ function ContentFeedbackPageContent() {
                           negotiationId &&
                           selectedPreviewMediaUrl
                         ) {
-                          // If negotiation is not approved yet, approve it first.
-                          // Video approval into brand chat should still work even when
-                          // negotiation was already marked as approved.
                           if (!isAdminAlreadyApproved) {
                             approveNegotiation({
                               thread_id: threadId,
@@ -603,9 +506,6 @@ function ContentFeedbackPageContent() {
                         : 'Video Approve'}
                     </button>
                   </div>
-                  <span className="text-[11px] font-bold leading-tight">
-                    unboxing_draft_v1.mp4 (42MB)
-                  </span>
                 </div>
               </div>
             </div>

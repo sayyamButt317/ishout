@@ -7,7 +7,7 @@ import { RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { Button } from '@/components/ui/button';
 import OnboardingCampaignHook from '@/src/routes/Admin/Hooks/onboardingCampaign-hook';
-import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
+import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import CountButton from '@/src/app/component/custom-component/countbutton';
 import { useRouter } from 'next/navigation';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
@@ -129,8 +129,7 @@ export default function InfluencersContentPage() {
                                 className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
                                 onClick={() => {
                                     router.push(
-                                        `/Admin/content/influncers_content?campaign_id=${
-                                            campaign.campaign_id ?? campaign._id
+                                        `/Admin/content/influncers_content?campaign_id=${campaign.campaign_id ?? campaign._id
                                         }`,
                                     );
                                 }}

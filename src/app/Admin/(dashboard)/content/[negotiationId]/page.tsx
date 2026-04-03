@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import {
     Check,
@@ -25,15 +25,33 @@ import {
     ChatMessage,
     NegotiationResponse,
 } from '@/src/types/Admin-Type/Content-type';
-import VideoPanel from '@/src/app/component/content-feedback/video-panel';
+import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/feedback-dialogue';
 import ContentFeedbackPanel from '@/src/app/component/content-feedback/feedback';
 import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
-
+import {
+    extractTimelineMarkersFromMessages,
+    serializeTimedFeedbackMessage,
+} from '@/src/utils/content-feedback-chat';
+import { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
 
 export default function ContentFeedbackDetailPage() {
     const router = useRouter();
     const params = useParams<{ negotiationId: string }>();
     const negotiationIdParam = params?.negotiationId ?? '';
+
+    const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
+    const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
+    const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
+        null,
+    );
+    const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
+        'video' | 'image' | null
+    >(null);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
+    const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
+
+    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     const searchParams = useSearchParams();
     const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
@@ -81,9 +99,6 @@ export default function ContentFeedbackDetailPage() {
         router.push('/Admin/content/influncers_content');
     };
 
-    const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
-    const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
-
     const threadId = selectedCard?.thread_id || '';
     const brandThreadId = selectedCard?.brand_thread_id || '';
     const negotiationId = selectedCard?.id || negotiationIdParam || '';
@@ -123,15 +138,6 @@ export default function ContentFeedbackDetailPage() {
         'admin-content-feedback-id-map',
     );
 
-    const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
-        null,
-    );
-    const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
-        'video' | 'image' | null
-    >(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
-    const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
 
     const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
     const isImageUrl = useCallback((value: string) => AnalyzeURL(value).isImageUrl, []);
@@ -139,6 +145,45 @@ export default function ContentFeedbackDetailPage() {
         (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
 
     const activeFeedbackId2 = getFeedbackId(negotiationId, selectedPreviewMediaUrl);
+
+    const timelineMarkers = useMemo((): TimelineMarkerData[] => {
+        const messages = chatData?.messages ?? [];
+        const fromSerialized = extractTimelineMarkersFromMessages(
+            messages,
+            selectedPreviewMediaUrl,
+        );
+        const fromObjects: TimelineMarkerData[] = [];
+        for (const msg of messages) {
+            if (
+                typeof msg.message === 'object' &&
+                msg.message !== null &&
+                'timestamp' in msg.message &&
+                typeof (msg.message as { timestamp: unknown }).timestamp === 'number'
+            ) {
+                const m = msg.message as {
+                    text?: string;
+                    timestamp: number;
+                    snapshot?: string;
+                };
+                fromObjects.push({
+                    id: msg._id,
+                    timestamp: m.timestamp,
+                    text: m.text ?? '',
+                    snapshot: m.snapshot,
+                });
+            }
+        }
+        const map = new Map<string, TimelineMarkerData>();
+        for (const m of fromObjects) {
+            map.set(m.id, m);
+        }
+        for (const m of fromSerialized) {
+            if (!map.has(m.id)) {
+                map.set(m.id, m);
+            }
+        }
+        return [...map.values()].sort((a, b) => a.timestamp - b.timestamp);
+    }, [chatData?.messages, selectedPreviewMediaUrl]);
 
     useEffect(() => {
         setChatMode('influencer');
@@ -208,6 +253,36 @@ export default function ContentFeedbackDetailPage() {
         await companyChatQuery.refetch();
     };
 
+    const handleSeekPreviewToTime = useCallback((time: number) => {
+        const v = videoRef.current;
+        if (!v || !Number.isFinite(time)) return;
+        v.currentTime = time;
+        setIsPlaying(true);
+    }, []);
+
+    const handleTimedFeedbackSubmit = async (payload: {
+        text: string;
+        timestamp: number;
+        snapshotDataUrl: string | null;
+    }) => {
+        if (!selectedPreviewMediaUrl) return;
+        const body = serializeTimedFeedbackMessage({
+            t: payload.timestamp,
+            m: payload.text,
+            s: payload.snapshotDataUrl ?? undefined,
+            u: selectedPreviewMediaUrl,
+        });
+        if (chatMode === 'influencer') {
+            if (!threadId) return;
+            await sendInfluencerMessage(body);
+            await influencerChatQuery.refetch();
+            return;
+        }
+        if (!brandThreadId || !negotiationId) return;
+        await sendCompanyMessage(body);
+        await companyChatQuery.refetch();
+    };
+
     if (!selectedCard) {
         return (
             <div className="font-sans p-4">
@@ -264,7 +339,7 @@ export default function ContentFeedbackDetailPage() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-2">
+                            {/* <div className="flex items-center gap-2">
                                 <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-(--color-primaryButton) focus:outline-none">
                                     <option>Version 1 (Active)</option>
                                     <option disabled>Version 2 (Draft)</option>
@@ -272,19 +347,29 @@ export default function ContentFeedbackDetailPage() {
                                 <button className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors">
                                     <Maximize2 className="size-5" />
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
 
-                        <VideoPanel
-                            selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-                            selectedPreviewMediaType={selectedPreviewMediaType}
-                            isPlaying={isPlaying}
-                            setIsPlaying={setIsPlaying}
-                            setSelectedVideoDuration={setSelectedVideoDuration}
-                            setSelectedVideoResolution={setSelectedVideoResolution}
-                        />
+                        <div className="relative px-2 pt-2">
+                            <VideoFeedbackWorkspace
+                                videoRef={videoRef}
+                                selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                                selectedPreviewMediaType={selectedPreviewMediaType}
+                                isPlaying={isPlaying}
+                                setIsPlaying={setIsPlaying}
+                                setSelectedVideoDuration={setSelectedVideoDuration}
+                                setSelectedVideoResolution={setSelectedVideoResolution}
+                                duration={selectedVideoDuration}
+                                markers={timelineMarkers}
+                                sendEnabled={sendEnabled}
+                                contentUrl={selectedPreviewMediaUrl}
+                                onSubmitTimedFeedback={handleTimedFeedbackSubmit}
+                                onMarkerSeek={handleSeekPreviewToTime}
+                            />
+                        </div>
                         {/* feedback section */}
                         <ContentFeedbackPanel
+                            videoRef={videoRef}
                             activeFeedbackId={activeFeedbackId2}
                             selectedContentFeedback={selectedContentFeedback}
                             setSelectedContentFeedback={setSelectedContentFeedback}
@@ -315,22 +400,14 @@ export default function ContentFeedbackDetailPage() {
                                             : 'Image'}
                                     </p>
                                 </div>
-                                <div>
-                                    <p className="text-[10px] font-bold uppercase text-white/40">
-                                        Usage Rights
-                                    </p>
-                                    <span className="inline-block rounded border border-(--color-primaryButton)/20 bg-(--color-primaryButton)/10 px-2 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
-                                        Standard Commercial
-                                    </span>
-                                </div>
                             </div>
 
                             <div className="flex flex-col items-end gap-2 text-white/50">
                                 <div className="flex items-center gap-2">
-                                    <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
+                                    {/* <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
                                         <RefreshCw className="size-4" />
                                         Request Revision
-                                    </button>
+                                    </button> */}
                                     <button
                                         onClick={() => {
                                             if (
@@ -364,9 +441,6 @@ export default function ContentFeedbackDetailPage() {
                                         Approve for Brand
                                     </button>
                                 </div>
-                                <span className="text-[11px] font-bold leading-tight">
-                                    unboxing_draft_v1.mp4 (42MB)
-                                </span>
                             </div>
                         </div>
                     </div>
@@ -385,6 +459,7 @@ export default function ContentFeedbackDetailPage() {
                             setSelectedPreviewMediaType(type);
                             setIsPlaying(false);
                         }}
+                        onSeekToTime={handleSeekPreviewToTime}
                         sendEnabled={sendEnabled}
                         onSend={handleSendMessage}
                         bubbleMaxWidthClassName="max-w-[90%]"

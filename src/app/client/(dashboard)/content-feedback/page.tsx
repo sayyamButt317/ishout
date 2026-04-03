@@ -527,14 +527,6 @@ function ContentFeedbackPageContent() {
                         : 'Image'}
                     </p>
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase text-white/40">
-                      Usage Rights
-                    </p>
-                    <span className="inline-block rounded border border-(--color-primaryButton)/20 bg-(--color-primaryButton)/10 px-2 py-0.5 text-[10px] font-bold text-(--color-primaryButton)">
-                      Standard Commercial
-                    </span>
-                  </div>
                 </div>
                 <div className="flex flex-col items-end gap-2 text-white/50">
                   <div className="flex items-center gap-2">
@@ -575,9 +567,6 @@ function ContentFeedbackPageContent() {
                         : 'Video Approve'}
                     </button>
                   </div>
-                  <span className="text-[11px] font-bold leading-tight">
-                    unboxing_draft_v1.mp4 (42MB)
-                  </span>
                 </div>
               </div>
             </div>

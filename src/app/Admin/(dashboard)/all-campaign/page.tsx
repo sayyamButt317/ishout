@@ -6,21 +6,17 @@ import AllCampaignHook from '@/src/routes/Admin/Hooks/Allcampaign-hook';
 import { RefreshCcw, Trash, LayoutList, Filter } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import React, { useState, useEffect } from 'react';
-import { AdminAllCampaignApiResponse } from '@/src/types/Admin-Type/Campaign.type';
+import { AdminAllCampaignApiResponse } from '@/src/types/Admin-Type/Campaign-type';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import CountButton from '@/src/app/component/custom-component/countbutton';
-import { Badge } from '@/components/ui/badge';
 import UpdateStatusHook from '@/src/routes/Admin/Hooks/updateStatus-hook';
 import { DropDownCustomStatus } from '@/src/app/component/custom-component/dropdownstatus';
-import { DropdownMenuAction } from '@/src/app/component/custom-component/action';
-import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
-import Image from 'next/image';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 
 const STATUS_OPTIONS = [

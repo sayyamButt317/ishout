@@ -3,7 +3,7 @@ import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import TableComponent from '@/src/app/component/CustomTable';
 import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.hook';
-import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign.type';
+import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { Download, LayoutGrid } from 'lucide-react';
