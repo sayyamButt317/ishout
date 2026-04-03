@@ -34,9 +34,7 @@ import {
   NegotiationResponse,
 } from '@/src/types/Admin-Type/Content-type';
 
-const COLUMNS = [
-  { id: 'approved', label: 'Approved', count: 28, color: 'emerald' },
-];
+const COLUMNS = [{ id: 'approved', label: 'Approved', count: 28, color: 'emerald' }];
 
 const countStyles: Record<string, string> = {
   slate: 'bg-slate-100 border-slate-200 text-slate-600',
@@ -241,10 +239,11 @@ function ContentFeedbackPageContent() {
                     {col.label}
                   </h3>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
-                      ? 'bg-(--color-primaryButton) text-white'
-                      : countStyles[col.color]
-                      }`}
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                      col.color === 'primary'
+                        ? 'bg-(--color-primaryButton) text-white'
+                        : countStyles[col.color]
+                    }`}
                   >
                     {col.count}
                   </span>
@@ -260,8 +259,7 @@ function ContentFeedbackPageContent() {
                     key={card.id}
                     onClick={() =>
                       (() => {
-                        const campaignId =
-                          card.campaign_id ?? campaignIdFromQuery;
+                        const campaignId = card.campaign_id ?? campaignIdFromQuery;
                         if (!campaignId) return;
                         router.push(
                           `/Admin/content/${encodeURIComponent(
@@ -270,12 +268,13 @@ function ContentFeedbackPageContent() {
                         );
                       })()
                     }
-                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${col.id === 'review'
-                      ? 'border-2 border-(--color-primaryButton)'
-                      : col.id === 'revision'
-                        ? 'border-l-4 border-l-amber-400 border-white/10'
-                        : 'border-white/10 hover:border-(--color-primaryButton)/30'
-                      }`}
+                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
+                      col.id === 'review'
+                        ? 'border-2 border-(--color-primaryButton)'
+                        : col.id === 'revision'
+                          ? 'border-l-4 border-l-amber-400 border-white/10'
+                          : 'border-white/10 hover:border-(--color-primaryButton)/30'
+                    }`}
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
                       <Image
@@ -584,6 +583,7 @@ function ContentFeedbackPageContent() {
                           }
                           approveVideoMutation.mutate({
                             brand_thread_id: brandThreadId,
+                            campaign_id: selectedCard.campaign_id ?? '',
                             negotiation_id: negotiationId,
                             video_url: selectedPreviewMediaUrl,
                             video_approve_admin: 'approved',
@@ -624,20 +624,22 @@ function ContentFeedbackPageContent() {
                   <button
                     type="button"
                     onClick={() => setChatMode('influencer')}
-                    className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${chatMode === 'influencer'
-                      ? 'bg-white/15 text-white shadow-sm'
-                      : 'text-white/45 hover:text-white/70'
-                      }`}
+                    className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
+                      chatMode === 'influencer'
+                        ? 'bg-white/15 text-white shadow-sm'
+                        : 'text-white/45 hover:text-white/70'
+                    }`}
                   >
                     Influencer Chat
                   </button>
                   <button
                     type="button"
                     onClick={() => setChatMode('brand')}
-                    className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${chatMode === 'brand'
-                      ? 'bg-white/15 text-white shadow-sm'
-                      : 'text-white/45 hover:text-white/70'
-                      }`}
+                    className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
+                      chatMode === 'brand'
+                        ? 'bg-white/15 text-white shadow-sm'
+                        : 'text-white/45 hover:text-white/70'
+                    }`}
                   >
                     Brand Chat
                   </button>

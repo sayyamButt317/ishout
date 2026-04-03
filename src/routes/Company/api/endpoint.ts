@@ -25,6 +25,7 @@ UPLOAD_CAMPAIGN_LOGO: (brief_id: string) =>
 REVIEW_PENDING_INFLUENCERS: (campaign_id: string) =>
   `/company/campaigns/${campaign_id}/campaign-influencers`,
   COMPNAY_APPROVED_CAMPAIGN: (user_id: string) => `/company/${user_id}/approved-campaign`,
+  APPROVED_CONTENT: '/company/approved-content',
   FORGOT_PASSWORD: `/auth/forgot-password`,
   VERIFY_OTP: `/auth/verify-otp`,
   CHANGE_PASSWORD: (user_id: string) => `/company/change-password/${user_id}`,

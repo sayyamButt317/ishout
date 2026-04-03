@@ -69,7 +69,7 @@ export default function ClientInfluencersContentPage() {
                 className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
                 onClick={() => {
                   router.push(
-                    `/client/content-feedback?campaign_id=${campaign.campaign_id}`,
+                    `/client/approved-contents?campaign_id=${campaign.campaign_id}`,
                   );
                 }}
               >
