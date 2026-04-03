@@ -303,27 +303,13 @@ export default function ContentFeedbackDetailPage() {
     return (
         <div className="font-sans">
             <div className="w-full">
-                <PageHeader
-                    title="Content Review & Feedback Pipeline"
-                    description="Review content from influencers and provide feedback"
-                    icon={<MessageSquare className="size-5" />}
-                    actions={
-                        <button
-                            onClick={backToList}
-                            className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white hover:bg-white/10"
-                        >
-                            <ChevronLeft className="size-4" />
-                            Back
-                        </button>
-                    }
-                />
                 <div className=" flex h-full max-h-[min(920px,96vh)] w-full min-h-0 overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl">
                     <div className="flex min-h-0 min-w-0 flex-1 flex-col border-r border-white/10">
                         <div className="flex items-center justify-between border-b border-white/10 p-4">
                             <div className="flex items-center gap-3">
-                                <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
+                                {/* <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
                                     <ChevronLeft className="size-5" />
-                                </div>
+                                </div> */}
                                 <div>
                                     <h3 className="text-sm font-bold text-white">
                                         {selectedCard.title}
