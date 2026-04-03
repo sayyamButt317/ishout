@@ -2,20 +2,8 @@
 
 import Image from 'next/image';
 import { Play } from 'lucide-react';
-import { forwardRef, type ReactNode } from 'react';
-
-type VideoPanelProps = {
-  selectedPreviewMediaUrl: string | null;
-  selectedPreviewMediaType: 'video' | 'image' | null;
-  isPlaying: boolean;
-  setIsPlaying: (value: boolean) => void;
-  setSelectedVideoDuration: (value: number | null) => void;
-  setSelectedVideoResolution: (value: string) => void;
-  timelineSlot?: ReactNode;
-  pinCommentMode?: boolean;
-  onPinComment?: () => void;
-  onTimeUpdate?: (currentTime: number) => void;
-};
+import { forwardRef } from 'react';
+import { VideoPanelProps } from '@/src/types/Admin-Type/Video-type';
 
 const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoPanel(
   {

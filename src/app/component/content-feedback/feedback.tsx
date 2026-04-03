@@ -1,9 +1,10 @@
-import useAdminContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-admin-read-hook';
+'use client';
 import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
 import { ContentFeedbackPanelProps } from '@/src/types/Admin-Type/Feedback-Type';
 import { captureVideoFrameDataUrl } from '@/src/utils/content-feedback-chat';
-import React from 'react';
 import { toast } from 'sonner';
+import AdminFeedback from '@/src/app/component/content-feedback/AdminFeedback';
+import BrandFeedback from '@/src/app/component/content-feedback/BrandFeedback';
 
 export default function ContentFeedbackPanel({
     activeFeedbackId,
@@ -17,10 +18,6 @@ export default function ContentFeedbackPanel({
 }: ContentFeedbackPanelProps) {
 
     const saveContentFeedbackMutation = useSaveContentFeedbackHook();
-
-    const { data: adminFeedbackData } =
-        useAdminContentFeedbackReadHook(activeFeedbackId, !!activeFeedbackId);
-
     const SubmitFeedback = async (payload: {
         text: string;
         timestamp: number;
@@ -61,7 +58,7 @@ export default function ContentFeedbackPanel({
     };
 
     return (
-        <div className="flex w-full lg:w-72 shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+        <div className="flex w-full shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
             <div className="relative">
                 <textarea
                     value={selectedContentFeedback}
@@ -89,48 +86,8 @@ export default function ContentFeedbackPanel({
                         : 'Save Admin Feedback'}
                 </button>
             </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-white/50">
-                    Brand feedback
-                </p>
-                <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
-                    {adminFeedbackData?.feedback?.brand_review?.message?.length ? (
-                        adminFeedbackData.feedback.brand_review.message.map(
-                            (message: string, index: number) => (
-                                <p
-                                    key={`brand-feedback-${index}`}
-                                    className="text-sm text-white/70"
-                                >
-                                    {message}
-                                </p>
-                            ),
-                        )
-                    ) : (
-                        <p className="text-sm text-white/70">No brand feedback yet.</p>
-                    )}
-                </div>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-white/50">
-                    Admin feedback
-                </p>
-                <div className="mt-2 max-h-40 space-y-2 overflow-y-auto">
-                    {adminFeedbackData?.feedback?.admin_Rewiew?.message?.length ? (
-                        adminFeedbackData.feedback.admin_Rewiew.message.map(
-                            (message: string, index: number) => (
-                                <p
-                                    key={`admin-feedback-${index}`}
-                                    className="text-sm text-white/70"
-                                >
-                                    {message}
-                                </p>
-                            ),
-                        )
-                    ) : (
-                        <p className="text-sm text-white/70">No admin feedback yet.</p>
-                    )}
-                </div>
-            </div>
+            <BrandFeedback activeFeedbackId={activeFeedbackId} />
+            <AdminFeedback activeFeedbackId={activeFeedbackId} />
         </div>
 
     )

@@ -10,11 +10,11 @@ export default function NotFound() {
     router.back();
   };
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
         {/* Icon */}
         <div className="mb-6">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primaryButton via-[#ffbfbf] to-[#1e4b8e] rounded-full shadow-lg">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-primaryButton via-[#ffbfbf] to-[#1e4b8e] rounded-full shadow-lg">
             <AlertTriangle className="w-10 h-10 text-white" />
           </div>
         </div>
