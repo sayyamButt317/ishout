@@ -12,14 +12,12 @@ export const FeedbackMessage = ({ message, role, timestamp }: Props) => {
     const isAdmin = role === 'admin';
 
     return (
-        <div className="flex items-start gap-3 rounded-xl bg-[#f4f6f8] p-4">
-
+        <div className="flex items-start gap-3 rounded-xl bg-blackp-4">
             {/* LEFT COLOR BAR */}
             <div
                 className={`w-1 rounded-full ${isAdmin ? 'bg-green-500' : 'bg-red-500'
                     }`}
             />
-
             {/* CONTENT */}
             <div className="flex-1">
 
@@ -36,13 +34,13 @@ export const FeedbackMessage = ({ message, role, timestamp }: Props) => {
                     )}
 
                     {/* TITLE */}
-                    <h3 className="text-sm font-semibold text-gray-800">
+                    <h3 className="text-sm font-bold text-slate">
                         {isAdmin ? 'Admin Note' : 'Action Required'}
                     </h3>
                 </div>
 
                 {/* DESCRIPTION */}
-                <p className="mt-1 text-sm text-gray-600 leading-relaxed">
+                <p className="mt-1 text-sm text-white leading-relaxed">
                     {message}
                 </p>
 
@@ -50,8 +48,8 @@ export const FeedbackMessage = ({ message, role, timestamp }: Props) => {
                 <div className="mt-2">
                     <span
                         className={`inline-block rounded-md px-2 py-1 text-[10px] font-semibold ${isAdmin
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-red-100 text-red-600'
+                            ? 'bg-primaryButton text-white'
+                            : 'bg-red-100 text-red-600'
                             }`}
                     >
                         {isAdmin ? 'ADMIN NOTE' : 'ACTION REQUIRED'}

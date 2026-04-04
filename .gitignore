@@ -33,4 +33,4 @@ node_modules
 
 testsprite_tests/
 guided-questions/
-.env
+config.bat

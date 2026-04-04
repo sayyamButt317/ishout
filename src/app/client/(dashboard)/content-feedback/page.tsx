@@ -365,7 +365,7 @@ function ContentFeedbackPageContent() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-[var(--color-primaryButton)] focus:outline-none">
+                  <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-primaryButton focus:outline-none">
                     <option>Version 1 (Active)</option>
                     <option disabled>Version 2 (Draft)</option>
                   </select>
@@ -428,7 +428,7 @@ function ContentFeedbackPageContent() {
                       value={selectedContentFeedback}
                       onChange={(e) => setSelectedContentFeedback(e.target.value)}
                       placeholder="Type feedback on selected content..."
-                      className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                      className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
                     />
                     <button
                       type="button"
@@ -586,7 +586,7 @@ function ContentFeedbackPageContent() {
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
                     placeholder="Type your feedback..."
-                    className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+                    className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
                   />
                   <button
                     onClick={async () => {
@@ -624,7 +624,7 @@ function ContentFeedbackPageContent() {
                       }
                     }}
                     disabled={isApproving || isBrandAlreadyApproved}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center gap-2 rounded-xl bg-primaryButton px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Check className="size-4" />
                     {isBrandAlreadyApproved
