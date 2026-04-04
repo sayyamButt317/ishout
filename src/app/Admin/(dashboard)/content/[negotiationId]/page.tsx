@@ -348,7 +348,7 @@ export default function ContentFeedbackDetailPage() {
                                     onMarkerSeek={handleSeekPreviewToTime}
                                 />
                             </div>
-                            <aside className="flex min-h-0 w-full shrink-0 flex-col border-t border-white/10 pt-4 lg:w-72 lg:border-l lg:border-t-0 lg:pl-4 lg:pt-0 xl:w-80">
+                            <aside className="flex w-1/2 shrink-0 flex-col border-t border-white/10 pt-4 ">
                                 <ContentFeedbackPanel
                                     videoRef={videoRef}
                                     activeFeedbackId={activeFeedbackId2}

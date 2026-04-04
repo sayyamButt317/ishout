@@ -58,7 +58,7 @@ export default function ContentFeedbackPanel({
     };
 
     return (
-        <div className="flex h-full min-h-0 w-full shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+        <div className="flex w-full shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
             <div className="relative">
                 <textarea
                     value={selectedContentFeedback}
@@ -79,7 +79,7 @@ export default function ContentFeedbackPanel({
                         });
                     }}
                     disabled={saveContentFeedbackMutation.isPending}
-                    className="mt-2 w-full rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="mt-2 w-full rounded-xl bg-primaryButton px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {saveContentFeedbackMutation.isPending
                         ? 'Saving...'

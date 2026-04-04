@@ -86,7 +86,7 @@ export default function ChatPanel({
 
   return (
     <div
-      className={`flex w-1/2 shrink-0 flex-col bg-white/2 ${className ?? ''}`}
+      className={`flex shrink-0 flex-col bg-white/2 ${className ?? ''}`}
     >
       {modeToggle && (
         <div className="border-b border-white/10 px-4 pt-3 pb-2">
@@ -95,7 +95,7 @@ export default function ChatPanel({
               type="button"
               onClick={() => modeToggle.onChange('influencer')}
               className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'influencer'
-                ? 'bg-white/15 text-white shadow-sm'
+                ? 'bg-primaryButton text-white shadow-sm'
                 : 'text-white/45 hover:text-white/70'
                 }`}
             >
@@ -105,7 +105,7 @@ export default function ChatPanel({
               type="button"
               onClick={() => modeToggle.onChange('brand')}
               className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'brand'
-                ? 'bg-white/15 text-white shadow-sm'
+                ? 'bg-primaryButton text-white shadow-sm'
                 : 'text-white/45 hover:text-white/70'
                 }`}
             >
