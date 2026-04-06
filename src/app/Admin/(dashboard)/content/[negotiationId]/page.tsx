@@ -15,311 +15,300 @@ import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-
 import ChatPanel from '@/src/app/component/content-feedback/chat-panel';
 
 import {
-    CardType,
-    ChatMessage,
-    NegotiationResponse,
+  CardType,
+  ChatMessage,
+  NegotiationResponse,
 } from '@/src/types/Admin-Type/Content-type';
 import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/feedback-dialogue';
 import ContentFeedbackPanel from '@/src/app/component/content-feedback/feedback';
 import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
 import {
-    extractTimelineMarkersFromMessages,
-    serializeTimedFeedbackMessage,
+  extractTimelineMarkersFromMessages,
+  serializeTimedFeedbackMessage,
 } from '@/src/utils/content-feedback-chat';
 import { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
 
 export default function ContentFeedbackDetailPage() {
-    const router = useRouter();
-    const params = useParams<{ negotiationId: string }>();
-    const negotiationIdParam = params?.negotiationId ?? '';
+  const router = useRouter();
+  const params = useParams<{ negotiationId: string }>();
+  const negotiationIdParam = params?.negotiationId ?? '';
 
-    const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
-    const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
-    const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
-        null,
+  const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
+  const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
+  const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
+    null,
+  );
+  const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
+    'video' | 'image' | null
+  >(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
+  const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
+
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const searchParams = useSearchParams();
+  const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
+
+  const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
+    data?: NegotiationResponse;
+  };
+
+  const apiCards: CardType[] = useMemo(() => {
+    const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
+
+    return negotiationItems
+      .filter((item) => !item.negotiation_status || item.negotiation_status === 'agreed')
+      .map((item) => {
+        return {
+          id: item._id,
+          campaign_id: item.campaign_id,
+          title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
+          campaign: item.campaign_brief?.title ?? 'Campaign',
+          rights: 'Full Rights',
+          status: 'Ready to Post',
+          thumb: item.campaign_logo_url ?? '/assets/logo.svg',
+          thread_id: item.thread_id,
+          brand_thread_id: item.brand_thread_id,
+          admin_approved: item.admin_approved,
+        };
+      });
+  }, [data]);
+
+  const selectedCard = useMemo(() => {
+    if (!negotiationIdParam) return null;
+    return apiCards.find((c) => c.id === negotiationIdParam) ?? null;
+  }, [apiCards, negotiationIdParam]);
+
+  const backToList = () => {
+    const campaignId = campaignIdFromQuery || selectedCard?.campaign_id || '';
+    if (campaignId) {
+      router.push(`/Admin/content?campaign_id=${encodeURIComponent(campaignId)}`);
+      return;
+    }
+    router.push('/Admin/content/influncers_content');
+  };
+
+  const threadId = selectedCard?.thread_id || '';
+  const brandThreadId = selectedCard?.brand_thread_id || '';
+  const negotiationId = selectedCard?.id || negotiationIdParam || '';
+
+  const influencerChatQuery = useAdminInfluencerMessagesHook(
+    threadId,
+    1,
+    20,
+    chatMode === 'influencer',
+  );
+  const companyChatQuery = useAdminCompanyMessagesHook(
+    brandThreadId,
+    negotiationId,
+    1,
+    20,
+    chatMode === 'brand',
+  );
+
+  const chatData =
+    chatMode === 'influencer' ? influencerChatQuery.data : companyChatQuery.data;
+  const chatLoading =
+    chatMode === 'influencer'
+      ? influencerChatQuery.isLoading
+      : companyChatQuery.isLoading;
+
+  const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(threadId);
+  const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(
+    brandThreadId,
+    negotiationId,
+  );
+
+  const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
+  const { mutate: approveNegotiation, isPending: isApproving } =
+    useAdminNegotiationApprovalStatus();
+
+  const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
+    'admin-content-feedback-id-map',
+  );
+
+  const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
+  const isImageUrl = useCallback((value: string) => AnalyzeURL(value).isImageUrl, []);
+  const isAdminAlreadyApproved =
+    (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
+
+  const activeFeedbackId2 = getFeedbackId(negotiationId, selectedPreviewMediaUrl);
+
+  const timelineMarkers = useMemo((): TimelineMarkerData[] => {
+    const messages = chatData?.messages ?? [];
+    const fromSerialized = extractTimelineMarkersFromMessages(
+      messages,
+      selectedPreviewMediaUrl,
     );
-    const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
-        'video' | 'image' | null
-    >(null);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
-    const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
-
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-
-    const searchParams = useSearchParams();
-    const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
-
-    const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
-        data?: NegotiationResponse;
-    };
-
-    const apiCards: CardType[] = useMemo(() => {
-        const negotiationItems =
-            data?.negotiations ?? data?.negotiation_controls ?? [];
-
-        return negotiationItems
-            .filter((item) => !item.negotiation_status || item.negotiation_status === 'agreed')
-            .map((item) => {
-                return {
-                    id: item._id,
-                    campaign_id: item.campaign_id,
-                    title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
-                    campaign: item.campaign_brief?.title ?? 'Campaign',
-                    rights: 'Full Rights',
-                    status: 'Ready to Post',
-                    thumb: item.campaign_logo_url ?? '/assets/logo.svg',
-                    thread_id: item.thread_id,
-                    brand_thread_id: item.brand_thread_id,
-                    admin_approved: item.admin_approved,
-                };
-            });
-    }, [data]);
-
-    const selectedCard = useMemo(() => {
-        if (!negotiationIdParam) return null;
-        return apiCards.find((c) => c.id === negotiationIdParam) ?? null;
-    }, [apiCards, negotiationIdParam]);
-
-    const backToList = () => {
-        const campaignId =
-            campaignIdFromQuery || selectedCard?.campaign_id || '';
-        if (campaignId) {
-            router.push(
-                `/Admin/content?campaign_id=${encodeURIComponent(campaignId)}`,
-            );
-            return;
-        }
-        router.push('/Admin/content/influncers_content');
-    };
-
-    const threadId = selectedCard?.thread_id || '';
-    const brandThreadId = selectedCard?.brand_thread_id || '';
-    const negotiationId = selectedCard?.id || negotiationIdParam || '';
-
-    const influencerChatQuery = useAdminInfluencerMessagesHook(
-        threadId,
-        1,
-        20,
-        chatMode === 'influencer',
-    );
-    const companyChatQuery = useAdminCompanyMessagesHook(
-        brandThreadId,
-        negotiationId,
-        1,
-        20,
-        chatMode === 'brand',
-    );
-
-    const chatData =
-        chatMode === 'influencer' ? influencerChatQuery.data : companyChatQuery.data;
-    const chatLoading =
-        chatMode === 'influencer'
-            ? influencerChatQuery.isLoading
-            : companyChatQuery.isLoading;
-
-    const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(threadId);
-    const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(
-        brandThreadId,
-        negotiationId,
-    );
-
-    const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
-    const { mutate: approveNegotiation, isPending: isApproving } =
-        useAdminNegotiationApprovalStatus();
-
-    const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
-        'admin-content-feedback-id-map',
-    );
-
-
-    const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
-    const isImageUrl = useCallback((value: string) => AnalyzeURL(value).isImageUrl, []);
-    const isAdminAlreadyApproved =
-        (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
-
-    const activeFeedbackId2 = getFeedbackId(negotiationId, selectedPreviewMediaUrl);
-
-    const timelineMarkers = useMemo((): TimelineMarkerData[] => {
-        const messages = chatData?.messages ?? [];
-        const fromSerialized = extractTimelineMarkersFromMessages(
-            messages,
-            selectedPreviewMediaUrl,
-        );
-        const fromObjects: TimelineMarkerData[] = [];
-        for (const msg of messages) {
-            if (
-                typeof msg.message === 'object' &&
-                msg.message !== null &&
-                'timestamp' in msg.message &&
-                typeof (msg.message as { timestamp: unknown }).timestamp === 'number'
-            ) {
-                const m = msg.message as {
-                    text?: string;
-                    timestamp: number;
-                    snapshot?: string;
-                };
-                fromObjects.push({
-                    id: msg._id,
-                    timestamp: m.timestamp,
-                    text: m.text ?? '',
-                    snapshot: m.snapshot,
-                });
-            }
-        }
-        const map = new Map<string, TimelineMarkerData>();
-        for (const m of fromObjects) {
-            map.set(m.id, m);
-        }
-        for (const m of fromSerialized) {
-            if (!map.has(m.id)) {
-                map.set(m.id, m);
-            }
-        }
-        return [...map.values()].sort((a, b) => a.timestamp - b.timestamp);
-    }, [chatData?.messages, selectedPreviewMediaUrl]);
-
-    useEffect(() => {
-        setChatMode('influencer');
-        setSelectedContentFeedback('');
-        setSelectedPreviewMediaUrl(null);
-        setSelectedPreviewMediaType(null);
-        setIsPlaying(false);
-        setSelectedVideoDuration(null);
-        setSelectedVideoResolution('—');
-    }, [selectedCard?.id]);
-
-    useEffect(() => {
-        const mediaMessages =
-            chatData?.messages?.filter(
-                (msg: ChatMessage) =>
-                    typeof msg.message === 'string' &&
-                    (isVideoUrl(msg.message) || isImageUrl(msg.message)),
-            ) ?? [];
-
-        if (mediaMessages.length === 0) {
-            setSelectedPreviewMediaUrl(null);
-            setSelectedPreviewMediaType(null);
-            setIsPlaying(false);
-            setSelectedVideoDuration(null);
-            setSelectedVideoResolution('—');
-            return;
-        }
-
-        if (
-            selectedPreviewMediaUrl &&
-            mediaMessages.some((msg: ChatMessage) => msg.message === selectedPreviewMediaUrl)
-        ) {
-            return;
-        }
-
-        const latestMedia = mediaMessages[mediaMessages.length - 1];
-        const analyzed = AnalyzeURL(latestMedia.message ?? '');
-        setSelectedPreviewMediaUrl(latestMedia.message);
-        setSelectedPreviewMediaType(
-            analyzed.type === 'video' || analyzed.type === 'image'
-                ? analyzed.type
-                : null,
-        );
-        setSelectedVideoResolution(analyzed.resolution);
-        setIsPlaying(false);
-        setSelectedVideoDuration(null);
-    }, [chatData, selectedPreviewMediaUrl, isImageUrl, isVideoUrl]);
-
-    const sendEnabled =
-        chatMode === 'influencer'
-            ? !!threadId
-            : !!brandThreadId && !!negotiationId;
-
-    const handleSendMessage = async (text: string) => {
-        const trimmed = text.trim();
-        if (!trimmed) return;
-
-        if (chatMode === 'influencer') {
-            if (!threadId) return;
-            await sendInfluencerMessage(trimmed);
-            await influencerChatQuery.refetch();
-            return;
-        }
-
-        if (!brandThreadId || !negotiationId) return;
-        await sendCompanyMessage(trimmed);
-        await companyChatQuery.refetch();
-    };
-
-    const handleSeekPreviewToTime = useCallback((time: number) => {
-        const v = videoRef.current;
-        if (!v || !Number.isFinite(time)) return;
-        v.currentTime = time;
-        setIsPlaying(true);
-    }, []);
-
-    const handleTimedFeedbackSubmit = async (payload: {
-        text: string;
-        timestamp: number;
-        snapshotDataUrl: string | null;
-    }) => {
-        if (!selectedPreviewMediaUrl) return;
-        const body = serializeTimedFeedbackMessage({
-            t: payload.timestamp,
-            m: payload.text,
-            s: payload.snapshotDataUrl ?? undefined,
-            u: selectedPreviewMediaUrl,
+    const fromObjects: TimelineMarkerData[] = [];
+    for (const msg of messages) {
+      if (
+        typeof msg.message === 'object' &&
+        msg.message !== null &&
+        'timestamp' in msg.message &&
+        typeof (msg.message as { timestamp: unknown }).timestamp === 'number'
+      ) {
+        const m = msg.message as {
+          text?: string;
+          timestamp: number;
+          snapshot?: string;
+        };
+        fromObjects.push({
+          id: msg._id,
+          timestamp: m.timestamp,
+          text: m.text ?? '',
+          snapshot: m.snapshot,
         });
-        if (chatMode === 'influencer') {
-            if (!threadId) return;
-            await sendInfluencerMessage(body);
-            await influencerChatQuery.refetch();
-            return;
-        }
-        if (!brandThreadId || !negotiationId) return;
-        await sendCompanyMessage(body);
-        await companyChatQuery.refetch();
-    };
+      }
+    }
+    const map = new Map<string, TimelineMarkerData>();
+    for (const m of fromObjects) {
+      map.set(m.id, m);
+    }
+    for (const m of fromSerialized) {
+      if (!map.has(m.id)) {
+        map.set(m.id, m);
+      }
+    }
+    return [...map.values()].sort((a, b) => a.timestamp - b.timestamp);
+  }, [chatData?.messages, selectedPreviewMediaUrl]);
 
-    if (!selectedCard) {
-        return (
-            <div className="font-sans p-4">
-                <PageHeader
-                    title="Content Review & Feedback Pipeline"
-                    description="Select a negotiation to review"
-                    icon={<MessageSquare className="size-5" />}
-                    actions={
-                        <button
-                            onClick={backToList}
-                            className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white hover:bg-white/10"
-                        >
-                            Back
-                        </button>
-                    }
-                />
-                <div className="mt-4 text-white/60">
-                    Negotiation not found (or missing `campaign_id`).
-                </div>
-            </div>
-        );
+  useEffect(() => {
+    setChatMode('influencer');
+    setSelectedContentFeedback('');
+    setSelectedPreviewMediaUrl(null);
+    setSelectedPreviewMediaType(null);
+    setIsPlaying(false);
+    setSelectedVideoDuration(null);
+    setSelectedVideoResolution('—');
+  }, [selectedCard?.id]);
+
+  useEffect(() => {
+    const mediaMessages =
+      chatData?.messages?.filter(
+        (msg: ChatMessage) =>
+          typeof msg.message === 'string' &&
+          (isVideoUrl(msg.message) || isImageUrl(msg.message)),
+      ) ?? [];
+
+    if (mediaMessages.length === 0) {
+      setSelectedPreviewMediaUrl(null);
+      setSelectedPreviewMediaType(null);
+      setIsPlaying(false);
+      setSelectedVideoDuration(null);
+      setSelectedVideoResolution('—');
+      return;
     }
 
+    if (
+      selectedPreviewMediaUrl &&
+      mediaMessages.some((msg: ChatMessage) => msg.message === selectedPreviewMediaUrl)
+    ) {
+      return;
+    }
+
+    const latestMedia = mediaMessages[mediaMessages.length - 1];
+    const analyzed = AnalyzeURL(latestMedia.message ?? '');
+    setSelectedPreviewMediaUrl(latestMedia.message);
+    setSelectedPreviewMediaType(
+      analyzed.type === 'video' || analyzed.type === 'image' ? analyzed.type : null,
+    );
+    setSelectedVideoResolution(analyzed.resolution);
+    setIsPlaying(false);
+    setSelectedVideoDuration(null);
+  }, [chatData, selectedPreviewMediaUrl, isImageUrl, isVideoUrl]);
+
+  const sendEnabled =
+    chatMode === 'influencer' ? !!threadId : !!brandThreadId && !!negotiationId;
+
+  const handleSendMessage = async (text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+
+    if (chatMode === 'influencer') {
+      if (!threadId) return;
+      await sendInfluencerMessage(trimmed);
+      await influencerChatQuery.refetch();
+      return;
+    }
+
+    if (!brandThreadId || !negotiationId) return;
+    await sendCompanyMessage(trimmed);
+    await companyChatQuery.refetch();
+  };
+
+  const handleSeekPreviewToTime = useCallback((time: number) => {
+    const v = videoRef.current;
+    if (!v || !Number.isFinite(time)) return;
+    v.currentTime = time;
+    setIsPlaying(true);
+  }, []);
+
+  const handleTimedFeedbackSubmit = async (payload: {
+    text: string;
+    timestamp: number;
+    snapshotDataUrl: string | null;
+  }) => {
+    if (!selectedPreviewMediaUrl) return;
+    const body = serializeTimedFeedbackMessage({
+      t: payload.timestamp,
+      m: payload.text,
+      s: payload.snapshotDataUrl ?? undefined,
+      u: selectedPreviewMediaUrl,
+    });
+    if (chatMode === 'influencer') {
+      if (!threadId) return;
+      await sendInfluencerMessage(body);
+      await influencerChatQuery.refetch();
+      return;
+    }
+    if (!brandThreadId || !negotiationId) return;
+    await sendCompanyMessage(body);
+    await companyChatQuery.refetch();
+  };
+
+  if (!selectedCard) {
     return (
-        <div className="font-sans">
-            <div className="w-full">
-                <div className=" flex h-full max-h-[min(920px,96vh)] w-full min-h-0 overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl">
-                    <div className="flex min-h-0 min-w-0 flex-1 flex-col border-r border-white/10">
-                        <div className="flex items-center justify-between border-b border-white/10 p-4">
-                            <div className="flex items-center gap-3">
-                                {/* <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
+      <div className="font-sans p-4">
+        <PageHeader
+          title="Content Review & Feedback Pipeline"
+          description="Select a negotiation to review"
+          icon={<MessageSquare className="size-5" />}
+          actions={
+            <button
+              onClick={backToList}
+              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white hover:bg-white/10"
+            >
+              Back
+            </button>
+          }
+        />
+        <div className="mt-4 text-white/60">
+          Negotiation not found (or missing `campaign_id`).
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="font-sans">
+      <div className="w-full">
+        <div className="flex h-full max-h-[min(920px,96vh)] w-full min-h-0 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
+          <div className="flex w-full shrink-0 flex-col border-b border-white/10 lg:min-h-0 lg:min-w-0 lg:flex-1 lg:border-r lg:border-b-0">
+            <div className="flex items-center justify-between border-b border-white/10 p-4">
+              <div className="flex items-center gap-3">
+                {/* <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
                                     <ChevronLeft className="size-5" />
                                 </div> */}
-                                <div>
-                                    <h3 className="text-sm font-bold text-white">
-                                        {selectedCard.title}
-                                    </h3>
-                                    <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
-                                        {selectedCard.campaign} Campaign
-                                    </p>
-                                </div>
-                            </div>
-                            {/* <div className="flex items-center gap-2">
+                <div>
+                  <h3 className="text-sm font-bold text-white">{selectedCard.title}</h3>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
+                    {selectedCard.campaign} Campaign
+                  </p>
+                </div>
+              </div>
+              {/* <div className="flex items-center gap-2">
                                 <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-(--color-primaryButton) focus:outline-none">
                                     <option>Version 1 (Active)</option>
                                     <option disabled>Version 2 (Draft)</option>
@@ -391,89 +380,89 @@ export default function ContentFeedbackDetailPage() {
                                         <RefreshCw className="size-4" />
                                         Request Revision
                                     </button> */}
-                                    <button
-                                        onClick={() => {
-                                            if (
-                                                threadId &&
-                                                brandThreadId &&
-                                                negotiationId &&
-                                                selectedPreviewMediaUrl &&
-                                                selectedCard.campaign_id
-                                            ) {
-                                                if (!isAdminAlreadyApproved) {
-                                                    approveNegotiation({
-                                                        thread_id: threadId,
-                                                        payload: { admin_approved: 'Approved' },
-                                                    });
-                                                }
-                                                approveVideoMutation.mutate({
-                                                    brand_thread_id: brandThreadId,
-                                                    campaign_id: selectedCard.campaign_id,
-                                                    negotiation_id: negotiationId,
-                                                    video_url: selectedPreviewMediaUrl,
-                                                    video_approve_admin: 'approved',
-                                                });
-                                            }
-                                        }}
-                                        disabled={
-                                            isApproving ||
-                                            approveVideoMutation.isPending ||
-                                            !selectedPreviewMediaUrl
-                                        }
-                                        className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        <Check className="size-4" />
-                                        Approve for Brand
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <ChatPanel
-                        title="Feedback"
-                        modeToggle={{ value: chatMode, onChange: setChatMode }}
-                        messages={chatData?.messages}
-                        isLoading={chatLoading}
-                        messagesAvailable={!(chatMode === 'brand' && !brandThreadId)}
-                        messagesUnavailableText="No brand thread for this negotiation."
-                        isRightMessage={(msg) => msg.sender === 'ADMIN'}
-                        onSelectMedia={(url, type) => {
-                            setSelectedPreviewMediaUrl(url);
-                            setSelectedPreviewMediaType(type);
-                            setIsPlaying(false);
-                        }}
-                        onSeekToTime={handleSeekPreviewToTime}
-                        sendEnabled={sendEnabled}
-                        onSend={handleSendMessage}
-                        bubbleMaxWidthClassName="max-w-[90%]"
-                        afterComposer={
-                            <div className="flex flex-col gap-3">
-                                <button
-                                    onClick={() => {
-                                        if (threadId && !isAdminAlreadyApproved) {
-                                            approveNegotiation({
-                                                thread_id: threadId,
-                                                payload: { admin_approved: 'Approved' },
-                                            });
-                                        }
-                                    }}
-                                    disabled={isApproving || isAdminAlreadyApproved}
-                                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Check className="size-4" />
-                                    {isAdminAlreadyApproved
-                                        ? 'Approved'
-                                        : isApproving
-                                            ? 'Approving...'
-                                            : 'Approve'}
-                                </button>
-                            </div>
+                  <button
+                    onClick={() => {
+                      if (
+                        threadId &&
+                        brandThreadId &&
+                        negotiationId &&
+                        selectedPreviewMediaUrl &&
+                        selectedCard.campaign_id
+                      ) {
+                        if (!isAdminAlreadyApproved) {
+                          approveNegotiation({
+                            thread_id: threadId,
+                            payload: { admin_approved: 'Approved' },
+                          });
                         }
-                    />
+                        approveVideoMutation.mutate({
+                          brand_thread_id: brandThreadId,
+                          campaign_id: selectedCard.campaign_id,
+                          negotiation_id: negotiationId,
+                          video_url: selectedPreviewMediaUrl,
+                          video_approve_admin: 'approved',
+                        });
+                      }
+                    }}
+                    disabled={
+                      isApproving ||
+                      approveVideoMutation.isPending ||
+                      !selectedPreviewMediaUrl
+                    }
+                    className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Check className="size-4" />
+                    Approve for Brand
+                  </button>
                 </div>
+              </div>
             </div>
-        </div>
-    );
-}
+          </div>
 
+          <ChatPanel
+            className="w-full min-h-0 lg:max-w-[min(420px,42vw)]"
+            title="Feedback"
+            modeToggle={{ value: chatMode, onChange: setChatMode }}
+            messages={chatData?.messages}
+            isLoading={chatLoading}
+            messagesAvailable={!(chatMode === 'brand' && !brandThreadId)}
+            messagesUnavailableText="No brand thread for this negotiation."
+            isRightMessage={(msg) => msg.sender === 'ADMIN'}
+            onSelectMedia={(url, type) => {
+              setSelectedPreviewMediaUrl(url);
+              setSelectedPreviewMediaType(type);
+              setIsPlaying(false);
+            }}
+            onSeekToTime={handleSeekPreviewToTime}
+            sendEnabled={sendEnabled}
+            onSend={handleSendMessage}
+            bubbleMaxWidthClassName="max-w-[90%]"
+            afterComposer={
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    if (threadId && !isAdminAlreadyApproved) {
+                      approveNegotiation({
+                        thread_id: threadId,
+                        payload: { admin_approved: 'Approved' },
+                      });
+                    }
+                  }}
+                  disabled={isApproving || isAdminAlreadyApproved}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Check className="size-4" />
+                  {isAdminAlreadyApproved
+                    ? 'Approved'
+                    : isApproving
+                      ? 'Approving...'
+                      : 'Approve'}
+                </button>
+              </div>
+            }
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
