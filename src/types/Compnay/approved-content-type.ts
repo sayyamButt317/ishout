@@ -8,6 +8,9 @@ export type ApprovedContentItem = {
   updated_at: string;
   video_approve_admin: string;
   video_approve_brand: string;
+  caption?: string;
+  hashtags?: string[];
+  subtitles?: string;
 };
 
 export type ApprovedContentsResponse = {

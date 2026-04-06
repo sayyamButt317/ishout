@@ -20,6 +20,16 @@ function isApproved(value: string | undefined) {
   return (value ?? '').toLowerCase() === 'approved';
 }
 
+function displayOrDash(value: string | undefined) {
+  const t = value?.trim();
+  return t ? t : '—';
+}
+
+function formatHashtags(tags: string[] | undefined) {
+  if (!tags?.length) return '—';
+  return tags.join(', ');
+}
+
 export default function ApprovedContentCard({ item }: { item: ApprovedContentItem }) {
   const adminOk = isApproved(item.video_approve_admin);
   const brandOk = isApproved(item.video_approve_brand);
@@ -77,8 +87,38 @@ export default function ApprovedContentCard({ item }: { item: ApprovedContentIte
 
         <div className="mt-3 rounded-xl border border-white/10 bg-white/4 p-3 text-[11px] text-white/55">
           <p>
-            <span className="font-semibold text-white/70">Updated</span> {formatDate(item.updated_at)}
+            <span className="font-semibold text-white/70">Updated</span>{' '}
+            {formatDate(item.updated_at)}
           </p>
+        </div>
+
+        <div className="mt-3 rounded-xl border border-white/10 bg-white/4 p-3 text-[11px] text-white/60">
+          <div className="grid gap-2">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-white/45">
+                Hashtags
+              </p>
+              <p className="mt-0.5 break-words text-white/80">
+                {formatHashtags(item.hashtags)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-white/45">
+                Subtitles
+              </p>
+              <p className="mt-0.5 break-words text-white/80">
+                {displayOrDash(item.subtitles)}
+              </p>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wide text-white/45">
+                Captions
+              </p>
+              <p className="mt-0.5 break-words text-white/80">
+                {displayOrDash(item.caption)}
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="mt-4">

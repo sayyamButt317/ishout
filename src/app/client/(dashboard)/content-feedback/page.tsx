@@ -25,6 +25,7 @@ import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp
 import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
 import useBrandContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-brand-read-hook';
 import useWhatsAppAdminCompanyApproveVideo from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-approve-video-hook';
+import useUpdateApprovedContent from '@/src/routes/Company/api/Hooks/use-update-approved-content.hook';
 import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-map';
 import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages-list';
 import {
@@ -32,6 +33,7 @@ import {
   ChatMessage,
   NegotiationResponse,
 } from '@/src/types/Compnay/feeedback-content-type';
+import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
 
 const COLUMNS = [
   { id: 'drafts', label: 'Drafts', count: 5, color: 'slate' },
@@ -46,6 +48,18 @@ const countStyles: Record<string, string> = {
   amber: 'bg-amber-100 border-amber-200 text-amber-700',
   emerald: 'bg-emerald-100 border-emerald-200 text-emerald-700',
 };
+
+function parseHashtagsInputToArray(text: string): string[] {
+  return text
+    .split(/[\s,]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/** Canonical key so approve, chat selection, and drafts use the same map entry */
+function normalizeMediaUrlKey(url: string): string {
+  return url.trim();
+}
 
 function ContentFeedbackPageContent() {
   const searchParams = useSearchParams();
@@ -82,6 +96,7 @@ function ContentFeedbackPageContent() {
 
   const { sendMessage } = useSendCompanyAdminMessage(company_user_id, negotiationId);
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
+  const updateApprovedContentMutation = useUpdateApprovedContent();
 
   const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
 
@@ -124,6 +139,18 @@ function ContentFeedbackPageContent() {
 
   const [isSending, setIsSending] = useState(false);
 
+  /** Per preview URL: approve API returned video_approve_brand approved for this session */
+  const [brandApprovedByVideoUrl, setBrandApprovedByVideoUrl] = useState<
+    Record<string, boolean>
+  >({});
+  /** Last approve-video response per preview URL (see `WhatsAppAdminCompanyApproveVideoResponse`) */
+  const [approveVideoResponseByUrl, setApproveVideoResponseByUrl] = useState<
+    Partial<Record<string, WhatsAppAdminCompanyApproveVideoResponse>>
+  >({});
+  const [approvedCopyDraftByUrl, setApprovedCopyDraftByUrl] = useState<
+    Record<string, { hashtags: string; caption: string; subtitles: string }>
+  >({});
+
   const isBrandAlreadyApproved =
     (selectedCard?.Brand_approved ?? '').toLowerCase() === 'approved';
   const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
@@ -135,19 +162,30 @@ function ContentFeedbackPageContent() {
   const { data: brandFeedbackData, refetch: refetchBrandFeedback } =
     useBrandContentFeedbackReadHook(activeFeedbackId, !!activeFeedbackId);
 
+  const selectedMediaKey = selectedPreviewMediaUrl
+    ? normalizeMediaUrlKey(selectedPreviewMediaUrl)
+    : null;
+
   const isBrandContentApprovedInBrandChat = useMemo(() => {
     const url = selectedPreviewMediaUrl;
     if (!url || !chatData?.messages) return false;
+    const key = normalizeMediaUrlKey(url);
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-          (isVideoUrl(msg.message) || isImageUrl(msg.message))
+        (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
-      return contentUrl === url && brandOk;
+      return normalizeMediaUrlKey(contentUrl) === key && brandOk;
     });
   }, [chatData, selectedPreviewMediaUrl]);
+
+  const isSelectedContentBrandApproved = useMemo(() => {
+    if (!selectedMediaKey) return false;
+    if (brandApprovedByVideoUrl[selectedMediaKey]) return true;
+    return isBrandContentApprovedInBrandChat;
+  }, [selectedMediaKey, brandApprovedByVideoUrl, isBrandContentApprovedInBrandChat]);
 
   useEffect(() => {
     setSelectedPreviewMediaUrl(null);
@@ -155,6 +193,9 @@ function ContentFeedbackPageContent() {
     setIsPlaying(false);
     setSelectedVideoDuration(null);
     setSelectedVideoResolution('—');
+    setBrandApprovedByVideoUrl({});
+    setApproveVideoResponseByUrl({});
+    setApprovedCopyDraftByUrl({});
   }, [selectedCard?.id]);
 
   useEffect(() => {
@@ -176,13 +217,19 @@ function ContentFeedbackPageContent() {
 
     if (
       selectedPreviewMediaUrl &&
-      mediaMessages.some((msg: ChatMessage) => msg.message === selectedPreviewMediaUrl)
+      mediaMessages.some((msg: ChatMessage) => {
+        if (typeof msg.message !== 'string') return false;
+        return (
+          normalizeMediaUrlKey(msg.message) ===
+          normalizeMediaUrlKey(selectedPreviewMediaUrl)
+        );
+      })
     ) {
       return;
     }
 
     const latestMedia = mediaMessages[mediaMessages.length - 1];
-    setSelectedPreviewMediaUrl(latestMedia.message);
+    setSelectedPreviewMediaUrl(normalizeMediaUrlKey(latestMedia.message));
     setSelectedPreviewMediaType(isVideoUrl(latestMedia.message) ? 'video' : 'image');
     setIsPlaying(false);
     setSelectedVideoDuration(null);
@@ -195,6 +242,33 @@ function ContentFeedbackPageContent() {
     const mins = Math.floor(total / 60);
     const secs = total % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const approvedCopyDraft =
+    selectedMediaKey != null
+      ? (approvedCopyDraftByUrl[selectedMediaKey] ?? {
+          hashtags: '',
+          caption: '',
+          subtitles: '',
+        })
+      : { hashtags: '', caption: '', subtitles: '' };
+
+  const setApprovedCopyDraftField = (
+    field: 'hashtags' | 'caption' | 'subtitles',
+    value: string,
+  ) => {
+    if (!selectedMediaKey) return;
+    setApprovedCopyDraftByUrl((prev) => {
+      const current = prev[selectedMediaKey] ?? {
+        hashtags: '',
+        caption: '',
+        subtitles: '',
+      };
+      return {
+        ...prev,
+        [selectedMediaKey]: { ...current, [field]: value },
+      };
+    });
   };
 
   return (
@@ -238,10 +312,11 @@ function ContentFeedbackPageContent() {
                     {col.label}
                   </h3>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
-                      ? 'bg-(--color-primaryButton) text-white'
-                      : countStyles[col.color]
-                      }`}
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                      col.color === 'primary'
+                        ? 'bg-(--color-primaryButton) text-white'
+                        : countStyles[col.color]
+                    }`}
                   >
                     {col.count}
                   </span>
@@ -266,12 +341,13 @@ function ContentFeedbackPageContent() {
                         Brand_approved: card.Brand_approved,
                       })
                     }
-                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${col.id === 'review'
-                      ? 'border-2 border-(--color-primaryButton)'
-                      : col.id === 'revision'
-                        ? 'border-l-4 border-l-amber-400 border-white/10'
-                        : 'border-white/10 hover:border-(--color-primaryButton)/30'
-                      }`}
+                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
+                      col.id === 'review'
+                        ? 'border-2 border-(--color-primaryButton)'
+                        : col.id === 'revision'
+                          ? 'border-l-4 border-l-amber-400 border-white/10'
+                          : 'border-white/10 hover:border-(--color-primaryButton)/30'
+                    }`}
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
                       <Image
@@ -497,6 +573,91 @@ function ContentFeedbackPageContent() {
                       )}
                     </div>
                   </div>
+                  {selectedMediaKey &&
+                    approveVideoResponseByUrl[selectedMediaKey]?.approved_content_id && (
+                      <div
+                        key={selectedMediaKey}
+                        className="rounded-xl border border-white/10 bg-white/5 p-4"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-xs font-bold uppercase tracking-wider text-white/50">
+                            Hashtags & copy
+                          </p>
+                          <button
+                            type="button"
+                            disabled={updateApprovedContentMutation.isPending}
+                            onClick={() => {
+                              const id =
+                                selectedMediaKey &&
+                                approveVideoResponseByUrl[selectedMediaKey]
+                                  ?.approved_content_id;
+                              if (!id) return;
+                              const hashtags = parseHashtagsInputToArray(
+                                approvedCopyDraft.hashtags,
+                              );
+                              updateApprovedContentMutation.mutate({
+                                approved_content_id: id,
+                                payload: {
+                                  caption: approvedCopyDraft.caption.trim() || undefined,
+                                  hashtags: hashtags.length ? hashtags : undefined,
+                                  subtitles:
+                                    approvedCopyDraft.subtitles.trim() || undefined,
+                                },
+                              });
+                            }}
+                            className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            {updateApprovedContentMutation.isPending
+                              ? 'Saving…'
+                              : 'Add hashtags'}
+                          </button>
+                        </div>
+                        <div className="mt-3 grid gap-3 text-sm">
+                          <div>
+                            <p className="text-[10px] font-bold uppercase text-white/40">
+                              Hashtags
+                            </p>
+                            <textarea
+                              value={approvedCopyDraft.hashtags}
+                              onChange={(e) =>
+                                setApprovedCopyDraftField('hashtags', e.target.value)
+                              }
+                              placeholder="Space or comma separated"
+                              rows={2}
+                              className="mt-1 w-full resize-none rounded-lg border border-white/10 bg-white/5 p-2 text-sm text-white placeholder:text-white/35 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
+                            />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase text-white/40">
+                              Captions
+                            </p>
+                            <textarea
+                              value={approvedCopyDraft.caption}
+                              onChange={(e) =>
+                                setApprovedCopyDraftField('caption', e.target.value)
+                              }
+                              placeholder="Caption"
+                              rows={2}
+                              className="mt-1 w-full resize-none rounded-lg border border-white/10 bg-white/5 p-2 text-sm text-white placeholder:text-white/35 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
+                            />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase text-white/40">
+                              Subtitles
+                            </p>
+                            <textarea
+                              value={approvedCopyDraft.subtitles}
+                              onChange={(e) =>
+                                setApprovedCopyDraftField('subtitles', e.target.value)
+                              }
+                              placeholder="Subtitles"
+                              rows={2}
+                              className="mt-1 w-full resize-none rounded-lg border border-white/10 bg-white/5 p-2 text-sm text-white placeholder:text-white/35 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-4">
@@ -539,20 +700,50 @@ function ContentFeedbackPageContent() {
                           negotiationId &&
                           selectedPreviewMediaUrl
                         ) {
-                          approveVideoMutation.mutate({
-                            brand_thread_id: effectiveBrandThreadId,
-                            campaign_id: selectedCard.campaign_id ?? '',
-                            negotiation_id: negotiationId,
-                            video_url: selectedPreviewMediaUrl,
-                            video_approve_brand: 'approved',
-                          });
+                          approveVideoMutation.mutate(
+                            {
+                              brand_thread_id: effectiveBrandThreadId,
+                              campaign_id: selectedCard.campaign_id ?? '',
+                              negotiation_id: negotiationId,
+                              video_url: selectedPreviewMediaUrl,
+                              video_approve_brand: 'approved',
+                            },
+                            {
+                              onSuccess: (
+                                data: WhatsAppAdminCompanyApproveVideoResponse,
+                                variables,
+                              ) => {
+                                const key = normalizeMediaUrlKey(variables.video_url);
+                                if (
+                                  data?.success &&
+                                  (data.video_approve_brand ?? '')
+                                    .toLowerCase()
+                                    .trim() === 'approved'
+                                ) {
+                                  setBrandApprovedByVideoUrl((prev) => ({
+                                    ...prev,
+                                    [key]: true,
+                                  }));
+                                }
+                                setApproveVideoResponseByUrl((prev) => {
+                                  const next = { ...prev };
+                                  if (data.approved_content_id) {
+                                    next[key] = data;
+                                  } else {
+                                    delete next[key];
+                                  }
+                                  return next;
+                                });
+                              },
+                            },
+                          );
                         }
                       }}
                       disabled={
                         approveVideoMutation.isPending ||
                         !selectedPreviewMediaUrl ||
                         !effectiveBrandThreadId ||
-                        isBrandContentApprovedInBrandChat
+                        isSelectedContentBrandApproved
                       }
                       className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     >
@@ -573,7 +764,7 @@ function ContentFeedbackPageContent() {
                   isRightMessage={(msg) => msg.sender !== 'ADMIN'}
                   roleLabels={{ right: 'Brand', left: 'Admin' }}
                   onSelectMedia={(url, type) => {
-                    setSelectedPreviewMediaUrl(url);
+                    setSelectedPreviewMediaUrl(normalizeMediaUrlKey(url));
                     setSelectedPreviewMediaType(type);
                     setIsPlaying(false);
                   }}
