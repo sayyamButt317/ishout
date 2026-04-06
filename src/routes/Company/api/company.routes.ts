@@ -23,6 +23,7 @@ import {
 } from '@/src/types/Compnay/campaign-brief.types';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { ApprovedContentsResponse } from '@/src/types/Compnay/approved-content-type';
+import type { UpdateApprovedContentPayload } from '@/src/types/Compnay/approved-video-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -137,6 +138,17 @@ export const getApprovedContentsApi = async (
   const response = await api.get<ApprovedContentsResponse>(CompanyENDPOINT.APPROVED_CONTENT, {
     params: { campaign_id },
   });
+  return response.data;
+};
+
+export const updateApprovedContentApi = async (
+  approved_content_id: string,
+  payload: UpdateApprovedContentPayload,
+) => {
+  const response = await api.patch(
+    CompanyENDPOINT.APPROVED_CONTENT_UPDATE(approved_content_id),
+    payload,
+  );
   return response.data;
 };
 

@@ -1,9 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { WhatsAppAdminCompanyApproveVideoApi } from '../../API/admin.routes';
 import {
-  WhatsAppAdminCompanyApproveVideoApi,
   type WhatsAppAdminCompanyApproveVideoPayload,
-} from '../../API/admin.routes';
+  type WhatsAppAdminCompanyApproveVideoResponse,
+} from '@/src/types/Compnay/approved-video-type';
 
 export default function useWhatsAppAdminCompanyApproveVideo() {
   const queryClient = useQueryClient();
@@ -11,7 +12,7 @@ export default function useWhatsAppAdminCompanyApproveVideo() {
   return useMutation({
     mutationFn: (payload: WhatsAppAdminCompanyApproveVideoPayload) =>
       WhatsAppAdminCompanyApproveVideoApi(payload),
-    onSuccess: (data: { success: boolean; message: string }, variables) => {
+    onSuccess: (data: WhatsAppAdminCompanyApproveVideoResponse, variables) => {
       if (data?.success) {
         toast.success(data.message ?? 'Video approved');
       } else {

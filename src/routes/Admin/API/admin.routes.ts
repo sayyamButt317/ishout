@@ -20,6 +20,10 @@ import { UpdateUserStatusResponse } from '@/src/types/Admin-Type/usermanagment.t
 import { RejectandRegenerateInfluencerRequest } from '@/src/types/Admin-Type/reject-influencers.type';
 import { AddInfluencersNumberRequest } from '@/src/types/Admin-Type/review-influencer';
 import { SaveContentFeedbackPayload } from '@/src/types/Admin-Type/Content-type';
+import {
+  type WhatsAppAdminCompanyApproveVideoPayload,
+  type WhatsAppAdminCompanyApproveVideoResponse,
+} from '@/src/types/Compnay/approved-video-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -491,18 +495,9 @@ export const WhatsAppAdminCompanySendHumanMessageApi = async (
   return response.data;
 };
 
-export type WhatsAppAdminCompanyApproveVideoPayload = {
-  brand_thread_id: string;
-  campaign_id: string;
-  negotiation_id: string;
-  video_url: string;
-  video_approve_admin?: string;
-  video_approve_brand?: string;
-};
-
 export const WhatsAppAdminCompanyApproveVideoApi = async (
   payload: WhatsAppAdminCompanyApproveVideoPayload,
-) => {
+): Promise<WhatsAppAdminCompanyApproveVideoResponse> => {
   const body: Record<string, string> = {
     negotiation_id: payload.negotiation_id,
     campaign_id: payload.campaign_id,
