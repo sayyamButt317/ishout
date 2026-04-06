@@ -317,66 +317,66 @@ export default function ContentFeedbackDetailPage() {
                                     <Maximize2 className="size-5" />
                                 </button>
                             </div> */}
-            </div>
+                        </div>
 
-            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-2 pt-2 lg:flex-row lg:items-stretch">
-              <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto lg:min-h-[min(580px,70vh)] lg:min-w-0">
-                <VideoFeedbackWorkspace
-                  videoRef={videoRef}
-                  selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-                  selectedPreviewMediaType={selectedPreviewMediaType}
-                  isPlaying={isPlaying}
-                  setIsPlaying={setIsPlaying}
-                  setSelectedVideoDuration={setSelectedVideoDuration}
-                  setSelectedVideoResolution={setSelectedVideoResolution}
-                  duration={selectedVideoDuration}
-                  markers={timelineMarkers}
-                  sendEnabled={sendEnabled}
-                  contentUrl={selectedPreviewMediaUrl}
-                  onSubmitTimedFeedback={handleTimedFeedbackSubmit}
-                  onMarkerSeek={handleSeekPreviewToTime}
-                />
-              </div>
-              <aside className="flex w-full shrink-0 flex-col border-t border-white/10 pt-4 lg:w-1/2 lg:min-w-0">
-                <ContentFeedbackPanel
-                  videoRef={videoRef}
-                  activeFeedbackId={activeFeedbackId2}
-                  selectedContentFeedback={selectedContentFeedback}
-                  setSelectedContentFeedback={setSelectedContentFeedback}
-                  selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-                  negotiationId={negotiationId}
-                  selectedCard={selectedCard}
-                  setFeedbackId={setFeedbackId}
-                />
-              </aside>
-            </div>
-            <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-3">
-              <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                <div>
-                  <p className="text-[10px] font-bold uppercase text-white/40">
-                    Duration
-                  </p>
-                  <p className="text-sm font-bold text-white">
-                    {AnalyzeURL(selectedPreviewMediaUrl ?? '')?.type === 'video'
-                      ? formatVideoDuration(selectedVideoDuration)
-                      : '--:--'}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-bold uppercase text-white/40">
-                    Resolution
-                  </p>
-                  <p className="text-sm font-bold text-white">
-                    {selectedPreviewMediaType === 'video'
-                      ? selectedVideoResolution
-                      : 'Image'}
-                  </p>
-                </div>
-              </div>
+                        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-2 pt-2 lg:flex-row lg:items-stretch">
+                            <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto lg:min-h-[min(580px,70vh)]">
+                                <VideoFeedbackWorkspace
+                                    videoRef={videoRef}
+                                    selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                                    selectedPreviewMediaType={selectedPreviewMediaType}
+                                    isPlaying={isPlaying}
+                                    setIsPlaying={setIsPlaying}
+                                    setSelectedVideoDuration={setSelectedVideoDuration}
+                                    setSelectedVideoResolution={setSelectedVideoResolution}
+                                    duration={selectedVideoDuration}
+                                    markers={timelineMarkers}
+                                    sendEnabled={sendEnabled}
+                                    contentUrl={selectedPreviewMediaUrl}
+                                    onSubmitTimedFeedback={handleTimedFeedbackSubmit}
+                                    onMarkerSeek={handleSeekPreviewToTime}
+                                />
+                            </div>
+                            <aside className="flex w-1/2 shrink-0 flex-col border-t border-white/10 pt-4 ">
+                                <ContentFeedbackPanel
+                                    videoRef={videoRef}
+                                    activeFeedbackId={activeFeedbackId2}
+                                    selectedContentFeedback={selectedContentFeedback}
+                                    setSelectedContentFeedback={setSelectedContentFeedback}
+                                    selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                                    negotiationId={negotiationId}
+                                    selectedCard={selectedCard}
+                                    setFeedbackId={setFeedbackId}
+                                />
+                            </aside>
+                        </div>
+                        <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-3">
+                            <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase text-white/40">
+                                        Duration
+                                    </p>
+                                    <p className="text-sm font-bold text-white">
+                                        {AnalyzeURL(selectedPreviewMediaUrl ?? '')?.type === 'video'
+                                            ? formatVideoDuration(selectedVideoDuration)
+                                            : '--:--'}
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-bold uppercase text-white/40">
+                                        Resolution
+                                    </p>
+                                    <p className="text-sm font-bold text-white">
+                                        {selectedPreviewMediaType === 'video'
+                                            ? selectedVideoResolution
+                                            : 'Image'}
+                                    </p>
+                                </div>
+                            </div>
 
-              <div className="flex flex-col items-end gap-2 text-white/50">
-                <div className="flex items-center gap-2">
-                  {/* <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
+                            <div className="flex flex-col items-end gap-2 text-white/50">
+                                <div className="flex items-center gap-2">
+                                    {/* <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
                                         <RefreshCw className="size-4" />
                                         Request Revision
                                     </button> */}
