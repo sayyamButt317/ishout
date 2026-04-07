@@ -1,13 +1,13 @@
-import Link from "next/link";
-import { useMemo, useSyncExternalStore } from "react";
-import CustomButton from "./button";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Link from 'next/link';
+import { useMemo, useSyncExternalStore } from 'react';
+import CustomButton from './button';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
   clearAuthTokenProvider,
   getAuthTokenProvider,
   getRoleProvider,
-} from "@/src/provider/auth-provide";
+} from '@/src/provider/auth-provide';
 
 const Header = () => {
   const router = useRouter();
@@ -15,9 +15,9 @@ const Header = () => {
   const role = getRoleProvider();
 
   const dashboardRoute = useMemo(() => {
-    if (token && role === "company") return "/client/choose-campaign";
-    if (token && role === "admin") return "/Admin/all-campaign";
-    return "/auth/login";
+    if (token && role === 'company') return '/client/choose-campaign';
+    if (token && role === 'admin') return '/Admin/all-campaign';
+    return '/auth/login';
   }, [token, role]);
 
   const DashboardRedirect = () => {
@@ -32,21 +32,20 @@ const Header = () => {
             <Image
               src="/assets/iShout-gif-black-background.gif"
               alt="logo"
-              width={200}
-              height={52}
-              className="w-[200px] h-auto object-contain"
+              width={100}
+              height={100}
+              className="w-[100px] h-auto object-contain"
               loading="eager"
               priority
               unoptimized={true}
             />
           </div>
-
           <div
             className="hidden lg:flex items-center gap-8 text-sm font-thin"
             style={{
-              maxWidth: "900px",
-              width: "100%",
-              justifyContent: "center",
+              maxWidth: '900px',
+              width: '100%',
+              justifyContent: 'center',
             }}
           >
             <a
@@ -75,18 +74,14 @@ const Header = () => {
                 asChild
                 className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap"
               >
-                <Link href="/auth/login">
-                  Login
-                </Link>
+                <Link href="/auth/login">Login</Link>
               </CustomButton>
 
               <CustomButton
                 asChild
                 className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap"
               >
-                <Link href="/auth/register">
-                  Register
-                </Link>
+                <Link href="/auth/register">Register</Link>
               </CustomButton>
             </div>
           ) : (
@@ -101,10 +96,7 @@ const Header = () => {
                 asChild
                 className="px-3 sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap"
               >
-                <Link
-                  href="/auth/login"
-                  onClick={() => clearAuthTokenProvider()}
-                >
+                <Link href="/auth/login" onClick={() => clearAuthTokenProvider()}>
                   Sign Out
                 </Link>
               </CustomButton>
