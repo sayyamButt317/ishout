@@ -72,7 +72,7 @@ export default function ClientInfluencersContentPage() {
                   );
                 }}
               >
-                View
+                View Feedback
               </Button>
             </div>,
           ];
