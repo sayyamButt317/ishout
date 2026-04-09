@@ -89,7 +89,7 @@ export default function LandingPage() {
           Case Studies
         </h2>
         <p className="italic mt-4 text-center justify-center items-center text-neutral-600 dark:text-neutral-400 text-base md:text-md font-sans max-w-2xl mx-auto">
-          <span className="font-bold">Proven Results at Scale,</span>
+          <span className="font-bold">Proven Results at Scale, </span>
           <span className="font-thin justify-center items-center">
             We &apos;ve helped over 600 brands amplify their reach and performance with{' '}
             <span className="font-bold">AI-powered </span>
