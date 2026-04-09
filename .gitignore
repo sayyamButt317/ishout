@@ -34,4 +34,6 @@ node_modules
 testsprite_tests/
 guided-questions/
 
-.env
+config.bat
+temp_auto_push.bat
+temp_interactive_push.bat

@@ -361,12 +361,12 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                   </p>
                 </div>
               </div>
-              <button
+              {/* <button
                 onClick={onClose}
                 className="text-white/60 hover:text-white hover:bg-white/10 rounded-full p-2 transition-all duration-200 self-end sm:self-start"
               >
                 <X size={20} className="lg:w-6 lg:h-6" />
-              </button>
+              </button> */}
             </div>
 
             <div className="flex items-center gap-2 text-xs lg:text-sm mb-6">
