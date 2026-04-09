@@ -166,7 +166,9 @@ export default function NegotiationPage() {
               <CustomButton
                 key={`view-chat-${userSession._id}`}
                 onClick={() => {
-                  router.push(`/Admin/negotiation-chat/${userSession._id}`);
+                  router.push(
+                    `/Admin/negotiation-chat/${userSession.thread_id}?negotiation_id=${userSession._id}`,
+                  );
                 }}
                 className="relative bg-primaryButton hover:bg-primaryHover text-white"
               >
