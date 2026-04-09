@@ -1,5 +1,5 @@
 'use client';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import useWhatsAppMessagesHook from '@/src/routes/Admin/Hooks/whatsappmessages-hook';
 import useNegotiationMessagesHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiationmessages-hook';
@@ -10,22 +10,40 @@ import Spinner from '@/src/app/component/custom-component/spinner';
 import SendWhatsappMessageHook from '@/src/routes/Admin/Hooks/sendwhatsappmessage-hook';
 import HumanTakeoverHook from '@/src/routes/Admin/Hooks/humantakeover-hook';
 import ToogleStatusHook from '@/src/routes/Admin/Hooks/tooglestatus-hook';
+import NegotiationHumanTakeoverHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-humantakeover-hook';
+import NegotiationTakeoverValueHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-takeover-value-hook';
 import { ChatMessage, useWhatsAppChatStore } from '@/src/store/Campaign/chat.store';
 import { RefreshCcw } from 'lucide-react';
 import { useNotificationSound } from '@/src/helper/notificationSound';
 
+type NegotiationHistoryItem = {
+  sender_type?: string;
+  message?: string;
+};
+
+function isTakeoverActive(data: unknown): boolean {
+  if (!data || typeof data !== 'object') return false;
+  const d = data as Record<string, unknown>;
+  return (
+    d.mode === 'HUMAN_TAKEOVER' || d.human_takeover === true || d.enabled === true
+  );
+}
+
 export default function WhatsAppChatById() {
   const { Id } = useParams<{ Id: string }>();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isNegotiation = pathname?.includes('/negotiation-chat');
+  const negotiationId = searchParams.get('negotiation_id') ?? Id ?? '';
 
-  const useMessagesHook = isNegotiation
-    ? useNegotiationMessagesHook
-    : useWhatsAppMessagesHook;
-
-  const { data, isPending, isRefetching, refetch } = isNegotiation
-    ? useMessagesHook(Id ?? '')
-    : useMessagesHook(Id ?? '', 1, 100);
+  const negotiationQuery = useNegotiationMessagesHook(negotiationId);
+  const whatsappQuery = useWhatsAppMessagesHook(Id ?? '', 1, 100);
+  const data = isNegotiation ? negotiationQuery.data : whatsappQuery.data;
+  const isPending = isNegotiation ? negotiationQuery.isPending : whatsappQuery.isPending;
+  const isRefetching = isNegotiation
+    ? negotiationQuery.isRefetching
+    : whatsappQuery.isRefetching;
+  const refetch = isNegotiation ? negotiationQuery.refetch : whatsappQuery.refetch;
 
   const messages = useWhatsAppChatStore((s) => s.chats[Id ?? '']);
   const memoizedMessages = useMemo(() => messages ?? [], [messages]);
@@ -34,8 +52,10 @@ export default function WhatsAppChatById() {
   const { playMessageSentSound } = useNotificationSound();
 
   const sendMessage = isNegotiation ? null : SendWhatsappMessageHook(Id ?? '');
-  const humantakeover = isNegotiation ? null : HumanTakeoverHook(Id ?? '');
-  const toogleStatus = isNegotiation ? null : ToogleStatusHook(Id ?? '');
+  const humantakeover = HumanTakeoverHook(Id ?? '');
+  const toogleStatus = ToogleStatusHook(Id ?? '', !isNegotiation);
+  const negotiationHumanTakeover = NegotiationHumanTakeoverHook(Id ?? '');
+  const negotiationTakeoverValue = NegotiationTakeoverValueHook(Id ?? '', isNegotiation);
 
   const [adminTakeover, setAdminTakeover] = useState<boolean | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -45,27 +65,27 @@ export default function WhatsAppChatById() {
   }, [memoizedMessages.length]);
 
   useEffect(() => {
-    if (isNegotiation) {
-      setAdminTakeover(false);
-      return;
-    }
-    if (!toogleStatus?.data) return;
-    const isHuman = toogleStatus.data.mode === 'HUMAN_TAKEOVER';
-    setAdminTakeover(isHuman);
-  }, [toogleStatus?.data, isNegotiation]);
+    const takeoverData = isNegotiation ? negotiationTakeoverValue.data : toogleStatus.data;
+    if (takeoverData === undefined || takeoverData === null) return;
+    setAdminTakeover(isTakeoverActive(takeoverData));
+  }, [isNegotiation, toogleStatus.data, negotiationTakeoverValue.data]);
 
   useEffect(() => {
     if (!Id) return;
     if (isNegotiation && data) {
-      const messages = (data.history || []).map((msg: any, index: number) => ({
-        _id: `${Id}-${index}`,
-        thread_id: Id!,
-        sender: msg.sender_type === 'AI' ? 'AI' : 'USER',
-        message: msg.message,
-        timestamp: new Date().toISOString(),
-        username: msg.sender_type === 'USER' ? data.name : undefined,
-      }));
-      setMessages(Id!, messages);
+      const history = (data.history as NegotiationHistoryItem[]) || [];
+      const mapped: ChatMessage[] = history.map((msg, index) => {
+        const sender: ChatMessage['sender'] = msg.sender_type === 'AI' ? 'AI' : 'USER';
+        return {
+          _id: `${Id}-${index}`,
+          thread_id: Id!,
+          sender,
+          message: msg.message ?? '',
+          timestamp: new Date().toISOString(),
+          username: sender === 'USER' ? data.name : undefined,
+        };
+      });
+      setMessages(Id!, mapped);
     } else {
       setMessages(Id, data?.messages ?? []);
     }
@@ -73,14 +93,26 @@ export default function WhatsAppChatById() {
 
   const handleAdminToggle = useCallback(
     (enabled: boolean) => {
-      if (isNegotiation || !humantakeover || !toogleStatus) return;
       setAdminTakeover(enabled);
+      if (isNegotiation) {
+        negotiationHumanTakeover.mutate(enabled, {
+          onError: () => setAdminTakeover((prev) => !prev),
+          onSuccess: () => negotiationTakeoverValue.refetch(),
+        });
+        return;
+      }
       humantakeover.mutate(enabled, {
         onError: () => setAdminTakeover((prev) => !prev),
         onSuccess: () => toogleStatus.refetch(),
       });
     },
-    [humantakeover, toogleStatus, isNegotiation],
+    [
+      humantakeover,
+      toogleStatus,
+      isNegotiation,
+      negotiationHumanTakeover,
+      negotiationTakeoverValue,
+    ],
   );
 
   // Send message handler
@@ -136,17 +168,20 @@ export default function WhatsAppChatById() {
               onClick={() =>
                 refetch().then(() => {
                   if (isNegotiation && data) {
-                    const messages = (data.history || []).map(
-                      (msg: any, index: number) => ({
+                    const history = (data.history as NegotiationHistoryItem[]) || [];
+                    const mapped: ChatMessage[] = history.map((msg, index) => {
+                      const sender: ChatMessage['sender'] =
+                        msg.sender_type === 'AI' ? 'AI' : 'USER';
+                      return {
                         _id: `${Id}-${index}`,
                         thread_id: Id!,
-                        sender: msg.sender_type === 'AI' ? 'AI' : 'USER',
-                        message: msg.message,
+                        sender,
+                        message: msg.message ?? '',
                         timestamp: new Date().toISOString(),
-                        username: msg.sender_type === 'USER' ? data.name : undefined,
-                      }),
-                    );
-                    setMessages(Id!, messages);
+                        username: sender === 'USER' ? data.name : undefined,
+                      };
+                    });
+                    setMessages(Id!, mapped);
                   } else {
                     const newMessages = data?.messages ?? [];
                     setMessages(Id!, newMessages);
@@ -156,13 +191,20 @@ export default function WhatsAppChatById() {
             />
           </div>
         </div>
-        {isNegotiation ? null : adminTakeover === null ? (
+        {adminTakeover === null ? (
           <Spinner />
         ) : (
           <AdminTakeoverToggle
             enabled={adminTakeover}
             onChange={handleAdminToggle}
-            disabled={!!(humantakeover?.isPending || toogleStatus?.isFetching)}
+            disabled={
+              isNegotiation
+                ? !!(
+                    negotiationHumanTakeover.isPending ||
+                    negotiationTakeoverValue.isFetching
+                  )
+                : !!(humantakeover.isPending || toogleStatus.isFetching)
+            }
           />
         )}
       </div>

@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, type ComponentType } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,12 +8,12 @@ import CustomButton from '../button';
 import AddInfluencerNumberHook from '@/src/routes/Admin/Hooks/addInfluencerNumber-hook';
 import { PlatformType } from '@/src/types/readymadeinfluencers-type';
 import { Loader2 } from 'lucide-react';
-// import { useEffect, useState,ComponentType } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import {
   removePlusPrefix,
   normalizePhoneNumberForDisplay,
 } from '@/src/utils/phone.utils';
+import { MobileCountrySelect } from '@/src/app/component/custom-component/selectcountry';
 
 interface ChooseOptionDialogProps {
   open: boolean;
@@ -28,90 +28,6 @@ interface ChooseOptionDialogProps {
     min_price: number;
     max_price: number;
   } | null;
-}
-
-type CountryOption = { value?: string; label: string };
-type FlagIconComponent = ComponentType<{
-  country: string;
-  title: string;
-  className?: string;
-}>;
-
-function MobileCountrySelect({
-  value,
-  onChange,
-  options,
-  iconComponent: FlagIcon,
-}: {
-  value?: string;
-  onChange: (value?: string) => void;
-  options: CountryOption[];
-  iconComponent: FlagIconComponent;
-}) {
-  const [open, setOpen] = useState(false);
-  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-1 rounded px-1 py-0.5 hover:bg-white/10 transition-colors"
-      >
-        {value && <FlagIcon country={value} title={selectedLabel} />}
-        <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
-          <path
-            fillRule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clipRule="evenodd"
-          />
-        </svg>
-      </button>
-
-      {open && (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/60"
-            onClick={() => setOpen(false)}
-          />
-          <div className="fixed inset-x-6 top-1/4 bottom-[15%] z-50 flex flex-col rounded-2xl border border-white/10 bg-[#0d0d1e] shadow-2xl overflow-hidden">
-            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3">
-              <span className="text-sm font-semibold text-white">Select Country</span>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="text-base leading-none text-white/50 hover:text-white"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto">
-              {options
-                .filter((o) => o.value)
-                .map((o) => (
-                  <button
-                    key={o.value}
-                    type="button"
-                    onClick={() => {
-                      onChange(o.value);
-                      setOpen(false);
-                    }}
-                    className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-white/10 ${
-                      o.value === value
-                        ? 'bg-white/10 font-semibold text-white'
-                        : 'text-white/80'
-                    }`}
-                  >
-                    <FlagIcon country={o.value!} title={o.label} />
-                    <span>{o.label}</span>
-                  </button>
-                ))}
-            </div>
-          </div>
-        </>
-      )}
-    </>
-  );
 }
 
 export default function ChooseOptionDialog({
@@ -190,12 +106,12 @@ export default function ChooseOptionDialog({
                 countrySelectComponent={MobileCountrySelect}
                 disabled={isPending}
                 className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus-within:border-[#ff4e7e] focus-within:ring-2 focus-within:ring-[#ff4e7e]/30 text-white placeholder:text-white/30 w-full 
-  [&_.PhoneInput]:border-none 
-  [&_.PhoneInput]:bg-transparent
-  [&_.PhoneInputInput]:border-none 
-  [&_.PhoneInputInput]:bg-transparent 
-  [&_.PhoneInputInput]:outline-none 
-  [&_.PhoneInputCountry]:border-none"
+  // [&_.PhoneInput]:border-none 
+  // [&_.PhoneInput]:bg-transparent
+  // [&_.PhoneInputInput]:border-none 
+  // [&_.PhoneInputInput]:bg-transparent 
+  // [&_.PhoneInputInput]:outline-none 
+  // [&_.PhoneInputCountry]:border-none"
               />
             </div>
 
