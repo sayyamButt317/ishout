@@ -135,7 +135,7 @@ export default function InfluencersContentPage() {
                   );
                 }}
               >
-                View
+                View Feedback
               </Button>
             </div>,
             <div key={`view-brief-${id}`} className="truncate">

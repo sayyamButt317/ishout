@@ -312,9 +312,14 @@ export const NegotiationHumanTakeoverApi = async (
 ) => {
   const response = await api.post(
     AdminENDPOINT.ADMIN_NEGOTIATION_HUMAN_TAKEOVER(thread_id),
-    {
-      enabled,
-    },
+    { enabled },
+  );
+  return response.data;
+};
+
+export const NegotiationTakeoverValueApi = async (thread_id: string) => {
+  const response = await api.get(
+    AdminENDPOINT.ADMIN_NEGOTIATION_TAKEOVER_VALUE(thread_id),
   );
   return response.data;
 };
