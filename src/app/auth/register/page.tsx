@@ -1,5 +1,5 @@
 'use client';
-import { useState, type ComponentType } from 'react';
+import { useState } from 'react';
 import {
   Form,
   FormControl,
@@ -17,82 +17,24 @@ import {
   SignUpFormSchema,
   SignUpFormValidator,
 } from '@/src/validators/Auth-Validator/signUp-Validators';
-import { normalizePhoneNumberForDisplay, removePlusPrefix } from '@/src/utils/phone.utils';
+import {
+  normalizePhoneNumberForDisplay,
+  removePlusPrefix,
+} from '@/src/utils/phone.utils';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import CustomButton from '../../component/button';
 import RegisterMutation from '@/src/routes/Auth-Routes/Api/Auth-Hook/regeister-hook';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
+import { MobileCountrySelect } from '@/src/app/component/custom-component/selectcountry';
 
 const DomeGallery = dynamic(() => import('@/src/constant/Influencers-data'), {
   ssr: false,
 });
 
-type CountryOption = { value?: string; label: string };
-type FlagIconComponent = ComponentType<{ country: string; title: string; className?: string }>;
-
-function MobileCountrySelect({
-  value,
-  onChange,
-  options,
-  iconComponent: FlagIcon,
-}: {
-  value?: string;
-  onChange: (value?: string) => void;
-  options: CountryOption[];
-  iconComponent: FlagIconComponent;
-}) {
-  const [open, setOpen] = useState(false);
-  const selectedLabel = options.find((o) => o.value === value)?.label ?? '';
-
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-1 rounded px-1 py-0.5 hover:bg-white/10 transition-colors"
-      >
-        {value && <FlagIcon country={value} title={selectedLabel} />}
-        <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-        </svg>
-      </button>
-
-      {open && (
-        <>
-          <div className="fixed inset-0 z-40 bg-black/60" onClick={() => setOpen(false)} />
-          <div className="fixed inset-x-6 top-1/4 bottom-[15%] z-50 flex flex-col rounded-2xl border border-white/10 bg-[#0d0d1e] shadow-2xl overflow-hidden">
-            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3">
-              <span className="text-sm font-semibold text-white">Select Country</span>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="text-base leading-none text-white/50 hover:text-white"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto">
-              {options.filter((o) => o.value).map((o) => (
-                <button
-                  key={o.value}
-                  type="button"
-                  onClick={() => { onChange(o.value); setOpen(false); }}
-                  className={`flex w-full items-center gap-3 px-4 py-3 text-left text-sm transition-colors hover:bg-white/10 ${o.value === value ? 'bg-white/10 font-semibold text-white' : 'text-white/80'
-                    }`}
-                >
-                  <FlagIcon country={o.value!} title={o.label} />
-                  <span>{o.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-    </>
-  );
-}
+const registerCountrySearchInputClassName =
+  'h-10 border-white/10 bg-white/5 text-white placeholder:text-white/40 focus:border-primarytext focus:ring-primarytext/30';
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -128,10 +70,8 @@ export default function Signup() {
 
       {/* Right - Signup Form */}
       <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-black to-slate-900 p-6">
-
         <Card className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
           <div className="p-10 space-y-8">
-
             {/* Logo */}
             <Link href="/" className="flex justify-center">
               <div className="flex items-center gap-2">
@@ -143,8 +83,7 @@ export default function Signup() {
                   unoptimized
                 />
                 <h2 className="text-4xl font-bold text-white tracking-tight">
-                  i
-                  <span className="text-white font-extrabold">S</span>
+                  i<span className="text-white font-extrabold">S</span>
                   hout
                   <span className="text-primarytext font-extrabold">.</span>
                 </h2>
@@ -153,9 +92,7 @@ export default function Signup() {
 
             {/* Heading */}
             <div className="text-center space-y-2">
-              <h1 className="text-2xl font-semibold text-white">
-                Create your account
-              </h1>
+              <h1 className="text-2xl font-semibold text-white">Create your account</h1>
               <p className="italic text-sm text-slate-400">
                 Start managing campaigns in minutes
               </p>
@@ -164,7 +101,6 @@ export default function Signup() {
             {/* Form */}
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-
                 {/* Contact Person */}
                 <FormField
                   control={form.control}
@@ -202,7 +138,12 @@ export default function Signup() {
                               const valueWithoutPlus = removePlusPrefix(value);
                               field.onChange(valueWithoutPlus);
                             }}
-                            countrySelectComponent={MobileCountrySelect}
+                            countrySelectComponent={(props) => (
+                              <MobileCountrySelect
+                                {...props}
+                                searchInputClassName={registerCountrySearchInputClassName}
+                              />
+                            )}
                             className="h-12 rounded-xl border border-white/10 bg-white/5 px-3 text-white focus-within:ring-2 focus-within:ring-primarytext w-full"
                           />
                         </FormControl>
@@ -258,14 +199,14 @@ export default function Signup() {
                       <FormControl>
                         <div className="relative">
                           <Input
-                            type={showPassword ? "text" : "password"}
+                            type={showPassword ? 'text' : 'password'}
                             placeholder="Create a strong password"
                             {...field}
                             className="h-12 bg-white/5 border-white/10 text-white placeholder:text-slate-500 rounded-xl pr-10 focus:ring-2 focus:ring-primarytext focus:border-transparent"
                           />
                           <button
                             type="button"
-                            onClick={() => setShowPassword(v => !v)}
+                            onClick={() => setShowPassword((v) => !v)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
                           >
                             {showPassword ? (
@@ -289,24 +230,19 @@ export default function Signup() {
                   {isPending ? (
                     <Loader2 className="animate-spin text-white" />
                   ) : (
-                    "Create Account"
+                    'Create Account'
                   )}
                 </CustomButton>
-
               </form>
             </Form>
 
             {/* Footer */}
             <p className="text-center text-sm text-slate-400">
-              Already have an account?{" "}
-              <Link
-                href="/auth/login"
-                className="text-white font-medium hover:underline"
-              >
+              Already have an account?{' '}
+              <Link href="/auth/login" className="text-white font-medium hover:underline">
                 Sign in
               </Link>
             </p>
-
           </div>
         </Card>
       </div>

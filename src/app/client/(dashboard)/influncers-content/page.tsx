@@ -38,7 +38,7 @@ export default function ClientInfluencersContentPage() {
           'Requested ',
           'Status',
           'Created At',
-          'View',
+          'View Feedback',
         ]}
         imageUrls={data?.campaigns?.map(
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
@@ -73,7 +73,7 @@ export default function ClientInfluencersContentPage() {
                   );
                 }}
               >
-                View Feedback
+                View
               </Button>
             </div>,
           ];
