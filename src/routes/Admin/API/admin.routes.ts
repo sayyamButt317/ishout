@@ -324,6 +324,17 @@ export const NegotiationTakeoverValueApi = async (thread_id: string) => {
   return response.data;
 };
 
+export const NegotiationSendHumanMessageApi = async (
+  thread_id: string,
+  payload: { message: string; negotiation_id: string },
+) => {
+  const response = await api.post(
+    AdminENDPOINT.ADMIN_NEGOTIATION_SEND_HUMAN_MESSAGE(thread_id),
+    payload,
+  );
+  return response.data;
+};
+
 export const SendWhatsappMessageApi = async (thread_id: string, message: string) => {
   const response = await api.post(AdminENDPOINT.ADMIN_SEND_WHATSAPP_MESSAGEl(thread_id), {
     message: message,

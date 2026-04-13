@@ -65,6 +65,8 @@ export const AdminENDPOINT = {
     `/admin/negotiation/toggle-takeover/${thread_id}`,
   ADMIN_NEGOTIATION_TAKEOVER_VALUE: (thread_id: string) =>
     `/admin/negotiation/takeover-value/${thread_id}`,
+  ADMIN_NEGOTIATION_SEND_HUMAN_MESSAGE: (thread_id: string) =>
+    `/admin/negotiation/send-human-message/${thread_id}`,
 
   DELETE_NEGOTIATION: (thread_id: string) => `/admin/negotiation-controls/${thread_id}`,
   ADMIN_NEGOTIATION_APPROVAL_STATUS: (thread_id: string) =>
