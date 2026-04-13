@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Waveform from './audiowave';
 import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
 import { parseTimedFeedbackMessage } from '@/src/utils/content-feedback-chat';
+import { FiFileText } from 'react-icons/fi';
 
 type ChatMessageType = {
   text?: string;
@@ -41,6 +42,20 @@ function isDataUrl(src: string) {
   return src.startsWith('data:');
 }
 
+function isPdfUrl(value: string) {
+  return /^https?:\/\/.+\.pdf(?:[?#].*)?$/i.test(value.trim());
+}
+
+function extractFileName(url: string) {
+  try {
+    const pathname = new URL(url).pathname;
+    const name = pathname.split('/').pop();
+    return name || 'document.pdf';
+  } catch {
+    return 'document.pdf';
+  }
+}
+
 export default function ChatMessageContent({
   message,
   onSelectMedia,
@@ -48,8 +63,7 @@ export default function ChatMessageContent({
 }: ChatMessageContentProps) {
   const msg = normalizeMessage(message);
 
-  const hasTimedStamp =
-    msg.timestamp != null && Number.isFinite(msg.timestamp);
+  const hasTimedStamp = msg.timestamp != null && Number.isFinite(msg.timestamp);
 
   if (hasTimedStamp) {
     return (
@@ -117,15 +131,32 @@ export default function ChatMessageContent({
             </div>
           )}
         </button>
-        {msg.text && (
-          <p className="mt-1 text-sm text-white/80">{msg.text}</p>
-        )}
+        {msg.text && <p className="mt-1 text-sm text-white/80">{msg.text}</p>}
       </div>
     );
   }
 
   const mediaUrl = msg?.mediaUrl || msg?.text || '';
   const analyzed = AnalyzeURL(mediaUrl);
+
+  if (isPdfUrl(mediaUrl)) {
+    return (
+      <a
+        href={mediaUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 p-3 transition hover:bg-white/10"
+      >
+        <FiFileText className="text-2xl text-white/90" />
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold text-white">
+            {extractFileName(mediaUrl)}
+          </p>
+          <p className="text-xs text-white/60">PDF Document</p>
+        </div>
+      </a>
+    );
+  }
 
   if (analyzed.isVideoUrl) {
     return (
@@ -145,10 +176,7 @@ export default function ChatMessageContent({
 
   if (analyzed.isImageUrl) {
     return (
-      <button
-        type="button"
-        onClick={() => onSelectMedia(mediaUrl, 'image')}
-      >
+      <button type="button" onClick={() => onSelectMedia(mediaUrl, 'image')}>
         <Image
           src={mediaUrl}
           alt="Chat image"

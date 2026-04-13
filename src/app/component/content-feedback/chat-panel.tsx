@@ -2,7 +2,7 @@
 
 import React, { ReactNode, useState } from 'react';
 import ChatMessagesList from './chat-messages-list';
-import { MessageSquare, Send } from 'lucide-react';
+import { Mic, Paperclip, Send } from 'lucide-react';
 
 type Mode = 'influencer' | 'brand';
 
@@ -65,9 +65,9 @@ export default function ChatPanel({
     messageRoleLabels ??
     (modeToggle
       ? {
-        right: 'Admin',
-        left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
-      }
+          right: 'Admin',
+          left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
+        }
       : undefined);
 
   const handleSend = async () => {
@@ -85,29 +85,29 @@ export default function ChatPanel({
   };
 
   return (
-    <div
-      className={`flex shrink-0 flex-col bg-white/2 ${className ?? ''}`}
-    >
+    <div className={`flex shrink-0 flex-col bg-white/2 ${className ?? ''}`}>
       {modeToggle && (
         <div className="border-b border-white/10 px-4 pt-3 pb-2">
           <div className="mx-auto flex max-w-md rounded-full border border-white/10 bg-white/5 p-1">
             <button
               type="button"
               onClick={() => modeToggle.onChange('influencer')}
-              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'influencer'
-                ? 'bg-primaryButton text-white shadow-sm'
-                : 'text-white/45 hover:text-white/70'
-                }`}
+              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
+                modeToggle.value === 'influencer'
+                  ? 'bg-primaryButton text-white shadow-sm'
+                  : 'text-white/45 hover:text-white/70'
+              }`}
             >
               Influencer Chat
             </button>
             <button
               type="button"
               onClick={() => modeToggle.onChange('brand')}
-              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'brand'
-                ? 'bg-primaryButton text-white shadow-sm'
-                : 'text-white/45 hover:text-white/70'
-                }`}
+              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
+                modeToggle.value === 'brand'
+                  ? 'bg-primaryButton text-white shadow-sm'
+                  : 'text-white/45 hover:text-white/70'
+              }`}
             >
               Brand Chat
             </button>
@@ -137,19 +137,36 @@ export default function ChatPanel({
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Type your feedback..."
-            className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
+            className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-32 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
           />
-          <button
-            type="button"
-            onClick={handleSend}
-            disabled={!sendEnabled || isSending}
-            className={`absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg transition-colors ${!sendEnabled || isSending
-              ? 'bg-white/10 text-white/50 cursor-not-allowed'
-              : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'
+          <div className="absolute bottom-4 right-4 flex items-center gap-2">
+            <button
+              type="button"
+              className="flex size-8 items-center justify-center rounded-lg bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+              title="Attach files"
+            >
+              <Paperclip className="size-4" />
+            </button>
+            <button
+              type="button"
+              className="flex size-8 items-center justify-center rounded-lg bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+              title="Record voice"
+            >
+              <Mic className="size-4" />
+            </button>
+            <button
+              type="button"
+              onClick={handleSend}
+              disabled={!sendEnabled || isSending}
+              className={`flex size-8 items-center justify-center rounded-lg transition-colors ${
+                !sendEnabled || isSending
+                  ? 'bg-white/10 text-white/50 cursor-not-allowed'
+                  : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'
               }`}
-          >
-            <Send className="size-4" />
-          </button>
+            >
+              <Send className="size-4" />
+            </button>
+          </div>
         </div>
 
         {afterComposer}
@@ -157,4 +174,3 @@ export default function ChatPanel({
     </div>
   );
 }
-

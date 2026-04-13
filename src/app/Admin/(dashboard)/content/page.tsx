@@ -64,18 +64,16 @@ export default function InfluencersContentPage() {
         header={[
           'Company Name',
           'Campaign Name',
-          'Source',
           'Platform',
-          'Category',
           'Followers',
           'Country',
+          'Status',
           'Requested',
           'Onboarded',
-          'Status',
           'Created At',
-          'View Feedback',
-          'View Brief',
-          'Delete',
+          ' ',
+          ' ',
+          ' ',
         ]}
         imageUrls={data?.campaigns?.map(
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
@@ -95,14 +93,8 @@ export default function InfluencersContentPage() {
             <div key={`campaign-name-${id}`} className="truncate">
               {campaign?.name}
             </div>,
-            <div key={`source-${id}`} className="truncate">
-              {campaign?.user_type || '-'}
-            </div>,
             <div key={`platform-${id}`} className="truncate">
               <PlatformBadge platform={campaign?.platform} />
-            </div>,
-            <div key={`category-${id}`} className="truncate">
-              {campaign?.category?.join(', ') || '-'}
             </div>,
             <div key={`followers-${id}`} className="truncate">
               {Array.isArray(campaign?.followers)
@@ -112,15 +104,16 @@ export default function InfluencersContentPage() {
             <div key={`country-${id}`} className="truncate">
               {campaign?.country?.join(', ') || '-'}
             </div>,
+            <div key={`status-${id}`} className="truncate">
+              <StatusBadge status={campaign?.status} />
+            </div>,
             <div key={`requested-influencers-${id}`} className="truncate">
               <CountButton count={campaign?.limit} />
             </div>,
             <div key={`onboarding-influencers-${id}`} className="truncate">
               <CountButton count={campaign?.approved_influencer_count} />
             </div>,
-            <div key={`status-${id}`} className="truncate">
-              <StatusBadge status={campaign?.status} />
-            </div>,
+            
             <div key={`created-at-${id}`} className="truncate">
               {new Date(campaign?.created_at).toLocaleDateString()}
             </div>,
@@ -167,7 +160,7 @@ export default function InfluencersContentPage() {
                   }
                 }}
               >
-                <Trash className="size-5 text-red-300 cursor-pointer" />
+                <Trash className="text-red-300 cursor-pointer size-md" />
               </Button>
             </div>,
           ];
