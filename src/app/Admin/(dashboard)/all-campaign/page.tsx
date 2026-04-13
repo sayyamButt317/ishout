@@ -121,7 +121,6 @@ export default function AllCampaignPage() {
           'Campaign Name',
           'Source',
           'Platform',
-          'Category',
           'Followers',
           'Country',
           'Requested',
