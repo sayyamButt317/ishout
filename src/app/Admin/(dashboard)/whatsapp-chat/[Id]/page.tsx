@@ -1,5 +1,6 @@
 'use client';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
+import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import useWhatsAppMessagesHook from '@/src/routes/Admin/Hooks/whatsappmessages-hook';
 import useNegotiationMessagesHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiationmessages-hook';
@@ -38,7 +39,18 @@ export default function WhatsAppChatById() {
   const { Id } = useParams<{ Id: string }>();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
   const isNegotiation = pathname?.includes('/negotiation-chat');
+  const negotiationId = searchParams.get('negotiation_id') ?? Id ?? '';
+
+  const negotiationQuery = useNegotiationMessagesHook(negotiationId);
+  const whatsappQuery = useWhatsAppMessagesHook(Id ?? '', 1, 100);
+  const data = isNegotiation ? negotiationQuery.data : whatsappQuery.data;
+  const isPending = isNegotiation ? negotiationQuery.isPending : whatsappQuery.isPending;
+  const isRefetching = isNegotiation
+    ? negotiationQuery.isRefetching
+    : whatsappQuery.isRefetching;
+  const refetch = isNegotiation ? negotiationQuery.refetch : whatsappQuery.refetch;
   const negotiationId = searchParams.get('negotiation_id') ?? Id ?? '';
 
   const negotiationQuery = useNegotiationMessagesHook(negotiationId);
@@ -109,11 +121,25 @@ export default function WhatsAppChatById() {
         });
         return;
       }
+      if (isNegotiation) {
+        negotiationHumanTakeover.mutate(enabled, {
+          onError: () => setAdminTakeover((prev) => !prev),
+          onSuccess: () => negotiationTakeoverValue.refetch(),
+        });
+        return;
+      }
       humantakeover.mutate(enabled, {
         onError: () => setAdminTakeover((prev) => !prev),
         onSuccess: () => toogleStatus.refetch(),
       });
     },
+    [
+      humantakeover,
+      toogleStatus,
+      isNegotiation,
+      negotiationHumanTakeover,
+      negotiationTakeoverValue,
+    ],
     [
       humantakeover,
       toogleStatus,
@@ -197,7 +223,13 @@ export default function WhatsAppChatById() {
                         thread_id: Id!,
                         sender,
                         message: msg.message ?? '',
+                        sender,
+                        message: msg.message ?? '',
                         timestamp: new Date().toISOString(),
+                        username: sender === 'USER' ? data.name : undefined,
+                      };
+                    });
+                    setMessages(Id!, mapped);
                         username: sender === 'USER' ? data.name : undefined,
                       };
                     });
@@ -212,11 +244,20 @@ export default function WhatsAppChatById() {
           </div>
         </div>
         {adminTakeover === null ? (
+        {adminTakeover === null ? (
           <Spinner />
         ) : (
           <AdminTakeoverToggle
             enabled={adminTakeover}
             onChange={handleAdminToggle}
+            disabled={
+              isNegotiation
+                ? !!(
+                    negotiationHumanTakeover.isPending ||
+                    negotiationTakeoverValue.isFetching
+                  )
+                : !!(humantakeover.isPending || toogleStatus.isFetching)
+            }
             disabled={
               isNegotiation
                 ? !!(
