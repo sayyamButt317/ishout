@@ -40,7 +40,6 @@ import ContentFeedbackPanel from '@/src/app/component/content-feedback/feedback'
 
 const COLUMNS = [{ id: 'approved', label: 'Approved', count: 28, color: 'emerald' }];
 
-
 function ContentFeedbackPageContent() {
   const searchParams = useSearchParams();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
@@ -171,13 +170,13 @@ function ContentFeedbackPageContent() {
     setSelectedVideoResolution('—');
   }, [chatData, selectedPreviewMediaUrl]);
 
-
   const SubmitFeedback = async (payload: {
     text: string;
     timestamp: number;
     snapshotDataUrl: string | null;
   }) => {
-    if (!selectedContentFeedback.trim() ||
+    if (
+      !selectedContentFeedback.trim() ||
       !selectedPreviewMediaUrl ||
       !negotiationId ||
       !selectedCard?.campaign_id
@@ -194,8 +193,7 @@ function ContentFeedbackPageContent() {
         review_side: 'admin_review',
         timestamp: payload.timestamp,
       });
-    }
-    catch (error) {
+    } catch (error) {
       toast.error(`Failed to save content feedback: ${error}`);
     }
   };
@@ -462,7 +460,6 @@ function ContentFeedbackPageContent() {
                         : 'Image'}
                     </p>
                   </div>
-
                 </div>
                 <div className="flex flex-col items-end gap-2 text-white/50">
                   <div className="flex items-center gap-2">

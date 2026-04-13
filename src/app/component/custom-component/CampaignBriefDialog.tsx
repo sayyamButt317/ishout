@@ -43,17 +43,6 @@ export default function CampaignBriefDialog({
     setLocalBrief({ ...localBrief, [key]: value });
   };
 
-  const getBase64FromUrl = async (url: string) => {
-    const res = await fetch(url);
-    const blob = await res.blob();
-
-    return new Promise<string>((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(blob);
-    });
-  };
-
   const handleExportPDF = async () => {
     if (!localBrief) return;
 
@@ -137,28 +126,17 @@ export default function CampaignBriefDialog({
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
-      doc.text('Product Images', margin, y);
+      doc.text('Product Image URLs', margin, y);
       y += 10;
 
-      const imgSize = 40;
-      let x = margin;
-
-      for (let i = 0; i < localBrief.product_image_urls.length; i++) {
-        const imgUrl = localBrief.product_image_urls[i];
-
-        try {
-          const base64 = await getBase64FromUrl(imgUrl);
-          const format = base64.includes('image/png') ? 'PNG' : 'JPEG';
-          doc.addImage(base64, format, x, y, imgSize, imgSize);
-          x += imgSize + 5;
-          if (x + imgSize > pageWidth - margin) {
-            x = margin;
-            y += imgSize + 10;
-          }
-        } catch (err) {
-          console.error('Image load failed', err);
-        }
-      }
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      localBrief.product_image_urls.forEach((link: string) => {
+        const splitText = doc.splitTextToSize(link, textWidth);
+        doc.text(splitText, margin, y);
+        doc.link(margin, y - 4, textWidth, 6, { url: link });
+        y += splitText.length * 6 + 4;
+      });
     }
     if (localBrief.video_links?.length) {
       doc.addPage();
