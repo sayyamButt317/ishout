@@ -20,6 +20,7 @@ import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import { Trash } from 'lucide-react';
+import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,6 +80,7 @@ export default function AdminPendingCampaigns() {
           'Generate/View-Generated',
           'View Brief',
           'Delete',
+          'WhatsApp',
         ]}
         imageUrls={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => campaign?.campaign_logo_url || null,
@@ -183,6 +185,7 @@ export default function AdminPendingCampaigns() {
               <Trash className="size-5 text-red-300 cursor-pointer" />
             </Button>
           </div>,
+            <WhatsAppShareButton key={campaign._id} userId={campaign.user_id || ''} />
         ])}
         paginationstart={data?.page ?? 1}
         paginationend={data?.total_pages ?? 1}

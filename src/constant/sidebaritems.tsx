@@ -103,19 +103,11 @@ export const adminSidebarLinks = [
     iconBg: 'bg-violet-500/20',
     iconColor: 'text-violet-400',
     children: [
-      { label: 'All Campaigns', route: '/Admin/all-campaign' },
+      { label: 'All Campaigns', route: '/Admin/all-campaigns' },
       { label: 'Pending', route: '/Admin/pending-campaign' },
       { label: 'iShout Approved', route: '/Admin/approved-campaign' },
       { label: 'Brand Approved', route: '/Admin/brand-approved' },
-    ],
-  },
-  {
-    label: 'Workflow',
-    icon: <CircleCheck size={15} />,
-    iconBg: 'bg-emerald-500/20',
-    iconColor: 'text-emerald-400',
-    children: [
-      { label: 'Negotiation', route: '/Admin/onboarding' },
+      { label: 'Onboarding', route: '/Admin/onboarding' },
       { label: 'Content', route: '/Admin/content' },
       { label: 'Report', route: '/Admin/report' },
     ],

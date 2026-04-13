@@ -61,7 +61,7 @@ export default function ChooseOptionDialog({
   const displayValue = normalizePhoneNumberForDisplay(phoneNumber);
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg border border-white/10 bg-black text-white rounded-3xl overflow-hidden">
+      <DialogContent className="max-w-3xl border border-white/10 bg-black text-white rounded-3xl overflow-hidden">
         <div className="relative p-8 space-y-8">
           <div className="space-y-2">
             <DialogTitle className="text-2xl font-semibold tracking-tight">
@@ -105,7 +105,7 @@ export default function ChooseOptionDialog({
                 }}
                 countrySelectComponent={MobileCountrySelect}
                 disabled={isPending}
-                className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus-within:border-[#ff4e7e] focus-within:ring-2 focus-within:ring-[#ff4e7e]/30 text-white placeholder:text-white/30 w-full 
+                className="h-20 w- 12 rounded-2xl bg-white/[0.05] border border-white/10 focus-within:border-[#ff4e7e] focus-within:ring-2 focus-within:ring-[#ff4e7e]/30 text-white placeholder:text-white/30 w-full 
   // [&_.PhoneInput]:border-none 
   // [&_.PhoneInput]:bg-transparent
   // [&_.PhoneInputInput]:border-none 
