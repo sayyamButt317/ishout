@@ -12,6 +12,7 @@ import HumanTakeoverHook from '@/src/routes/Admin/Hooks/humantakeover-hook';
 import ToogleStatusHook from '@/src/routes/Admin/Hooks/tooglestatus-hook';
 import NegotiationHumanTakeoverHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-humantakeover-hook';
 import NegotiationTakeoverValueHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-takeover-value-hook';
+import NegotiationSendHumanMessageHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-sendhumanmessage-hook';
 import { ChatMessage, useWhatsAppChatStore } from '@/src/store/Campaign/chat.store';
 import { RefreshCcw } from 'lucide-react';
 import { useNotificationSound } from '@/src/helper/notificationSound';
@@ -21,12 +22,16 @@ type NegotiationHistoryItem = {
   message?: string;
 };
 
+function mapNegotiationSender(senderType?: string): ChatMessage['sender'] {
+  // In negotiation UI, everything except USER should appear on the right
+  // using the white bubble style.
+  return senderType === 'USER' ? 'USER' : 'AI';
+}
+
 function isTakeoverActive(data: unknown): boolean {
   if (!data || typeof data !== 'object') return false;
   const d = data as Record<string, unknown>;
-  return (
-    d.mode === 'HUMAN_TAKEOVER' || d.human_takeover === true || d.enabled === true
-  );
+  return d.mode === 'HUMAN_TAKEOVER' || d.human_takeover === true || d.enabled === true;
 }
 
 export default function WhatsAppChatById() {
@@ -52,6 +57,7 @@ export default function WhatsAppChatById() {
   const { playMessageSentSound } = useNotificationSound();
 
   const sendMessage = isNegotiation ? null : SendWhatsappMessageHook(Id ?? '');
+  const negotiationSendMessage = NegotiationSendHumanMessageHook(Id ?? '', negotiationId);
   const humantakeover = HumanTakeoverHook(Id ?? '');
   const toogleStatus = ToogleStatusHook(Id ?? '', !isNegotiation);
   const negotiationHumanTakeover = NegotiationHumanTakeoverHook(Id ?? '');
@@ -65,7 +71,9 @@ export default function WhatsAppChatById() {
   }, [memoizedMessages.length]);
 
   useEffect(() => {
-    const takeoverData = isNegotiation ? negotiationTakeoverValue.data : toogleStatus.data;
+    const takeoverData = isNegotiation
+      ? negotiationTakeoverValue.data
+      : toogleStatus.data;
     if (takeoverData === undefined || takeoverData === null) return;
     setAdminTakeover(isTakeoverActive(takeoverData));
   }, [isNegotiation, toogleStatus.data, negotiationTakeoverValue.data]);
@@ -75,7 +83,7 @@ export default function WhatsAppChatById() {
     if (isNegotiation && data) {
       const history = (data.history as NegotiationHistoryItem[]) || [];
       const mapped: ChatMessage[] = history.map((msg, index) => {
-        const sender: ChatMessage['sender'] = msg.sender_type === 'AI' ? 'AI' : 'USER';
+        const sender = mapNegotiationSender(msg.sender_type);
         return {
           _id: `${Id}-${index}`,
           thread_id: Id!,
@@ -118,19 +126,32 @@ export default function WhatsAppChatById() {
   // Send message handler
   const handleSend = useCallback(
     (msg: string) => {
-      if (!msg.trim() || !adminTakeover || !sendMessage || isNegotiation) return;
+      if (!msg.trim() || !adminTakeover) return;
       const newMessage: ChatMessage = {
         _id: crypto.randomUUID(),
         thread_id: Id!,
-        sender: 'ADMIN',
+        sender: isNegotiation ? 'AI' : 'ADMIN',
         message: msg,
         timestamp: new Date().toISOString(),
       };
       addMessage(Id!, newMessage);
       playMessageSentSound();
+      if (isNegotiation) {
+        negotiationSendMessage.mutate(msg);
+        return;
+      }
+      if (!sendMessage) return;
       sendMessage.mutate(msg);
     },
-    [adminTakeover, playMessageSentSound, Id, addMessage, sendMessage, isNegotiation],
+    [
+      adminTakeover,
+      playMessageSentSound,
+      Id,
+      addMessage,
+      sendMessage,
+      isNegotiation,
+      negotiationSendMessage,
+    ],
   );
 
   const name = isNegotiation
@@ -170,8 +191,7 @@ export default function WhatsAppChatById() {
                   if (isNegotiation && data) {
                     const history = (data.history as NegotiationHistoryItem[]) || [];
                     const mapped: ChatMessage[] = history.map((msg, index) => {
-                      const sender: ChatMessage['sender'] =
-                        msg.sender_type === 'AI' ? 'AI' : 'USER';
+                      const sender = mapNegotiationSender(msg.sender_type);
                       return {
                         _id: `${Id}-${index}`,
                         thread_id: Id!,
@@ -219,11 +239,12 @@ export default function WhatsAppChatById() {
           memoizedMessages.map((msg) => {
             // Detect PDF links
             const isPdf = msg.message?.toLowerCase().endsWith('.pdf');
+            const displaySender = msg.sender === 'ADMIN' ? 'AI' : msg.sender;
             return (
               <MessageBubble
                 key={msg._id || `${msg.timestamp}-${msg.sender}`}
                 message={msg.message}
-                sender={msg.sender}
+                sender={displaySender}
                 timestamp={msg.timestamp}
                 isPdf={isPdf}
               />
@@ -234,9 +255,7 @@ export default function WhatsAppChatById() {
       </div>
 
       <ChatInput
-        enabled={
-          !isNegotiation && !!adminTakeover && !(humantakeover?.isPending || false)
-        }
+        enabled={!!adminTakeover && !(humantakeover?.isPending || false)}
         onSend={handleSend}
       />
     </div>
