@@ -21,14 +21,6 @@ export type ApprovedContentTagsPayload = {
   brand?: string[];
 };
 
-/**
- * Body for updating approved content media metadata.
- * Backend accepts this full shape; the client currently sends caption, hashtags, and subtitles only.
- */
 export type UpdateApprovedContentPayload = {
-  caption?: string;
-  tags?: ApprovedContentTagsPayload;
-  location_tag?: string;
   hashtags?: string[];
-  subtitles?: string;
 };

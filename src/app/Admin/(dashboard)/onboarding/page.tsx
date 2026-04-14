@@ -40,7 +40,7 @@ export default function OnboardingCampaignPage() {
   return (
     <>
       <PageHeader
-        title="Onboarding Influencer"
+        title="Onboarding Influencers"
         description="Showing campaigns waiting for influencers to be onboarded"
         icon={<UserPlus className="size-5" />}
         actions={
@@ -61,18 +61,16 @@ export default function OnboardingCampaignPage() {
         header={[
           'Company Name',
           'Campaign Name',
-          'Source',
           'Platform',
-          'Category',
           'Followers',
           'Country',
+          'Status',
           'Requested',
           'Onboarded',
-          'Status',
           'Created At',
-          'View Influencers',
-          'View Brief',
-          'Delete',
+          ' ',
+          ' ',
+          ' ',
         ]}
         imageUrls={data?.campaigns?.map(
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
@@ -90,14 +88,8 @@ export default function OnboardingCampaignPage() {
           <div key={`campaign-name-${campaign._id}`} className="truncate">
             {campaign?.name}
           </div>,
-          <div key={`source-${campaign._id}`} className="truncate">
-            {campaign?.user_type || '-'}
-          </div>,
           <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
-          </div>,
-          <div key={`category-${campaign._id}`} className="truncate">
-            {campaign?.category?.join(', ') || '-'}
           </div>,
           <div key={`followers-${campaign._id}`} className="truncate">
             {Array.isArray(campaign?.followers)
@@ -107,14 +99,14 @@ export default function OnboardingCampaignPage() {
           <div key={`country-${campaign._id}`} className="truncate">
             {campaign?.country?.join(', ') || '-'}
           </div>,
+           <div key={`status-${campaign._id}`} className="truncate">
+            <StatusBadge status={campaign?.status} />
+          </div>,
           <div key={`requested-influencers-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.limit} />
           </div>,
           <div key={`onboarding-influencers-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.approved_influencer_count} />
-          </div>,
-          <div key={`status-${campaign._id}`} className="truncate">
-            <StatusBadge status={campaign?.status} />
           </div>,
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}

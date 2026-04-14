@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import TableComponent from '@/src/app/component/CustomTable';
 import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
 import AllCampaignHook from '@/src/routes/Admin/Hooks/Allcampaign-hook';
-import { RefreshCcw, Trash, LayoutList, Filter } from 'lucide-react';
+import { RefreshCcw, Trash, LayoutList, Filter, Search, ArrowUpDown } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { AdminAllCampaignApiResponse } from '@/src/types/Admin-Type/Campaign-type';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import CountButton from '@/src/app/component/custom-component/countbutton';
@@ -28,17 +28,32 @@ const STATUS_OPTIONS = [
   { label: 'Rejected', value: 'rejected' },
 ] as const;
 
+const SORT_OPTIONS = [
+  { label: 'Sort by...', value: '' },
+  { label: 'Created At ↑', value: 'created_at_asc' },
+  { label: 'Created At ↓', value: 'created_at_desc' },
+  { label: 'Status A→Z', value: 'status_asc' },
+  { label: 'Status Z→A', value: 'status_desc' },
+  { label: 'Company Name A→Z', value: 'company_name_asc' },
+  { label: 'Company Name Z→A', value: 'company_name_desc' },
+  { label: 'Campaign Name A→Z', value: 'name_asc' },
+  { label: 'Campaign Name Z→A', value: 'name_desc' },
+];
+
 export default function AllCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortConfig, setSortConfig] = useState<{
+    key: 'created_at' | 'status' | 'company_name' | 'name';
+    direction: 'asc' | 'desc';
+  } | null>(null);
+
   const deleteCampaignHook = DeleteCampaignHook();
   const appliedStatus = statusFilter === 'all' ? undefined : statusFilter.toLowerCase();
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
 
-  const { data, isLoading, refetch, isRefetching } = AllCampaignHook(
-    currentPage,
-    appliedStatus,
-  );
+  const { data, isLoading, refetch, isRefetching } = AllCampaignHook(currentPage, appliedStatus);
 
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -46,7 +61,6 @@ export default function AllCampaignPage() {
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const [uploadModalOpen, setUploadModalOpen] = useState<string | null>(null);
   const uploadLogoMutation = UploadCampaignLogoHook();
-
   const updateStatusHook = UpdateStatusHook();
 
   const campaigns = (data?.campaigns ?? []) as AdminAllCampaignApiResponse[];
@@ -60,10 +74,7 @@ export default function AllCampaignPage() {
 
   useEffect(() => {
     if (briefData) {
-      setAdminBrief({
-        ...briefData.response,
-        id: briefData.id,
-      });
+      setAdminBrief({ ...briefData.response, id: briefData.id });
     }
   }, [briefData]);
 
@@ -72,19 +83,67 @@ export default function AllCampaignPage() {
     setCurrentPage(1);
   };
 
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (!value) {
+      setSortConfig(null);
+      return;
+    }
+    const lastUnderscoreIndex = value.lastIndexOf('_');
+    const key = value.slice(0, lastUnderscoreIndex) as 'created_at' | 'status' | 'company_name' | 'name';
+    const direction = value.slice(lastUnderscoreIndex + 1) as 'asc' | 'desc';
+    setSortConfig({ key, direction });
+  };
+
+  const filteredAndSortedCampaigns = useMemo(() => {
+    let result = [...campaigns];
+
+    // Search: match company name or campaign name
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (c) =>
+          c.company_name?.toLowerCase().includes(q) ||
+          c.name?.toLowerCase().includes(q),
+      );
+    }
+
+    // Sort
+    if (sortConfig) {
+      result.sort((a, b) => {
+        const key = sortConfig.key;
+
+        if (key === 'created_at') {
+          const aTime = new Date(a.created_at).getTime();
+          const bTime = new Date(b.created_at).getTime();
+          return sortConfig.direction === 'asc' ? aTime - bTime : bTime - aTime;
+        }
+
+        const aVal = String(a[key] ?? '').toLowerCase();
+        const bVal = String(b[key] ?? '').toLowerCase();
+        if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    return result;
+  }, [campaigns, searchQuery, sortConfig]);
+
   return (
     <>
       <PageHeader
         title="Company Generated Campaigns"
         description={
           <>
-            Showing <span className="font-medium text-white/80">{campaigns?.length}</span> of{' '}
+            Showing <span className="font-medium text-white/80">{filteredAndSortedCampaigns.length}</span> of{' '}
             <span className="font-medium text-white/80">{totalCount}</span> campaigns
           </>
         }
         icon={<LayoutList className="size-5" />}
         actions={
           <>
+            {/* Refresh */}
             <Button
               variant="ghost"
               size="icon"
@@ -95,6 +154,38 @@ export default function AllCampaignPage() {
             >
               <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
             </Button>
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/40" />
+              <input
+                type="text"
+                placeholder="Search campaigns..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-10 w-48 rounded-lg border border-white/15 bg-white/5 pl-9 pr-3 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
+              />
+            </div>
+
+            {/* Sort */}
+            <ArrowUpDown className="size-4 text-white/50" aria-hidden />
+            <label htmlFor="campaign-sort" className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70">
+              Sort by
+            </label>
+            <select
+              id="campaign-sort"
+              defaultValue=""
+              onChange={handleSortChange}
+              className="h-10 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
+            >
+              {SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value} className="bg-[#0d1320] text-white">
+                  {option.label}
+                </option>
+              ))}
+            </select>
+
+            {/* Status Filter */}
             <Filter className="size-4 text-white/50" aria-hidden />
             <label htmlFor="campaign-status-filter" className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70">
               Filter by status
@@ -127,18 +218,17 @@ export default function AllCampaignPage() {
           'Status',
           'Created At',
           'Chat',
-          'Action',
+          'Delete',
           'View Brief',
         ]}
-        imageUrls={campaigns.map((campaign) => campaign.campaign_logo_url || null)}
-        statuses={campaigns.map((campaign) => campaign.status)}
-        campaignIds={campaigns.map((campaign) => campaign._id)}
-        subheader={campaigns.map((campaign) => [
+        imageUrls={filteredAndSortedCampaigns.map((campaign) => campaign.campaign_logo_url || null)}
+        statuses={filteredAndSortedCampaigns.map((campaign) => campaign.status)}
+        campaignIds={filteredAndSortedCampaigns.map((campaign) => campaign._id)}
+        subheader={filteredAndSortedCampaigns.map((campaign) => [
           campaign.company_name,
           campaign.name,
           campaign.user_type,
           <PlatformBadge key={campaign._id} platform={campaign.platform} />,
-          campaign.category?.join(', ') || '-',
           campaign.followers?.join(', ') || '-',
           campaign.country?.join(', ') || '-',
           <CountButton key={campaign._id} count={campaign.limit} />,
@@ -157,7 +247,7 @@ export default function AllCampaignPage() {
             size="icon"
             onClick={() => deleteCampaignHook.mutate(campaign._id)}
           >
-            <Trash className="text-red-300" />
+            <Trash className="text-red-300 size-4" />
           </Button>,
           <CustomButton
             key={campaign._id}
@@ -174,15 +264,11 @@ export default function AllCampaignPage() {
           </CustomButton>,
         ])}
         onImageUpload={(rowIndex, file) => {
-          const campaign = campaigns[rowIndex];
+          const campaign = filteredAndSortedCampaigns[rowIndex];
           if (!campaign) return;
           uploadLogoMutation.mutate(
             { brief_id: campaign.brief_id!, file },
-            {
-              onSuccess: () => {
-                refetch();
-              },
-            },
+            { onSuccess: () => refetch() },
           );
         }}
         paginationstart={data?.page ?? currentPage}
@@ -190,6 +276,7 @@ export default function AllCampaignPage() {
         onPageChange={handlePageChange}
         isLoading={isLoading}
       />
+
       <CampaignBriefDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
@@ -201,16 +288,12 @@ export default function AllCampaignPage() {
         onClose={() => setUploadModalOpen(null)}
         onUpload={(file) => {
           if (!uploadModalOpen) return;
-
           uploadLogoMutation.mutate(
-            {
-              brief_id: uploadModalOpen,
-              file: file,
-            },
+            { brief_id: uploadModalOpen, file },
             {
               onSuccess: () => {
                 setUploadModalOpen(null);
-                refetch(); // refresh table
+                refetch();
               },
             },
           );

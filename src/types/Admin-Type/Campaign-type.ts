@@ -34,6 +34,7 @@ export interface ApiInfluencerResponse {
 }
 
 export interface AdminAllCampaignApiResponse {
+  campaignName: any;
   _id: string;
   user_type: string;
   name: string;

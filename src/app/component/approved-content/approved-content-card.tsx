@@ -102,22 +102,6 @@ export default function ApprovedContentCard({ item }: { item: ApprovedContentIte
                 {formatHashtags(item.hashtags)}
               </p>
             </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-wide text-white/45">
-                Subtitles
-              </p>
-              <p className="mt-0.5 break-words text-white/80">
-                {displayOrDash(item.subtitles)}
-              </p>
-            </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-wide text-white/45">
-                Captions
-              </p>
-              <p className="mt-0.5 break-words text-white/80">
-                {displayOrDash(item.caption)}
-              </p>
-            </div>
           </div>
         </div>
 

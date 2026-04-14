@@ -58,9 +58,7 @@ export default function ChatMessagesList({
             <div className="size-8 rounded-full bg-slate-600" />
 
             <div className={bubbleMaxWidthClassName ?? 'max-w-[80%]'}>
-              <span className="text-xs font-bold text-white/80">
-                {headerLabel}
-              </span>
+              <span className="text-xs font-bold text-white/80">{headerLabel}</span>
 
               <div className="mt-1 rounded-2xl p-2 text-xs bg-white/5">
                 <ChatMessageContent
@@ -69,7 +67,6 @@ export default function ChatMessagesList({
                   onSeekToTime={onSeekToTime}
                 />
               </div>
-
               <span className="text-[10px] text-white/40">
                 {new Date(msg.timestamp).toLocaleTimeString([], {
                   hour: '2-digit',
