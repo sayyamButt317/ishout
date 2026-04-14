@@ -2,7 +2,7 @@
 
 import React, { ReactNode, useState } from 'react';
 import ChatMessagesList from './chat-messages-list';
-import { Mic, Paperclip, Send } from 'lucide-react';
+import { Mic, Paperclip } from 'lucide-react';
 
 type Mode = 'influencer' | 'brand';
 
@@ -158,13 +158,13 @@ export default function ChatPanel({
               type="button"
               onClick={handleSend}
               disabled={!sendEnabled || isSending}
-              className={`flex size-8 items-center justify-center rounded-lg transition-colors ${
+              className={`flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors ${
                 !sendEnabled || isSending
                   ? 'bg-white/10 text-white/50 cursor-not-allowed'
                   : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'
               }`}
             >
-              <Send className="size-4" />
+              Send
             </button>
           </div>
         </div>

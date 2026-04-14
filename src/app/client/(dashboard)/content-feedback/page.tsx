@@ -12,7 +12,6 @@ import {
   Video,
   Check,
   RefreshCw,
-  Send,
   ChevronLeft,
   Maximize2,
 } from 'lucide-react';
@@ -36,7 +35,6 @@ import {
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
 
 const COLUMNS = [
-  { id: 'drafts', label: 'Drafts', count: 5, color: 'slate' },
   { id: 'review', label: 'Under Review', count: 12, color: 'primary' },
   { id: 'revision', label: 'Revision', count: 3, color: 'amber' },
   { id: 'approved', label: 'Approved', count: 28, color: 'emerald' },
@@ -103,8 +101,7 @@ function ContentFeedbackPageContent() {
   const apiCards: CardType[] = negotiationItems
     .filter(
       (item) =>
-        (!item.negotiation_status || item.negotiation_status === 'agreed') &&
-        item.admin_approved === 'Approved',
+        item.negotiation_status === 'agreed' && item.admin_approved === 'Approved',
     )
     .map((item) => ({
       id: item._id,
@@ -148,7 +145,7 @@ function ContentFeedbackPageContent() {
     Partial<Record<string, WhatsAppAdminCompanyApproveVideoResponse>>
   >({});
   const [approvedCopyDraftByUrl, setApprovedCopyDraftByUrl] = useState<
-    Record<string, { hashtags: string; caption: string; subtitles: string }>
+    Record<string, { hashtags: string }>
   >({});
 
   const isBrandAlreadyApproved =
@@ -248,21 +245,14 @@ function ContentFeedbackPageContent() {
     selectedMediaKey != null
       ? (approvedCopyDraftByUrl[selectedMediaKey] ?? {
           hashtags: '',
-          caption: '',
-          subtitles: '',
         })
-      : { hashtags: '', caption: '', subtitles: '' };
+      : { hashtags: '' };
 
-  const setApprovedCopyDraftField = (
-    field: 'hashtags' | 'caption' | 'subtitles',
-    value: string,
-  ) => {
+  const setApprovedCopyDraftField = (field: 'hashtags', value: string) => {
     if (!selectedMediaKey) return;
     setApprovedCopyDraftByUrl((prev) => {
       const current = prev[selectedMediaKey] ?? {
         hashtags: '',
-        caption: '',
-        subtitles: '',
       };
       return {
         ...prev,
@@ -299,7 +289,21 @@ function ContentFeedbackPageContent() {
 
       <div className="flex gap-6 overflow-x-auto pb-4">
         {COLUMNS.map((col) => {
-          const combinedCards: CardType[] = col.id === 'approved' ? [...apiCards] : [];
+          const combinedCards: CardType[] =
+            col.id === 'approved'
+              ? apiCards.filter(
+                  (card) => (card.Brand_approved ?? '').toLowerCase() === 'approved',
+                )
+              : col.id === 'revision'
+                ? apiCards.filter(
+                    (card) => (card.Brand_approved ?? '').toLowerCase() === 'revision',
+                  )
+                : col.id === 'review'
+                  ? apiCards.filter((card) => {
+                      const status = (card.Brand_approved ?? '').toLowerCase();
+                      return status !== 'approved' && status !== 'revision';
+                    })
+                  : [];
 
           return (
             <div
@@ -341,13 +345,7 @@ function ContentFeedbackPageContent() {
                         Brand_approved: card.Brand_approved,
                       })
                     }
-                    className={`cursor-pointer rounded-xl border bg-white/5 p-3 transition-all hover:shadow-lg ${
-                      col.id === 'review'
-                        ? 'border-2 border-(--color-primaryButton)'
-                        : col.id === 'revision'
-                          ? 'border-l-4 border-l-amber-400 border-white/10'
-                          : 'border-white/10 hover:border-(--color-primaryButton)/30'
-                    }`}
+                    className="cursor-pointer rounded-xl border border-white/10 bg-white/5 p-3 transition-all hover:border-(--color-primaryButton)/30 hover:shadow-lg"
                   >
                     <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
                       <Image
@@ -357,27 +355,6 @@ function ContentFeedbackPageContent() {
                         className="object-cover"
                         sizes="320px"
                       />
-
-                      {col.id === 'review' && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-(--color-primaryButton)/10">
-                          <Play
-                            className="size-10 text-(--color-primaryButton)"
-                            fill="currentColor"
-                          />
-                        </div>
-                      )}
-
-                      {col.id === 'revision' && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-amber-500/20">
-                          <RefreshCw className="size-8 text-amber-500" />
-                        </div>
-                      )}
-
-                      {col.id === 'approved' && (
-                        <div className="absolute top-2 right-2 rounded-full bg-emerald-500 p-1">
-                          <Check className="size-3 text-white" />
-                        </div>
-                      )}
 
                       <div className="absolute top-2 right-2 rounded-lg bg-white/90 p-1">
                         <Video className="size-3 text-slate-700" />
@@ -525,6 +502,7 @@ function ContentFeedbackPageContent() {
                             content_url: selectedPreviewMediaUrl,
                             msg: selectedContentFeedback.trim(),
                             review_side: 'brand_review',
+                            Brand_approved: 'revision',
                           });
                           const newFeedbackId = response?.feedback?.feedback_id as
                             | string
@@ -585,31 +563,26 @@ function ContentFeedbackPageContent() {
                           </p>
                           <button
                             type="button"
-                            disabled={updateApprovedContentMutation.isPending}
                             onClick={() => {
-                              const id =
-                                selectedMediaKey &&
-                                approveVideoResponseByUrl[selectedMediaKey]
-                                  ?.approved_content_id;
-                              if (!id) return;
-                              const hashtags = parseHashtagsInputToArray(
-                                approvedCopyDraft.hashtags,
-                              );
-                              updateApprovedContentMutation.mutate({
-                                approved_content_id: id,
-                                payload: {
-                                  caption: approvedCopyDraft.caption.trim() || undefined,
-                                  hashtags: hashtags.length ? hashtags : undefined,
-                                  subtitles:
-                                    approvedCopyDraft.subtitles.trim() || undefined,
-                                },
+                              if (!selectedMediaKey) return;
+                              setApprovedCopyDraftByUrl((prev) => {
+                                const current = prev[selectedMediaKey] ?? {
+                                  hashtags: '',
+                                };
+                                return {
+                                  ...prev,
+                                  [selectedMediaKey]: {
+                                    ...current,
+                                    hashtags: current.hashtags
+                                      ? `${current.hashtags.trim()} `
+                                      : '#',
+                                  },
+                                };
                               });
                             }}
                             className="shrink-0 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                           >
-                            {updateApprovedContentMutation.isPending
-                              ? 'Saving…'
-                              : 'Add hashtags'}
+                            Add hashtags
                           </button>
                         </div>
                         <div className="mt-3 grid gap-3 text-sm">
@@ -626,34 +599,31 @@ function ContentFeedbackPageContent() {
                               rows={2}
                               className="mt-1 w-full resize-none rounded-lg border border-white/10 bg-white/5 p-2 text-sm text-white placeholder:text-white/35 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
                             />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold uppercase text-white/40">
-                              Captions
-                            </p>
-                            <textarea
-                              value={approvedCopyDraft.caption}
-                              onChange={(e) =>
-                                setApprovedCopyDraftField('caption', e.target.value)
-                              }
-                              placeholder="Caption"
-                              rows={2}
-                              className="mt-1 w-full resize-none rounded-lg border border-white/10 bg-white/5 p-2 text-sm text-white placeholder:text-white/35 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
-                            />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold uppercase text-white/40">
-                              Subtitles
-                            </p>
-                            <textarea
-                              value={approvedCopyDraft.subtitles}
-                              onChange={(e) =>
-                                setApprovedCopyDraftField('subtitles', e.target.value)
-                              }
-                              placeholder="Subtitles"
-                              rows={2}
-                              className="mt-1 w-full resize-none rounded-lg border border-white/10 bg-white/5 p-2 text-sm text-white placeholder:text-white/35 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
-                            />
+                            <button
+                              type="button"
+                              disabled={updateApprovedContentMutation.isPending}
+                              onClick={() => {
+                                const id =
+                                  selectedMediaKey &&
+                                  approveVideoResponseByUrl[selectedMediaKey]
+                                    ?.approved_content_id;
+                                if (!id) return;
+                                const hashtags = parseHashtagsInputToArray(
+                                  approvedCopyDraft.hashtags,
+                                );
+                                updateApprovedContentMutation.mutate({
+                                  approved_content_id: id,
+                                  payload: {
+                                    hashtags: hashtags.length ? hashtags : undefined,
+                                  },
+                                });
+                              }}
+                              className="mt-3 rounded-lg bg-(--color-primaryButton) px-3 py-2 text-xs font-bold text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                              {updateApprovedContentMutation.isPending
+                                ? 'Saving…'
+                                : 'Save hashtags'}
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -700,6 +670,12 @@ function ContentFeedbackPageContent() {
                           negotiationId &&
                           selectedPreviewMediaUrl
                         ) {
+                          if (threadId && !isBrandAlreadyApproved) {
+                            approveNegotiation({
+                              thread_id: threadId,
+                              payload: { Brand_approved: 'Approved' },
+                            });
+                          }
                           approveVideoMutation.mutate(
                             {
                               brand_thread_id: effectiveBrandThreadId,
@@ -740,6 +716,7 @@ function ContentFeedbackPageContent() {
                         }
                       }}
                       disabled={
+                        isApproving ||
                         approveVideoMutation.isPending ||
                         !selectedPreviewMediaUrl ||
                         !effectiveBrandThreadId ||
@@ -794,35 +771,16 @@ function ContentFeedbackPageContent() {
                       }
                     }}
                     disabled={isSending}
-                    className={`absolute bottom-4 right-4 flex size-8 items-center justify-center rounded-lg transition-colors
+                    className={`absolute bottom-4 right-4 flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors
     ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'}`}
                   >
-                    <Send className="size-4" />
+                    Send
                   </button>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div>
                   <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-3 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
                     <RefreshCw className="size-4" />
                     Revision
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (threadId && !isBrandAlreadyApproved) {
-                        approveNegotiation({
-                          thread_id: threadId,
-                          payload: { Brand_approved: 'Approved' },
-                        });
-                      }
-                    }}
-                    disabled={isApproving || isBrandAlreadyApproved}
-                    className="flex items-center justify-center gap-2 rounded-xl bg-primaryButton px-4 py-3 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <Check className="size-4" />
-                    {isBrandAlreadyApproved
-                      ? 'Approved'
-                      : isApproving
-                        ? 'Approving...'
-                        : 'Approve'}
                   </button>
                 </div>
               </div>

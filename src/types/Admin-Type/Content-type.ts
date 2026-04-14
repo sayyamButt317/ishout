@@ -1,4 +1,4 @@
-import { TimelineMarkerData } from "./timeline-type";
+import { TimelineMarkerData } from './timeline-type';
 
 export interface CardType {
   id: string;
@@ -68,10 +68,10 @@ export interface SaveContentFeedbackPayload {
   campaign_id?: string;
   content_url?: string | null;
   snapshot?: string | null;
+  Brand_approved?: string | null;
   /** Video timecode for timed feedback; optional for plain textarea saves. */
   timestamp?: number;
 }
-
 
 export interface VideoFeedbackWorkspaceProps {
   videoRef: React.RefObject<HTMLVideoElement | null>;
@@ -91,4 +91,4 @@ export interface VideoFeedbackWorkspaceProps {
     snapshotDataUrl: string | null;
   }) => Promise<void>;
   onMarkerSeek?: (timestamp: number) => void;
-};
+}
