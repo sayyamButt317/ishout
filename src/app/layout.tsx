@@ -11,19 +11,19 @@ import ErrorBoundary from "@/src/errors/ErrorBoundary";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "iShout",
+  title: 'iShout',
   icons: {
-    icon: "/assets/iShout-gif-black-background.gif",
+    icon: '/assets/iShout-gif-black-background.gif',
   },
 };
 
