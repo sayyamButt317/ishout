@@ -71,16 +71,15 @@ export default function AdminPendingCampaigns() {
           'Company Name',
           'Campaign Name',
           'Platform',
-          'Category',
           'Followers',
           'Country',
-          'Requested',
           'Status',
+          'Requested',
           'Created At',
-          'Generate/View-Generated',
-          'View Brief',
+          'Chat ',
           'Delete',
-          'WhatsApp',
+          '_ ',
+          ' _',
         ]}
         imageUrls={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => campaign?.campaign_logo_url || null,
@@ -96,25 +95,36 @@ export default function AdminPendingCampaigns() {
           <div key={`platform-${campaign._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
           </div>,
-          <div key={`category-${campaign._id}`} className="truncate">
-            {campaign?.category?.join(', ')}
-          </div>,
           <div key={`followers-${campaign._id}`} className="truncate">
             {campaign?.followers?.join(', ')}
           </div>,
           <div key={`country-${campaign._id}`} className="truncate">
             {campaign?.country?.join(', ')}
           </div>,
-          <div key={`requested-${campaign._id}`} className="truncate">
-            <CountButton count={campaign?.limit} />
-          </div>,
           <div key={`status-${campaign._id}`} className="truncate">
             <StatusBadge status={campaign?.status} />
           </div>,
+          <div key={`requested-${campaign._id}`} className="truncate">
+            <CountButton count={campaign?.limit} />
+          </div>,
+          
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
-          <div key={`view-${campaign._id}`} className="min-w-[180px]">
+          <div key={`delete-${campaign._id}`} className="truncate">
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={deleteCampaignHook.isPending}
+              onClick={() => {
+                deleteCampaignHook.mutate(campaign._id);
+              }}
+            >
+              <Trash className="size-5 text-red-300 cursor-pointer" />
+            </Button>
+          </div>,
+            <WhatsAppShareButton key={campaign._id} userId={campaign.user_id || ''} />,
+                      <div key={`view-${campaign._id}`} className="min-w-[180px]">
             {campaign?.generated === false ? (
               <CustomButton
                 key={`generate-${campaign._id}`}
@@ -173,19 +183,6 @@ export default function AdminPendingCampaigns() {
               View Brief
             </CustomButton>
           </div>,
-          <div key={`delete-${campaign._id}`} className="truncate">
-            <Button
-              variant="ghost"
-              size="icon"
-              disabled={deleteCampaignHook.isPending}
-              onClick={() => {
-                deleteCampaignHook.mutate(campaign._id);
-              }}
-            >
-              <Trash className="size-5 text-red-300 cursor-pointer" />
-            </Button>
-          </div>,
-            <WhatsAppShareButton key={campaign._id} userId={campaign.user_id || ''} />
         ])}
         paginationstart={data?.page ?? 1}
         paginationend={data?.total_pages ?? 1}

@@ -219,7 +219,7 @@ export default function AllCampaignPage() {
           'Created At',
           'Chat',
           'Delete',
-          'View Brief',
+          ' ',
         ]}
         imageUrls={filteredAndSortedCampaigns.map((campaign) => campaign.campaign_logo_url || null)}
         statuses={filteredAndSortedCampaigns.map((campaign) => campaign.status)}

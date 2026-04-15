@@ -16,6 +16,7 @@ import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import { Trash } from 'lucide-react';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 const ApprovedCampaignPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,6 +28,14 @@ const ApprovedCampaignPage = () => {
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
   const deleteCampaignHook = DeleteCampaignHook();
+
+  
+    // ✅ DELETE DIALOG STATE
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] =
+    useState<string | null>(null);
+
+
 
   useEffect(() => {
     if (briefData) {
@@ -69,9 +78,9 @@ const ApprovedCampaignPage = () => {
           // "Approved",
           'Status',
           'Created At',
-          'View',
-          'View Brief',
-          'Delete',
+          ' ',
+          ' ',
+          ' ',
         ]}
         imageUrls={data?.campaigns?.map(
           (campaign: ApprovedCampaignResponse) => campaign?.campaign_logo_url || null,
@@ -129,13 +138,13 @@ const ApprovedCampaignPage = () => {
                   router.push(`/Admin/approved-campaign/${campaign?.campaign_id}`);
                 }}
               >
-                View
+                View Influencers
               </Button>
             </div>
           </div>,
           <div key={`view-brief-${campaign._id}`} className="truncate">
-            <Button
-              className="bg-secondaryButton hover:bg-secondaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+           <Button
+              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
               disabled={!campaign.brief_id}
               onClick={() => {
                 if (campaign.brief_id) {
@@ -145,20 +154,18 @@ const ApprovedCampaignPage = () => {
               }}
             >
               View Brief
-            </Button>
+            </Button> 
           </div>,
           <div key={`delete-${campaign._id}`} className="truncate">
-            <Button
+          <Button
+              key={campaign._id + 'del'}
               variant="ghost"
-              size="icon"
-              disabled={deleteCampaignHook.isPending}
               onClick={() => {
-                if (confirm('Are you sure you want to delete this campaign?')) {
-                  deleteCampaignHook.mutate(campaign.campaign_id);
-                }
+                setSelectedCampaignId(campaign.campaign_id);
+                setDeleteOpen(true);
               }}
             >
-              <Trash className="size-5 text-red-300 cursor-pointer" />
+              <Trash className="size-5 text-red-400" />
             </Button>
           </div>,
         ])}
@@ -168,6 +175,19 @@ const ApprovedCampaignPage = () => {
           setCurrentPage(page);
         }}
         isLoading={isLoading}
+      />
+        {/* ✅ DELETE DIALOG (OUTSIDE TABLE) */}
+      <DeleteDialogue
+        heading="Delete Campaign"
+        subheading="Are you sure you want to delete this campaign?"
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        ondelete={() => {
+          if (selectedCampaignId) {
+            deleteCampaignHook.mutate(selectedCampaignId);
+            setDeleteOpen(false);
+          }
+        }}
       />
       <CampaignBriefDialog
         open={dialogOpen}
