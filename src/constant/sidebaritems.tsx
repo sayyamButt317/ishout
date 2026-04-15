@@ -103,7 +103,7 @@ export const adminSidebarLinks = [
     iconBg: 'bg-violet-500/20',
     iconColor: 'text-violet-400',
     children: [
-      { label: 'All Campaigns', route: '/Admin/all-campaigns' },
+      { label: 'All Campaigns', route: '/Admin/all-campaign' },
       { label: 'Pending', route: '/Admin/pending-campaign' },
       { label: 'iShout Approved', route: '/Admin/approved-campaign' },
       { label: 'Brand Approved', route: '/Admin/brand-approved' },
