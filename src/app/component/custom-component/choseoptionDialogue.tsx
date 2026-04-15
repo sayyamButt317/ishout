@@ -71,7 +71,7 @@ export default function ChooseOptionDialog({
               Add contact number and pricing range for this creator.
             </p>
           </div>
-          <div className="flex items-center gap-5 p-4 rounded-2xl bg-white/[0.04] border border-white/10">
+          <div className="flex items-center gap-5 p-4 rounded-2xl bg-white/0.04 border border-white/10">
             <Image
               src={influencer.picture}
               alt={influencer.username}
@@ -105,12 +105,12 @@ export default function ChooseOptionDialog({
                 }}
                 countrySelectComponent={MobileCountrySelect}
                 disabled={isPending}
-                className="h-20 w- 12 rounded-2xl bg-white/[0.05] border border-white/10 focus-within:border-[#ff4e7e] focus-within:ring-2 focus-within:ring-[#ff4e7e]/30 text-white placeholder:text-white/30 w-full 
-  // [&_.PhoneInput]:border-none 
+                className="h-20 w- 12 rounded-2xl bg-white/0.05 border border-white/10 focus-within:border-[#ff4e7e] focus-within:ring-2 focus-within:ring-[#ff4e7e]/30 text-white placeholder:text-white/30 w-full 
+  // [&_.PhoneInput]:border-none
   // [&_.PhoneInput]:bg-transparent
-  // [&_.PhoneInputInput]:border-none 
-  // [&_.PhoneInputInput]:bg-transparent 
-  // [&_.PhoneInputInput]:outline-none 
+  // [&_.PhoneInputInput]:border-none
+  // [&_.PhoneInputInput]:bg-transparent
+  // [&_.PhoneInputInput]:outline-none
   // [&_.PhoneInputCountry]:border-none"
               />
             </div>
@@ -126,7 +126,7 @@ export default function ChooseOptionDialog({
                   onChange={(e) => setMinPricing(e.target.value)}
                   disabled={isPending}
                   placeholder=""
-                  className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="h-12 rounded-2xl bg-white/0.05 border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
 
@@ -140,7 +140,7 @@ export default function ChooseOptionDialog({
                   onChange={(e) => setMaxPricing(e.target.value)}
                   disabled={isPending}
                   placeholder=""
-                  className="h-12 rounded-2xl bg-white/[0.05] border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  className="h-12 rounded-2xl bg-white/0.05 border border-white/10 focus:border-[#ff4e7e] focus:ring-2 focus:ring-[#ff4e7e]/30 text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                 />
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function ChooseOptionDialog({
           <div className="flex justify-end gap-4 pt-4 border-t border-white/10">
             <CustomButton
               onClick={onClose}
-              className="h-11 px-6 rounded-2xl bg-white/[0.05] border border-white/10 hover:bg-white/[0.08] text-white/70 transition-all"
+              className="h-11 px-6 rounded-2xl bg-white/0.05 border border-white/10 hover:bg-white/0.08 text-white/70 transition-all"
             >
               Cancel
             </CustomButton>
@@ -170,7 +170,7 @@ export default function ChooseOptionDialog({
                   },
                 );
               }}
-              className="h-11 px-8 rounded-2xl bg-[#ff4e7e] hover:bg-[#ff6f7f] text-white font-medium shadow-lg shadow-[#ff4e7e]/30 transition-all flex items-center justify-center min-w-[110px]"
+              className="h-11 px-8 rounded-2xl bg-[#ff4e7e] hover:bg-primaryHover text-white font-medium shadow-lg shadow-[#ff4e7e]/30 transition-all flex items-center justify-center min-w-27.5"
             >
               {isPending ? <Loader2 className="animate-spin" /> : 'Save Changes'}
             </CustomButton>

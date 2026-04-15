@@ -124,7 +124,7 @@ export default function AdminPendingCampaigns() {
             </Button>
           </div>,
             <WhatsAppShareButton key={campaign._id} userId={campaign.user_id || ''} />,
-                      <div key={`view-${campaign._id}`} className="min-w-[180px]">
+                      <div key={`view-${campaign._id}`} className="min-w-180px">
             {campaign?.generated === false ? (
               <CustomButton
                 key={`generate-${campaign._id}`}
