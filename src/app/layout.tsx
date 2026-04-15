@@ -1,13 +1,13 @@
-import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
-import { Analytics } from '@vercel/analytics/next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-import 'react-phone-number-input/style.css';
-import QueryProvider from '@/src/context/QueryProvider';
-import CustomToast from './component/customtoast';
-import ErrorBoundary from '@/src/errors/ErrorBoundary';
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import "react-phone-number-input/style.css";
+import QueryProvider from "@/src/context/QueryProvider";
+import CustomToast from "./component/customtoast";
+import ErrorBoundary from "@/src/errors/ErrorBoundary";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const geistSans = Geist({
