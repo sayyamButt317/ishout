@@ -271,7 +271,7 @@ export default function ContentFeedbackDetailPage() {
     return (
       <div className="font-sans p-4">
         <PageHeader
-          title="Content Review & Feedback Pipeline"
+          title="Content Review & Feedback Pipelin"
           description="Select a negotiation to review"
           icon={<MessageSquare className="size-5" />}
           actions={

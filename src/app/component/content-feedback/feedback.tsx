@@ -42,6 +42,7 @@ export default function ContentFeedbackPanel({
         msg: payload.text,
         review_side: 'admin_review',
         timestamp: payload.timestamp,
+        admin_approved: 'revision',
       });
       const newFeedbackId = response?.feedback?.feedback_id as string | undefined;
       if (newFeedbackId && setFeedbackId) {
