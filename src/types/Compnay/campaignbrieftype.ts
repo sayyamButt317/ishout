@@ -16,8 +16,16 @@ export interface CampaignBrief {
   usage_rights: string[];
   dos_donts: string[];
   campaign_logo_url?: string | null;
+  video_links?: string[] | null;
 }
-
+export interface CampaignBriefResponse {
+  id: string;
+  platform: string[];
+  category: string[];
+  followers: string[];
+  country: string[];
+  limit: number;
+}
 // campaignbrieftype.ts
 export interface UpdateCampaignBrief {
   id: string;

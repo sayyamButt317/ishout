@@ -90,7 +90,7 @@ export default function Sidebar({ links }: SidebarProps) {
     <>
       {/* Desktop */}
       <aside
-        className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-[260px] flex-col 
+        className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-65 flex-col
         rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10
         shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6"
       >
@@ -158,7 +158,7 @@ export default function Sidebar({ links }: SidebarProps) {
 
           <SheetContent
             side="left"
-            className="w-[260px] p-6 bg-slate-950 border-r border-white/10"
+            className="w-65 p-6 bg-slate-950 border-r border-white/10"
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
