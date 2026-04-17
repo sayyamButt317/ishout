@@ -5,5 +5,4 @@ const InfluencerfeedbackById = () => {
     <div>Influencerfeedback ById</div>
   )
 }
-
 export default InfluencerfeedbackById

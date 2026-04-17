@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useMemo, useSyncExternalStore } from 'react';
+import { useMemo } from 'react';
 import CustomButton from './button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -65,6 +65,12 @@ const Header = () => {
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               Case Studies
+            </a>
+            <a
+              href="/feedback"
+              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+            >
+              Feedback
             </a>
           </div>
 
