@@ -1,7 +1,7 @@
 'use client';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import TableComponent from '@/src/app/component/CustomTable';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import { RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
@@ -15,6 +15,7 @@ import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
+import { resolveCampaignStepperStatus } from '@/src/app/component/stepper';
 import { Trash } from 'lucide-react';
 
 export default function OnboardingCampaignPage() {
@@ -77,7 +78,12 @@ export default function OnboardingCampaignPage() {
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
         )}
         statuses={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign.status,
+          (campaign: CompanyCampaignResponse) =>
+            resolveCampaignStepperStatus({
+              status: campaign.status,
+              admin_approved: campaign.admin_approved,
+              company_approved: campaign.company_approved,
+            }),
         )}
         campaignIds={data?.campaigns?.map(
           (campaign: CompanyCampaignResponse) => campaign._id,
