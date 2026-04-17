@@ -36,10 +36,7 @@ export default function PageHeader({
   className = '',
 }: PageHeaderProps) {
   return (
-    <header
-      className={`mb-8 font-sans ${className}`}
-      role="banner"
-    >
+    <header className={`mb-8 font-sans ${className}`} role="banner">
       {/* Breadcrumbs */}
       {breadcrumbs != null && breadcrumbs.length > 0 && (
         <nav className="mb-3 flex items-center gap-1.5" aria-label="Breadcrumb">
@@ -91,7 +88,7 @@ export default function PageHeader({
           style={{ background: 'var(--color-primaryButton)' }}
         />
 
-        <div className="relative flex flex-col gap-4 sm:gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="relative flex flex-col gap-4 sm:gap-3 lg:flex-row lg:items-center lg:justify-between">
           {/* Left: icon + title + description */}
           <div className="flex min-w-0 flex-1 items-start gap-3.5 sm:items-center">
             {icon != null && (
@@ -130,7 +127,7 @@ export default function PageHeader({
 
           {/* Right: action slots */}
           {actions != null && (
-            <div className="flex shrink-0 flex-wrap items-center gap-2 sm:gap-2.5">
+            <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:gap-2.5 lg:w-auto">
               {actions}
             </div>
           )}

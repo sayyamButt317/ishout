@@ -71,6 +71,7 @@ export default function InfluencersContentPage() {
           'Requested',
           'Onboarded',
           'Created At',
+          'Delete',
           ' ',
           ' ',
           ' ',
@@ -113,9 +114,27 @@ export default function InfluencersContentPage() {
             <div key={`onboarding-influencers-${id}`} className="truncate">
               <CountButton count={campaign?.approved_influencer_count} />
             </div>,
-            
+
             <div key={`created-at-${id}`} className="truncate">
               {new Date(campaign?.created_at).toLocaleDateString()}
+            </div>,
+            <div key={`delete-${id}`} className="truncate">
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled={deleteCampaignHook.isPending}
+                onClick={() => {
+                  const delId = campaign.campaign_id ?? campaign._id;
+                  if (
+                    confirm('Are you sure you want to delete this campaign?') &&
+                    delId
+                  ) {
+                    deleteCampaignHook.mutate(delId);
+                  }
+                }}
+              >
+                <Trash className="text-red-300 cursor-pointer size-5" />
+              </Button>
             </div>,
             <div key={`view-${id}`} className="truncate">
               <Button
@@ -144,24 +163,6 @@ export default function InfluencersContentPage() {
               >
                 View Brief
               </CustomButton>
-            </div>,
-            <div key={`delete-${id}`} className="truncate">
-              <Button
-                variant="ghost"
-                size="icon"
-                disabled={deleteCampaignHook.isPending}
-                onClick={() => {
-                  const delId = campaign.campaign_id ?? campaign._id;
-                  if (
-                    confirm('Are you sure you want to delete this campaign?') &&
-                    delId
-                  ) {
-                    deleteCampaignHook.mutate(delId);
-                  }
-                }}
-              >
-                <Trash className="text-red-300 cursor-pointer size-md" />
-              </Button>
             </div>,
           ];
         })}

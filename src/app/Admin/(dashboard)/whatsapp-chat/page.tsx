@@ -52,8 +52,8 @@ export default function WhatsAppChat() {
           'Campaign Created',
           'Mode',
           'Human Takeover',
+          'Delete',
           'Conversation',
-          'Action',
         ]}
         subheader={data?.users?.map((userSession: WhatsAppUserSessionResponse) => [
           <div key={`user-name-${userSession._id}`} className="truncate">
@@ -82,6 +82,14 @@ export default function WhatsAppChat() {
               status={userSession?.human_takeover === true ? 'Enabled' : 'Disabled'}
             />
           </div>,
+          <div key={`delete-${userSession._id}`} className="truncate">
+            <Trash
+              className="size-5 text-red-300 cursor-pointer"
+              onClick={() => {
+                deleteWhatsappChatHook.mutate(userSession.thread_id);
+              }}
+            />
+          </div>,
           // <div key={`status-${userSession._id}`} className="truncate">
           //   <StatusBadge status={userSession?.status ?? "Pending"} />
           // </div>,
@@ -99,14 +107,6 @@ export default function WhatsAppChat() {
               </span>
             )}
           </CustomButton>,
-          <div key={`delete-${userSession._id}`} className="truncate">
-            <Trash
-              className="w-4 h-4 text-red-300 cursor-pointer"
-              onClick={() => {
-                deleteWhatsappChatHook.mutate(userSession.thread_id);
-              }}
-            />
-          </div>,
         ])}
         paginationstart={data?.page ?? 1}
         paginationend={data?.total_pages ?? 1}

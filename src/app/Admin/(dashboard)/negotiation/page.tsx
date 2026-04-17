@@ -61,8 +61,8 @@ export default function NegotiationPage() {
           'Manual Negotiation',
           'Agent Paused',
           'Final Reply',
-          'View Chat',
           'Delete',
+          'View Chat',
         ]}
         subheader={data?.negotiation_controls?.map(
           (userSession: NegotiationStatsResponse) => {
@@ -163,22 +163,6 @@ export default function NegotiationPage() {
               >
                 {userSession?.final_reply || '-'}
               </div>,
-              <CustomButton
-                key={`view-chat-${userSession._id}`}
-                onClick={() => {
-                  router.push(
-                    `/Admin/negotiation-chat/${userSession.thread_id}?negotiation_id=${userSession._id}`,
-                  );
-                }}
-                className="relative bg-primaryButton hover:bg-primaryHover text-white"
-              >
-                View Chat
-                {unreadMap?.[userSession.thread_id] > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                    {unreadMap[userSession.thread_id]}
-                  </span>
-                )}
-              </CustomButton>,
               <div key={`delete-${userSession.thread_id}`}>
                 <Button
                   variant="ghost"
@@ -196,6 +180,22 @@ export default function NegotiationPage() {
                   <Trash className="size-5 text-red-300" />
                 </Button>
               </div>,
+              <CustomButton
+                key={`view-chat-${userSession._id}`}
+                onClick={() => {
+                  router.push(
+                    `/Admin/negotiation-chat/${userSession.thread_id}?negotiation_id=${userSession._id}`,
+                  );
+                }}
+                className="relative bg-primaryButton hover:bg-primaryHover text-white"
+              >
+                View Chat
+                {unreadMap?.[userSession.thread_id] > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                    {unreadMap[userSession.thread_id]}
+                  </span>
+                )}
+              </CustomButton>,
             ];
           },
         )}
