@@ -84,7 +84,9 @@ export default function AdminPendingCampaigns() {
         imageUrls={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => campaign?.campaign_logo_url || null,
         )}
-        statuses={data?.campaigns.map((campaign: AdminAllCampaignApiResponse) => campaign.status)}
+        statuses={data?.campaigns.map(
+          (campaign: AdminAllCampaignApiResponse) => campaign.status,
+        )}
         subheader={data?.campaigns.map((campaign: AdminAllCampaignApiResponse) => [
           <div key={`company-name-${campaign._id}`} className="truncate">
             {campaign?.company_name}
@@ -110,6 +112,7 @@ export default function AdminPendingCampaigns() {
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
+          <WhatsAppShareButton key={campaign._id} userId={campaign.user_id || ''} />,
           <div key={`delete-${campaign._id}`} className="truncate">
             <Button
               variant="ghost"
@@ -122,8 +125,7 @@ export default function AdminPendingCampaigns() {
               <Trash className="size-5 text-red-300 cursor-pointer" />
             </Button>
           </div>,
-            <WhatsAppShareButton key={campaign._id} userId={campaign.user_id || ''} />,
-                      <div key={`view-${campaign._id}`} className="min-w-180px">
+          <div key={`view-${campaign._id}`} className="min-w-180px">
             {campaign?.generated === false ? (
               <CustomButton
                 key={`generate-${campaign._id}`}

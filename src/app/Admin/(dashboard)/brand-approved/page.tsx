@@ -69,6 +69,7 @@ export default function OnboardingCampaignPage() {
           'Requested',
           'Onboarded',
           'Created At',
+          'Delete',
           ' ',
           ' ',
           ' ',
@@ -116,6 +117,20 @@ export default function OnboardingCampaignPage() {
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
+          <div key={`delete-${campaign._id}`} className="truncate">
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={deleteCampaignHook.isPending}
+              onClick={() => {
+                if (confirm('Are you sure you want to delete this campaign?')) {
+                  deleteCampaignHook.mutate(campaign.campaign_id);
+                }
+              }}
+            >
+              <Trash className="size-5 text-red-300 cursor-pointer" />
+            </Button>
+          </div>,
           <div key={`view-${campaign._id}`} className="truncate">
             <Button
               className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
@@ -139,20 +154,6 @@ export default function OnboardingCampaignPage() {
             >
               View Brief
             </CustomButton>
-          </div>,
-          <div key={`delete-${campaign._id}`} className="truncate">
-            <Button
-              variant="ghost"
-              size="icon"
-              disabled={deleteCampaignHook.isPending}
-              onClick={() => {
-                if (confirm('Are you sure you want to delete this campaign?')) {
-                  deleteCampaignHook.mutate(campaign.campaign_id);
-                }
-              }}
-            >
-              <Trash className="size-6 text-red-300 cursor-pointer" />
-            </Button>
           </div>,
         ])}
         paginationstart={currentPage}

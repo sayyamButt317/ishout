@@ -71,6 +71,7 @@ export default function InfluencersContentPage() {
           'Requested',
           'Onboarded',
           'Created At',
+          'Delete',
           ' ',
           ' ',
           ' ',
