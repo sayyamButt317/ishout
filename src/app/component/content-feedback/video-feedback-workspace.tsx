@@ -68,7 +68,6 @@ export default function VideoFeedbackWorkspace({
     const [commentText, setCommentText] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
-    /** Netflix-style scrub preview */
     const [scrubHover, setScrubHover] = useState<{
         time: number;
         clientX: number;
@@ -162,7 +161,7 @@ export default function VideoFeedbackWorkspace({
         ],
     );
 
-    const handleSubmit = async () => {
+    const submitFeedback = async () => {
         const text = commentText.trim();
         if (!text) return;
         setSubmitting(true);
@@ -172,6 +171,11 @@ export default function VideoFeedbackWorkspace({
                 timestamp: composerTime,
                 snapshotDataUrl: composerSnapshot,
             });
+            console.log('Feedback submitted successfully',
+                "Text: ", text,
+                "Timestamp: ", composerTime,
+                "Snapshot: ", composerSnapshot,
+            );
             setComposerOpen(false);
             setPinMode(false);
         } finally {
@@ -374,7 +378,7 @@ export default function VideoFeedbackWorkspace({
                             type="button"
                             disabled={submitting || !commentText.trim()}
                             className="bg-(--color-primaryButton) text-white hover:opacity-90"
-                            onClick={() => void handleSubmit()}
+                            onClick={() => void submitFeedback()}
                         >
                             {submitting ? 'Sending…' : 'Send feedback'}
                         </Button>
