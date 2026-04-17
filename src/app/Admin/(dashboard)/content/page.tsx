@@ -113,38 +113,11 @@ export default function InfluencersContentPage() {
             <div key={`onboarding-influencers-${id}`} className="truncate">
               <CountButton count={campaign?.approved_influencer_count} />
             </div>,
-            
+
             <div key={`created-at-${id}`} className="truncate">
               {new Date(campaign?.created_at).toLocaleDateString()}
             </div>,
-            <div key={`view-${id}`} className="truncate">
-              <Button
-                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-                onClick={() => {
-                  router.push(
-                    `/Admin/content/influncers_content?campaign_id=${
-                      campaign.campaign_id ?? campaign._id
-                    }`,
-                  );
-                }}
-              >
-                View Feedback
-              </Button>
-            </div>,
-            <div key={`view-brief-${id}`} className="truncate">
-              <CustomButton
-                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
-                disabled={!campaign.brief_id}
-                onClick={() => {
-                  if (campaign.brief_id) {
-                    setSelectedBriefId(campaign.brief_id);
-                    setDialogOpen(true);
-                  }
-                }}
-              >
-                View Brief
-              </CustomButton>
-            </div>,
+
             <div key={`delete-${id}`} className="truncate">
               <Button
                 variant="ghost"
@@ -161,6 +134,33 @@ export default function InfluencersContentPage() {
                 }}
               >
                 <Trash className="text-red-300 cursor-pointer size-md" />
+              </Button>
+            </div>,
+            <div key={`view-brief-${id}`} className="truncate">
+              <CustomButton
+                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+                disabled={!campaign.brief_id}
+                onClick={() => {
+                  if (campaign.brief_id) {
+                    setSelectedBriefId(campaign.brief_id);
+                    setDialogOpen(true);
+                  }
+                }}
+              >
+                View Brief
+              </CustomButton>
+            </div>,
+            <div key={`view-${id}`} className="truncate">
+              <Button
+                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+                onClick={() => {
+                  router.push(
+                    `/Admin/content/influncers_content?campaign_id=${campaign.campaign_id ?? campaign._id
+                    }`,
+                  );
+                }}
+              >
+                View Content
               </Button>
             </div>,
           ];

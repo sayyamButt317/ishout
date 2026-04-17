@@ -2,7 +2,7 @@
 import CampaignBriefResult from '@/src/app/component/custom-component/CampaignBriefResult';
 import CampaignBreifHook from '@/src/routes/Company/api/Hooks/CampaignBreif-hook';
 import useAuthStore from '@/src/store/AuthStore/authStore';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, WandSparkles } from 'lucide-react';
 import { useCallback, useState, useRef } from 'react';
 import SummaryPopup from '@/src/app/component/Ready-made/SummaryPopup';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
@@ -127,13 +127,6 @@ const CampaignBreifPage = () => {
           <div className="w-full bg-[#131318] rounded-2xl p-1 border border-white/0.06 shadow-2xl shadow-black/40">
             <div className="bg-[#13131a] rounded-2xl p-6 space-y-4 text-left">
 
-              {/* <label className="text-sm font-bold text-[#acaab1] ml-1 flex items-center gap-2">
-                <svg className="w-4 h-4 text-primaryButton" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Describe your campaign
-              </label> */}
-
               <textarea
                 placeholder="e.g., A summer launch for our sustainable activewear brand featuring gen-z yoga influencers in urban settings..."
                 value={input}
@@ -151,7 +144,7 @@ const CampaignBreifPage = () => {
                 <button
                   onClick={handleGenerateCampaignBreif}
                   disabled={isPending || !input.trim()}
-                  className="px-8 py-3.5 bg-linear-to-r from-primaryButton to-primaryHover text-black font-bold rounded-full flex items-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  className="px-8 py-3.5 bg-linear-to-r from-primaryButton to-primaryHover text-white cursor-pointer font-bold rounded-full flex items-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   {isPending ? (
                     <>
@@ -161,9 +154,7 @@ const CampaignBreifPage = () => {
                   ) : (
                     <>
                       {/* magic_button icon */}
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M7.5 5.6L10 7 8.6 4.5 10 2 7.5 3.4 5 2l1.4 2.5L5 7zm12 9.8L17 14l1.4 2.5L17 19l2.5-1.4L22 19l-1.4-2.5L22 14zM22 2l-2.5 1.4L17 2l1.4 2.5L17 7l2.5-1.4L22 7l-1.4-2.5zm-7.63 5.29a1 1 0 00-1.41 0L1.29 18.96a1 1 0 000 1.41l2.34 2.34a1 1 0 001.41 0L16.7 11.05a1 1 0 000-1.41l-2.33-2.35zm-1.03 5.49l-2.12-2.12 2.44-2.44 2.12 2.12-2.44 2.44z"/>
-                      </svg>
+                      <WandSparkles />
                       Generate Brief
                     </>
                   )}
