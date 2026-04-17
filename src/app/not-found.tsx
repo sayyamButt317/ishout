@@ -1,13 +1,17 @@
-"use client";
-import Link from "next/link";
-import { Home, ArrowLeft, AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+'use client';
+import Link from 'next/link';
+import { Home, ArrowLeft, AlertTriangle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 export default function NotFound() {
   const router = useRouter();
   const handleGoBack = () => {
-    router.back();
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back();
+      return;
+    }
+    router.push('/');
   };
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
@@ -20,12 +24,10 @@ export default function NotFound() {
         </div>
         {/* Main Content */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">
-            Oops! Page Not Found
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">Oops! Page Not Found</h2>
           <p className="text-gray-600 text-lg leading-relaxed">
-            The page you&apos;re looking for doesn&apos;t exist or has been
-            moved. Don&apos;t worry, let&apos;s get you back on track!
+            The page you&apos;re looking for doesn&apos;t exist or has been moved.
+            Don&apos;t worry, let&apos;s get you back on track!
           </p>
         </div>
         {/* Action Buttons */}
@@ -41,17 +43,13 @@ export default function NotFound() {
           </Button>
           <Button
             variant="outline"
-            asChild
             className="w-full border-2 border-gray-300 hover:border-blue-500 text-gray-700 hover:text-blue-600 font-semibold py-3 px-6 rounded-xl transition-all duration-300"
+            onClick={handleGoBack}
           >
-            <Link
-              href="/"
-              className="flex items-center justify-center gap-2"
-              onClick={handleGoBack}
-            >
+            <span className="flex items-center justify-center gap-2">
               <ArrowLeft className="w-5 h-5" />
               Go Back
-            </Link>
+            </span>
           </Button>
         </div>
         {/* Decorative Elements */}

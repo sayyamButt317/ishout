@@ -53,7 +53,10 @@ export default function AllCampaignPage() {
   const appliedStatus = statusFilter === 'all' ? undefined : statusFilter.toLowerCase();
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
 
-  const { data, isLoading, refetch, isRefetching } = AllCampaignHook(currentPage, appliedStatus);
+  const { data, isLoading, refetch, isRefetching } = AllCampaignHook(
+    currentPage,
+    appliedStatus,
+  );
 
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -90,7 +93,11 @@ export default function AllCampaignPage() {
       return;
     }
     const lastUnderscoreIndex = value.lastIndexOf('_');
-    const key = value.slice(0, lastUnderscoreIndex) as 'created_at' | 'status' | 'company_name' | 'name';
+    const key = value.slice(0, lastUnderscoreIndex) as
+      | 'created_at'
+      | 'status'
+      | 'company_name'
+      | 'name';
     const direction = value.slice(lastUnderscoreIndex + 1) as 'asc' | 'desc';
     setSortConfig({ key, direction });
   };
@@ -103,8 +110,7 @@ export default function AllCampaignPage() {
       const q = searchQuery.toLowerCase();
       result = result.filter(
         (c) =>
-          c.company_name?.toLowerCase().includes(q) ||
-          c.name?.toLowerCase().includes(q),
+          c.company_name?.toLowerCase().includes(q) || c.name?.toLowerCase().includes(q),
       );
     }
 
@@ -136,8 +142,11 @@ export default function AllCampaignPage() {
         title="Company Generated Campaigns"
         description={
           <>
-            Showing <span className="font-medium text-white/80">{filteredAndSortedCampaigns.length}</span> of{' '}
-            <span className="font-medium text-white/80">{totalCount}</span> campaigns
+            Showing{' '}
+            <span className="font-medium text-white/80">
+              {filteredAndSortedCampaigns.length}
+            </span>{' '}
+            of <span className="font-medium text-white/80">{totalCount}</span> campaigns
           </>
         }
         icon={<LayoutList className="size-5" />}
@@ -169,7 +178,10 @@ export default function AllCampaignPage() {
 
             {/* Sort */}
             <ArrowUpDown className="size-4 text-white/50" aria-hidden />
-            <label htmlFor="campaign-sort" className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70">
+            <label
+              htmlFor="campaign-sort"
+              className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70"
+            >
               Sort by
             </label>
             <select
@@ -179,7 +191,11 @@ export default function AllCampaignPage() {
               className="h-10 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
             >
               {SORT_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value} className="bg-[#0d1320] text-white">
+                <option
+                  key={option.value}
+                  value={option.value}
+                  className="bg-[#0d1320] text-white"
+                >
                   {option.label}
                 </option>
               ))}
@@ -187,7 +203,10 @@ export default function AllCampaignPage() {
 
             {/* Status Filter */}
             <Filter className="size-4 text-white/50" aria-hidden />
-            <label htmlFor="campaign-status-filter" className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70">
+            <label
+              htmlFor="campaign-status-filter"
+              className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70"
+            >
               Filter by status
             </label>
             <select
@@ -197,7 +216,11 @@ export default function AllCampaignPage() {
               className="h-10 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
             >
               {STATUS_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value} className="bg-[#0d1320] text-white">
+                <option
+                  key={option.value}
+                  value={option.value}
+                  className="bg-[#0d1320] text-white"
+                >
                   {option.label}
                 </option>
               ))}
@@ -219,9 +242,11 @@ export default function AllCampaignPage() {
           'Created At',
           'Chat',
           'Delete',
-          'View Brief',
+          ' ',
         ]}
-        imageUrls={filteredAndSortedCampaigns.map((campaign) => campaign.campaign_logo_url || null)}
+        imageUrls={filteredAndSortedCampaigns.map(
+          (campaign) => campaign.campaign_logo_url || null,
+        )}
         statuses={filteredAndSortedCampaigns.map((campaign) => campaign.status)}
         campaignIds={filteredAndSortedCampaigns.map((campaign) => campaign._id)}
         subheader={filteredAndSortedCampaigns.map((campaign) => [
