@@ -151,81 +151,81 @@ export default function AllCampaignPage() {
         }
         icon={<LayoutList className="size-5" />}
         actions={
-          <>
-            {/* Refresh */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 shrink-0 text-white/70 hover:bg-white/10 hover:text-white"
-              onClick={() => refetch()}
-              disabled={isRefetching}
-              aria-label="Refresh list"
-            >
-              <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
-            </Button>
+          <div className="flex w-full min-w-0 flex-col gap-2 xl:w-auto xl:flex-row xl:flex-wrap xl:items-center xl:gap-3">
+            <div className="flex w-full min-w-0 items-center gap-2 xl:w-auto">
+              {/* Refresh */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8 shrink-0 text-white/70 hover:bg-white/10 hover:text-white"
+                onClick={() => refetch()}
+                disabled={isRefetching}
+                aria-label="Refresh list"
+              >
+                <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
+              </Button>
 
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/40" />
-              <input
-                type="text"
-                placeholder="Search campaigns..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-10 w-48 rounded-lg border border-white/15 bg-white/5 pl-9 pr-3 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
-              />
+              {/* Search */}
+              <div className="relative min-w-0 flex-1 xl:w-56 xl:flex-none">
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/40" />
+                <input
+                  type="text"
+                  placeholder="Search campaigns..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-10 w-full rounded-lg border border-white/15 bg-white/5 pl-9 pr-3 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
+                />
+              </div>
             </div>
 
-            {/* Sort */}
-            <ArrowUpDown className="size-4 text-white/50" aria-hidden />
-            <label
-              htmlFor="campaign-sort"
-              className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70"
-            >
-              Sort by
-            </label>
-            <select
-              id="campaign-sort"
-              defaultValue=""
-              onChange={handleSortChange}
-              className="h-10 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
-            >
-              {SORT_OPTIONS.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                  className="bg-[#0d1320] text-white"
-                >
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <div className="flex w-full min-w-0 items-center gap-2 xl:w-auto">
+              {/* Sort */}
+              <ArrowUpDown className="size-4 shrink-0 text-white/50" aria-hidden />
+              <label htmlFor="campaign-sort" className="text-sm text-white/70">
+                Sort by
+              </label>
+              <select
+                id="campaign-sort"
+                defaultValue=""
+                onChange={handleSortChange}
+                className="h-10 min-w-0 flex-1 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20 xl:w-56 xl:flex-none"
+              >
+                {SORT_OPTIONS.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                    className="bg-[#0d1320] text-white"
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            {/* Status Filter */}
-            <Filter className="size-4 text-white/50" aria-hidden />
-            <label
-              htmlFor="campaign-status-filter"
-              className="sr-only sm:not-sr-only sm:text-sm sm:text-white/70"
-            >
-              Filter by status
-            </label>
-            <select
-              id="campaign-status-filter"
-              value={statusFilter}
-              onChange={handleStatusChange}
-              className="h-10 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
-            >
-              {STATUS_OPTIONS.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                  className="bg-[#0d1320] text-white"
-                >
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </>
+            <div className="flex w-full min-w-0 items-center gap-2 xl:w-auto">
+              {/* Status Filter */}
+              <Filter className="size-4 shrink-0 text-white/50" aria-hidden />
+              <label htmlFor="campaign-status-filter" className="text-sm text-white/70">
+                Filter by status
+              </label>
+              <select
+                id="campaign-status-filter"
+                value={statusFilter}
+                onChange={handleStatusChange}
+                className="h-10 min-w-0 flex-1 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20 xl:w-48 xl:flex-none"
+              >
+                {STATUS_OPTIONS.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                    className="bg-[#0d1320] text-white"
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         }
       />
 
@@ -272,7 +272,7 @@ export default function AllCampaignPage() {
             size="icon"
             onClick={() => deleteCampaignHook.mutate(campaign._id)}
           >
-            <Trash className="text-red-300 size-4" />
+            <Trash className="text-red-300 size-5" />
           </Button>,
           <CustomButton
             key={campaign._id}
