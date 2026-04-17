@@ -49,28 +49,8 @@ export default function LandingPage() {
               <div className="mt-6 p-[4px] border border-white/15 rounded-[20px] inline-block">
                 <div className="p-[6px] border border-white/30 rounded-[20px] inline-block">
                   <CustomButton
-                    className="
-    bg-[#ff3b8d]
-    hover:bg-[#ff5a9e]
-    cursor-pointer
-    rounded-[14px]
-    h-12
-    px-20
-    text-xl
-    font-extrabold
-    italic
-    text-white
-    
-    /* Default state: No */
-    shadow-none
-
-    /* Hover state: Multi-layered glow */
-    hover:shadow-[0_0_15px_rgba(255,255,255,0.4),0_0_30px_rgba(255,59,141,0.6),0_0_50px_rgba(255,59,141,0.3)]
-
-    transition-all
-    duration-300
-    ease-out
-  "
+                    className="bg-[#ff3b8d] hover:bg-[#ff5a9e] cursor-pointer rounded-[14px] h-12 px-20 text-xl font-extrabold italic text-white
+    shadow-none hover:shadow-[0_0_15px_rgba(255,255,255,0.4),0_0_30px_rgba(255,59,141,0.6),0_0_50px_rgba(255,59,141,0.3)] transition-all duration-300 ease-out"
                   >
                     Book a Demo
                   </CustomButton>
