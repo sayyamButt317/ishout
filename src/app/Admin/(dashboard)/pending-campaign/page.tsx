@@ -107,7 +107,6 @@ export default function AdminPendingCampaigns() {
           <div key={`requested-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.limit} />
           </div>,
-          
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
@@ -170,7 +169,7 @@ export default function AdminPendingCampaigns() {
               </CustomButton>
             )}
           </div>,
-          <div key={`view-brief-${campaign._id}`} className="min-w-[90px] pl-4">
+          <div key={`view-brief-${campaign._id}`} className="min-w-90px pl-4">
             <CustomButton
               className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
               onClick={() => {
