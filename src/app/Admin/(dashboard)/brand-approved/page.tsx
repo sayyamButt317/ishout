@@ -1,7 +1,7 @@
 'use client';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import TableComponent from '@/src/app/component/CustomTable';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import { RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
@@ -15,6 +15,7 @@ import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
+import { resolveCampaignStepperStatus } from '@/src/app/component/stepper';
 import { Trash } from 'lucide-react';
 
 export default function OnboardingCampaignPage() {
@@ -68,6 +69,7 @@ export default function OnboardingCampaignPage() {
           'Requested',
           'Onboarded',
           'Created At',
+          'Delete',
           ' ',
           ' ',
           ' ',
@@ -76,7 +78,12 @@ export default function OnboardingCampaignPage() {
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
         )}
         statuses={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign.status,
+          (campaign: CompanyCampaignResponse) =>
+            resolveCampaignStepperStatus({
+              status: campaign.status,
+              admin_approved: campaign.admin_approved,
+              company_approved: campaign.company_approved,
+            }),
         )}
         campaignIds={data?.campaigns?.map(
           (campaign: CompanyCampaignResponse) => campaign._id,
@@ -97,7 +104,7 @@ export default function OnboardingCampaignPage() {
           <div key={`country-${campaign._id}`} className="truncate">
             {campaign?.country?.join(', ') || '-'}
           </div>,
-           <div key={`status-${campaign._id}`} className="truncate">
+          <div key={`status-${campaign._id}`} className="truncate">
             <StatusBadge status={campaign?.status} />
           </div>,
           <div key={`requested-influencers-${campaign._id}`} className="truncate">
@@ -106,9 +113,23 @@ export default function OnboardingCampaignPage() {
           <div key={`onboarding-influencers-${campaign._id}`} className="truncate">
             <CountButton count={campaign?.approved_influencer_count} />
           </div>,
-      
+
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
+          </div>,
+          <div key={`delete-${campaign._id}`} className="truncate">
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={deleteCampaignHook.isPending}
+              onClick={() => {
+                if (confirm('Are you sure you want to delete this campaign?')) {
+                  deleteCampaignHook.mutate(campaign.campaign_id);
+                }
+              }}
+            >
+              <Trash className="size-5 text-red-300 cursor-pointer" />
+            </Button>
           </div>,
           <div key={`view-${campaign._id}`} className="truncate">
             <Button
@@ -133,20 +154,6 @@ export default function OnboardingCampaignPage() {
             >
               View Brief
             </CustomButton>
-          </div>,
-          <div key={`delete-${campaign._id}`} className="truncate">
-            <Button
-              variant="ghost"
-              size="icon"
-              disabled={deleteCampaignHook.isPending}
-              onClick={() => {
-                if (confirm('Are you sure you want to delete this campaign?')) {
-                  deleteCampaignHook.mutate(campaign.campaign_id);
-                }
-              }}
-            >
-              <Trash className="size-6 text-red-300 cursor-pointer" />
-            </Button>
           </div>,
         ])}
         paginationstart={currentPage}

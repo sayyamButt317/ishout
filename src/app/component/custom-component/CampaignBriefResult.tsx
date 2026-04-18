@@ -5,7 +5,7 @@ import {
   UpdateCampaignBrief,
 } from '@/src/types/Compnay/campaignbrieftype';
 import {
-  Copy, CheckCircle2, Sparkles, Check, Pencil, Save, X,
+  CheckCircle2, Sparkles, Check, Pencil, Save, X,
   BarChart3, Link2, ImageIcon, Users, Megaphone, Film,
   Package, Calendar, BookCheck, ShieldCheck, Info,
   MousePointerClick, UserSearch,
@@ -57,11 +57,11 @@ function EditableText({
 
 const CampaignBriefResult = ({ brief, onApprove }: Props) => {
   const [campaignImages, setCampaignImages] = useState<File[]>([]);
-  const [videoLinks, setVideoLinks]         = useState<string[]>(brief.video_links ?? []);
-  const [newLink, setNewLink]               = useState('');
-  const [copied, setCopied]                 = useState(false);
-  const [editable, setEditable]             = useState(false);
-  const [localBrief, setLocalBrief]         = useState<CampaignBrief>(brief);
+  const [videoLinks, setVideoLinks] = useState<string[]>(brief.video_links ?? []);
+  const [newLink, setNewLink] = useState('');
+
+  const [editable, setEditable] = useState(false);
+  const [localBrief, setLocalBrief] = useState<CampaignBrief>(brief);
 
   const { mutate: updateBrief, isPending: isUpdating } = useUpdateCampaignBrief();
 
@@ -71,11 +71,6 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
   const setStr = (key: keyof CampaignBrief, value: string) =>
     setLocalBrief((prev) => ({ ...prev, [key]: value }));
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(JSON.stringify(localBrief, null, 2));
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   const handleSave = () => {
     if (!localBrief.id) { toast.error('Brief ID missing'); return; }
@@ -151,14 +146,14 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
           {/* Approve */}
           <button
             onClick={() => onApprove?.()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-green-500/30 bg-green-500/5 text-green-400 font-bold text-md hover:bg-green-500/10 transition-colors"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-green-500/30 bg-primaryButton text-white cursor-pointer font-bold text-md hover:bg-primaryHover transition-colors"
           >
             <Check className="w-3.5 h-3.5" />
-            Approve
+            Approve Campaign
           </button>
 
           {/* Copy */}
-          <button
+          {/* <button
             onClick={handleCopy}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 bg-white/0.03 text-white/50 font-bold text-md hover:bg-white/[0.07] hover:text-white transition-all"
           >
@@ -166,7 +161,7 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
               ? <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
               : <Copy className="w-3.5 h-3.5" />}
             {copied ? 'Copied!' : 'Copy'}
-          </button>
+          </button> */}
         </div>
       </div>
 

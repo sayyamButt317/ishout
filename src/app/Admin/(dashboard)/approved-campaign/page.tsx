@@ -29,13 +29,9 @@ const ApprovedCampaignPage = () => {
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
   const deleteCampaignHook = DeleteCampaignHook();
 
-  
-    // ✅ DELETE DIALOG STATE
+  // ✅ DELETE DIALOG STATE
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [selectedCampaignId, setSelectedCampaignId] =
-    useState<string | null>(null);
-
-
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
   useEffect(() => {
     if (briefData) {
@@ -78,7 +74,7 @@ const ApprovedCampaignPage = () => {
           // "Approved",
           'Status',
           'Created At',
-          ' ',
+          'Delete',
           ' ',
           ' ',
         ]}
@@ -130,6 +126,18 @@ const ApprovedCampaignPage = () => {
           <div key={`created-at-${campaign._id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
+          <div key={`delete-${campaign._id}`} className="truncate">
+            <Button
+              key={campaign._id + 'del'}
+              variant="ghost"
+              onClick={() => {
+                setSelectedCampaignId(campaign.campaign_id);
+                setDeleteOpen(true);
+              }}
+            >
+              <Trash className="size-5 text-red-300" />
+            </Button>
+          </div>,
           <div key={`view-${campaign._id}`} className="truncate">
             <div key={`view-${campaign._id}`} className="truncate">
               <Button
@@ -143,7 +151,7 @@ const ApprovedCampaignPage = () => {
             </div>
           </div>,
           <div key={`view-brief-${campaign._id}`} className="truncate">
-           <Button
+            <Button
               className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
               disabled={!campaign.brief_id}
               onClick={() => {
@@ -154,18 +162,6 @@ const ApprovedCampaignPage = () => {
               }}
             >
               View Brief
-            </Button> 
-          </div>,
-          <div key={`delete-${campaign._id}`} className="truncate">
-          <Button
-              key={campaign._id + 'del'}
-              variant="ghost"
-              onClick={() => {
-                setSelectedCampaignId(campaign.campaign_id);
-                setDeleteOpen(true);
-              }}
-            >
-              <Trash className="size-5 text-red-400" />
             </Button>
           </div>,
         ])}
@@ -176,7 +172,7 @@ const ApprovedCampaignPage = () => {
         }}
         isLoading={isLoading}
       />
-        {/* ✅ DELETE DIALOG (OUTSIDE TABLE) */}
+      {/* ✅ DELETE DIALOG (OUTSIDE TABLE) */}
       <DeleteDialogue
         heading="Delete Campaign"
         subheading="Are you sure you want to delete this campaign?"
