@@ -149,7 +149,7 @@ const CampaignBreifPage = () => {
                   {isPending ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Generating...
+                      Generating Brief...
                     </>
                   ) : (
                     <>

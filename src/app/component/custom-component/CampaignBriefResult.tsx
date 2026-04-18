@@ -85,7 +85,6 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
         onSuccess: (data) => {
           setLocalBrief(data);
           setEditable(false);
-          toast.success('Campaign brief updated');
         },
       },
     );
