@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
 import { LogOut, Menu, ChevronDown } from 'lucide-react';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import LogoutDialogue from './logoutdialogue';
 import Image from 'next/image';
 import { SidebarGroupLink } from '@/src/constant/sidebaritems'; // ← adjust if path differs
@@ -14,7 +14,6 @@ export interface SidebarProps {
   links: SidebarGroupLink[];
 }
 
-// ─── Collapsible group ────────────────────────────────────────────────────────
 
 function NavGroup({
   group,
@@ -30,7 +29,11 @@ function NavGroup({
     (c) => c.route && (pathname === c.route || pathname.startsWith(c.route)),
   );
 
-  const [open, setOpen] = useState(hasActive || true);
+  const [open, setOpen] = useState<boolean>(hasActive);
+
+  useEffect(() => {
+    setOpen(hasActive);
+  }, [hasActive]);
 
   const isActive = useCallback(
     (route: string) =>
@@ -172,7 +175,7 @@ function SidebarContent({
 
 export default function Sidebar({ links }: SidebarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isLogout, setIsLogout]     = useState(false);
+  const [isLogout, setIsLogout] = useState(false);
 
   return (
     <>
