@@ -1,6 +1,6 @@
 import { TimedFeedbackPayloadV1, TimelineMarkerData } from "../types/Admin-Type/timeline-type";
 
-export const TIMED_FEEDBACK_PREFIX_V1 = '__CFB1__';
+export const TIMED_FEEDBACK_PREFIX_V1 = 'CFB:';
 export function serializeTimedFeedbackMessage(payload: TimedFeedbackPayloadV1): string {
   const body: Record<string, unknown> = {
     t: payload.t,

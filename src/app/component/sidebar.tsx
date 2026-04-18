@@ -78,12 +78,12 @@ export default function Sidebar({ links }: SidebarProps) {
 
   const primaryRenderedLinks = useMemo(
     () => links.filter((l) => !adminToolsRoutes.has(l.route)).map(renderLink),
-    [links, adminToolsRoutes, pathname],
+    [links, adminToolsRoutes, renderLink],
   );
 
   const adminToolsRenderedLinks = useMemo(
     () => links.filter((l) => adminToolsRoutes.has(l.route)).map(renderLink),
-    [links, adminToolsRoutes, pathname],
+    [links, adminToolsRoutes, renderLink],
   );
 
   return (

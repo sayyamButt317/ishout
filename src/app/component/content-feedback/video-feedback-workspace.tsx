@@ -171,11 +171,11 @@ export default function VideoFeedbackWorkspace({
                 timestamp: composerTime,
                 snapshotDataUrl: composerSnapshot,
             });
-            console.log('Feedback submitted successfully',
-                "Text: ", text,
-                "Timestamp: ", composerTime,
-                "Snapshot: ", composerSnapshot,
-            );
+            // console.log('Feedback submitted successfully',
+            //     "Text: ", text,
+            //     "Timestamp: ", composerTime,
+            //     "Snapshot: ", composerSnapshot,
+            // );
             setComposerOpen(false);
             setPinMode(false);
         } finally {
