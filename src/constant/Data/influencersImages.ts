@@ -1,31 +1,32 @@
 export const INFLUENCERS_IMAGES = [
 
     // MAN → PRODUCT → WOMAN → ARCHITECTURE → FOOD → JEWELRY → FASHION → NATURE → BABY → ACCESSORIES ...
-
-    { 
-        src: "https://i.pinimg.com/736x/94/2c/bc/942cbcc19f8a79a843278c3ffa0d959f.jpg", 
-        alt: "Modern Man Fashion" 
-    },
-    { 
-        src: "https://i.pinimg.com/736x/3c/9e/f7/3c9ef7391114d718cdabf059d1517d46.jpg", 
-        alt: "skincare products on a table" 
-    },
-    { 
-        src: "https://i.pinimg.com/1200x/39/f2/0b/39f20b7e319a6d03dcbaa68836f73a43.jpg", 
-        alt: "Woman with a flower" 
+    {
+        src: "https://i.pinimg.com/736x/94/2c/bc/942cbcc19f8a79a843278c3ffa0d959f.jpg",
+        alt: "Modern Man Fashion"
     },
     {
-        src: "https://i.pinimg.com/736x/b1/1f/fe/b11ffee678ec57a9af8802c7598b0fc6.jpg", 
-        alt: "Qatari building with a tree" 
+        src: "https://i.pinimg.com/736x/3c/9e/f7/3c9ef7391114d718cdabf059d1517d46.jpg",
+        alt: "skincare products on a table"
     },
-    { 
-        src: "https://i.pinimg.com/1200x/42/77/7b/42777b7ff3967aeb2fbfa49c62afb65d.jpg", 
-        alt: "phone taking picture of food" 
+    {
+        src: "https://i.pinimg.com/1200x/39/f2/0b/39f20b7e319a6d03dcbaa68836f73a43.jpg",
+        alt: "Woman with a flower"
+    },
+
+    {
+        src: "https://i.pinimg.com/736x/b1/1f/fe/b11ffee678ec57a9af8802c7598b0fc6.jpg",
+        alt: "Qatari building with a tree"
+    },
+    {
+        src: "https://i.pinimg.com/1200x/42/77/7b/42777b7ff3967aeb2fbfa49c62afb65d.jpg",
+        alt: "phone taking picture of food"
     },
     { src: "https://i.pinimg.com/1200x/ba/fc/15/bafc151702072262c51d1c80b81f3a2e.jpg", alt: "Jewelry Model Photoshoot" },
     { src: "https://i.pinimg.com/736x/b7/2d/b3/b72db34c2a137db4af3f60b6d9725a3c.jpg", alt: "Arab Fashion" },
     { src: "https://i.pinimg.com/736x/f7/b1/37/f7b1374482b730ad155c28e25e4e19c3.jpg", alt: "Arab man in flower field" },
     { src: "https://i.pinimg.com/736x/87/39/1b/87391bb40afb200565a2ab40d0dc7d75.jpg", alt: "Baby Products" },
+
     { src: "https://i.pinimg.com/736x/f5/cc/7d/f5cc7da1a5b9a6b229faec25e52904c9.jpg", alt: "Fashion Accessories" },
 
     { src: "https://i.pinimg.com/1200x/e7/7f/f5/e77ff5b4c10f2f751741ab78a64bf887.jpg", alt: "Arab Man" },
@@ -48,6 +49,10 @@ export const INFLUENCERS_IMAGES = [
     { src: "https://i.pinimg.com/736x/f5/12/61/f51261387db32f952e829006d67bd125.jpg", alt: "dress and accessories on a table" },
     { src: "https://i.pinimg.com/736x/b3/38/54/b33854df65bbd7d03d6371d77a6e0881.jpg", alt: "Arab woman in desert" },
     { src: "https://i.pinimg.com/736x/c2/18/f3/c218f3a699738729ce059295ddc34b02.jpg", alt: "Arab woman in a traditional setting" },
+    {
+        src: "https://i.pinimg.com/736x/62/d7/58/62d7587957baf197d6fb81ab5dc317fd.jpg",
+        alt: "Formal Menswear"
+    },
     { src: "https://i.pinimg.com/1200x/d8/cc/d7/d8ccd793191c5540590ebd70fd89ac9f.jpg", alt: "Arab woman" },
 
 ];

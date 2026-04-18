@@ -21,6 +21,7 @@ export default function NegotiationPage() {
   );
   const unreadMap = useWhatsAppChatStore((s) => s.unread);
   console.log('data', data);
+  console.log('data', data);
   const deleteNegotiationHook = DeleteNegotiationHook();
   const [deletingThreadId, setDeletingThreadId] = useState<string | null>(null);
 
@@ -104,7 +105,7 @@ export default function NegotiationPage() {
               </div>,
               <div key={`last-offered-price-${userSession._id}`} className="truncate">
                 {userSession?.last_offered_price !== null &&
-                userSession?.last_offered_price !== undefined
+                  userSession?.last_offered_price !== undefined
                   ? `$${userSession.last_offered_price}`
                   : '-'}
               </div>,
@@ -128,13 +129,13 @@ export default function NegotiationPage() {
               </div>,
               <div key={`negotiation-round-${userSession._id}`} className="truncate">
                 {userSession?.negotiation_round !== null &&
-                userSession?.negotiation_round !== undefined
+                  userSession?.negotiation_round !== undefined
                   ? userSession.negotiation_round
                   : '-'}
               </div>,
               <div key={`negotiation-completed-${userSession._id}`} className="truncate">
                 {userSession?.negotiation_completed !== null &&
-                userSession?.negotiation_completed !== undefined
+                  userSession?.negotiation_completed !== undefined
                   ? userSession.negotiation_completed
                     ? 'Yes'
                     : 'No'
@@ -142,7 +143,7 @@ export default function NegotiationPage() {
               </div>,
               <div key={`manual-negotiation-${userSession._id}`} className="truncate">
                 {userSession?.manual_negotiation !== null &&
-                userSession?.manual_negotiation !== undefined
+                  userSession?.manual_negotiation !== undefined
                   ? userSession.manual_negotiation
                     ? 'Yes'
                     : 'No'
@@ -150,7 +151,7 @@ export default function NegotiationPage() {
               </div>,
               <div key={`agent-paused-${userSession._id}`} className="truncate">
                 {userSession?.agent_paused !== null &&
-                userSession?.agent_paused !== undefined
+                  userSession?.agent_paused !== undefined
                   ? userSession.agent_paused
                     ? 'Yes'
                     : 'No'
