@@ -336,18 +336,6 @@ export default function ContentFeedbackDetailPage() {
                   onMarkerSeek={handleSeekPreviewToTime}
                 />
               </div>
-              <aside className="flex w-1/2 shrink-0 flex-col border-t border-white/10 pt-4 ">
-                <ContentFeedbackPanel
-                  videoRef={videoRef}
-                  activeFeedbackId={activeFeedbackId2}
-                  selectedContentFeedback={selectedContentFeedback}
-                  setSelectedContentFeedback={setSelectedContentFeedback}
-                  selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-                  negotiationId={negotiationId}
-                  selectedCard={selectedCard}
-                  setFeedbackId={setFeedbackId}
-                />
-              </aside>
             </div>
             <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-3">
               <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
@@ -419,7 +407,7 @@ export default function ContentFeedbackDetailPage() {
           </div>
 
           <ChatPanel
-            className="w-full min-h-0 lg:max-w-[min(420px,42vw)]"
+            className="w-full min-h-0 lg:max-w-2xl"
             title="Feedback"
             modeToggle={{ value: chatMode, onChange: setChatMode }}
             messages={chatData?.messages}
@@ -438,7 +426,20 @@ export default function ContentFeedbackDetailPage() {
             bubbleMaxWidthClassName="max-w-[90%]"
           />
         </div>
+
+        <ContentFeedbackPanel
+          videoRef={videoRef}
+          activeFeedbackId={activeFeedbackId2}
+          selectedContentFeedback={selectedContentFeedback}
+          setSelectedContentFeedback={setSelectedContentFeedback}
+          selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+          negotiationId={negotiationId}
+          selectedCard={selectedCard}
+          setFeedbackId={setFeedbackId}
+        />
+
       </div>
+
     </div>
   );
 }
