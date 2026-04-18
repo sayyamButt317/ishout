@@ -50,7 +50,7 @@ export const INFLUENCERS_IMAGES = [
     { src: "https://i.pinimg.com/736x/b3/38/54/b33854df65bbd7d03d6371d77a6e0881.jpg", alt: "Arab woman in desert" },
     { src: "https://i.pinimg.com/736x/c2/18/f3/c218f3a699738729ce059295ddc34b02.jpg", alt: "Arab woman in a traditional setting" },
     {
-        src: "https://i.pinimg.com/736x/1b/fc/35/1bfc355e69b58d960d51a8ef0f986e94.jpg",
+        src: "https://i.pinimg.com/736x/62/d7/58/62d7587957baf197d6fb81ab5dc317fd.jpg",
         alt: "Formal Menswear"
     },
     { src: "https://i.pinimg.com/1200x/d8/cc/d7/d8ccd793191c5540590ebd70fd89ac9f.jpg", alt: "Arab woman" },
