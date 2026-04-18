@@ -3,54 +3,66 @@
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
-import { LogOut, Menu } from 'lucide-react';
-import { useCallback, useMemo, useState } from 'react';
+import { LogOut, Menu, ChevronDown } from 'lucide-react';
+import { useState, useCallback, useEffect } from 'react';
 import LogoutDialogue from './logoutdialogue';
 import Image from 'next/image';
-
-export interface SidebarLink {
-  label: string;
-  route: string;
-  icon?: React.ReactNode;
-}
+import { SidebarGroupLink } from '@/src/constant/sidebaritems'; // ← adjust if path differs
 
 export interface SidebarProps {
-  links: SidebarLink[];
+  links: SidebarGroupLink[];
 }
 
-export default function Sidebar({ links }: SidebarProps) {
-  const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [isLogout, setIsLogout] = useState(false);
 
-  const adminToolsRoutes = useMemo(
-    () =>
-      new Set([
-        '/Admin/user-management',
-        '/Admin/whatsapp-chat',
-        '/Admin/negotiation',
-      ]),
-    [],
+function NavGroup({
+  group,
+  onLinkClick,
+}: {
+  group: SidebarGroupLink;
+  onLinkClick?: () => void;
+}) {
+  const pathname = usePathname();
+
+  // auto-open if a child is currently active
+  const hasActive = group.children.some(
+    (c) => c.route && (pathname === c.route || pathname.startsWith(c.route)),
   );
 
-  const renderLink = useCallback(
-    (link: SidebarLink) => {
-      const isSelected =
-        pathname === link.route ||
-        (link.route !== '/auth/login' && pathname.startsWith(link.route));
+  const [open, setOpen] = useState<boolean>(hasActive);
 
-      return (
-        <Link
-          key={link.route}
-          href={link.route}
-          onClick={() => setMobileOpen(false)}
+  useEffect(() => {
+    setOpen(hasActive);
+  }, [hasActive]);
+
+  const isActive = useCallback(
+    (route: string) =>
+      !!route && (pathname === route || pathname.startsWith(route)),
+    [pathname],
+  );
+
+  return (
+    <div className="mb-3">
+      {/* Group header button */}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl
+          text-white/55 hover:text-white hover:bg-white/0.04
+          transition-all duration-200"
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${group.iconBg}`}
+          >
+            <span className={group.iconColor}>{group.icon}</span>
+          </div>
+          <span className="text-sm font-bold tracking-tight">{group.label}</span>
+        </div>
+        <ChevronDown
           className={cn(
-            'group relative flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ease-out',
-            isSelected
-              ? 'bg-white/5 backdrop-blur-xl border border-white/10 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)]'
-              : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent',
+            'w-3.5 h-3.5 opacity-40 transition-transform duration-200',
+            open && 'rotate-180',
           )}
         >
           {isSelected && (
@@ -71,143 +83,129 @@ export default function Sidebar({ links }: SidebarProps) {
           )}
           <span className="text-sm font-medium tracking-wide">{link.label}</span>
         </Link>
-      );
+        );
     },
-    [pathname],
-  );
+        [pathname],
+        );
 
-  const primaryRenderedLinks = useMemo(
+        const primaryRenderedLinks = useMemo(
     () => links.filter((l) => !adminToolsRoutes.has(l.route)).map(renderLink),
-    [links, adminToolsRoutes, renderLink],
-  );
+        [links, adminToolsRoutes, renderLink],
+        );
 
-  const adminToolsRenderedLinks = useMemo(
+        const adminToolsRenderedLinks = useMemo(
     () => links.filter((l) => adminToolsRoutes.has(l.route)).map(renderLink),
-    [links, adminToolsRoutes, renderLink],
-  );
+        [links, adminToolsRoutes, renderLink],
+        );
 
-  return (
-    <>
-      {/* Desktop */}
-      <aside
-        className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-65 flex-col
-        rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10
-        shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6"
-      >
-        {/* Logo */}
-        <a
-          href="https://ishout.ae"
-          rel="noopener noreferrer"
-          className="mb-8 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
-        >
-          <div className="relative">
-            <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
-            <Image
-              src="/assets/iShout-gif-black-background.gif"
-              alt="logo"
-              width={50}
-              height={50}
-              className="relative z-10"
-              unoptimized={true}
-            />
-          </div>
-        </a>
+        return (
+        <div className="flex flex-col h-full">
 
-        {/* Links */}
-        <nav className="flex flex-col gap-2 flex-1 overflow-y-auto pr-1">
-          {primaryRenderedLinks}
-          {adminToolsRenderedLinks.length > 0 && (
-            <>
-              <div className="pt-4 pb-1 px-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                Admin Tools
-              </div>
-              <div className="h-px mx-4 bg-white/10" />
-              <div className="flex flex-col gap-2 pt-2">
-                {adminToolsRenderedLinks}
-              </div>
-            </>
-          )}
-        </nav>
-
-        {/* Logout */}
-        <div className="pt-6 border-t border-white/10 cursor-pointer">
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-red-400 hover:bg-red-500/10 rounded-xl"
-            onClick={() => setIsLogout(true)}
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
-        </div>
-      </aside>
-
-      <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
-
-      {/* Mobile */}
-      <div className="md:hidden">
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetTrigger asChild>
-            <button
-              className="fixed top-4 left-4 z-50 text-white bg-white/10 backdrop-blur-xl p-2 rounded-xl border border-white/10"
-              aria-label="Open menu"
-            >
-              <Menu />
-            </button>
-          </SheetTrigger>
-
-          <SheetContent
-            side="left"
-            className="w-65 p-6 bg-slate-950 border-r border-white/10"
-            onCloseAutoFocus={(e) => e.preventDefault()}
-          >
-            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+          {/* ── Brand logo ── */}
+          <div className="flex justify-center mb-8 mt-2 px-4">
             <a
               href="https://ishout.ae"
               rel="noopener noreferrer"
-              className="mb-6 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={() => setMobileOpen(false)}
+              onClick={onLinkClick}
+              className="flex flex-col items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
             >
-              <Image
-                src="/assets/iShout-gif-black-background.gif"
-                alt="logo"
-                width={36}
-                height={36}
-                unoptimized={true}
-              />
-              <h2 className="text-xl font-bold text-white">iShout</h2>
+              <div className="relative">
+                <div className="absolute inset-0 bg-primaryButton/20 blur-xl rounded-full scale-110" />
+                <div className="relative w-16 h-16 rounded-full overflow-hidden border border-primaryButton/20 shadow-lg">
+                  <Image
+                    src="/assets/iShout-gif-black-background.gif"
+                    alt="iShout"
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                </div>
+              </div>
             </a>
+          </div>
 
-            <nav className="flex flex-col gap-2 flex-1 overflow-y-auto">
-              {primaryRenderedLinks}
-              {adminToolsRenderedLinks.length > 0 && (
-                <>
-                  <div className="pt-4 pb-1 px-4 text-[11px] font-bold uppercase tracking-wider text-slate-500">
-                    Admin Tools
-                  </div>
-                  <div className="h-px mx-4 bg-white/10" />
-                  <div className="flex flex-col gap-2 pt-2">
-                    {adminToolsRenderedLinks}
-                  </div>
-                </>
-              )}
-            </nav>
-            <div className="pt-6 border-t border-white/10">
-              <Button
-                variant="ghost"
-                className="w-full justify-start text-red-400 hover:bg-red-500/10 rounded-xl"
-                onClick={() => {
-                  setMobileOpen(false);
-                  setIsLogout(true);
-                }}
+          {/* ── Nav groups ── */}
+          <nav className="flex-1 px-3 overflow-y-auto space-y-1">
+            {links.map((group) => (
+              <NavGroup
+                key={group.label}
+                group={group}
+                onLinkClick={onLinkClick}
+              />
+            ))}
+          </nav>
+
+          {/* ── Logout ── */}
+          <div className="px-4 pt-4 mt-2 border-t border-white/0.05">
+            <button
+              onClick={onLogout}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl
+            text-sm font-semibold text-red-400/70 hover:text-red-400
+            hover:bg-red-500/0.08 transition-all duration-200"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </div>
+        </div>
+        );
+}
+
+        // ─── Main Export ──────────────────────────────────────────────────────────────
+
+        export default function Sidebar({links}: SidebarProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+        const [isLogout, setIsLogout] = useState(false);
+
+        return (
+        <>
+          {/* ── DESKTOP ── */}
+          <aside
+            className="hidden md:flex fixed left-0 top-0 h-screen w-64 flex-col z-50 border-r border-white/0.05 py-6"
+            style={{
+              background:
+                'radial-gradient(circle at 100% 50%, rgba(255,78,126,0.06) 0%, transparent 65%), #0e0e13',
+            }}
+          >
+            <SidebarContent
+              links={links}
+              onLogout={() => setIsLogout(true)}
+            />
+          </aside>
+
+          {/* ── MOBILE ── */}
+          <div className="md:hidden">
+            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+              <SheetTrigger asChild>
+                <button
+                  aria-label="Open menu"
+                  className="fixed top-4 left-4 z-50 w-10 h-10 flex items-center justify-center
+                rounded-xl bg-black/70 backdrop-blur-xl border border-white/0.08
+                text-white hover:bg-white/10 transition-colors"
+                >
+                  <Menu className="w-5 h-5" />
+                </button>
+              </SheetTrigger>
+
+              <SheetContent
+                side="left"
+                className="w-64 p-0 border-r border-white/0.05"
+                style={{ background: '#0e0e13' }}
+                onCloseAutoFocus={(e) => e.preventDefault()}
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Logout
-              </Button>
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
-    </>
-  );
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <div className="h-full py-6">
+                  <SidebarContent
+                    links={links}
+                    onLogout={() => { setMobileOpen(false); setIsLogout(true); }}
+                    onLinkClick={() => setMobileOpen(false)}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
+        </>
+        );
 }
