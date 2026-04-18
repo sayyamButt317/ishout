@@ -57,6 +57,10 @@ export default function ContentFeedbackPanel({
 
   return (
     <div className="flex w-full shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+      <h1 className="text-white text-2xl font-bold font-inter">Add Feedback</h1>
+      <p className="text-white text-sm font-thin font-inter">
+        Add feedback on the selected content.
+      </p>
       <div className="relative">
         <textarea
           value={selectedContentFeedback}
@@ -75,9 +79,9 @@ export default function ContentFeedbackPanel({
             });
           }}
           disabled={saveContentFeedbackMutation.isPending}
-          className="mt-2 w-full rounded-xl bg-primaryButton px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 w-1/3 rounded-xl bg-primaryButton px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {saveContentFeedbackMutation.isPending ? 'Saving...' : 'Save Admin Feedback'}
+          {saveContentFeedbackMutation.isPending ? 'Saving...' : 'Submit Feedback'}
         </button>
       </div>
       <BrandFeedback activeFeedbackId={activeFeedbackId} />
