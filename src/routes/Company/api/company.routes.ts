@@ -245,3 +245,26 @@ export const CompanyProfileChangePasswordApi = async (
   const response = await api.patch(CompanyENDPOINT.CHANGE_PASSWORD(user_id), payload);
   return response.data;
 };
+
+export const UploadImageToCampaign = async (
+  brief_id: string,
+  files: File[]
+) => {
+  const formData = new FormData()
+
+  files.forEach(file => {
+    formData.append("files", file)
+  })
+
+  const response = await api.post(
+    CompanyENDPOINT.UPLOADCAMPAIGNIMAGE(brief_id),
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
+  )
+
+  return response.data
+}

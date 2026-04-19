@@ -15,6 +15,10 @@ import useUpdateCampaignBrief from '@/src/routes/Company/api/Hooks/useUpdateCamp
 import { toast } from 'sonner';
 import Image from 'next/image';
 import BriefCard from './BriefCard';
+import { EditableText } from './EditableTextInput';
+import UploadCampaignImageHook from '@/src/routes/Company/api/Hooks/UploadCampaignImage-hook';
+import Button from '../button';
+import { CampaignSBriefStore } from '@/src/store/Campaign/brief.store';
 
 interface Props {
   brief: CampaignBrief;
@@ -22,40 +26,9 @@ interface Props {
   onApprove?: () => void;
 }
 
-function EditableText({
-  value,
-  editable,
-  onChange,
-  placeholder,
-  rows = 6,
-}: {
-  value: string;
-  editable: boolean;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  rows?: number;
-}) {
-  if (!editable) {
-    return (
-      <p className="text-md text-white/65 leading-relaxed ">
-        {value || <span className="italic text-white/25">—</span>}
-      </p>
-    );
-  }
-  return (
-    <textarea
-      rows={rows}
-      className='w-full bg-black/30 border border-white/10 rounded-xl  px-6 py-3 text-md text-white placeholder:text-white/30 focus:outline-none focus:border-primaryButton/50 focus:ring-1 focus:ring-primaryButton/20 transition-all resize-none disabled:opacity-50 disabled:cursor-default leading-relaxed'
-      value={value}
-      placeholder={placeholder}
-      onChange={(e) => onChange(e.target.value)}
-    />
-  );
-}
-
-// ─── Main Component ───────────────────────────────────────────────────────────
 
 const CampaignBriefResult = ({ brief, onApprove }: Props) => {
+  const { mutate: uploadImageMutation, isPending } = UploadCampaignImageHook()
   const [campaignImages, setCampaignImages] = useState<File[]>([]);
   const [videoLinks, setVideoLinks] = useState<string[]>(brief.video_links ?? []);
   const [newLink, setNewLink] = useState('');
@@ -64,6 +37,7 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
   const [localBrief, setLocalBrief] = useState<CampaignBrief>(brief);
 
   const { mutate: updateBrief, isPending: isUpdating } = useUpdateCampaignBrief();
+  const { imageUrls, clearImages } = CampaignSBriefStore()
 
   const setArr = (key: keyof CampaignBrief, value: string[]) =>
     setLocalBrief((prev) => ({ ...prev, [key]: value }));
@@ -71,16 +45,16 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
   const setStr = (key: keyof CampaignBrief, value: string) =>
     setLocalBrief((prev) => ({ ...prev, [key]: value }));
 
-
   const handleSave = () => {
     if (!localBrief.id) { toast.error('Brief ID missing'); return; }
     const payload: UpdateCampaignBrief = {
       ...localBrief,
       id: localBrief.id as string,
       video_links: videoLinks.filter(Boolean),
+      product_image_urls: imageUrls,
     };
     updateBrief(
-      { brief: payload, product_image_urls: campaignImages },
+      { brief: payload },
       {
         onSuccess: (data) => {
           setLocalBrief(data);
@@ -150,17 +124,6 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
             <Check className="w-3.5 h-3.5" />
             Approve Campaign
           </button>
-
-          {/* Copy */}
-          {/* <button
-            onClick={handleCopy}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 bg-white/0.03 text-white/50 font-bold text-md hover:bg-white/[0.07] hover:text-white transition-all"
-          >
-            {copied
-              ? <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
-              : <Copy className="w-3.5 h-3.5" />}
-            {copied ? 'Copied!' : 'Copy'}
-          </button> */}
         </div>
       </div>
 
@@ -307,6 +270,7 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
               <ImageIcon className="w-6 h-6" />
               <span className="text-[10px] font-medium">Add</span>
             </label>
+
             <input id="img-upload" type="file" accept="image/*" multiple disabled={!editable}
               onChange={(e) => {
                 if (e.target.files)
@@ -314,7 +278,20 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
               }}
               className="hidden"
             />
+
           </div>
+          <Button
+            onClick={() =>
+              uploadImageMutation({
+                brief_id: localBrief.id!,
+                files: campaignImages,
+              })
+            }
+            disabled={isPending}
+            className={`bg-primaryHover mt-2 ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {isPending ? <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Uploading…</> : 'Add Image'}
+          </Button>
         </div>
 
         {/* ── Video Links — full width ── */}
