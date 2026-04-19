@@ -96,7 +96,7 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
           <button
             onClick={editable ? handleSave : () => setEditable(true)}
             disabled={isUpdating}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-md text-white transition-all
+            className="flex items-center cursor-pointer gap-2 px-5 py-2.5 rounded-xl font-bold text-md text-white transition-all
               hover:scale-[1.03] active:scale-95 disabled:opacity-50 shadow-lg shadow-primaryButton/20
               bg-primaryButton hover:bg-primaryHover"
           >
@@ -117,13 +117,14 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
           )}
 
           {/* Approve */}
-          <button
-            onClick={() => onApprove?.()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-green-500/30 bg-primaryButton text-white cursor-pointer font-bold text-md hover:bg-primaryHover transition-colors"
-          >
-            <Check className="w-3.5 h-3.5" />
-            Approve Campaign
-          </button>
+          {!editable && (
+            <button
+              onClick={() => onApprove?.()}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-green-500/30 bg-primaryButton text-white cursor-pointer font-bold text-md hover:bg-primaryHover transition-colors"
+            >
+              Approve Campaign
+            </button>
+          )}
         </div>
       </div>
 
@@ -280,18 +281,20 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
             />
 
           </div>
-          <Button
-            onClick={() =>
-              uploadImageMutation({
-                brief_id: localBrief.id!,
-                files: campaignImages,
-              })
-            }
-            disabled={isPending}
-            className={`bg-primaryHover mt-2 ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {isPending ? <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Uploading…</> : 'Add Image'}
-          </Button>
+          {editable && (
+            <Button
+              onClick={() =>
+                uploadImageMutation({
+                  brief_id: localBrief.id!,
+                  files: campaignImages,
+                })
+              }
+              disabled={isPending}
+              className={`bg-primaryHover mt-2 ${isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {isPending ? <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Uploading…</> : 'Add Image'}
+            </Button>
+          )}
         </div>
 
         {/* ── Video Links — full width ── */}

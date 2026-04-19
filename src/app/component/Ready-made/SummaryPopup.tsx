@@ -19,6 +19,7 @@ import { campaignNames } from '@/src/constant/campaignname';
 import { rangeOfFollowers } from '@/src/constant/rangeoffollowers';
 import { INSTAGRAM_INFLUENCERS_COUNTRIES } from '@/src/constant/country';
 import { NumberofFollowers } from '@/src/constant/numberofInfluencers';
+import { CampaignSBriefStore } from '@/src/store/Campaign/brief.store';
 
 interface SummaryPopupProps {
   onClose: () => void;
@@ -37,7 +38,7 @@ interface FieldConfig {
   };
   placeholder: string;
   isArray: boolean;
-  displayValue?: (value: any) => string;
+  displayValue?: (value: string) => string;
 }
 
 const fieldConfigs: FieldConfig[] = [
@@ -124,7 +125,7 @@ interface EditableFieldProps {
   value: string[] | string;
   options: string[];
   onSelect: (item: string) => void;
-  onRemove: (item: string) => void;
+  onRemove: (item: string | string[]) => void;
 }
 
 const EditableField = ({
@@ -151,7 +152,7 @@ const EditableField = ({
       return `${selectedItems.length} selected`;
     } else {
       if (!value) return config.placeholder;
-      return config.displayValue ? config.displayValue(value) : value;
+      return config.displayValue ? config.displayValue(value as string) : value;
     }
   };
 
@@ -171,7 +172,7 @@ const EditableField = ({
               {config.isArray
                 ? item
                 : config.displayValue
-                  ? config.displayValue(item)
+                  ? config.displayValue(item as string)
                   : item}
               <button
                 className="hover:bg-white/20 rounded-full p-0.5 transition-colors duration-200"
@@ -264,6 +265,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
 
   const { company_name } = useAuthStore();
   const { mutateAsync: findInfluencer, isPending } = CreateCampaignHook();
+  const { clearImages } = CampaignSBriefStore();
 
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -325,6 +327,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
       brief_id: brief_id || undefined,
     });
     clearTemplate();
+    clearImages();
     onClose();
   };
 
@@ -387,7 +390,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                   value={fieldValues[config.key]}
                   options={getOptionsForField(config.key)}
                   onSelect={(item) => handleSelect(config, item)}
-                  onRemove={(item) => handleRemove(config, item)}
+                  onRemove={(item: string | string[]) => handleRemove(config, item as string)}
                 />
               ))}
             </div>
