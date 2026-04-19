@@ -10,6 +10,7 @@ interface TemplateProps {
     limit: string;
     followers: string[];
     country: string[];
+    imageUrl: string[];
     campaign_id: string;
     brief_id: string;
     iseditable: boolean;
@@ -49,6 +50,8 @@ export const useReadyMadeTemplateStore = create<TemplateProps>()(
                 results: undefined,
                 iseditable: false,
                 isSelected: false,
+                imageUrl: [],
+
 
                 setField: (field, value) => set((state) => ({ ...state, [field]: value })),
                 getField: (field) => get()[field],
