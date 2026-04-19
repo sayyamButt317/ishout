@@ -2,7 +2,8 @@
 
 import React, { ReactNode, useState } from 'react';
 import ChatMessagesList from './chat-messages-list';
-import { Mic, Paperclip } from 'lucide-react';
+import { Mic, Paperclip, Send } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type Mode = 'influencer' | 'brand';
 
@@ -65,9 +66,9 @@ export default function ChatPanel({
     messageRoleLabels ??
     (modeToggle
       ? {
-          right: 'Admin',
-          left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
-        }
+        right: 'Admin',
+        left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
+      }
       : undefined);
 
   const handleSend = async () => {
@@ -92,22 +93,20 @@ export default function ChatPanel({
             <button
               type="button"
               onClick={() => modeToggle.onChange('influencer')}
-              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
-                modeToggle.value === 'influencer'
-                  ? 'bg-primaryButton text-white shadow-sm'
-                  : 'text-white/45 hover:text-white/70'
-              }`}
+              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'influencer'
+                ? 'bg-primaryButton text-white shadow-sm'
+                : 'text-white/45 hover:text-white/70'
+                }`}
             >
               Influencer Chat
             </button>
             <button
               type="button"
               onClick={() => modeToggle.onChange('brand')}
-              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
-                modeToggle.value === 'brand'
-                  ? 'bg-primaryButton text-white shadow-sm'
-                  : 'text-white/45 hover:text-white/70'
-              }`}
+              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'brand'
+                ? 'bg-primaryButton text-white shadow-sm'
+                : 'text-white/45 hover:text-white/70'
+                }`}
             >
               Brand Chat
             </button>
@@ -136,7 +135,7 @@ export default function ChatPanel({
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Type your feedback..."
+            placeholder="Type your message..."
             className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-32 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
           />
           <div className="absolute bottom-4 right-4 flex items-center gap-2">
@@ -154,18 +153,17 @@ export default function ChatPanel({
             >
               <Mic className="size-4" />
             </button>
-            <button
-              type="button"
+            <Button
               onClick={handleSend}
               disabled={!sendEnabled || isSending}
-              className={`flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors ${
-                !sendEnabled || isSending
-                  ? 'bg-white/10 text-white/50 cursor-not-allowed'
-                  : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'
-              }`}
+              className={`flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors ${!sendEnabled || isSending
+                ? 'bg-white/10 text-white/50 cursor-not-allowed'
+                : 'bg-primaryButton font-bold cursor-pointer text-white hover:bg-primaryButton/80 hover:text-white'
+                }`}
             >
-              Send
-            </button>
+              <Send className="size-4 mr-2" />
+              Send Message
+            </Button>
           </div>
         </div>
 

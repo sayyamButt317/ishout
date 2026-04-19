@@ -5,6 +5,7 @@ import { captureVideoFrameDataUrl } from '@/src/utils/content-feedback-chat';
 import { toast } from 'sonner';
 import AdminFeedback from '@/src/app/component/content-feedback/AdminFeedback';
 import BrandFeedback from '@/src/app/component/content-feedback/BrandFeedback';
+import { Button } from '@/components/ui/button';
 
 export default function ContentFeedbackPanel({
   activeFeedbackId,
@@ -68,8 +69,7 @@ export default function ContentFeedbackPanel({
           placeholder="Type feedback on selected content..."
           className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
         />
-        <button
-          type="button"
+        <Button
           onClick={async () => {
             const video = videoRef?.current ?? null;
             await SubmitFeedback({
@@ -79,10 +79,10 @@ export default function ContentFeedbackPanel({
             });
           }}
           disabled={saveContentFeedbackMutation.isPending}
-          className="mt-2 w-1/3 rounded-xl bg-primaryButton px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 flex justify-end rounded-xl bg-primaryButton px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saveContentFeedbackMutation.isPending ? 'Saving...' : 'Submit Feedback'}
-        </button>
+        </Button>
       </div>
       <BrandFeedback activeFeedbackId={activeFeedbackId} />
       <AdminFeedback activeFeedbackId={activeFeedbackId} />
