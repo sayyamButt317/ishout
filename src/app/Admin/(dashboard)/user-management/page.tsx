@@ -417,16 +417,12 @@ export default function UserManagementPage() {
         </div>
       </div>
 
-      {/* ── DELETE DIALOGUE ── */}
       <DeleteDialogue
         open={!!deleteId}
-        onClose={() => setDeleteId(null)}
         heading="Delete User?"
         subheading="This action cannot be undone. The user will be permanently removed."
         ondelete={handleDelete}
       />
-
-      {/* ── ADD / EDIT MODAL ── */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={closeModal} />
@@ -495,7 +491,6 @@ export default function UserManagementPage() {
                   value={mode === 'add' ? addForm.email : editUser?.email ?? ''}
                   onChange={mode === 'add' ? af('email') : ef('email')} />
 
-                {/* Phone */}
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-[0.12em] text-white/35 mb-2">Phone Number</label>
                   <div className="md:hidden">
@@ -511,7 +506,6 @@ export default function UserManagementPage() {
                   </div>
                 </div>
 
-                {/* Password */}
                 <div>
                   <label className="block text-[10px] font-bold uppercase tracking-[0.12em] text-white/35 mb-2">
                     {mode === 'add' ? 'Password *' : 'New Password (leave blank to keep current)'}

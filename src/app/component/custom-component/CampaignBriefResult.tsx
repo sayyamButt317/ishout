@@ -111,7 +111,7 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
             Campaign Intelligence Report
           </h2>
           <p className="text-white/45 text-md max-w-xl">
-            Click Edit to make changes and Approve to finalize the campaign brief. You can also add reference images and video links to guide the influencers.
+            Click Edit to make changes and Approve to finalize the campaign brief. You can also add reference images and Links to guide the influencers.
           </p>
         </div>
 
@@ -264,14 +264,14 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
             placeholder="One right per line…" onChange={(v: string[]) => setArr('usage_rights', v)} />
         </BriefCard>
 
-        {/* Do's & Don'ts — full width */}
+        {/* Do's & Don'ts */}
         <BriefCard icon={<BookCheck className="w-6 h-6" />} title="Do's & Don'ts" accent="primary" colSpan>
           <EditableList items={localBrief.dos_donts ?? []} editable={editable}
             placeholder="One item per line. Prefix with ✓ or ✗ to distinguish…"
             onChange={(v: string[]) => setArr('dos_donts', v)} />
         </BriefCard>
 
-        {/* ── Campaign Images — full width ── */}
+        {/* ── Campaign Images ── */}
         <div className="md:col-span-2 bg-black/40 backdrop-blur-sm rounded-2xl p-6 border border-white/0.06 border-l-4 border-l-purple-500">
           <div className="flex items-center gap-2.5 mb-1">
             <ImageIcon className="w-4 h-4 text-purple-400" />
@@ -317,13 +317,13 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
           </div>
         </div>
 
-        {/* ── Video Links — full width ── */}
+        {/* ── Links ── */}
         <div className="md:col-span-2 bg-black/40 backdrop-blur-sm rounded-2xl p-6 border border-white/0.06 border-l-4 border-l-primaryButton">
           <div className="flex items-center gap-2.5 mb-1">
             <Link2 className="w-6 h-6 text-primarytext" />
-            <h4 className="text-xs font-black text-white/80 uppercase tracking-[0.12em]">Video Links</h4>
+            <h4 className="text-xs font-black text-white/80 uppercase tracking-[0.12em]">Reference Links</h4>
           </div>
-          <p className="text-xs text-white/30 italic mb-5">Reference video links for this campaign.</p>
+          <p className="text-xs text-white/30 italic mb-5">Click <span className="text-primaryButton">Edit</span> to add Reference Links for this campaign.</p>
 
           <div className="space-y-2.5">
             {videoLinks.map((link, i) => (
@@ -373,7 +373,7 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
             )}
 
             {!videoLinks.length && !editable && (
-              <p className="text-md text-white/25 italic">No video links added yet.</p>
+              <p className="text-md text-white/25 italic">There is no reference links added yet .</p>
             )}
           </div>
         </div>
