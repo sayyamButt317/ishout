@@ -92,4 +92,5 @@ export const AdminENDPOINT = {
   ADMIN_CONTENT_FEEDBACK: `/admin/content-feedback`,
   ADMIN_CONTENT_FEEDBACK_ADMIN_READ: `/admin/content-feedback/admin`,
   ADMIN_CONTENT_FEEDBACK_BRAND_READ: `/admin/content-feedback/brand`,
+
 };

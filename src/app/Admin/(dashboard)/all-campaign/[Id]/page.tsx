@@ -1,23 +1,23 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
-import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
-import Spinner from "@/src/app/component/custom-component/spinner";
-import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
-import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
-import { ArrowLeft, ChevronRight, Download, UserCheck, UserX, Users } from "lucide-react";
-import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
-import CustomButton from "@/src/app/component/button";
+'use client';
+import { Button } from '@/components/ui/button';
+import InfluencerCard from '@/src/app/component/Ready-made/influencer-card';
+import ExportToExcel from '@/src/app/component/custom-component/exportToExcel';
+import Spinner from '@/src/app/component/custom-component/spinner';
+import CampaignByIdHook from '@/src/routes/Admin/Hooks/campaignById-hook';
+import { ReadyMadeInfluencerResponse } from '@/src/types/readymadeinfluencers-type';
+import { ArrowLeft, ChevronRight, Download, UserCheck, UserX, Users } from 'lucide-react';
+import Link from 'next/link';
+import { useParams, useRouter } from 'next/navigation';
+import CustomButton from '@/src/app/component/button';
 
 export default function CampaignByIdPage() {
   const { Id } = useParams<{ Id: string }>();
   const router = useRouter();
-  const { data, isLoading, isError } = CampaignByIdHook(Id ?? "");
+  const { data, isLoading, isError } = CampaignByIdHook(Id ?? '');
 
   const approvedCount = data?.approved_influencers?.length ?? 0;
   const rejectedCount = data?.rejected_influencers?.length ?? 0;
-  const campaignTitle = (data as { name?: string } | undefined)?.name ?? "Campaign";
+  const campaignTitle = (data as { name?: string } | undefined)?.name ?? 'Campaign';
   const totalCount = approvedCount + rejectedCount;
 
   return (
@@ -75,8 +75,11 @@ export default function CampaignByIdPage() {
                   </span>
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2">
-                  <UserX className="size-4 text-(--color-deleteButton)" aria-hidden />
-                  <span className="text-sm font-semibold text-(--color-deleteButton)">
+                  <UserX
+                    className="size-4 text-[var(--color-deleteButton)]"
+                    aria-hidden
+                  />
+                  <span className="text-sm font-semibold text-[var(--color-deleteButton)]">
                     {rejectedCount} rejected
                   </span>
                 </div>
@@ -86,8 +89,8 @@ export default function CampaignByIdPage() {
             {/* Right: actions */}
             <div className="flex shrink-0 flex-wrap items-center gap-2 sm:gap-3">
               <CustomButton
-                className="h-11 gap-2 w-fit whitespace-nowrap rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-colors hover:bg-white/10 hover:border-white/15"
-                onClick={() => router.push("/Admin/all-campaign")}
+                className="h-11 gap-2 rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-medium text-white transition-colors hover:bg-white/10 hover:border-white/15"
+                onClick={() => router.push('/Admin/all-campaign')}
               >
                 <ArrowLeft className="size-4" />
                 Back to list
@@ -119,9 +122,7 @@ export default function CampaignByIdPage() {
 
       {/* Approved section */}
       <div className="flex flex-row items-center justify-between gap-3 mb-4">
-        <h2 className="text-lg font-semibold text-white">
-          Approved Influencers
-        </h2>
+        <h2 className="text-lg font-semibold text-white">Approved Influencers</h2>
         {approvedCount > 0 && (
           <Button
             variant="ghost"
@@ -137,17 +138,15 @@ export default function CampaignByIdPage() {
 
       {data?.approved_influencers?.length ? (
         <div className="w-full mx-auto mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-          {data.approved_influencers.map(
-            (approved: ReadyMadeInfluencerResponse) => (
-              <InfluencerCard
-                key={approved._id}
-                influencer={approved}
-                showAccept={false}
-                showReject={false}
-                showDelete={false}
-              />
-            )
-          )}
+          {data.approved_influencers.map((approved: ReadyMadeInfluencerResponse) => (
+            <InfluencerCard
+              key={approved._id}
+              influencer={approved}
+              showAccept={false}
+              showReject={false}
+              showDelete={false}
+            />
+          ))}
         </div>
       ) : (
         <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10 mb-8">
@@ -156,22 +155,18 @@ export default function CampaignByIdPage() {
       )}
 
       {/* Rejected section */}
-      <h2 className="text-lg font-semibold text-white mb-4">
-        Rejected Influencers
-      </h2>
+      <h2 className="text-lg font-semibold text-white mb-4">Rejected Influencers</h2>
       {data?.rejected_influencers?.length ? (
         <div className="w-full mx-auto mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-          {data.rejected_influencers.map(
-            (rejected: ReadyMadeInfluencerResponse) => (
-              <InfluencerCard
-                key={rejected._id}
-                influencer={rejected}
-                showAccept={false}
-                showReject={false}
-                showDelete={false}
-              />
-            )
-          )}
+          {data.rejected_influencers.map((rejected: ReadyMadeInfluencerResponse) => (
+            <InfluencerCard
+              key={rejected._id}
+              influencer={rejected}
+              showAccept={false}
+              showReject={false}
+              showDelete={false}
+            />
+          ))}
         </div>
       ) : (
         <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10 mb-8">

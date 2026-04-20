@@ -19,7 +19,14 @@ import { MessageTemplate } from '@/src/types/meta.type';
 import { UpdateUserStatusResponse } from '@/src/types/Admin-Type/usermanagment.type';
 import { RejectandRegenerateInfluencerRequest } from '@/src/types/Admin-Type/reject-influencers.type';
 import { AddInfluencersNumberRequest } from '@/src/types/Admin-Type/review-influencer';
-import { SaveContentFeedbackPayload } from '@/src/types/Admin-Type/Content-type';
+import {
+  SaveContentFeedbackPayload,
+} from '@/src/types/Admin-Type/Content-type';
+import {
+  buildAdminInfluencerMessageFormData,
+  mapAdminInfluencerMessageError,
+  type SendAdminInfluencerMessageInput,
+} from '@/src/types/Admin-Type/admin-influencer-message-type';
 import {
   type WhatsAppAdminCompanyApproveVideoPayload,
   type WhatsAppAdminCompanyApproveVideoResponse,
@@ -488,15 +495,22 @@ export const WhatsAppCompanyAdminSendHumanMessageApi = async (
   return response.data;
 };
 
-export const WhatsAppAdminInfuencerSendHumanMessageApi = async (
-  thread_id: string,
-  message: string,
+export const sendAdminInfluencerMessage = async (
+  input: SendAdminInfluencerMessageInput,
 ) => {
-  const response = await api.post(
-    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_SEND_HUMAN_MESSAGE(thread_id),
-    { message },
-  );
-  return response.data;
+  try {
+    const formData = buildAdminInfluencerMessageFormData(input);
+    const response = await api.post(
+      AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_SEND_HUMAN_MESSAGE(input.threadId),
+      formData,
+      {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      },
+    );
+    return response.data;
+  } catch (error) {
+    throw new Error(mapAdminInfluencerMessageError(error));
+  }
 };
 
 export const WhatsAppAdminCompanySendHumanMessageApi = async (
