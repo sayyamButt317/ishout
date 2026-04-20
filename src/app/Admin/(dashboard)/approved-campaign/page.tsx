@@ -172,12 +172,10 @@ const ApprovedCampaignPage = () => {
         }}
         isLoading={isLoading}
       />
-      {/* ✅ DELETE DIALOG (OUTSIDE TABLE) */}
       <DeleteDialogue
         heading="Delete Campaign"
         subheading="Are you sure you want to delete this campaign?"
         open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
         ondelete={() => {
           if (selectedCampaignId) {
             deleteCampaignHook.mutate(selectedCampaignId);
