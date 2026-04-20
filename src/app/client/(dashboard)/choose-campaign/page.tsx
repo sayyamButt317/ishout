@@ -87,7 +87,7 @@ function CampaignCard({ option }: { option: CampaignOption }) {
 
           <Button
             onClick={handleClick}
-            className={`inline-flex cursor-pointer w-1/4 items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition active:scale-95 hover:scale-[1.03] ${a.btnClass}`}
+            className={`inline-flex cursor-pointer w-fit whitespace-nowrap items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition active:scale-95 hover:scale-[1.03] ${a.btnClass}`}
             aria-label={`Start ${option.title}`}
           >
             Get Started

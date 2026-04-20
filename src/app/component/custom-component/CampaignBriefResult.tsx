@@ -111,7 +111,7 @@ const CampaignBriefResult = ({ brief, onApprove }: Props) => {
             Campaign Intelligence Report
           </h2>
           <p className="text-white/45 text-md max-w-xl">
-            Review, refine and approve your AI-generated campaign strategy.
+            Click Edit to make changes and Approve to finalize the campaign brief. You can also add reference images and video links to guide the influencers.
           </p>
         </div>
 
