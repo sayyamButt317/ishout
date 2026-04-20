@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { Check, ChevronLeft, MessageSquare } from 'lucide-react';
+import { Check, MessageSquare } from 'lucide-react';
 
 import PageHeader from '@/src/app/component/PageHeader';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
@@ -27,6 +27,8 @@ import {
   serializeTimedFeedbackMessage,
 } from '@/src/utils/content-feedback-chat';
 import { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
+import { toast } from 'sonner';
+import { mapAdminInfluencerMessageError } from '@/src/types/Admin-Type/admin-influencer-message-type';
 
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
@@ -114,7 +116,10 @@ export default function ContentFeedbackDetailPage() {
       ? influencerChatQuery.isLoading
       : companyChatQuery.isLoading;
 
-  const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(threadId);
+  const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(
+    threadId,
+    negotiationId,
+  );
   const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(
     brandThreadId,
     negotiationId,
@@ -221,19 +226,35 @@ export default function ContentFeedbackDetailPage() {
   const sendEnabled =
     chatMode === 'influencer' ? !!threadId : !!brandThreadId && !!negotiationId;
 
-  const handleSendMessage = async (text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed) return;
+  const handleSendMessage = async (textOrFile: string | File) => {
+    if (textOrFile instanceof File) {
+      if (chatMode !== 'influencer') {
+        toast.error('Attach files in Influencer Chat only.');
+        return;
+      }
+      if (!threadId) return;
+      try {
+        await sendInfluencerMessage({ file: textOrFile });
+        await influencerChatQuery.refetch();
+      } catch (error) {
+        toast.error(mapAdminInfluencerMessageError(error));
+      }
+      return;
+    }
 
     if (chatMode === 'influencer') {
       if (!threadId) return;
-      await sendInfluencerMessage(trimmed);
-      await influencerChatQuery.refetch();
+      try {
+        await sendInfluencerMessage({ message: textOrFile });
+        await influencerChatQuery.refetch();
+      } catch (error) {
+        toast.error(mapAdminInfluencerMessageError(error));
+      }
       return;
     }
 
     if (!brandThreadId || !negotiationId) return;
-    await sendCompanyMessage(trimmed);
+    await sendCompanyMessage(textOrFile);
     await companyChatQuery.refetch();
   };
 
@@ -258,7 +279,7 @@ export default function ContentFeedbackDetailPage() {
     });
     if (chatMode === 'influencer') {
       if (!threadId) return;
-      await sendInfluencerMessage(body);
+      await sendInfluencerMessage({ message: body });
       await influencerChatQuery.refetch();
       return;
     }
