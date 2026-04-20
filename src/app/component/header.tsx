@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useMemo, useSyncExternalStore } from 'react';
+import { useMemo } from 'react';
 import CustomButton from './button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -48,24 +48,30 @@ const Header = () => {
               justifyContent: 'center',
             }}
           >
-            <a
+            <Link
               href="#about-us"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               About Us
-            </a>
-            <a
+            </Link>
+            <Link
               href="#how-it-works"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               How It Works
-            </a>
-            <a
+            </Link>
+            <Link
               href="#case-studies"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               Case Studies
-            </a>
+            </Link>
+            <Link
+              href="/feedback"
+              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+            >
+              Feedback
+            </Link>
           </div>
 
           {!token ? (

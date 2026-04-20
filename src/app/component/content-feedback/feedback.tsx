@@ -5,6 +5,7 @@ import { captureVideoFrameDataUrl } from '@/src/utils/content-feedback-chat';
 import { toast } from 'sonner';
 import AdminFeedback from '@/src/app/component/content-feedback/AdminFeedback';
 import BrandFeedback from '@/src/app/component/content-feedback/BrandFeedback';
+import { Button } from '@/components/ui/button';
 
 export default function ContentFeedbackPanel({
   activeFeedbackId,
@@ -57,6 +58,10 @@ export default function ContentFeedbackPanel({
 
   return (
     <div className="flex w-full shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+      <h1 className="text-white text-2xl font-bold font-inter">Add Feedback</h1>
+      <p className="text-white text-sm font-thin font-inter">
+        Add feedback on the selected content.
+      </p>
       <div className="relative">
         <textarea
           value={selectedContentFeedback}
@@ -64,8 +69,7 @@ export default function ContentFeedbackPanel({
           placeholder="Type feedback on selected content..."
           className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
         />
-        <button
-          type="button"
+        <Button
           onClick={async () => {
             const video = videoRef?.current ?? null;
             await SubmitFeedback({
@@ -75,10 +79,10 @@ export default function ContentFeedbackPanel({
             });
           }}
           disabled={saveContentFeedbackMutation.isPending}
-          className="mt-2 w-full rounded-xl bg-primaryButton px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 flex justify-end rounded-xl bg-primaryButton px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {saveContentFeedbackMutation.isPending ? 'Saving...' : 'Save Admin Feedback'}
-        </button>
+          {saveContentFeedbackMutation.isPending ? 'Saving...' : 'Submit Feedback'}
+        </Button>
       </div>
       <BrandFeedback activeFeedbackId={activeFeedbackId} />
       <AdminFeedback activeFeedbackId={activeFeedbackId} />

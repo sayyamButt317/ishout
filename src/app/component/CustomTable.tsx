@@ -1,41 +1,12 @@
 "use client";
 import { Button } from '@/components/ui/button';
-import { Check, Eye, Trash, Pencil } from 'lucide-react';
+import { Eye, Trash, Pencil } from 'lucide-react';
 import Spinner from './custom-component/spinner';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import ImageUploadModal from './custom-component/image-upload-modal';
 import { useRouter } from 'next/navigation';
-
-const STATUS_STEPS = [
-  { key: 'pending', label: 'Pending', letter: 'P' },
-  { key: 'approved', label: 'iShout', letter: 'I' },
-  { key: 'processing', label: 'Brand', letter: 'B' },
-  { key: 'completed', label: 'Negotiated', letter: 'N' },
-  { key: 'content', label: 'Content', letter: 'C' },
-  { key: 'report', label: 'Report', letter: 'R' }
-] as const;
-
-const STATUS_ORDER = ['pending', 'approved', 'processing', 'completed', 'content', 'report'] as const;
-
-function getStatusSteps(currentStatus: string) {
-  const normalizedStatus = currentStatus.toLowerCase();
-  const currentIndex = STATUS_ORDER.indexOf(normalizedStatus as (typeof STATUS_ORDER)[number]);
-
-  if (currentIndex === -1) {
-    return STATUS_STEPS.map((step, index) => ({
-      ...step,
-      isActive: index === 0,
-      isCurrent: false
-    }));
-  }
-
-  return STATUS_STEPS.map((step, index) => ({
-    ...step,
-    isActive: index <= currentIndex,
-    isCurrent: STATUS_ORDER[index] === normalizedStatus
-  }));
-}
+import Stepper from './stepper';
 
 interface TableProps {
   header: string[];
@@ -138,57 +109,22 @@ export default function TableComponent({
           {subheader.map((row, rowIndex) => {
             // const isSelected = selectedRows.has(rowIndex);
             const currentStatus = statuses?.[rowIndex]?.toLowerCase() || 'pending';
-            const statusSteps = getStatusSteps(currentStatus);
+            const campaignId = campaignIds?.[rowIndex];
 
             return (
               <div key={rowIndex} className="w-full">
                 <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1A1A1A] p-3 sm:p-5 hover:border-white/20 transition-colors">
                   {statuses && (
                     <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-white/10 overflow-x-auto">
-                      <div className="flex items-center justify-between min-w-[280px] sm:max-w-2xl">
-                        {statusSteps.map((step, stepIndex) => {
-                          const isApprovedByAdmin = step.key === 'approved';
-                          const campaignId = campaignIds?.[rowIndex];
-                          const isClickable = isApprovedByAdmin && campaignId;
-                          const handleStepClick = (e: React.MouseEvent) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (isClickable && campaignId) {
-                              router.push(`/Admin/approved-campaign/${campaignId}`);
-                            }
-                          };
-
-                          return (
-                            <div key={step.key} className="flex items-center">
-                              <div
-                                onClick={isClickable ? handleStepClick : undefined}
-                                className={`flex flex-col justify-center cursor-pointer items-center ${isClickable ? 'cursor-pointer' : ''}`}
-                              >
-                                <div
-                                  className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${step.isActive
-                                    ? 'bg-[#FF3B8D] text-white'
-                                    : 'bg-white/10 text-white/40 border border-white/20'
-                                    } ${isClickable ? 'hover:bg-[#FF3B8D]/80' : ''}`}>
-                                  {step.isActive && stepIndex > 0 ? (
-                                    <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                                  ) : (
-                                    step.letter
-                                  )}
-                                </div>
-                                <span
-                                  className={`text-[8px] sm:text-[10px] mt-1 whitespace-nowrap ${step.isActive ? 'text-white/80' : 'text-white/40'
-                                    } ${isClickable ? 'hover:text-white' : ''}`}>
-                                  {step.label}
-                                </span>
-                              </div>
-                              {stepIndex < statusSteps.length - 1 && (
-                                <div className={`w-6 sm:w-40 h-0.5 mx-1 sm:mx-2 ${step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
-                                  }`} />
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
+                      <Stepper
+                        currentStatus={currentStatus}
+                        isStepClickable={(step) => step.key === 'approved' && Boolean(campaignId)}
+                        onStepClick={(step) => {
+                          if (step.key === 'approved' && campaignId) {
+                            router.push(`/Admin/approved-campaign/${campaignId}`);
+                          }
+                        }}
+                      />
                     </div>
                   )}
 
