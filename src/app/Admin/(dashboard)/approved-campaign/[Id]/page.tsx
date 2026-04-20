@@ -52,13 +52,13 @@ export default function ApprovedInfluencerById() {
         </div>
       </div>
       {isLoading && (
-        <div className="flex justify-center items-center min-h-[200px]">
+        <div className="flex justify-center items-center min-h-50">
           <Spinner size={20} />
         </div>
       )}
 
       {isError && (
-        <div className="flex justify-center items-center min-h-[200px]">
+        <div className="flex justify-center items-center min-h-50">
           <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
             Error loading approved influencers.
           </div>
