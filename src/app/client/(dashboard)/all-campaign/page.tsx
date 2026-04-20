@@ -11,6 +11,10 @@ import CustomButton from '@/src/app/component/button';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
+import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
+import { Trash } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 export default function AllCampaign() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,6 +23,9 @@ export default function AllCampaign() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
+  const deleteCampaignHook = DeleteCampaignHook();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
   useEffect(() => {
     if (briefData) {
@@ -42,12 +49,15 @@ export default function AllCampaign() {
           'Campaign Name',
           'followers',
           'Platform',
+          'Category',
+          'Country',
           'Requested ',
           // "Approved ",
           // "Rejected ",
           'Status',
           'Created At',
-          ' ',
+          'Delete',
+          'View',
         ]}
         imageUrls={data?.campaigns?.map(
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
@@ -62,17 +72,37 @@ export default function AllCampaign() {
           <div key={`platform-${campaign?.campaign_id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
           </div>,
+          <div key={`category-${campaign.campaign_id}`} className="truncate">
+            {campaign?.category?.join(', ') || '-'}
+          </div>,
+          <div key={`country-${campaign?.campaign_id}`} className="truncate">
+            {campaign?.country?.join(', ')}
+          </div>,
           <div
             key={`requested-${campaign?.campaign_id}`}
             className="truncate items-center justify-center"
           >
             {campaign?.limit}
           </div>,
+
           <div key={`status-${campaign?.campaign_id}`} className="truncate">
             <StatusBadge status={campaign.status} />
           </div>,
           <div key={`created-at-${campaign?.campaign_id}`} className="truncate">
             {new Date(campaign?.created_at).toLocaleDateString()}
+          </div>,
+          <div key={`delete-${campaign.campaign_id}`} className="truncate">
+            <Button
+              variant="ghost"
+              size="icon"
+              disabled={deleteCampaignHook.isPending}
+              onClick={() => {
+                setSelectedCampaignId(campaign.campaign_id);
+                setDeleteOpen(true);
+              }}
+            >
+              <Trash className="size-5 text-red-300 cursor-pointer" />
+            </Button>
           </div>,
           <CustomButton
             key={`view-brief-${campaign?.campaign_id}`}
@@ -99,6 +129,18 @@ export default function AllCampaign() {
         onOpenChange={setDialogOpen}
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
+      />
+      <DeleteDialogue
+        heading="Delete Campaign"
+        subheading="Are you sure you want to delete this campaign?"
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        ondelete={() => {
+          if (selectedCampaignId) {
+            deleteCampaignHook.mutate(selectedCampaignId);
+            setDeleteOpen(false);
+          }
+        }}
       />
     </>
   );

@@ -126,16 +126,6 @@ export default function OnboardingCampaignPage() {
               <Trash className="size-5 text-red-300 cursor-pointer" />
             </Button>
           </div>,
-          <div key={`view-${campaign._id}`} className="truncate">
-            <Button
-              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-              onClick={() => {
-                router.push(`/Admin/onboarding/${campaign?._id}`);
-              }}
-            >
-              View Influencers
-            </Button>
-          </div>,
           <div key={`view-brief-${campaign._id}`} className="truncate">
             <CustomButton
               className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
@@ -149,6 +139,16 @@ export default function OnboardingCampaignPage() {
             >
               View Brief
             </CustomButton>
+          </div>,
+          <div key={`view-${campaign._id}`} className="truncate">
+            <Button
+              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+              onClick={() => {
+                router.push(`/Admin/onboarding/${campaign?._id}`);
+              }}
+            >
+              View Influencers
+            </Button>
           </div>,
         ])}
         paginationstart={currentPage}

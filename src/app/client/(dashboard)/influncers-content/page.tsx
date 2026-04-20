@@ -22,7 +22,7 @@ export default function ClientInfluencersContentPage() {
   return (
     <>
       <PageHeader
-        title="All Campaigns"
+        title="Content Feedback"
         description={
           data?.campaigns?.length != null && data?.total != null
             ? `Showing ${data.campaigns.length} of ${data.total} campaigns`
@@ -35,6 +35,8 @@ export default function ClientInfluencersContentPage() {
           'Campaign Name',
           'followers',
           'Platform',
+          'Category',
+          'Country',
           'Requested ',
           'Status',
           'Created At',
@@ -54,6 +56,12 @@ export default function ClientInfluencersContentPage() {
             </div>,
             <div key={`platform-${id}`} className="truncate">
               <PlatformBadge platform={campaign?.platform} />
+            </div>,
+            <div key={`category-${campaign.campaign_id}`} className="truncate">
+              {campaign?.category?.join(', ') || '-'}
+            </div>,
+            <div key={`country-${campaign?.campaign_id}`} className="truncate">
+              {campaign?.country?.join(', ')}
             </div>,
             <div key={`requested-${id}`} className="truncate items-center justify-center">
               {campaign?.limit}

@@ -144,7 +144,7 @@ export default function CampaignBriefDialog({
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
-      doc.text('Video Links', margin, y);
+      doc.text('Links', margin, y);
       y += 10;
 
       doc.setFont('helvetica', 'normal');
@@ -182,7 +182,7 @@ export default function CampaignBriefDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw]! max-w-[1200px]! h-[92vh] bg-linear-to-br from-neutral-900 via-neutral-950 to-black border border-white/10 rounded-3xl overflow-y-auto p-0">
+      <DialogContent className="w-[95vw]! max-w-300! h-[92vh] bg-linear-to-br from-neutral-900 via-neutral-950 to-black border border-white/10 rounded-3xl overflow-y-auto p-0">
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between p-10 border-b border-white/10 gap-6">
           {/* LEFT SIDE */}
@@ -351,10 +351,10 @@ export default function CampaignBriefDialog({
             </div>
           )}
 
-          {/* Video Links */}
+          {/* Links */}
           {localBrief.video_links && localBrief.video_links.length > 0 && (
             <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Video Links</h3>
+              <h3 className="text-lg font-semibold text-white mb-3">Links</h3>
 
               <div className="flex flex-col gap-2">
                 {localBrief.video_links.map((link: string, index: number) => (
