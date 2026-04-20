@@ -1,17 +1,18 @@
 'use client';
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import PageHeader from '@/src/app/component/PageHeader';
-import { MessageSquare, MoreHorizontal, Search, Video } from 'lucide-react';
+import { MessageSquare, MoreHorizontal, Video } from 'lucide-react';
 import Image from 'next/image';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import { CardType, NegotiationResponse } from '@/src/types/Admin-Type/Content-type';
 import { countStyles } from '@/src/utils/countStyle';
+import ContentHeader from '@/src/app/component/custom-component/ContentHeader';
+import { Button } from '@/components/ui/button';
 
 const COLUMNS = [
-  { id: 'review', label: 'Under Review', count: 12, color: 'primary' },
-  { id: 'revision', label: 'Revision', count: 3, color: 'amber' },
-  { id: 'approved', label: 'Approved', count: 28, color: 'emerald' },
+  { id: 'review', label: 'Under Review', color: 'primary' },
+  { id: 'revision', label: 'Revision', color: 'amber' },
+  { id: 'approved', label: 'Approved', color: 'emerald' },
 ];
 
 function ContentFeedbackPageContent() {
@@ -36,7 +37,7 @@ function ContentFeedbackPageContent() {
         campaign: item.campaign_brief?.title ?? 'Campaign',
         rights: 'Full Rights',
         status: 'Ready to Post',
-        thumb: item.campaign_logo_url ?? '/assets/logo.svg',
+        thumb: item.campaign_logo_url ?? '',
         thread_id: item.thread_id,
         brand_thread_id: item.brand_thread_id,
         admin_approved: item.admin_approved,
@@ -45,52 +46,33 @@ function ContentFeedbackPageContent() {
 
   return (
     <div className="font-sans">
-      <PageHeader
-        title="Content Review & Feedback Pipeline"
-        description="Review content from influencers and provide feedback"
-        icon={<MessageSquare className="size-5" />}
-        actions={
-          <div className="flex items-center gap-2">
-            <div className="relative hidden md:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/40" />
-              <input
-                type="text"
-                placeholder="Search content..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="h-10 w-64 rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
-              />
-            </div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-bold text-emerald-400">Live Pipeline</span>
-            </div>
-          </div>
-        }
-      />
+      <ContentHeader title={apiCards?.[0]?.campaign ?? ''}
+        logo={apiCards?.[0]?.thumb ?? ''}
+        description='Showing influencers content waiting for content feedback review'
+        category='Influencers Content' />
 
       <div className="flex gap-6 overflow-x-auto pb-4">
         {COLUMNS.map((col) => {
           const combinedCards: CardType[] =
             col.id === 'approved'
               ? apiCards.filter(
-                  (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
-                )
+                (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
+              )
               : col.id === 'revision'
                 ? apiCards.filter(
-                    (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
-                  )
+                  (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
+                )
                 : col.id === 'review'
                   ? apiCards.filter((card) => {
-                      const status = (card.admin_approved ?? '').toLowerCase();
-                      return status !== 'approved' && status !== 'revision';
-                    })
+                    const status = (card.admin_approved ?? '').toLowerCase();
+                    return status !== 'approved' && status !== 'revision';
+                  })
                   : [];
 
           return (
             <div
               key={col.id}
-              className="flex w-80 shrink-0 flex-col gap-4 rounded-xl border border-white/10 bg-white/2 p-4"
+              className="flex w-1/3 shrink-2 flex-col mt-2 gap-4 rounded-xl border border-white/10 bg-white/2 p-4"
             >
               <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-2">
@@ -98,13 +80,12 @@ function ContentFeedbackPageContent() {
                     {col.label}
                   </h3>
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                      col.color === 'primary'
-                        ? 'bg-(--color-primaryButton) text-white'
-                        : countStyles[col.color]
-                    }`}
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
+                      ? 'bg-(--color-primaryButton) text-white'
+                      : countStyles[col.color]
+                      }`}
                   >
-                    {col.count}
+                    {combinedCards.length}
                   </span>
                 </div>
                 <button className="text-white/40 hover:text-white/70 transition-colors">
@@ -143,25 +124,20 @@ function ContentFeedbackPageContent() {
                     <h4 className="truncate text-sm font-bold text-white">
                       {card.title}
                     </h4>
-                    <p className="mb-3 text-xs text-white/50">{card.campaign}</p>
+                    <div className="flex items-center justify-between mt-2">
 
-                    <div className="flex items-center justify-between">
-                      <span className="rounded-md border border-blue-500/30 bg-blue-500/10 px-2 py-1 text-[10px] font-bold uppercase text-blue-400">
-                        {'rights' in card ? card.rights : 'Full Rights'}
-                      </span>
-
-                      {'comments' in card && card.comments && (
-                        <div className="flex items-center gap-1 text-white/50">
-                          <MessageSquare className="size-3" />
-                          <span className="text-xs font-bold">{card.comments}</span>
-                        </div>
-                      )}
-
-                      {'status' in card && card.status && (
-                        <span className="text-[10px] font-bold text-emerald-400">
-                          {card.status}
-                        </span>
-                      )}
+                      <div className="flex flex-row justify-between gap-2">
+                        <Button
+                          variant="outline"
+                          onClick={() => { }}
+                          className="whitespace-nowrap text-xs px-3 cursor-pointer">Message</Button>
+                        <Button
+                          variant="default"
+                          onClick={() => {
+                            router.push(`/Admin/influencers/${card.id}`);
+                          }}
+                          className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer">View Content</Button>
+                      </div>
                     </div>
                   </div>
                 ))}

@@ -1,9 +1,8 @@
 'use client';
 
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useRef, useState } from 'react';
 import ChatMessagesList from './chat-messages-list';
-import { Mic, Paperclip, Send } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Mic, Paperclip, X } from 'lucide-react';
 
 type Mode = 'influencer' | 'brand';
 
@@ -37,7 +36,8 @@ type ChatPanelProps = {
   onSeekToTime?: (time: number) => void;
 
   sendEnabled: boolean;
-  onSend: (text: string) => Promise<void> | void;
+  /** Text from the composer, or a file from the attach control. */
+  onSend: (payload: string | File) => Promise<void> | void;
 
   afterComposer?: ReactNode;
   bubbleMaxWidthClassName?: string;
@@ -61,28 +61,44 @@ export default function ChatPanel({
 }: ChatPanelProps) {
   const [draft, setDraft] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const resolvedRoleLabels =
     messageRoleLabels ??
     (modeToggle
       ? {
-        right: 'Admin',
-        left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
-      }
+          right: 'Admin',
+          left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
+        }
       : undefined);
 
   const handleSend = async () => {
-    const text = draft.trim();
-    if (!text) return;
     if (!sendEnabled) return;
 
     setIsSending(true);
     try {
+      if (selectedFile) {
+        await onSend(selectedFile);
+        setSelectedFile(null);
+        return;
+      }
+
+      const text = draft.trim();
+      if (!text) return;
+
       await onSend(text);
       setDraft('');
     } finally {
       setIsSending(false);
     }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setSelectedFile(file);
   };
 
   return (
@@ -93,20 +109,22 @@ export default function ChatPanel({
             <button
               type="button"
               onClick={() => modeToggle.onChange('influencer')}
-              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'influencer'
-                ? 'bg-primaryButton text-white shadow-sm'
-                : 'text-white/45 hover:text-white/70'
-                }`}
+              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
+                modeToggle.value === 'influencer'
+                  ? 'bg-primaryButton text-white shadow-sm'
+                  : 'text-white/45 hover:text-white/70'
+              }`}
             >
               Influencer Chat
             </button>
             <button
               type="button"
               onClick={() => modeToggle.onChange('brand')}
-              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'brand'
-                ? 'bg-primaryButton text-white shadow-sm'
-                : 'text-white/45 hover:text-white/70'
-                }`}
+              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${
+                modeToggle.value === 'brand'
+                  ? 'bg-primaryButton text-white shadow-sm'
+                  : 'text-white/45 hover:text-white/70'
+              }`}
             >
               Brand Chat
             </button>
@@ -135,14 +153,39 @@ export default function ChatPanel({
           <textarea
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Type your message..."
+            placeholder="Type your feedback..."
             className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-32 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
           />
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+            onChange={handleFileChange}
+          />
           <div className="absolute bottom-4 right-4 flex items-center gap-2">
+            {selectedFile ? (
+              <div className="flex max-w-[170px] items-center gap-1 rounded-lg bg-white/10 px-2 py-1 text-[11px] font-semibold text-white/80">
+                <span className="truncate" title={selectedFile.name}>
+                  {selectedFile.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedFile(null)}
+                  disabled={isSending}
+                  className="inline-flex size-4 items-center justify-center rounded text-white/80 hover:bg-white/15 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                  title="Deselect file"
+                >
+                  <X className="size-3" />
+                </button>
+              </div>
+            ) : null}
             <button
               type="button"
-              className="flex size-8 items-center justify-center rounded-lg bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
-              title="Attach files"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={!sendEnabled || isSending}
+              className="flex size-8 items-center justify-center rounded-lg bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+              title="Attach image, video, audio, or document"
             >
               <Paperclip className="size-4" />
             </button>
@@ -153,17 +196,18 @@ export default function ChatPanel({
             >
               <Mic className="size-4" />
             </button>
-            <Button
+            <button
+              type="button"
               onClick={handleSend}
               disabled={!sendEnabled || isSending}
-              className={`flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors ${!sendEnabled || isSending
-                ? 'bg-white/10 text-white/50 cursor-not-allowed'
-                : 'bg-primaryButton font-bold cursor-pointer text-white hover:bg-primaryButton/80 hover:text-white'
-                }`}
+              className={`flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors ${
+                !sendEnabled || isSending
+                  ? 'bg-white/10 text-white/50 cursor-not-allowed'
+                  : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'
+              }`}
             >
-              <Send className="size-4 mr-2" />
-              Send Message
-            </Button>
+              Send
+            </button>
           </div>
         </div>
 
