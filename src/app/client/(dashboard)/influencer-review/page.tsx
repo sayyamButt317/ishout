@@ -45,6 +45,8 @@ export default function RevieInfluencer() {
           'Campaign Name',
           'followers',
           'Platform',
+          'Category',
+          'Country',
           'Requested ',
           'Unapproved',
           'Status',
@@ -60,6 +62,12 @@ export default function RevieInfluencer() {
           </div>,
           <div key={`platform-${campaign?._id}`} className="truncate">
             <PlatformBadge platform={campaign?.platform} />
+          </div>,
+          <div key={`category-${campaign.campaign_id}`} className="truncate">
+            {campaign?.category?.join(', ') || '-'}
+          </div>,
+          <div key={`country-${campaign?.campaign_id}`} className="truncate">
+            {campaign?.country?.join(', ')}
           </div>,
           <div
             key={`requested-${campaign?._id}`}
