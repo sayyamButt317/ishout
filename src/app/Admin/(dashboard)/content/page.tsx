@@ -2,13 +2,11 @@
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import TableComponent from '@/src/app/component/CustomTable';
 import React, { useState, useEffect } from 'react';
-import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import { RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { Button } from '@/components/ui/button';
 import OnboardingCampaignHook from '@/src/routes/Admin/Hooks/onboardingCampaign-hook';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
-import CountButton from '@/src/app/component/custom-component/countbutton';
 import { useRouter } from 'next/navigation';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
@@ -65,12 +63,12 @@ export default function InfluencersContentPage() {
           'Company Name',
           'Campaign Name',
           'Platform',
-          'Followers',
-          'Country',
-          'Status',
-          'Requested',
-          'Onboarded',
-          'Created At',
+          // 'Followers',
+          // 'Country',
+          // 'Status',
+          // 'Requested',
+          // 'Onboarded',
+          // 'Created At',
           'Delete',
           ' ',
           ' ',
@@ -97,27 +95,27 @@ export default function InfluencersContentPage() {
             <div key={`platform-${id}`} className="truncate">
               <PlatformBadge platform={campaign?.platform} />
             </div>,
-            <div key={`followers-${id}`} className="truncate">
-              {Array.isArray(campaign?.followers)
-                ? campaign.followers.map((f: number) => `${f}`).join(', ')
-                : '-'}
-            </div>,
-            <div key={`country-${id}`} className="truncate">
-              {campaign?.country?.join(', ') || '-'}
-            </div>,
-            <div key={`status-${id}`} className="truncate">
-              <StatusBadge status={campaign?.status} />
-            </div>,
-            <div key={`requested-influencers-${id}`} className="truncate">
-              <CountButton count={campaign?.limit} />
-            </div>,
-            <div key={`onboarding-influencers-${id}`} className="truncate">
-              <CountButton count={campaign?.approved_influencer_count} />
-            </div>,
+            // <div key={`followers-${id}`} className="truncate">
+            //   {Array.isArray(campaign?.followers)
+            //     ? campaign.followers.map((f: number) => `${f}`).join(', ')
+            //     : '-'}
+            // </div>,
+            // <div key={`country-${id}`} className="truncate">
+            //   {campaign?.country?.join(', ') || '-'}
+            // </div>,
+            // <div key={`status-${id}`} className="truncate">
+            //   <StatusBadge status={campaign?.status} />
+            // </div>,
+            // <div key={`requested-influencers-${id}`} className="truncate">
+            //   <CountButton count={campaign?.limit} />
+            // </div>,
+            // <div key={`onboarding-influencers-${id}`} className="truncate">
+            //   <CountButton count={campaign?.approved_influencer_count} />
+            // </div>,
 
-            <div key={`created-at-${id}`} className="truncate">
-              {new Date(campaign?.created_at).toLocaleDateString()}
-            </div>,
+            // <div key={`created-at-${id}`} className="truncate">
+            //   {new Date(campaign?.created_at).toLocaleDateString()}
+            // </div>,
 
             <div key={`delete-${id}`} className="truncate">
               <Button
