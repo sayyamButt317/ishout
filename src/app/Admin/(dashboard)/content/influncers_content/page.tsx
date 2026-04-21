@@ -1,13 +1,30 @@
 'use client';
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Video } from 'lucide-react';
 import Image from 'next/image';
+
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import { CardType } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import { countStyles } from '@/src/utils/countStyle';
 import ContentHeader from '@/src/app/component/custom-component/ContentHeader';
 import { Button } from '@/components/ui/button';
+import { countStyles } from '@/src/utils/countStyle';
+
+interface CampaingnContentProps {
+  _id: string;
+  thread_id: string;
+  Brand_approved: string | null;
+  admin_approved: string;
+  brand_thread_id: string;
+  campaign_id: string;
+  campaign_logo_url: string;
+  influencer_id: string;
+  campaign_brief: {
+    title: string;
+  };
+  name: string;
+}
 
 const COLUMNS = [
   { id: 'review', label: 'Under Review', color: 'primary' },
@@ -72,7 +89,7 @@ function ContentFeedbackPageContent() {
 
       <div className="flex gap-6 overflow-x-auto pb-4">
         {COLUMNS.map((col) => {
-          const combinedCards: CardType[] =
+          const combinedCards =
             col.id === 'approved'
               ? apiCards.filter(
                   (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
@@ -112,15 +129,16 @@ function ContentFeedbackPageContent() {
               <div className="flex flex-col gap-3 overflow-y-auto">
                 {combinedCards.map((card) => (
                   <div
-                    key={card.id}
+                    key={card._id}
                     onClick={() => {
-                      const campaignId = card.campaign_id ?? campaignIdFromQuery;
+                      const campaignId =
+                        card.campaign_id ?? campaignIdFromQuery;
                       if (!campaignId) return;
 
                       router.push(
                         `/Admin/content/${encodeURIComponent(
-                          card.id,
-                        )}?campaign_id=${encodeURIComponent(campaignId)}`,
+                          card._id
+                        )}?campaign_id=${encodeURIComponent(campaignId)}`
                       );
                     }}
                     className="cursor-pointer rounded-2xl border border-white/10 bg-[#0F0F0F] p-5 transition-all hover:border-white/20"
@@ -203,6 +221,13 @@ function ContentFeedbackPageContent() {
                     </div>
                   </div>
                 ))}
+
+                {/* Empty State */}
+                {combinedCards.length === 0 && (
+                  <p className="text-xs text-white/40 text-center py-4">
+                    No items
+                  </p>
+                )}
               </div>
             </div>
           );
