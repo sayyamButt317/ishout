@@ -23,15 +23,15 @@ export default function CampaignByIdPage() {
   return (
     <div className="font-sans">
       <header
-        className="mb-10 relative overflow-hidden rounded-2xl border border-white/[0.06] bg-[var(--color-section-overlays)] shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset,0_24px_48px_-24px_rgba(0,0,0,0.4)]"
+        className="mb-10 relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset,0_24px_48px_-24px_rgba(0,0,0,0.4)]"
         role="banner"
       >
         <div
-          className="pointer-events-none absolute -left-24 -top-24 h-56 w-56 rounded-full bg-[var(--color-primaryButton)] opacity-[0.08] blur-[60px]"
+          className="pointer-events-none absolute -left-24 -top-24 h-56 w-56 rounded-full bg-(--color-primaryButton) opacity-[0.08] blur-[60px]"
           aria-hidden
         />
         <div
-          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--color-primaryButton)] to-transparent opacity-60"
+          className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-(--color-primaryButton) to-transparent opacity-60"
           aria-hidden
         />
 
@@ -51,13 +51,13 @@ export default function CampaignByIdPage() {
             <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
               <div className="flex items-center gap-4">
                 <div
-                  className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-[var(--color-primaryButton)]/20 bg-[var(--color-primaryButton)]/[0.12] text-[var(--color-primaryButton)]"
+                  className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-(--color-primaryButton)/20 bg-(--color-primaryButton)/12 text-(--color-primaryButton)"
                   aria-hidden
                 >
                   <Users className="size-7" />
                 </div>
                 <div className="min-w-0">
-                  <h1 className="truncate text-2xl font-semibold tracking-tight text-white sm:text-3xl tracking-[-0.03em]">
+                  <h1 className="truncate text-2xl font-semibold tracking-tight text-white sm:text-3xl">
                     {campaignTitle}
                   </h1>
                   <p className="mt-0.5 text-sm font-medium text-white/50">
@@ -75,8 +75,8 @@ export default function CampaignByIdPage() {
                   </span>
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2">
-                  <UserX className="size-4 text-[var(--color-deleteButton)]" aria-hidden />
-                  <span className="text-sm font-semibold text-[var(--color-deleteButton)]">
+                  <UserX className="size-4 text-(--color-deleteButton)" aria-hidden />
+                  <span className="text-sm font-semibold text-(--color-deleteButton)">
                     {rejectedCount} rejected
                   </span>
                 </div>
@@ -93,7 +93,7 @@ export default function CampaignByIdPage() {
                 Back to list
               </CustomButton>
               <Button
-                className="h-11 gap-2 rounded-xl bg-[var(--color-primaryButton)] px-4 text-sm font-semibold text-white transition-all hover:opacity-95"
+                className="h-11 gap-2 rounded-xl bg-(--color-primaryButton) px-4 text-sm font-semibold text-white transition-all hover:opacity-95"
                 onClick={() => ExportToExcel()}
               >
                 <Download className="size-4" />
