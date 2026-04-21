@@ -10,6 +10,7 @@ import useAuthStore from '@/src/store/AuthStore/authStore';
 import { toast } from 'sonner';
 import axios, { AxiosResponse } from 'axios';
 import { getAuthTokenProvider } from '@/src/provider/auth-provide';
+import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import {
   UpdateCampaignStatusRequestProps,
   UpdateInfluencerStatusRequestProps,
@@ -403,12 +404,15 @@ export const NegotiationStatsApi = async (page: number = 1, page_size: number = 
   return response.data;
 };
 
-export const NegotiationAgreedByCampaignApi = async (campaign_id: string) => {
+export const NegotiationAgreedByCampaignApi = async (
+  campaign_id: string,
+): Promise<AgreedNegotiationResponse> => {
   const response = await api.get(
     AdminENDPOINT.NEGOTIATION_AGREED_BY_CAMPAIGN(campaign_id),
   );
   return response.data;
 };
+
 
 export const NegotiationChatDetailApi = async (_id: string) => {
   const response = await api.get(AdminENDPOINT.NEGOTIATION_CHAT_DETAIL, {
