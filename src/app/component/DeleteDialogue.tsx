@@ -6,7 +6,7 @@ interface DialogueProps{
     subheading?:string,
     ondelete?:()=>void,
     open: boolean;
-    onClose: () => void;
+    onClose?: () => void;
 }
 
 export const DeleteDialogue = ({

@@ -78,8 +78,8 @@ export default function AdminPendingCampaigns() {
           'Created At',
           'Chat ',
           'Delete',
-          '_ ',
-          ' _',
+          ' ',
+          ' ',
         ]}
         imageUrls={data?.campaigns.map(
           (campaign: AdminAllCampaignApiResponse) => campaign?.campaign_logo_url || null,
@@ -124,6 +124,19 @@ export default function AdminPendingCampaigns() {
             >
               <Trash className="size-5 text-red-300 cursor-pointer" />
             </Button>
+          </div>,
+          <div key={`view-brief-${campaign._id}`} className="min-w-90px pl-4">
+            <CustomButton
+              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+              onClick={() => {
+                if (!campaign.brief_id) return;
+                setSelectedBriefId(campaign.brief_id);
+                setDialogOpen(true);
+              }}
+              disabled={!campaign.brief_id}
+            >
+              View Brief
+            </CustomButton>
           </div>,
           <div key={`view-${campaign._id}`} className="min-w-180px">
             {campaign?.generated === false ? (
@@ -170,19 +183,6 @@ export default function AdminPendingCampaigns() {
                 View Generated
               </CustomButton>
             )}
-          </div>,
-          <div key={`view-brief-${campaign._id}`} className="min-w-90px pl-4">
-            <CustomButton
-              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
-              onClick={() => {
-                if (!campaign.brief_id) return;
-                setSelectedBriefId(campaign.brief_id);
-                setDialogOpen(true);
-              }}
-              disabled={!campaign.brief_id}
-            >
-              View Brief
-            </CustomButton>
           </div>,
         ])}
         paginationstart={data?.page ?? 1}
