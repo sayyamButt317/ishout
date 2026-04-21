@@ -1,7 +1,6 @@
 'use client';
 import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Video } from 'lucide-react';
 import Image from 'next/image';
 
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
@@ -9,22 +8,6 @@ import { CardType } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import { countStyles } from '@/src/utils/countStyle';
 import ContentHeader from '@/src/app/component/custom-component/ContentHeader';
 import { Button } from '@/components/ui/button';
-import { countStyles } from '@/src/utils/countStyle';
-
-interface CampaingnContentProps {
-  _id: string;
-  thread_id: string;
-  Brand_approved: string | null;
-  admin_approved: string;
-  brand_thread_id: string;
-  campaign_id: string;
-  campaign_logo_url: string;
-  influencer_id: string;
-  campaign_brief: {
-    title: string;
-  };
-  name: string;
-}
 
 const COLUMNS = [
   { id: 'review', label: 'Under Review', color: 'primary' },
@@ -37,7 +20,6 @@ function ContentFeedbackPageContent() {
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
   const router = useRouter();
 
-  const [search, setSearch] = useState('');
 
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery);
   const negotiationItems = data?.negotiations ?? [];
@@ -81,8 +63,8 @@ function ContentFeedbackPageContent() {
   return (
     <div className="font-sans">
       <ContentHeader
-        title={apiCards?.[0]?.campaign ?? ''}
-        logo={apiCards?.[0]?.thumb ?? ''}
+        title={apiCards?.[0]?.campaign ?? 'Campaign'}
+        logo={apiCards?.[0]?.thumb ?? '/assets/logo.svg'}
         description="Showing influencers content waiting for content feedback review"
         category="Influencers Content"
       />
@@ -92,16 +74,16 @@ function ContentFeedbackPageContent() {
           const combinedCards =
             col.id === 'approved'
               ? apiCards.filter(
-                  (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
-                )
+                (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
+              )
               : col.id === 'revision'
                 ? apiCards.filter(
-                    (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
-                  )
+                  (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
+                )
                 : apiCards.filter((card) => {
-                    const status = (card.admin_approved ?? '').toLowerCase();
-                    return status !== 'approved' && status !== 'revision';
-                  });
+                  const status = (card.admin_approved ?? '').toLowerCase();
+                  return status !== 'approved' && status !== 'revision';
+                });
 
           return (
             <div
@@ -115,11 +97,10 @@ function ContentFeedbackPageContent() {
                 </h3>
 
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                    col.color === 'primary'
-                      ? 'bg-(--color-primaryButton) text-white'
-                      : countStyles[col.color]
-                  }`}
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
+                    ? 'bg-(--color-primaryButton) text-white'
+                    : countStyles[col.color]
+                    }`}
                 >
                   {combinedCards.length}
                 </span>
@@ -129,7 +110,7 @@ function ContentFeedbackPageContent() {
               <div className="flex flex-col gap-3 overflow-y-auto">
                 {combinedCards.map((card) => (
                   <div
-                    key={card._id}
+                    key={card.id}
                     onClick={() => {
                       const campaignId =
                         card.campaign_id ?? campaignIdFromQuery;
@@ -137,7 +118,7 @@ function ContentFeedbackPageContent() {
 
                       router.push(
                         `/Admin/content/${encodeURIComponent(
-                          card._id
+                          card.id
                         )}?campaign_id=${encodeURIComponent(campaignId)}`
                       );
                     }}
@@ -147,8 +128,8 @@ function ContentFeedbackPageContent() {
                     <div className="flex items-center gap-4 mb-6">
                       <div className="relative size-12 overflow-hidden rounded-full border border-white/10">
                         <Image
-                          src={card.picture || card.thumb}
-                          alt={card.influncer_name}
+                          src={card.picture || '/assets/logo.svg'}
+                          alt={card.influncer_name ?? 'Influencer avatar'}
                           fill
                           className="object-cover"
                         />
