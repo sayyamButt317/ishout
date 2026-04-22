@@ -40,10 +40,7 @@ function ContentFeedbackPageContent() {
 
   type CardWithSource = CardType & { source: NegotiationItem };
   const apiCards: CardWithSource[] = negotiationItems
-    .filter(
-      (item) =>
-        item.negotiation_status === 'agreed' && item.admin_approved === 'Approved',
-    )
+    .filter((item) => item.admin_approved === 'Approved')
     .map((item) => ({
       id: item._id,
       campaign_id: item.campaign_id,
