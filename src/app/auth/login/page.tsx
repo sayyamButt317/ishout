@@ -47,12 +47,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-[3fr_2fr]">
+    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-[4fr_2fr]">
       <div className="hidden lg:block h-full">
         <DomeGallery />
       </div>
       {/* Right - Login Form */}
-      <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-black to-slate-900 p-6">
+      <div className="min-h-screen w-full flex items-center justify-center bg-linear-to-br from-slate-950 via-black to-slate-900 p-6 lg:pl-0">
 
         {/* Card */}
         <Card className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
@@ -70,7 +70,7 @@ export default function Login() {
                 />
                 <h2 className="text-4xl font-bold text-white tracking-tight">
                   i
-                  <span className="text-primarytext font-extrabold">S</span>
+                  <span className="text-white font-extrabold">S</span>
                   hout
                   <span className="text-primarytext font-extrabold">.</span>
                 </h2>

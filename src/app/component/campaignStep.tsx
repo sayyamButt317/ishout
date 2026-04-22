@@ -30,18 +30,16 @@ export function CampaignSteps({ currentStep }: CampaignStepsProps) {
           {steps.map((step) => (
             <div
               key={step.number}
-              className={`flex flex-col items-center flex-shrink-0 text-center min-w-[80px] px-2 py-1 rounded-lg transition-all duration-300 ${
-                currentStep === step.number
+              className={`flex flex-col items-center shrink-0 text-center min-w-[80px] px-2 py-1 rounded-lg transition-all duration-300 ${currentStep === step.number
                   ? "bg-emerald-100 text-emerald-700"
                   : "bg-slate-100 text-slate-500"
-              }`}
+                }`}
             >
               <div
-                className={`w-7 h-7 flex items-center justify-center rounded-full font-semibold text-sm mb-1 ${
-                  currentStep >= step.number
+                className={`w-7 h-7 flex items-center justify-center rounded-full font-semibold text-sm mb-1 ${currentStep >= step.number
                     ? "bg-emerald-500 text-white"
                     : "bg-slate-300 text-slate-700"
-                }`}
+                  }`}
               >
                 {currentStep > step.number ? <Check className="w-4 h-4" /> : step.number}
               </div>
@@ -57,13 +55,12 @@ export function CampaignSteps({ currentStep }: CampaignStepsProps) {
               {/* Step Circle */}
               <div className="relative flex flex-col items-center text-center w-full">
                 <div
-                  className={`w-9 h-9 flex items-center justify-center rounded-full font-semibold text-sm mb-2 transition-all duration-300 ${
-                    currentStep > step.number
+                  className={`w-9 h-9 flex items-center justify-center rounded-full font-semibold text-sm mb-2 transition-all duration-300 ${currentStep > step.number
                       ? "bg-emerald-500 text-white"
                       : currentStep === step.number
-                      ? "bg-emerald-100 text-emerald-700 ring-2 ring-emerald-300"
-                      : "bg-slate-200 text-slate-500"
-                  }`}
+                        ? "bg-emerald-100 text-emerald-700 ring-2 ring-emerald-300"
+                        : "bg-slate-200 text-slate-500"
+                    }`}
                 >
                   {currentStep > step.number ? (
                     <Check className="w-5 h-5" />
@@ -75,11 +72,10 @@ export function CampaignSteps({ currentStep }: CampaignStepsProps) {
                 {/* Step Title */}
                 <div className="text-center">
                   <p
-                    className={`text-sm font-medium transition-colors ${
-                      currentStep >= step.number
+                    className={`text-sm font-medium transition-colors ${currentStep >= step.number
                         ? "text-slate-900"
                         : "text-slate-500"
-                    }`}
+                      }`}
                   >
                     {step.title}
                   </p>
@@ -90,11 +86,10 @@ export function CampaignSteps({ currentStep }: CampaignStepsProps) {
               {/* Connector Line */}
               {index < steps.length - 1 && (
                 <div
-                  className={`flex-1 h-0.5 mx-2 transition-all duration-300 ${
-                    currentStep > step.number
+                  className={`flex-1 h-0.5 mx-2 transition-all duration-300 ${currentStep > step.number
                       ? "bg-emerald-500"
                       : "bg-slate-200"
-                  }`}
+                    }`}
                 />
               )}
             </div>

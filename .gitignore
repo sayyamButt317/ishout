@@ -3,7 +3,6 @@ node_modules
 .next
 
 # Ignore environment variables
-.env
 
 # Ignore logs
 logs
@@ -34,4 +33,4 @@ node_modules
 
 testsprite_tests/
 guided-questions/
-config.bat
+.env

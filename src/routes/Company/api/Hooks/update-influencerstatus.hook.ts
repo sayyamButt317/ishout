@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CompanyUpdateInfluencerStatusApi } from "../company.routes";
-import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from "@/src/types/Admin-Type/Campaign.type";
+import { UpdateInfluencerStatusRequestProps, UpdateInfluencerStatusResponseProps } from "@/src/types/Admin-Type/Campaign-type";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 
@@ -10,7 +10,7 @@ export default function UpdateInfluencerStatusCompanyHook() {
         mutationFn: (influencerRequest: UpdateInfluencerStatusRequestProps) => CompanyUpdateInfluencerStatusApi(influencerRequest),
         onSuccess: async (data: UpdateInfluencerStatusResponseProps) => {
             toast.success(data.message);
-            await queryClient.invalidateQueries({ queryKey: ['approved-campaign'] });
+            await queryClient.invalidateQueries({ queryKey: ['campaign-influencers'] });
         },
         onError: (error) => {
             const axiosError = error as AxiosError<{ detail: string }>;

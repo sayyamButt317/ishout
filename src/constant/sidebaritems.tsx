@@ -1,132 +1,86 @@
-import {
-  CircleCheck,
-  FileText,
-  Handshake,
-  // FileText,
-  Hourglass,
-  LayoutGrid,
-  Plus,
-  User,
-  UserCheck,
-  Users,
-} from 'lucide-react';
-import { SiWhatsapp } from 'react-icons/si';
+import React from 'react';
+import { LayoutGrid, User, Video, Users} from 'lucide-react';
 
-export const employeeSidebarLinks = [
+// ─── Shared types ─────────────────────────────────────────────────────────────
+
+export interface SidebarChildLink {
+  label: string;
+  route: string;
+}
+
+export interface SidebarGroupLink {
+  label: string;
+  icon: React.ReactNode;
+  iconBg: string;
+  iconColor: string;
+  children: SidebarChildLink[];
+}
+
+// ─── Employee (Company/Client) Sidebar ───────────────────────────────────────
+
+export const employeeSidebarLinks: SidebarGroupLink[] = [
   {
-    label: 'Create Campaign',
-    route: '/client/choose-campaign',
-    icon: <Plus className="w-5 h-5 text-secondarytext group-hover:text-primarytext transition-colors" />,
+    label: 'Campaigns',
+    icon: React.createElement(LayoutGrid, { size: 15 }),
+    iconBg: 'bg-primaryButton/10',
+    iconColor: 'text-primarytext',
+    children: [
+      { label: 'All Campaigns',      route: '/client/all-campaign' },
+      { label: 'Create Campaign',    route: '/client/choose-campaign' },
+      { label: 'Campaign Brief',     route: '/client/briefs' },
+      { label: 'Review Influencers', route: '/client/influencer-review' },
+      { label: 'Content Feedback',   route: '/client/influncers-content' },
+      { label: 'Approved Content',   route: '/client/approved-contents/all-campaigns' },
+    ],
   },
   {
-    label: 'Review Influencer',
-    route: '/client/influencer-review',
-    icon: <UserCheck className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
+    label: 'Studio',
+    icon: React.createElement(Video, { size: 15 }),
+    iconBg: 'bg-cyan-500/10',
+    iconColor: 'text-cyan-400',
+    children: [
+      { label: 'Image Studio', route: '/client/image-studio' },
+      { label: 'Video Studio', route: '/client/video-studio' },
+    ],
   },
   {
-    label: 'All Campaigns',
-    route: '/client/all-campaign',
-    icon: <LayoutGrid className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
-  },
-  {
-    label: 'Campaign Brief',
-    route: '/client/briefs',
-    icon: <FileText className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
-  },
-  {
-    label: 'Profile',
-    route: '/client/profile',
-    icon: <User className="w-5 h-5 text-slate-700 group-hover:text-primarytext transition-colors" />,
+    label: 'Account',
+    icon: React.createElement(User, { size: 15 }),
+    iconBg: 'bg-emerald-500/10',
+    iconColor: 'text-emerald-400',
+    children: [
+      { label: 'Profile', route: '/client/profile' },
+    ],
   },
 ];
 
-// {
-//   label: "Contents",
-//   route: "/client/content",
-//   icon: <FileText className="w-5 h-5" />,
-// },
+// ─── Admin Sidebar ────────────────────────────────────────────────────────────
 
-
-export const adminSidebarLinks = [
+export const adminSidebarLinks: SidebarGroupLink[] = [
   {
-    label: 'Pending Campaign',
-    route: '/Admin/pending-campaign',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-        <Hourglass className="text-2xl text-white" />
-      </div>
-    ),
+    label: 'Campaigns',
+    icon: React.createElement(LayoutGrid, { size: 15 }),
+    iconBg: 'bg-primaryButton/10',
+    iconColor: 'text-primarytext',
+    children: [
+      { label: 'All Campaigns',   route: '/Admin/all-campaign' },
+      { label: 'Pending',         route: '/Admin/pending-campaign' },
+      { label: 'iShout Approved', route: '/Admin/approved-campaign' },
+      { label: 'Brand Approved',  route: '/Admin/brand-approved' },
+      { label: 'Onboarding',      route: '/Admin/onboarding' },
+      { label: 'Content',         route: '/Admin/content' },
+      { label: 'Report',          route: '/Admin/report' },
+    ],
   },
   {
-    label: 'Approved Influencers',
-    route: '/Admin/approved-campaign',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
-        <CircleCheck className="text-2xl text-white" />
-      </div>
-    ),
+    label: 'Users & Messaging',
+    icon: React.createElement(Users, { size: 15 }),
+    iconBg: 'bg-purple-500/10',
+    iconColor: 'text-purple-400',
+    children: [
+      { label: 'User Management', route: '/Admin/user-management' },
+      { label: 'WhatsApp',        route: '/Admin/whatsapp-chat' },
+      { label: 'Negotiation',     route: '/Admin/negotiation' },
+    ],
   },
-  {
-    label: 'OnBoarding',
-    route: '/Admin/onboarding',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
-        <UserCheck className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  {
-    label: 'All Campaigns',
-    route: '/Admin/all-campaign',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-        <LayoutGrid className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  {
-    label: 'User Management',
-    route: '/Admin/user-management',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-        <Users className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  {
-    label: 'WhatsApp',
-    route: '/Admin/whatsapp-chat',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-green-600 to-green-400 rounded-xl">
-        <SiWhatsapp className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  // {
-  //   label: "Instagram",
-  //   route: "/Admin/messages",
-  //   icon: (
-  //     <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
-  //       <SiInstagram className="text-2xl text-white" />
-  //     </div>
-  //   ),
-  // },
-  {
-    label: 'Negotiation',
-    route: '/Admin/negotiation',
-    icon: (
-      <div className="p-2 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl">
-        <Handshake className="text-2xl text-white" />
-      </div>
-    ),
-  },
-  // {
-  //   label: "Analytics",
-  //   route: "/Admin/analytics",
-  //   icon: (
-  //     <div className="p-2 bg-gradient-to-br from-gray-600 to-gray-400 rounded-xl">
-  //       <BarChart3 className="text-2xl text-white" />
-  //     </div>
-  //   ),
-  // },
 ];

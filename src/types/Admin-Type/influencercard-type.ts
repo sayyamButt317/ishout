@@ -1,5 +1,5 @@
 import { ReadyMadeInfluencerResponse } from "../readymadeinfluencers-type";
-import { UpdateInfluencerStatusRequestProps } from "./Campaign.type";
+import { UpdateInfluencerStatusRequestProps } from "./Campaign-type";
 
 export interface InfluencerCardProps {
     influencer: ReadyMadeInfluencerResponse;

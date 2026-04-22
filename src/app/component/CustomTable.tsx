@@ -1,38 +1,12 @@
 "use client";
 import { Button } from '@/components/ui/button';
-import { Check, Eye, Trash, Pencil } from 'lucide-react';
+import { Eye, Trash, Pencil } from 'lucide-react';
 import Spinner from './custom-component/spinner';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import ImageUploadModal from './custom-component/image-upload-modal';
-
-const STATUS_STEPS = [
-  { key: 'pending', label: 'Pending', letter: 'P' },
-  { key: 'approved', label: 'Approved By Admin', letter: 'A' },
-  { key: 'processing', label: 'Approved By Brand', letter: 'B' },
-  { key: 'completed', label: 'Negotiated', letter: 'N' }
-] as const;
-
-const STATUS_ORDER = ['pending', 'approved', 'processing', 'completed'] as const;
-
-function getStatusSteps(currentStatus: string) {
-  const normalizedStatus = currentStatus.toLowerCase();
-  const currentIndex = STATUS_ORDER.indexOf(normalizedStatus as any);
-
-  if (currentIndex === -1) {
-    return STATUS_STEPS.map((step, index) => ({
-      ...step,
-      isActive: index === 0,
-      isCurrent: false
-    }));
-  }
-
-  return STATUS_STEPS.map((step, index) => ({
-    ...step,
-    isActive: index <= currentIndex,
-    isCurrent: STATUS_ORDER[index] === normalizedStatus
-  }));
-}
+import { useRouter } from 'next/navigation';
+import Stepper from './stepper';
 
 interface TableProps {
   header: string[];
@@ -41,6 +15,7 @@ interface TableProps {
   subheader: (string | React.ReactNode)[][];
   imageUrls?: (string | null | undefined)[];
   statuses?: string[];
+  campaignIds?: (string | null | undefined)[];
   showTrashIcon?: boolean;
   showEyeIcon?: boolean;
   showEditIcon?: boolean;
@@ -62,6 +37,7 @@ export default function TableComponent({
   subheader,
   imageUrls,
   statuses,
+  campaignIds,
   showTrashIcon = false,
   showEyeIcon = false,
   showEditIcon = false,
@@ -73,7 +49,8 @@ export default function TableComponent({
   isLoading = false,
   error,
 }: TableProps) {
-  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+  const router = useRouter();
+
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
   const [uploadedImages, setUploadedImages] = useState<{ [key: number]: string }>({});
   const [uploadModalOpen, setUploadModalOpen] = useState<number | null>(null);
@@ -103,7 +80,7 @@ export default function TableComponent({
 
   if (isLoading) {
     return (
-      <div className="w-full min-h-[400px] flex items-center justify-center">
+      <div className="w-full min-h-100 flex items-center justify-center">
         <Spinner size={20} />
       </div>
     );
@@ -111,7 +88,7 @@ export default function TableComponent({
 
   if (error) {
     return (
-      <div className="w-full min-h-[400px] flex items-center justify-center text-white/60">
+      <div className="w-full min-h-100 flex items-center justify-center text-white/60">
         Error: {error.message}
       </div>
     );
@@ -119,7 +96,7 @@ export default function TableComponent({
 
   if (!subheader || subheader.length === 0) {
     return (
-      <div className="w-full min-h-[400px] flex items-center justify-center text-white/60">
+      <div className="w-full min-h-100 flex items-center justify-center text-white/60">
         No data available
       </div>
     );
@@ -127,49 +104,32 @@ export default function TableComponent({
 
   return (
     <div className="w-full">
-      <div className="min-h-[400px] flex flex-col justify-between">
+      <div className="min-h-100 flex flex-col justify-between">
         <div className="space-y-3">
           {subheader.map((row, rowIndex) => {
             // const isSelected = selectedRows.has(rowIndex);
             const currentStatus = statuses?.[rowIndex]?.toLowerCase() || 'pending';
-            const statusSteps = getStatusSteps(currentStatus);
+            const campaignId = campaignIds?.[rowIndex];
 
             return (
               <div key={rowIndex} className="w-full">
                 <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1A1A1A] p-3 sm:p-5 hover:border-white/20 transition-colors">
                   {statuses && (
                     <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-white/10 overflow-x-auto">
-                      <div className="flex items-center justify-between min-w-[280px] sm:max-w-2xl">
-                        {statusSteps.map((step, stepIndex) => (
-                          <div key={step.key} className="flex items-center">
-                            <div className="flex flex-col items-center">
-                              <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${step.isActive
-                                ? 'bg-[#FF3B8D] text-white'
-                                : 'bg-white/10 text-white/40 border border-white/20'
-                                }`}>
-                                {step.isActive && stepIndex > 0 ? (
-                                  <Check className="w-3 h-3 sm:w-4 sm:h-4" />
-                                ) : (
-                                  step.letter
-                                )}
-                              </div>
-                              <span className={`text-[8px] sm:text-[10px] mt-1 whitespace-nowrap ${step.isActive ? 'text-white/80' : 'text-white/40'
-                                }`}>
-                                {step.label}
-                              </span>
-                            </div>
-                            {stepIndex < statusSteps.length - 1 && (
-                              <div className={`w-12 sm:w-64 h-0.5 mx-1 sm:mx-2 ${step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
-                                }`} />
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                      <Stepper
+                        currentStatus={currentStatus}
+                        isStepClickable={(step) => step.key === 'approved' && Boolean(campaignId)}
+                        onStepClick={(step) => {
+                          if (step.key === 'approved' && campaignId) {
+                            router.push(`/Admin/approved-campaign/${campaignId}`);
+                          }
+                        }}
+                      />
                     </div>
                   )}
 
                   <div className="sm:hidden mb-3">
-                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-linear-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
                       <input
                         type="file"
                         accept="image/*"
@@ -246,7 +206,7 @@ export default function TableComponent({
 
                   <div className="flex gap-5">
                     <div className="hidden sm:flex shrink-0 items-center">
-                      <div className="w-20 h-20 rounded-xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
+                      <div className="w-20 h-20 rounded-xl overflow-hidden bg-linear-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
                         <input
                           type="file"
                           accept="image/*"
@@ -322,7 +282,7 @@ export default function TableComponent({
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-3 sm:gap-x-4 sm:gap-y-4">
+                      <div className="grid grid-col-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-3 sm:gap-x-4 sm:gap-y-4">
                         {row.map((cell, cellIndex) => {
                           const isLastColumn = cellIndex === row.length - 1;
                           const shouldSpanTwo = isLastColumn && row.length <= 11;
@@ -331,7 +291,7 @@ export default function TableComponent({
                               <p className="text-[10px] sm:text-xs text-white/60 mb-1 sm:mb-1.5 truncate font-medium">
                                 {header[cellIndex] || `Field ${cellIndex + 1}`}
                               </p>
-                              <div className="text-xs sm:text-sm text-white font-medium break-words">
+                              <div className="text-xs sm:text-sm text-white font-medium wrap-break-word">
                                 {cell}
                               </div>
                             </div>

@@ -4,7 +4,6 @@ import axios from "axios";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { toast } from "sonner";
 import { SignUpRequestProps, SignUpResponseProps } from "@/src/types/Auth-Type/signup-type";
-import { getAuthTokenProvider } from "@/src/provider/auth-provide";
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -12,17 +11,6 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-api.interceptors.request.use(
-  (config) => {
-    const accessToken = getAuthTokenProvider();
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
 
 api.interceptors.response.use(
   (response) => response,

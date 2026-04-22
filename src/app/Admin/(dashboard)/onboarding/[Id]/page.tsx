@@ -1,28 +1,43 @@
-"use client";
-import { useCallback, useState } from "react";
-import OnboardingHook from "@/src/routes/Admin/Hooks/onboarding-hook";
-import { ReviewInfluencerResponse } from "@/src/types/Admin-Type/review-influencer"
-import { ArrowLeft, RefreshCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { PlatformType } from "@/src/types/readymadeinfluencers-type";
-import { useParams } from "next/navigation";
-import CustomButton from "@/src/app/component/button";
-import { useRouter } from "next/navigation";
-import ChooseOptionDialog from "@/src/app/component/custom-component/choseoptionDialogue";
-import OnboardingCard from "@/src/app/component/Ready-made/onboarding-card";
-import SendNegotiationHook from "@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook";
-
+'use client';
+import { useCallback, useState } from 'react';
+import OnboardingHook from '@/src/routes/Admin/Hooks/onboarding-hook';
+import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influencer';
+import { ArrowLeft, RefreshCcw, UserPlus } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
+import { Button } from '@/components/ui/button';
+import { PlatformType } from '@/src/types/readymadeinfluencers-type';
+import { useParams } from 'next/navigation';
+import CustomButton from '@/src/app/component/button';
+import { useRouter } from 'next/navigation';
+import ChooseOptionDialog from '@/src/app/component/custom-component/choseoptionDialogue';
+import OnboardingCard from '@/src/app/component/Ready-made/onboarding-card';
+import SendNegotiationHook from '@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook';
+import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
 
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
   const { mutate: sendNegotiationMutation, isPending } = SendNegotiationHook();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, refetch, isRefetching } = OnboardingHook(
-    Id,
-    currentPage
-  );
+  const { data, isLoading, refetch, isRefetching } = OnboardingHook(Id, currentPage);
+  const { data: negotiationData } = NegotiationStatsHook(1, 100);
+  console.log('respinse data', data);
 
+  const getNegotiationForInfluencer = useCallback(
+    (influencer: ReviewInfluencerResponse) => {
+      if (!negotiationData?.negotiation_controls) return null;
+      const negotiation = negotiationData.negotiation_controls.find(
+        (n: any) => n.influencer_id === influencer._id,
+      );
+      return negotiation
+        ? {
+          _id: negotiation._id,
+          last_offered_price: negotiation.last_offered_price,
+        }
+        : null;
+    },
+    [negotiationData],
+  );
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedInfluencer, setSelectedInfluencer] = useState<{
@@ -36,17 +51,13 @@ export default function OnboardingInfluencerByCampaignId() {
     max_price: number;
   } | null>(null);
 
-
-  const handleMessage = useCallback(
-    (platform: PlatformType, username: string) => {
-      if (platform === "instagram") {
-        window.open(`https://ig.me/m/${username}`, "_blank");
-      } else if (platform === "tiktok") {
-        window.open(`https://www.tiktok.com/@${username}`, "_blank");
-      }
-    },
-    []
-  );
+  const handleMessage = useCallback((platform: PlatformType, username: string) => {
+    if (platform === 'instagram') {
+      window.open(`https://ig.me/m/${username}`, '_blank');
+    } else if (platform === 'tiktok') {
+      window.open(`https://www.tiktok.com/@${username}`, '_blank');
+    }
+  }, []);
 
   const handleEdit = useCallback((influencer: ReviewInfluencerResponse) => {
     setSelectedInfluencer({
@@ -55,54 +66,48 @@ export default function OnboardingInfluencerByCampaignId() {
       platform: influencer.platform,
       picture: influencer.picture,
       influencer_id: influencer.influencer_id,
-      phone_number: influencer.phone_number || "",
+      phone_number: influencer.phone_number || '',
       min_price: influencer.min_price || 0,
       max_price: influencer.max_price || 0,
     });
     setDialogOpen(true);
   }, []);
 
-  const handleSendNegotiation = useCallback((influencer_id: string) => {
-    sendNegotiationMutation(influencer_id);
-  }, [sendNegotiationMutation]);
+  const handleSendNegotiation = useCallback(
+    (influencer_id: string) => {
+      sendNegotiationMutation(influencer_id);
+    },
+    [sendNegotiationMutation],
+  );
 
   return (
     <>
-      <div>
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-row items-center gap-2">
-            <h1 className="italic text-2xl font-bold text-white">
-              Onboarded Influencers
-            </h1>
+      <PageHeader
+        title="Onboarded Influencers"
+        description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}
+        icon={<UserPlus className="size-5" />}
+        actions={
+          <>
             <Button
-              className="cursor-pointer"
               variant="ghost"
               size="icon"
-              onClick={() => {
-                refetch();
-              }}
+              className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+              onClick={() => refetch()}
               disabled={isRefetching}
+              aria-label="Refresh list"
             >
-              <RefreshCcw
-                className={`mt-5 w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-                  }`}
-              />
+              <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
             </Button>
-          </div>
-          <CustomButton
-            className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-[160px]"
-            onClick={() => {
-              router.replace(`/Admin/onboarding`);
-            }}
-          >
-            <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-            Back to Onboarding
-          </CustomButton>
-        </div>
-        <p className="italic text-xs text-slate-200 mt-2 mb-2">
-          Showing {data?.influencers.length} of {data?.total} influencers
-        </p>
-      </div>
+            <CustomButton
+              className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-[160px]"
+              onClick={() => router.replace('/Admin/onboarding')}
+            >
+              <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+              Back to Onboarding
+            </CustomButton>
+          </>
+        }
+      />
 
       {isLoading && (
         <div className="flex justify-center items-center min-h-[200px]">
@@ -113,16 +118,21 @@ export default function OnboardingInfluencerByCampaignId() {
       )}
 
       {data?.influencers?.length ? (
-        <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
-          {data?.influencers?.map((influencer: ReviewInfluencerResponse) => (
-            <OnboardingCard
-              key={influencer._id}
-              influencer={influencer}
-              onEdit={handleEdit}
-              onMessage={handleMessage}
-              sendNegotiation={() => handleSendNegotiation(influencer._id)}
-            />
-          ))}
+        <div className="w-full flex flex-row flex-wrap gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
+          {data?.influencers?.map((influencer: ReviewInfluencerResponse) => {
+            const negotiation = getNegotiationForInfluencer(influencer);
+            return (
+              <OnboardingCard
+                key={influencer._id}
+                influencer={influencer}
+                onEdit={handleEdit}
+                onMessage={handleMessage}
+                sendNegotiation={() => handleSendNegotiation(influencer._id)}
+                negotiationId={negotiation?._id}
+                lastOfferedPrice={negotiation?.last_offered_price}
+              />
+            );
+          })}
         </div>
       ) : (
         !isLoading && (

@@ -1,6 +1,9 @@
 export interface CampaignBriefResponseContent {
   title: string;
   brand_name_influencer_campaign_brief: string;
+
+  product_image_urls?: string[] | null
+  video_links?: string[] | null
   campaign_overview: string[];
   campaign_objectives: string[];
   target_audience: string[];
@@ -14,6 +17,7 @@ export interface CampaignBriefResponseContent {
   kpis_success_metrics: string[];
   usage_rights: string[];
   dos_donts: string[];
+  campaign_logo_url?: string | null;
 }
 
 export interface CampaignBriefItem {
@@ -26,7 +30,6 @@ export interface CampaignBriefItem {
   regenerated_from: string | null;
   created_at: string;
 }
-
 
 
 export interface CampaignBriefDialogProps {

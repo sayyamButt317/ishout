@@ -49,28 +49,8 @@ export default function LandingPage() {
               <div className="mt-6 p-[4px] border border-white/15 rounded-[20px] inline-block">
                 <div className="p-[6px] border border-white/30 rounded-[20px] inline-block">
                   <CustomButton
-                    className="
-    bg-[#ff3b8d]
-    hover:bg-[#ff5a9e]
-    cursor-pointer
-    rounded-[14px]
-    h-12
-    px-20
-    text-xl
-    font-extrabold
-    italic
-    text-white
-    
-    /* Default state: No shadow */
-    shadow-none
-
-    /* Hover state: Multi-layered glow */
-    hover:shadow-[0_0_15px_rgba(255,255,255,0.4),0_0_30px_rgba(255,59,141,0.6),0_0_50px_rgba(255,59,141,0.3)]
-
-    transition-all
-    duration-300
-    ease-out
-  "
+                    className="bg-[#ff3b8d] hover:bg-[#ff5a9e] cursor-pointer rounded-[14px] h-12 px-20 text-xl font-extrabold italic text-white
+    shadow-none hover:shadow-[0_0_15px_rgba(255,255,255,0.4),0_0_30px_rgba(255,59,141,0.6),0_0_50px_rgba(255,59,141,0.3)] transition-all duration-300 ease-out"
                   >
                     Book a Demo
                   </CustomButton>
@@ -89,7 +69,7 @@ export default function LandingPage() {
           Case Studies
         </h2>
         <p className="italic mt-4 text-center justify-center items-center text-neutral-600 dark:text-neutral-400 text-base md:text-md font-sans max-w-2xl mx-auto">
-          <span className="font-bold">Proven Results at Scale,</span>
+          <span className="font-bold">Proven Results at Scale, </span>
           <span className="font-thin justify-center items-center">
             We &apos;ve helped over 600 brands amplify their reach and performance with{' '}
             <span className="font-bold">AI-powered </span>

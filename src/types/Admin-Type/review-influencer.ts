@@ -11,6 +11,8 @@ export interface ReviewInfluencerResponse {
     status: string;
     admin_approved: boolean;
     company_approved: boolean;
+    last_offered_price : number;
+    negotiation_status : string;
     campaign_id: string;
     influencer_id: string;
     pricing: number;

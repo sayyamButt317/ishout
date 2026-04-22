@@ -1,9 +1,8 @@
-import "@/src/app/globals.css";
-import QueryProvider from "@/src/context/QueryProvider";
-import Sidebar from "../../component/sidebar";
-import { adminSidebarLinks } from "@/src/constant/sidebaritems";
-import WebSocketListener from "@/src/helper/websocket-listener";
-import NotificationBootstrap from "@/src/helper/NotificationBootstrap";
+import '@/src/app/globals.css';
+import QueryProvider from '@/src/context/QueryProvider';
+import WebSocketListener from '@/src/helper/websocket-listener';
+import NotificationBootstrap from '@/src/helper/NotificationBootstrap';
+import AdminSidebar from '../../component/AdminSidebar';
 
 export default function AdminDashboardLayout({
   children,
@@ -15,14 +14,9 @@ export default function AdminDashboardLayout({
       <NotificationBootstrap />
       <WebSocketListener />
 
-      <div className="min-h-screen flex">
-        <Sidebar links={adminSidebarLinks} />
-        <div className="flex-1 flex flex-col md:ml-[280px]">
-          <main className="flex-1 px-4 py-4 overflow-y-auto 
-            mt-14 md:mt-0">
-            {children}
-          </main>
-        </div>
+      <div className="flex min-h-screen">
+        <AdminSidebar />
+        <main className="flex-1 overflow-x-hidden md:ml-80 p-3 pt-6">{children}</main>
       </div>
     </QueryProvider>
   );
