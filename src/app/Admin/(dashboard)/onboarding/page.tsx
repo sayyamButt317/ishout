@@ -16,6 +16,7 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
 import { Trash } from 'lucide-react';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 export default function OnboardingCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,6 +28,9 @@ export default function OnboardingCampaignPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const deleteCampaignHook = DeleteCampaignHook();
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
   useEffect(() => {
     if (briefData) {
@@ -118,9 +122,8 @@ export default function OnboardingCampaignPage() {
               size="icon"
               disabled={deleteCampaignHook.isPending}
               onClick={() => {
-                if (confirm('Are you sure you want to delete this campaign?')) {
-                  deleteCampaignHook.mutate(campaign.campaign_id);
-                }
+                setSelectedCampaignId(campaign.campaign_id);
+                setDeleteOpen(true);
               }}
             >
               <Trash className="size-5 text-red-300 cursor-pointer" />
@@ -155,6 +158,26 @@ export default function OnboardingCampaignPage() {
         paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => setCurrentPage(page)}
         isLoading={isLoading}
+      />
+      <DeleteDialogue
+        heading="Delete Campaign"
+        subheading="Are you sure you want to delete this campaign?"
+        open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedCampaignId(null);
+        }}
+        ondelete={() => {
+          if (selectedCampaignId) {
+            deleteCampaignHook.mutate(selectedCampaignId, {
+              onSuccess: () => {
+                setDeleteOpen(false);
+                setSelectedCampaignId(null);
+                refetch();
+              },
+            });
+          }
+        }}
       />
       <CampaignBriefDialog
         open={dialogOpen}

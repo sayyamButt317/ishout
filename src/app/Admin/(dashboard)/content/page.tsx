@@ -14,11 +14,15 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
 import { Trash } from 'lucide-react';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 export default function InfluencersContentPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } = OnboardingCampaignHook(currentPage);
   const router = useRouter();
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
   const rowKey = (campaign: CompanyCampaignResponse) =>
     campaign.campaign_id ?? campaign._id ?? '';
@@ -124,15 +128,13 @@ export default function InfluencersContentPage() {
                 disabled={deleteCampaignHook.isPending}
                 onClick={() => {
                   const delId = campaign.campaign_id ?? campaign._id;
-                  if (
-                    confirm('Are you sure you want to delete this campaign?') &&
-                    delId
-                  ) {
-                    deleteCampaignHook.mutate(delId);
+                  if (delId) {
+                    setSelectedCampaignId(delId);
+                    setDeleteOpen(true);
                   }
                 }}
               >
-                <Trash className="text-red-300 cursor-pointer size-md" />
+                <Trash className="text-red-300 cursor-pointer size-5" />
               </Button>
             </div>,
             <div key={`view-brief-${id}`} className="truncate">
@@ -154,7 +156,8 @@ export default function InfluencersContentPage() {
                 className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
                 onClick={() => {
                   router.push(
-                    `/Admin/content/influncers_content?campaign_id=${campaign.campaign_id ?? campaign._id
+                    `/Admin/content/influncers_content?campaign_id=${
+                      campaign.campaign_id ?? campaign._id
                     }`,
                   );
                 }}
@@ -168,6 +171,26 @@ export default function InfluencersContentPage() {
         paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => setCurrentPage(page)}
         isLoading={isLoading}
+      />
+      <DeleteDialogue
+        heading="Delete Campaign"
+        subheading="Are you sure you want to delete this campaign?"
+        open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedCampaignId(null);
+        }}
+        ondelete={() => {
+          if (selectedCampaignId) {
+            deleteCampaignHook.mutate(selectedCampaignId, {
+              onSuccess: () => {
+                setDeleteOpen(false);
+                setSelectedCampaignId(null);
+                refetch();
+              },
+            });
+          }
+        }}
       />
       <CampaignBriefDialog
         open={dialogOpen}

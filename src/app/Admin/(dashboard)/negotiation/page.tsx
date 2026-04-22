@@ -10,6 +10,7 @@ import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationS
 import { NegotiationStatsResponse } from '@/src/types/Admin-Type/negotiation.type';
 import { useWhatsAppChatStore } from '@/src/store/Campaign/chat.store';
 import DeleteNegotiationHook from '@/src/routes/Admin/Hooks/negotiation-delete-hook';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 export default function NegotiationPage() {
   const router = useRouter();
@@ -19,6 +20,9 @@ export default function NegotiationPage() {
     currentPage,
     pageSize,
   );
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const unreadMap = useWhatsAppChatStore((s) => s.unread);
   console.log('data', data);
   console.log('data', data);
@@ -105,7 +109,7 @@ export default function NegotiationPage() {
               </div>,
               <div key={`last-offered-price-${userSession._id}`} className="truncate">
                 {userSession?.last_offered_price !== null &&
-                  userSession?.last_offered_price !== undefined
+                userSession?.last_offered_price !== undefined
                   ? `$${userSession.last_offered_price}`
                   : '-'}
               </div>,
@@ -129,13 +133,13 @@ export default function NegotiationPage() {
               </div>,
               <div key={`negotiation-round-${userSession._id}`} className="truncate">
                 {userSession?.negotiation_round !== null &&
-                  userSession?.negotiation_round !== undefined
+                userSession?.negotiation_round !== undefined
                   ? userSession.negotiation_round
                   : '-'}
               </div>,
               <div key={`negotiation-completed-${userSession._id}`} className="truncate">
                 {userSession?.negotiation_completed !== null &&
-                  userSession?.negotiation_completed !== undefined
+                userSession?.negotiation_completed !== undefined
                   ? userSession.negotiation_completed
                     ? 'Yes'
                     : 'No'
@@ -143,7 +147,7 @@ export default function NegotiationPage() {
               </div>,
               <div key={`manual-negotiation-${userSession._id}`} className="truncate">
                 {userSession?.manual_negotiation !== null &&
-                  userSession?.manual_negotiation !== undefined
+                userSession?.manual_negotiation !== undefined
                   ? userSession.manual_negotiation
                     ? 'Yes'
                     : 'No'
@@ -151,7 +155,7 @@ export default function NegotiationPage() {
               </div>,
               <div key={`agent-paused-${userSession._id}`} className="truncate">
                 {userSession?.agent_paused !== null &&
-                  userSession?.agent_paused !== undefined
+                userSession?.agent_paused !== undefined
                   ? userSession.agent_paused
                     ? 'Yes'
                     : 'No'
@@ -168,14 +172,13 @@ export default function NegotiationPage() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  disabled={deletingThreadId === userSession.thread_id}
-                  onClick={async () => {
-                    try {
-                      setDeletingThreadId(userSession.thread_id);
-                      await deleteNegotiationHook.mutateAsync(userSession.thread_id);
-                    } finally {
-                      setDeletingThreadId(null);
-                    }
+                  disabled={
+                    deletingThreadId === userSession.thread_id ||
+                    deleteNegotiationHook.isPending
+                  }
+                  onClick={() => {
+                    setSelectedThreadId(userSession.thread_id);
+                    setDeleteOpen(true);
                   }}
                 >
                   <Trash className="size-5 text-red-300" />
@@ -206,6 +209,31 @@ export default function NegotiationPage() {
           setCurrentPage(page);
         }}
         isLoading={isLoading}
+      />
+      <DeleteDialogue
+        heading="Delete Negotiation"
+        subheading="Are you sure you want to delete this conversation?"
+        open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedThreadId(null);
+        }}
+        ondelete={async () => {
+          if (selectedThreadId) {
+            try {
+              setDeletingThreadId(selectedThreadId);
+              await deleteNegotiationHook.mutateAsync(selectedThreadId);
+              setDeleteOpen(false);
+              setSelectedThreadId(null);
+              refetch();
+            } catch (error) {
+              console.error('Delete failed', error);
+              // optionally show toast here
+            } finally {
+              setDeletingThreadId(null);
+            }
+          }
+        }}
       />
     </>
   );
