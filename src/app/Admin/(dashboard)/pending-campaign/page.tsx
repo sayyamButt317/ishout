@@ -21,6 +21,7 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import { Trash } from 'lucide-react';
 import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,6 +36,9 @@ export default function AdminPendingCampaigns() {
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
   const deleteCampaignHook = DeleteCampaignHook();
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
   // Sync API response to local state
   useEffect(() => {
     if (briefData) {
@@ -119,7 +123,8 @@ export default function AdminPendingCampaigns() {
               size="icon"
               disabled={deleteCampaignHook.isPending}
               onClick={() => {
-                deleteCampaignHook.mutate(campaign._id);
+                setSelectedCampaignId(campaign._id);
+                setDeleteOpen(true);
               }}
             >
               <Trash className="size-5 text-red-300 cursor-pointer" />
@@ -191,6 +196,26 @@ export default function AdminPendingCampaigns() {
           setCurrentPage(page);
         }}
         isLoading={isLoading}
+      />
+      <DeleteDialogue
+        heading="Delete Campaign"
+        subheading="Are you sure you want to delete this campaign?"
+        open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedCampaignId(null);
+        }}
+        ondelete={() => {
+          if (selectedCampaignId) {
+            deleteCampaignHook.mutate(selectedCampaignId, {
+              onSuccess: () => {
+                setDeleteOpen(false);
+                setSelectedCampaignId(null);
+                refetch();
+              },
+            });
+          }
+        }}
       />
 
       <CampaignBriefDialog

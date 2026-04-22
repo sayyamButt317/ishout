@@ -1,7 +1,8 @@
 'use client';
+import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import TableComponent from '@/src/app/component/CustomTable';
 import React, { useState, useEffect } from 'react';
-import { RefreshCcw, UserPlus, Trash } from 'lucide-react';
+import { RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { Button } from '@/components/ui/button';
 import OnboardingCampaignHook from '@/src/routes/Admin/Hooks/onboardingCampaign-hook';
@@ -12,74 +13,34 @@ import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
+import { Trash } from 'lucide-react';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 export default function InfluencersContentPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const { data, isLoading, refetch, isRefetching } = OnboardingCampaignHook(currentPage);
+  const router = useRouter();
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
+
+  const rowKey = (campaign: CompanyCampaignResponse) =>
+    campaign.campaign_id ?? campaign._id ?? '';
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
 
-  const router = useRouter();
-  const { data, isLoading, refetch, isRefetching } = OnboardingCampaignHook(currentPage);
+  const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const deleteCampaignHook = DeleteCampaignHook();
 
   useEffect(() => {
-    if (briefData) setAdminBrief({ ...briefData.response, id: briefData.id });
+    if (briefData) {
+      setAdminBrief({
+        ...briefData.response,
+        id: briefData.id,
+      });
+    }
   }, [briefData]);
-
-  const rowKey = (c: CompanyCampaignResponse) => c.campaign_id ?? c._id ?? '';
-
-  const renderActions = (campaign: CompanyCampaignResponse) => (
-    <div className="flex items-center justify-between w-full">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="size-8 hover:bg-red-500/10 rounded-lg"
-        disabled={deleteCampaignHook.isPending}
-        onClick={() => {
-          const id = campaign.campaign_id ?? campaign._id;
-          if (confirm('Are you sure you want to delete this campaign?') && id)
-            deleteCampaignHook.mutate(id);
-        }}
-      >
-        <Trash className="text-red-400 size-5" />
-      </Button>
-
-      <div className="flex items-center gap-2">
-        <CustomButton
-          className="bg-primaryButton hover:bg-primaryHover text-white text-xs px-4 mr-4 py-1.5 rounded-lg whitespace-nowrap"
-          disabled={!campaign.brief_id}
-          onClick={() => {
-            if (campaign.brief_id) {
-              setSelectedBriefId(campaign.brief_id);
-              setDialogOpen(true);
-            }
-          }}
-        >
-          View Brief
-        </CustomButton>
-        <Button
-          className="bg-white/10 hover:bg-white/20 text-white text-xs px-4 py-1.5 rounded-lg whitespace-nowrap border border-white/20"
-          onClick={() =>
-            router.push(`/Admin/content/influncers_content?campaign_id=${campaign.campaign_id ?? campaign._id}`)
-          }
-        >
-          View Content
-        </Button>
-      </div>
-    </div>
-  );
-
-  const buildRow = (campaign: CompanyCampaignResponse) => {
-    const id = rowKey(campaign);
-    return [
-      <div key={`company-${id}`} className="truncate font-medium">{campaign?.company_name}</div>,
-      <div key={`name-${id}`} className="truncate text-white/80">{campaign?.name}</div>,
-      <div key={`country-${id}`} className="truncate text-white/80">{campaign?.country?.join(', ') || '-'}</div>,
-      <div key={`actions-${id}`} className="col-span-full">{renderActions(campaign)}</div>,
-    ];
-  };
 
   return (
     <>
@@ -102,17 +63,135 @@ export default function InfluencersContentPage() {
       />
 
       <TableComponent
-        header={['Company Name', 'Campaign Name', 'Country', ' ']}
-        imageUrls={data?.campaigns?.map((c: CompanyCampaignResponse) => c?.campaign_logo_url || null)}
-        statuses={data?.campaigns?.map((c: CompanyCampaignResponse) => c.status)}
-        campaignIds={data?.campaigns?.map((c: CompanyCampaignResponse) => rowKey(c) || null)}
-        subheader={data?.campaigns?.map(buildRow)}
+        header={[
+          'Company Name',
+          'Campaign Name',
+          'Platform',
+          // 'Followers',
+          // 'Country',
+          // 'Status',
+          // 'Requested',
+          // 'Onboarded',
+          // 'Created At',
+          'Delete',
+          ' ',
+          ' ',
+          ' ',
+        ]}
+        imageUrls={data?.campaigns?.map(
+          (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
+        )}
+        statuses={data?.campaigns?.map(
+          (campaign: CompanyCampaignResponse) => campaign.status,
+        )}
+        campaignIds={data?.campaigns?.map(
+          (campaign: CompanyCampaignResponse) => rowKey(campaign) || null,
+        )}
+        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => {
+          const id = rowKey(campaign);
+          return [
+            <div key={`company-${id}`} className="truncate">
+              {campaign?.company_name}
+            </div>,
+            <div key={`campaign-name-${id}`} className="truncate">
+              {campaign?.name}
+            </div>,
+            <div key={`platform-${id}`} className="truncate">
+              <PlatformBadge platform={campaign?.platform} />
+            </div>,
+            // <div key={`followers-${id}`} className="truncate">
+            //   {Array.isArray(campaign?.followers)
+            //     ? campaign.followers.map((f: number) => `${f}`).join(', ')
+            //     : '-'}
+            // </div>,
+            // <div key={`country-${id}`} className="truncate">
+            //   {campaign?.country?.join(', ') || '-'}
+            // </div>,
+            // <div key={`status-${id}`} className="truncate">
+            //   <StatusBadge status={campaign?.status} />
+            // </div>,
+            // <div key={`requested-influencers-${id}`} className="truncate">
+            //   <CountButton count={campaign?.limit} />
+            // </div>,
+            // <div key={`onboarding-influencers-${id}`} className="truncate">
+            //   <CountButton count={campaign?.approved_influencer_count} />
+            // </div>,
+
+            // <div key={`created-at-${id}`} className="truncate">
+            //   {new Date(campaign?.created_at).toLocaleDateString()}
+            // </div>,
+
+            <div key={`delete-${id}`} className="truncate">
+              <Button
+                variant="ghost"
+                size="icon"
+                disabled={deleteCampaignHook.isPending}
+                onClick={() => {
+                  const delId = campaign.campaign_id ?? campaign._id;
+                  if (delId) {
+                    setSelectedCampaignId(delId);
+                    setDeleteOpen(true);
+                  }
+                }}
+              >
+                <Trash className="text-red-300 cursor-pointer size-5" />
+              </Button>
+            </div>,
+            <div key={`view-brief-${id}`} className="truncate">
+              <CustomButton
+                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+                disabled={!campaign.brief_id}
+                onClick={() => {
+                  if (campaign.brief_id) {
+                    setSelectedBriefId(campaign.brief_id);
+                    setDialogOpen(true);
+                  }
+                }}
+              >
+                View Brief
+              </CustomButton>
+            </div>,
+            <div key={`view-${id}`} className="truncate">
+              <Button
+                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+                onClick={() => {
+                  router.push(
+                    `/Admin/content/influncers_content?campaign_id=${
+                      campaign.campaign_id ?? campaign._id
+                    }`,
+                  );
+                }}
+              >
+                View Content
+              </Button>
+            </div>,
+          ];
+        })}
         paginationstart={currentPage}
         paginationend={data?.total_pages ?? 1}
         onPageChange={(page: number) => setCurrentPage(page)}
         isLoading={isLoading}
       />
-
+      <DeleteDialogue
+        heading="Delete Campaign"
+        subheading="Are you sure you want to delete this campaign?"
+        open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedCampaignId(null);
+        }}
+        ondelete={() => {
+          if (selectedCampaignId) {
+            deleteCampaignHook.mutate(selectedCampaignId, {
+              onSuccess: () => {
+                setDeleteOpen(false);
+                setSelectedCampaignId(null);
+                refetch();
+              },
+            });
+          }
+        }}
+      />
       <CampaignBriefDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
