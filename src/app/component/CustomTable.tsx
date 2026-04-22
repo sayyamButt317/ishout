@@ -80,7 +80,7 @@ export default function TableComponent({
 
   if (isLoading) {
     return (
-      <div className="w-full min-h-[400px] flex items-center justify-center">
+      <div className="w-full min-h-100 flex items-center justify-center">
         <Spinner size={20} />
       </div>
     );
@@ -88,7 +88,7 @@ export default function TableComponent({
 
   if (error) {
     return (
-      <div className="w-full min-h-[400px] flex items-center justify-center text-white/60">
+      <div className="w-full min-h-100 flex items-center justify-center text-white/60">
         Error: {error.message}
       </div>
     );
@@ -96,7 +96,7 @@ export default function TableComponent({
 
   if (!subheader || subheader.length === 0) {
     return (
-      <div className="w-full min-h-[400px] flex items-center justify-center text-white/60">
+      <div className="w-full min-h-100 flex items-center justify-center text-white/60">
         No data available
       </div>
     );
@@ -104,7 +104,7 @@ export default function TableComponent({
 
   return (
     <div className="w-full">
-      <div className="min-h-[400px] flex flex-col justify-between">
+      <div className="min-h-100 flex flex-col justify-between">
         <div className="space-y-3">
           {subheader.map((row, rowIndex) => {
             // const isSelected = selectedRows.has(rowIndex);
@@ -282,7 +282,7 @@ export default function TableComponent({
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-3 sm:gap-x-4 sm:gap-y-4">
+                      <div className="grid grid-col-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-3 gap-y-3 sm:gap-x-4 sm:gap-y-4">
                         {row.map((cell, cellIndex) => {
                           const isLastColumn = cellIndex === row.length - 1;
                           const shouldSpanTwo = isLastColumn && row.length <= 11;
