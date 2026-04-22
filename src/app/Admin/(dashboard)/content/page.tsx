@@ -1,7 +1,8 @@
 'use client';
+import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import TableComponent from '@/src/app/component/CustomTable';
 import React, { useState, useEffect } from 'react';
-import { RefreshCcw, UserPlus, Trash } from 'lucide-react';
+import { RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { Button } from '@/components/ui/button';
 import OnboardingCampaignHook from '@/src/routes/Admin/Hooks/onboardingCampaign-hook';
@@ -29,69 +30,17 @@ export default function InfluencersContentPage() {
 
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
-
-  const router = useRouter();
-  const { data, isLoading, refetch, isRefetching } = OnboardingCampaignHook(currentPage);
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const deleteCampaignHook = DeleteCampaignHook();
 
   useEffect(() => {
-    if (briefData) setAdminBrief({ ...briefData.response, id: briefData.id });
+    if (briefData) {
+      setAdminBrief({
+        ...briefData.response,
+        id: briefData.id,
+      });
+    }
   }, [briefData]);
-
-  const rowKey = (c: CompanyCampaignResponse) => c.campaign_id ?? c._id ?? '';
-
-  const renderActions = (campaign: CompanyCampaignResponse) => (
-    <div className="flex items-center justify-between w-full">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="size-8 hover:bg-red-500/10 rounded-lg"
-        disabled={deleteCampaignHook.isPending}
-        onClick={() => {
-          const id = campaign.campaign_id ?? campaign._id;
-          if (confirm('Are you sure you want to delete this campaign?') && id)
-            deleteCampaignHook.mutate(id);
-        }}
-      >
-        <Trash className="text-red-400 size-5" />
-      </Button>
-
-      <div className="flex items-center gap-2">
-        <CustomButton
-          className="bg-primaryButton hover:bg-primaryHover text-white text-xs px-4 mr-4 py-1.5 rounded-lg whitespace-nowrap"
-          disabled={!campaign.brief_id}
-          onClick={() => {
-            if (campaign.brief_id) {
-              setSelectedBriefId(campaign.brief_id);
-              setDialogOpen(true);
-            }
-          }}
-        >
-          View Brief
-        </CustomButton>
-        <Button
-          className="bg-white/10 hover:bg-white/20 text-white text-xs px-4 py-1.5 rounded-lg whitespace-nowrap border border-white/20"
-          onClick={() =>
-            router.push(`/Admin/content/influncers_content?campaign_id=${campaign.campaign_id ?? campaign._id}`)
-          }
-        >
-          View Content
-        </Button>
-      </div>
-    </div>
-  );
-
-  const buildRow = (campaign: CompanyCampaignResponse) => {
-    const id = rowKey(campaign);
-    return [
-      <div key={`company-${id}`} className="truncate font-medium">{campaign?.company_name}</div>,
-      <div key={`name-${id}`} className="truncate text-white/80">{campaign?.name}</div>,
-      <div key={`country-${id}`} className="truncate text-white/80">{campaign?.country?.join(', ') || '-'}</div>,
-      <div key={`actions-${id}`} className="col-span-full">{renderActions(campaign)}</div>,
-    ];
-  };
 
   return (
     <>
