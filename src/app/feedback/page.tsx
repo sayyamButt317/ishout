@@ -143,7 +143,7 @@ export default function InfluencerFeedback() {
               <span className="w-2 h-2 rounded-full bg-[#e8184d] animate-pulse" />
               <span className="text-xs font-bold tracking-widest uppercase text-white/50">New: AI-Driven Frame Sync</span>
             </div>
-            <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 bg-linear-to-b from-white to-white/40 bg-clip-text text-transparent leading-[1.1]">
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter mb-8 bg-linear-to-b from-white to-white/40 bg-clip-text  leading-[1.1]">
               Precision Feedback<br />for Creators
             </h1>
             <p className="text-xl text-white/50 max-w-2xl mx-auto mb-12 font-light tracking-tight">
@@ -155,7 +155,7 @@ export default function InfluencerFeedback() {
               <GlassCard className="relative rounded-xl overflow-hidden shadow-2xl">
                 <div className="aspect-video bg-black relative">
                   <Image
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuwA8wanRInh8U7D2wWg-fzsztJn0Mn88CJ0fPqriTARxF-fwyLHCunYezrI9B0vCTgIc3M6P8RJ2z61MVALf7C5EDb9yEy_W5K7FXY1a1Jw4UcHYgr0GVOvyKP7JCG5tdfgCUbqsviOHaVSy8tJRQPNG7AxLM9OOuJ0F21E130NGymks_lmI-Wo_M58dc9-0JpkLOxozwD3TvPy3QlIQBJSThxE3Q7_yyJ3sRT0L50lKH58y9_rK4xEuDfbgnFGzNR9Wg_URG6ClJ"
+                    src="https://i.pinimg.com/1200x/f8/78/b8/f878b8501bd1d0ded1680224f35d374a.jpg"
                     alt="Video workspace" fill className="object-cover opacity-80" unoptimized priority
                   />
                   <div className="absolute inset-0 flex flex-col justify-end p-6">
@@ -170,7 +170,7 @@ export default function InfluencerFeedback() {
                       <div className="flex gap-4"><CirclePlay className="w-5 h-5" /><Volume2 className="w-5 h-5" /></div>
                     </div>
                   </div>
-                  <GlassCard className="absolute top-12 left-[38%] p-4 rounded-lg w-56 shadow-2xl transform rotate-2 hidden md:block">
+                  <GlassCard className="absolute top-12 left-[38%] p-4 rounded-lg w-56 shadow-2xl transform hidden md:block">
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-8 h-8 rounded-full bg-white/10" />
                       <span className="text-xs font-bold text-white uppercase tracking-wider">Editor Pro</span>
@@ -217,16 +217,16 @@ export default function InfluencerFeedback() {
             <div className="lg:col-span-8">
               <div className="relative">
                 <div className="absolute -inset-1 bg-linear-to-r from-[#e8184d]/20 to-[#d2bbff]/20 rounded-2xl blur-2xl opacity-50" />
-                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#1d1e30] shadow-2xl">
-                  <Image src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz4kzW_jGuOLkPcxefllWaX5kMKDEggjzLhoQn2B1YQanc0c0CuRI8Ah05wIZGxjdQJusAnS5M9ugrhdb7659bsgSgw-auT2RRy3Cw-IWQk6BUjXTxbhY1xue_GrvFaA65GFTRKAj4gXXU3ZIG7kuQRRX1_BzIFelFcNxnRwDvj9MZ0y45-kRzyElZIB16mu2ZD5IkS33Gz1dDT1GWhA6QDSAKejCSdfq8z67z6gjYxC-QrkAm_oZBT4ngWeseBbVvWrw0W3h3mJ8"
+                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#1d1e30] shadow-2xl">
+                    <Image src="https://i.pinimg.com/1200x/22/bf/a1/22bfa183386fa4e08775d045b78f7c22.jpg"
                     alt="Video Editor UI" unoptimized loading="lazy" width={1000} height={1000} className="aspect-video w-full object-cover opacity-80"
                   />
                   <GlassCard className="absolute left-[30%] top-[20%] rounded-2xl p-3">
-                    <p className="text-[10px] font-bold text-white">0:03 Alex M.</p>
-                    <p className="text-[11px] text-white/80">Increase saturation in the neon signs here.</p>
+                    <p className="text-[10px] font-bold text-white">0:03 iShout</p>
+                    <p className="text-[11px] text-white/80">Increase saturation in the buildings here.</p>
                   </GlassCard>
                   <GlassCard className="absolute bottom-[40%] right-[15%] rounded-2xl p-3">
-                    <p className="text-[10px] font-bold text-white">0:12 Sarah K.</p>
+                    <p className="text-[10px] font-bold text-white">0:12 iShout</p>
                     <p className="text-[11px] text-white/80">Smooth out the camera transition.</p>
                   </GlassCard>
                   <div className="absolute bottom-0 w-full border-t border-white/10 bg-[#1d1e30]/80 p-5 backdrop-blur-xl">
