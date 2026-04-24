@@ -375,7 +375,7 @@ export default function VideoFeedbackWorkspace({
                             className="bg-(--color-primaryButton) text-white hover:opacity-90"
                             onClick={() => void submitFeedback()}
                         >
-                            {submitting ? 'Sending…' : 'Send feedback'}
+                            {submitting ? 'Sending…' : 'Send Feedback'}
                         </Button>
                     </div>
                 </DialogContent>
