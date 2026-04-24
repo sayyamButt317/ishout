@@ -49,7 +49,7 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
           variant="outline"
           className={`
             capitalize ${getButtonStyle()} 
-            w-auto max-w-[80px] sm:max-w-[200px]
+            w-auto max-w-20 sm:max-w-50
             cursor-pointer text-[10px] sm:text-sm
             truncate px-2 sm:px-3
           `}
@@ -58,7 +58,7 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
         </Badge>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="bg-amber-50 backdrop-blur min-w-full sm:min-w-[14rem]">
+      <DropdownMenuContent className="bg-amber-50 backdrop-blur min-w-full sm:min-w-56">
         <DropdownMenuSeparator />
 
         <DropdownMenuRadioGroup

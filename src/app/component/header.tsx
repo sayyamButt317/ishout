@@ -26,7 +26,7 @@ const Header = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur px-4 sm:px-6 py-4 justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur px-4 sm:px-6 py-4 justify-between">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex flex-row gap-2">
             <Image
@@ -34,7 +34,7 @@ const Header = () => {
               alt="logo"
               width={100}
               height={100}
-              className="w-[100px] h-auto object-contain"
+              className="w-25 h-auto object-contain"
               loading="eager"
               priority
               unoptimized={true}
@@ -49,19 +49,19 @@ const Header = () => {
             }}
           >
             <Link
-              href="#about-us"
+              href="https://app.ishout.ae/#about-us"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               About Us
             </Link>
             <Link
-              href="#how-it-works"
+              href="https://app.ishout.ae/#how-it-works"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               How It Works
             </Link>
             <Link
-              href="#case-studies"
+              href="https://app.ishout.ae/#case-studies"
               className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
             >
               Case Studies
