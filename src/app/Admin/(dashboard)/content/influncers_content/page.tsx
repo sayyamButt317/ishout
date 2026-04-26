@@ -1,13 +1,15 @@
 'use client';
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Video } from 'lucide-react';
 import Image from 'next/image';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import { CardType } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import { countStyles } from '@/src/utils/countStyle';
 import ContentHeader from '@/src/app/component/custom-component/ContentHeader';
 import { Button } from '@/components/ui/button';
+import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
+import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 
 const COLUMNS = [
   { id: 'review', label: 'Under Review', color: 'primary' },
@@ -20,10 +22,11 @@ function ContentFeedbackPageContent() {
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
   const router = useRouter();
 
-  const [search, setSearch] = useState('');
-
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery);
   const negotiationItems = data?.negotiations ?? [];
+  const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
 
   const handleViewProfile = (username?: string, platform?: string) => {
     if (!username || !platform) return;
@@ -39,20 +42,17 @@ function ContentFeedbackPageContent() {
     const url = urls[platform.toLowerCase()];
     if (url) window.open(url, '_blank');
   };
+
   const apiCards: CardType[] = negotiationItems.map((item) => ({
     id: item._id,
     campaign_id: item.campaign_id,
-
-    campaign: item.campaign_brief?.title ?? 'Campaign',
-    thumb: item.campaign_logo_url ?? '',
-
+    campaign: data?.campaign_brief?.title ?? 'Campaign',
+    thumb: data?.campaign_logo_url ?? '',
     influncer_name: item.influencer?.username ?? '',
     picture: item.influencer?.picture ?? '',
-
     engagementRate: item.influencer?.engagementRate,
     country: item.influencer?.country,
     platform: item.influencer?.platform,
-
     thread_id: item.thread_id,
     brand_thread_id: item.brand_thread_id,
     admin_approved: item.admin_approved,
@@ -61,13 +61,30 @@ function ContentFeedbackPageContent() {
     status: 'Ready to Post',
   }));
 
+  const brief: UpdateCampaignBrief | null = briefData?.response
+    ? {
+        ...briefData.response,
+        id: briefData.id,
+      }
+    : null;
+
   return (
     <div className="font-sans">
       <ContentHeader
-        title={apiCards?.[0]?.campaign ?? ''}
-        logo={apiCards?.[0]?.thumb ?? ''}
+        title={data?.campaign_brief?.title ?? ''}
+        logo={data?.campaign_logo_url ?? ''}
         description="Showing influencers content waiting for content feedback review"
         category="Influencers Content"
+        deliverables={data?.campaign_brief?.deliverables_per_influencer}
+        timeline={data?.campaign_brief?.timeline}
+        platform={data?.campaign?.platform}
+        companyName={data?.campaign?.company_name}
+        briefId={data?.campaign?.brief_id}
+        brandThreadId={data?.campaign?.brand_thread_id}
+        onViewBrief={(id) => {
+          setSelectedBriefId(id);
+          setDialogOpen(true);
+        }}
       />
 
       <div className="flex gap-6 overflow-x-auto pb-4">
@@ -91,7 +108,6 @@ function ContentFeedbackPageContent() {
               key={col.id}
               className="flex w-1/3 shrink-0 flex-col mt-2 gap-4 rounded-xl border border-white/10 bg-white/2 p-4"
             >
-              {/* HEADER */}
               <div className="flex items-center justify-between px-2">
                 <h3 className="text-xs font-bold uppercase tracking-widest text-white/50">
                   {col.label}
@@ -125,7 +141,6 @@ function ContentFeedbackPageContent() {
                     }}
                     className="cursor-pointer rounded-2xl border border-white/10 bg-[#0F0F0F] p-5 transition-all hover:border-white/20"
                   >
-                    {/* HEADER: Avatar and Username */}
                     <div className="flex items-center gap-4 mb-6">
                       <div className="relative size-12 overflow-hidden rounded-full border border-white/10">
                         <Image
@@ -140,13 +155,12 @@ function ContentFeedbackPageContent() {
                           @{card.influncer_name}
                         </h4>
                         <span className="text-sm text-white/40">
-                          {/* Placeholder for name since logic wasn't provided for it */}
                           {card.influncer_name}
                         </span>
                       </div>
                     </div>
 
-                    {/* DETAILS: Grid Style (Matches SS-2) */}
+                    {/* DETAILS */}
                     <div className="space-y-4 mb-6">
                       <div className="flex justify-between items-center">
                         <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">
@@ -166,10 +180,8 @@ function ContentFeedbackPageContent() {
                       </div>
                     </div>
 
-                    {/* ACTIONS: Your Original Navigation Logic */}
-
+                    {/* ACTIONS */}
                     <div className="flex gap-3">
-                      {/* MESSAGE BUTTON → same as card click */}
                       <Button
                         variant="outline"
                         className="flex-1 h-11 rounded-xl bg-white/5 border-white/5 text-white hover:bg-white/10"
@@ -181,7 +193,6 @@ function ContentFeedbackPageContent() {
                         View Profile
                       </Button>
 
-                      {/* VIEW CONTENT → influencer profile */}
                       <Button
                         variant="default"
                         onClick={(e) => {
@@ -208,6 +219,13 @@ function ContentFeedbackPageContent() {
           );
         })}
       </div>
+
+      <CampaignBriefDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        briefData={brief}
+        onUpdate={() => {}}
+      />
     </div>
   );
 }
