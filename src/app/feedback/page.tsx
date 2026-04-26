@@ -270,11 +270,11 @@ export default function InfluencerFeedback() {
                   <p className="text-xs text-white/60">{msg}</p>
                 </GlassCard>
               ))}
-              <GlassCard className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl w-64 shadow-xl -rotate-3">
+              {/* <GlassCard className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl w-64 shadow-xl -rotate-3">
                 <Image src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3NtQvw0gR_cAsoiQr9wHZ6vQqlioRbsd6iGgTRWT53W3ZvqPEtKR0E--f6vd1vx8_i7HgbuRgqXQnukR_0YYnYh804DxdZANh9BoQmI1ooKTi98epu9zOrYQEwQwkdu0XetubKga2umhBDdv7SNT5czA2LtU-xPs57Aa-rKjNPSbw5kGB5MpxGB3uMsLBvc8J43IJoDOqRV6NGIvrBJuwn7M_crgG8UUpAEoJpEm6NuBW_o_XvG7Mhxsa3iXrwoCXOtuId7svz-Lo"
                   alt="Messy feedback" width={300} height={128} className="rounded h-32 w-full object-cover opacity-50 mb-2" />
                 <p className="text-[10px] font-mono text-[#e8184d]">Look at this spot specifically!</p>
-              </GlassCard>
+              </GlassCard> */}
             </div>
           </div>
         </section>
