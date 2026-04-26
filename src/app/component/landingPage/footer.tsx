@@ -18,9 +18,9 @@ export default function Footer() {
 
         <CalendlyDemo>
           {/* Layer 1: The New Outer-most Border */}
-          <div className="mt-6 p-[6px] border border-white/15 rounded-[22px] inline-block">
+          <div className="mt-6 p-1.5 border border-white/15 rounded-[22px] inline-block">
             {/* Layer 2: Middle Border */}
-            <div className="p-[8px] border border-white/30 rounded-[20px] inline-block">
+            <div className="p-2 border border-white/30 rounded-[20px] inline-block">
               <CustomButton
                 className="
           bg-[#ff3b8d]

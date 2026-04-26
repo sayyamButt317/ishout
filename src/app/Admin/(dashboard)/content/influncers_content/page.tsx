@@ -1,7 +1,8 @@
 'use client';
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import { CardType } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import { countStyles } from '@/src/utils/countStyle';
@@ -89,19 +90,19 @@ function ContentFeedbackPageContent() {
 
       <div className="flex gap-6 overflow-x-auto pb-4">
         {COLUMNS.map((col) => {
-          const combinedCards: CardType[] =
+          const combinedCards =
             col.id === 'approved'
               ? apiCards.filter(
-                  (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
-                )
+                (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
+              )
               : col.id === 'revision'
                 ? apiCards.filter(
-                    (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
-                  )
+                  (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
+                )
                 : apiCards.filter((card) => {
-                    const status = (card.admin_approved ?? '').toLowerCase();
-                    return status !== 'approved' && status !== 'revision';
-                  });
+                  const status = (card.admin_approved ?? '').toLowerCase();
+                  return status !== 'approved' && status !== 'revision';
+                });
 
           return (
             <div
@@ -114,11 +115,10 @@ function ContentFeedbackPageContent() {
                 </h3>
 
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                    col.color === 'primary'
-                      ? 'bg-(--color-primaryButton) text-white'
-                      : countStyles[col.color]
-                  }`}
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
+                    ? 'bg-(--color-primaryButton) text-white'
+                    : countStyles[col.color]
+                    }`}
                 >
                   {combinedCards.length}
                 </span>
@@ -130,13 +130,14 @@ function ContentFeedbackPageContent() {
                   <div
                     key={card.id}
                     onClick={() => {
-                      const campaignId = card.campaign_id ?? campaignIdFromQuery;
+                      const campaignId =
+                        card.campaign_id ?? campaignIdFromQuery;
                       if (!campaignId) return;
 
                       router.push(
                         `/Admin/content/${encodeURIComponent(
-                          card.id,
-                        )}?campaign_id=${encodeURIComponent(campaignId)}`,
+                          card.id
+                        )}?campaign_id=${encodeURIComponent(campaignId)}`
                       );
                     }}
                     className="cursor-pointer rounded-2xl border border-white/10 bg-[#0F0F0F] p-5 transition-all hover:border-white/20"
@@ -144,8 +145,8 @@ function ContentFeedbackPageContent() {
                     <div className="flex items-center gap-4 mb-6">
                       <div className="relative size-12 overflow-hidden rounded-full border border-white/10">
                         <Image
-                          src={card.picture || card.thumb}
-                          alt={card.influncer_name}
+                          src={card.picture || '/assets/logo.svg'}
+                          alt={card.influncer_name ?? 'Influencer avatar'}
                           fill
                           className="object-cover"
                         />
@@ -214,6 +215,13 @@ function ContentFeedbackPageContent() {
                     </div>
                   </div>
                 ))}
+
+                {/* Empty State */}
+                {combinedCards.length === 0 && (
+                  <p className="text-xs text-white/40 text-center py-4">
+                    No items
+                  </p>
+                )}
               </div>
             </div>
           );
