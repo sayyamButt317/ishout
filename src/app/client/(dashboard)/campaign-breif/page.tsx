@@ -133,7 +133,7 @@ const CampaignBreifPage = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 rows={5}
-                className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-xl text-[#f8f5fd] placeholder:text-[#acaab1]/30 resize-none"
+                className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-sm text-[#f8f5fd] placeholder:text-[#acaab1]/30 resize-none"
               />
 
               <div className="flex items-center justify-between pt-4 border-t border-white/0.05">

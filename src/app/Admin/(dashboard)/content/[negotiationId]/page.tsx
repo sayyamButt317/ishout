@@ -29,6 +29,8 @@ import {
 import { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
 import { toast } from 'sonner';
 import { mapAdminInfluencerMessageError } from '@/src/types/Admin-Type/admin-influencer-message-type';
+import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
+import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
 
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
@@ -55,6 +57,25 @@ export default function ContentFeedbackDetailPage() {
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
     data?: NegotiationResponse;
   };
+  console.log("data", data)
+
+  const { setAll } = useRevisionMessageStore()
+  useEffect(() => {
+    if (!data?.negotiations?.length) return
+    const n = data.negotiations[0]
+
+    setAll({
+      negotiation_id: n._id,
+      thread_id: n.thread_id,
+      message_id: "",
+      contentType: "VIDEO",
+      contentUrl: "",
+      current_version: 0,
+      status: "UNDER_REVIEW",
+    })
+  }, [data, setAll])
+
+
 
   const apiCards: CardType[] = useMemo(() => {
     const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
@@ -223,6 +244,44 @@ export default function ContentFeedbackDetailPage() {
     setSelectedVideoDuration(null);
   }, [chatData, selectedPreviewMediaUrl, isImageUrl, isVideoUrl]);
 
+  useEffect(() => {
+    if (!selectedCard?.id) return;
+    const messages = chatData?.messages ?? [];
+    const matchedMessage = messages.find(
+      (msg: ChatMessage) =>
+        typeof msg.message === "string" &&
+        msg.message === selectedPreviewMediaUrl &&
+        (isVideoUrl(msg.message) || isImageUrl(msg.message)),
+    );
+    const contentType =
+      selectedPreviewMediaType === "image"
+        ? "IMAGE"
+        : selectedPreviewMediaType === "video"
+          ? "VIDEO"
+          : "VIDEO";
+
+    setAll({
+      negotiation_id: selectedCard.id,
+      thread_id: chatMode === "influencer" ? threadId : brandThreadId,
+      message_id: matchedMessage?._id ?? "",
+      contentType,
+      contentUrl: selectedPreviewMediaUrl ?? "",
+      current_version: 0,
+      status: "UNDER_REVIEW",
+    });
+  }, [
+    selectedCard?.id,
+    chatData?.messages,
+    selectedPreviewMediaUrl,
+    selectedPreviewMediaType,
+    chatMode,
+    threadId,
+    brandThreadId,
+    isVideoUrl,
+    isImageUrl,
+    setAll,
+  ]);
+
   const sendEnabled =
     chatMode === 'influencer' ? !!threadId : !!brandThreadId && !!negotiationId;
 
@@ -358,6 +417,7 @@ export default function ContentFeedbackDetailPage() {
                 />
               </div>
             </div>
+
             <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-3">
               <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
                 <div>
@@ -423,6 +483,7 @@ export default function ContentFeedbackDetailPage() {
                     Approve for Brand
                   </button>
                 </div>
+
               </div>
             </div>
           </div>
@@ -447,7 +508,7 @@ export default function ContentFeedbackDetailPage() {
             bubbleMaxWidthClassName="max-w-[90%]"
           />
         </div>
-
+        <RevisionBox />
         <ContentFeedbackPanel
           videoRef={videoRef}
           activeFeedbackId={activeFeedbackId2}
@@ -458,9 +519,7 @@ export default function ContentFeedbackDetailPage() {
           selectedCard={selectedCard}
           setFeedbackId={setFeedbackId}
         />
-
       </div>
-
     </div>
   );
 }
