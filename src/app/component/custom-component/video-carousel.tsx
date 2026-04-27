@@ -1,8 +1,7 @@
-"use client";
-import { useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
-import { CaseStudiesVideos } from "@/src/helper/videoUrls";
+'use client';
+import { useEffect, useRef } from 'react';
+import { motion } from 'motion/react';
+import { CaseStudiesVideos } from '@/src/constant/videoUrls';
 
 interface VideoCarouselProps {
   videos?: typeof CaseStudiesVideos;
@@ -14,8 +13,8 @@ interface VideoCarouselProps {
 export default function VideoCarousel({
   videos = CaseStudiesVideos,
   initialScroll = 0,
-  heading = "3x engagment in 2 weeks",
-  id = "case-studies",
+  heading = '3x engagement in 2 weeks',
+  id = 'case-studies',
 }: VideoCarouselProps) {
   const carouselRef = useRef<HTMLDivElement>(null);
 
@@ -26,56 +25,54 @@ export default function VideoCarousel({
   }, [initialScroll]);
 
   return (
-    <div id={id} className="relative w-full">
+    <div id={id} className="relative w-full overflow-hidden">
       {heading && (
-        <h1 className="italic text-center md:text-md font-thin text-3xl text-neutral-800 dark:text-neutral-200 font-sans">
+        <h1 className="italic text-center text-3xl font-thin text-neutral-300 mb-12">
           {heading}
         </h1>
       )}
+      <div className="hidden md:block pointer-events-none absolute left-0 top-0 h-full w-120 bg-linear-to-r from-black via-black/80 to-transparent z-20" />
+      <div className="hidden md:block pointer-events-none absolute right-0 top-0 h-full w-120 bg-linear-to-l from-black via-black/80 to-transparent z-20" />
       <div
-        className="flex w-full overflow-x-auto overscroll-x-contain scroll-smooth pt-6 pb-10 md:pt-10 md:pb-20 [scrollbar-width:none] snap-x snap-mandatory"
         ref={carouselRef}
+        className="flex justify-center overflow-x-auto scroll-smooth snap-x snap-mandatory gap-10 px-16 pb-20 [scrollbar-width:none]"
       >
-        <div
-          className={cn(
-            "flex flex-row justify-start gap-4 px-4 md:px-8",
-            "w-full "
-          )}
-        >
-          {videos.map((video, index) => (
-            <motion.div
-              id={`video-${index}`}
-              initial={{
-                opacity: 0,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                transition: {
-                  duration: 0.5,
-                  delay: 0.2 * index,
-                  ease: "easeOut",
-                },
-              }}
-              key={`video-${index}`}
-              className="rounded-3xl flex-shrink-0 snap-start"
+        {videos.map((video, index) => (
+          <motion.div
+            key={`video-${index}`}
+            className="shrink-0 snap-center"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.6,
+                delay: index * 0.15,
+                ease: 'easeOut',
+              },
+            }}
+            whileHover={{ scale: 1.06 }}
+          >
+            <div
+              className="relative flex 
+              h-88 w-56 
+              md:h-82  md:w-48
+              overflow-hidden rounded-3xl 
+              bg-neutral-900 shadow-xl"
             >
-              <div className="relative z-10 flex h-64 w-[72vw] max-w-xs flex-col items-center justify-center overflow-hidden rounded-3xl bg-gray-100 sm:h-80 sm:w-64 md:h-[40rem] md:w-96 dark:bg-neutral-900">
-                <video
-                  src={video.src}
-                  className="h-full w-full object-cover rounded-3xl"
-                  muted
-                  autoPlay
-                  loop
-                  preload="auto"
-                  crossOrigin="anonymous"
-                  playsInline
-                />
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              <video
+                src={video.src}
+                className="h-full w-full object-cover"
+                muted
+                autoPlay
+                loop
+                preload="auto"
+                crossOrigin="anonymous"
+                playsInline
+              />
+            </div>
+          </motion.div>
+        ))}
       </div>
     </div>
   );

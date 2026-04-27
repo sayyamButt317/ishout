@@ -6,8 +6,9 @@ export interface FindInfluencerRequestProps {
   followers: string[];
   country: string[];
   company_name: string;
+  brief_id?: string;
 }
-export type PlatformType = "instagram" | "youtube" | "tiktok" | ""
+export type PlatformType = "instagram" | "youtube" | "tiktok" | "all" | "Instagram" | "YouTube" | "TikTok"
 export interface FoundedInfluencers {
   username: string;
   name: string;
@@ -20,20 +21,20 @@ export interface FoundedInfluencers {
 
 export interface ReadyMadeInfluencerResponse {
   _id: string;
-  id: string;
-  userId: string;
+  campaign_id: string;
+  influencer_id: string;
   country: string;
-  countryCode: string | null;
   followers: number;
   engagementRate: number;
-  name: string;
-  username: string;
   bio: string;
   picture: string;
-  page_content: string;
-  platform: string;
-  category: string;
-  company_name: string;
+  pricing?: number;
+  username: string;
+  platform: PlatformType;
+  status: string;
+  admin_approved: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ReadyMadeInfluencersRequest {
@@ -76,6 +77,10 @@ export interface MoreInfluencerRequest {
   exclude_ids: string[];
 }
 
+export interface GeneratedMoreInfluencerRequest {
+  campaign_id: string;
+}
+
 export interface MoreInfluencerReplacePayload {
   request: MoreInfluencerRequest;
   replaceId: string;
@@ -97,3 +102,33 @@ export interface ApprovedInfluencersResponse {
     strategy: string;
   };
 }
+
+interface TemplateProps {
+  _id: string[];
+  username: string[];
+  platform: string[];
+  category: string[];
+  limit: string;
+  followers: string[];
+  country: string[];
+  campaign_id: string;
+  iseditable: boolean;
+  isSelected: boolean;
+  results?: ReadyMadeInfluencersApiResponse[];
+
+  setField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray'>>(
+    field: K,
+    value: TemplateProps[K]
+  ) => void;
+
+  getField: <K extends keyof Omit<TemplateProps, 'setField' | 'getField' | 'addToArray' | 'removeFromArray' | 'clearArray'>>(
+    field: K
+  ) => TemplateProps[K];
+
+  addToArray: (field: "platform" | "category" | "followers" | "country", value: string) => void;
+  removeFromArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
+  clearArray: (field: "platform" | "category" | "followers" | "country" | "limit", value: string) => void;
+  clearTemplate: () => void;
+  setResults: (results: ReadyMadeInfluencersApiResponse[] | undefined) => void;
+}
+

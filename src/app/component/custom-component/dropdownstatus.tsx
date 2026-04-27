@@ -17,6 +17,7 @@ interface StatusProps {
 
 export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
   const [selectedStatus, setSelectedStatus] = React.useState(status);
+
   React.useEffect(() => {
     setSelectedStatus(status);
   }, [status]);
@@ -25,18 +26,19 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
     setSelectedStatus(value);
     updateStatus(value);
   };
+
   const getButtonStyle = () => {
     switch (selectedStatus) {
       case "rejected":
-        return "bg-red-100 text-red-800 border-red-400";
+        return "bg-[#f3004020] text-[#fa1c57]";
       case "approved":
-        return "bg-green-100 text-green-800 border-green-400";
+        return "bg-[#25e76620] text-[#25e766]";
       case "processing":
-        return "bg-yellow-100 text-yellow-800 border-yellow-400";
+        return "bg-[#e2c11b20] text-[#e2a513]";
       case "pending":
-        return "bg-gray-100 text-gray-800 border-gray-400";
+        return "bg-[#366ffe20] text-[#7199ff]";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800 border-gray-400";
     }
   };
 
@@ -45,37 +47,44 @@ export function DropDownCustomStatus({ status, updateStatus }: StatusProps) {
       <DropdownMenuTrigger asChild>
         <Badge
           variant="outline"
-          className={`capitalize ${getButtonStyle()} w-full cursor-pointer text-xs sm:text-sm`}
+          className={`
+            capitalize ${getButtonStyle()} 
+            w-auto max-w-20 sm:max-w-50
+            cursor-pointer text-[10px] sm:text-sm
+            truncate px-2 sm:px-3
+          `}
         >
-          {selectedStatus || "select status"}
+          {selectedStatus || "Select status"}
         </Badge>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-32 sm:w-56 bg-amber-50 backdrop-blur">
+
+      <DropdownMenuContent className="bg-amber-50 backdrop-blur min-w-full sm:min-w-56">
         <DropdownMenuSeparator />
+
         <DropdownMenuRadioGroup
           value={selectedStatus}
           onValueChange={handleStatusChange}
         >
           <DropdownMenuRadioItem
-            className="text-green-800 border-green-400 text-xs sm:text-sm"
+            className="text-[#25e766] border-green-400 text-xs sm:text-sm"
             value="approved"
           >
             Approved
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
-            className="text-red-800 border-red-400 text-xs sm:text-sm"
+            className="text-[#fa1c57] border-red-400 text-xs sm:text-sm"
             value="rejected"
           >
             Rejected
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
-            className="text-yellow-800 border-yellow-400 text-xs sm:text-sm"
+            className="text-[#e2a513] border-yellow-400 text-xs sm:text-sm"
             value="processing"
           >
             Processing
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem
-            className="text-gray-800 border-gray-400 text-xs sm:text-sm"
+            className="text-[#5481f4] border-gray-400 text-xs sm:text-sm"
             value="pending"
           >
             Pending

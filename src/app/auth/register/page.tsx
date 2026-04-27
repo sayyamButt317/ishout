@@ -1,5 +1,5 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+import { useState } from 'react';
 import {
   Form,
   FormControl,
@@ -7,24 +7,34 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Loader2, Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
+} from '@/components/ui/form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Loader2, Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
+import PhoneInput from 'react-phone-number-input';
 import {
   SignUpFormSchema,
   SignUpFormValidator,
-} from "@/src/validators/Auth-Validator/signUp-Validators";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import CustomButton from "../../component/button";
-import RegisterMutation from "@/src/routes/Auth-Routes/Api/Auth-Hook/regeister-hook";
-import dynamic from "next/dynamic";
-const DomeGallery = dynamic(() => import("@/src/constant/Influencers-data"), {
+} from '@/src/validators/Auth-Validator/signUp-Validators';
+import {
+  normalizePhoneNumberForDisplay,
+  removePlusPrefix,
+} from '@/src/utils/phone.utils';
+import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
+import CustomButton from '../../component/button';
+import RegisterMutation from '@/src/routes/Auth-Routes/Api/Auth-Hook/regeister-hook';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+import { MobileCountrySelect } from '@/src/app/component/custom-component/selectcountry';
+
+const DomeGallery = dynamic(() => import('@/src/constant/Influencers-data'), {
   ssr: false,
 });
-import Image from "next/image";
+
+const registerCountrySearchInputClassName =
+  'h-10 border-white/10 bg-white/5 text-white placeholder:text-white/40 focus:border-primarytext focus:ring-primarytext/30';
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,111 +43,130 @@ export default function Signup() {
   const form = useForm<SignUpFormValidator>({
     resolver: zodResolver(SignUpFormSchema),
     defaultValues: {
-      company_name: "",
-      contact_person: "",
-      phone: "",
-      email: "",
-      password: "",
+      company_name: '',
+      contact_person: '',
+      phone: '',
+      email: '',
+      password: '',
     },
   });
+
   const onSubmit = async (data: SignUpFormValidator) => {
     registerMutation({
       company_name: data.company_name,
       contact_person: data.contact_person,
-      phone: data.phone,
+      phone: removePlusPrefix(data.phone),
       email: data.email,
       password: data.password,
     });
-    form.reset();
   };
 
   return (
-    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-[3fr_2fr]">
-      <div className="h-full">
+    <div className="min-h-screen w-full grid grid-cols-1 lg:grid-cols-[4fr_2fr]">
+      {/* Left - Gallery */}
+      <div className="hidden lg:block h-full">
         <DomeGallery />
       </div>
-      <div className="bg-slate-50 flex items-center justify-center p-6 lg:p-12">
-        <Card className="bg-white w-full max-w-md text-card-foreground border border-border shadow-xl">
-          <CardContent className="p-8">
-            <div className="mb-2 flex flex-row items-center justify-center gap-0">
-              <Image
-                src="/assets/favicon.png"
-                alt="ishout"
-                width={40}
-                height={40}
-              />
-              <h2 className="text-2xl font-bold text-slate-900">iShout</h2>
-              <span className="text-primarytext font-extrabold text-2xl">
-                .
-              </span>
+
+      {/* Right - Signup Form */}
+      <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-black to-slate-900 p-6">
+        <Card className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
+          <div className="p-10 space-y-8">
+            {/* Logo */}
+            <Link href="/" className="flex justify-center">
+              <div className="flex items-center gap-2">
+                <Image
+                  src="/assets/iShout-gif-black-background.gif"
+                  alt="ishout"
+                  width={80}
+                  height={80}
+                  unoptimized
+                />
+                <h2 className="text-4xl font-bold text-white tracking-tight">
+                  i<span className="text-white font-extrabold">S</span>
+                  hout
+                  <span className="text-primarytext font-extrabold">.</span>
+                </h2>
+              </div>
+            </Link>
+
+            {/* Heading */}
+            <div className="text-center space-y-2">
+              <h1 className="text-2xl font-semibold text-white">Create your account</h1>
+              <p className="italic text-sm text-slate-400">
+                Start managing campaigns in minutes
+              </p>
             </div>
-            <p className="text-slate-600 text-sm text-center">
-              Create your account to get started
-            </p>
+
+            {/* Form */}
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-6 mt-6"
-              >
-                {/* Name Fields */}
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="contact_person"
-                    render={({ field }) => (
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                {/* Contact Person */}
+                <FormField
+                  control={form.control}
+                  name="contact_person"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        <Input
+                          placeholder="Contact person"
+                          {...field}
+                          className="h-12 bg-white/5 border-white/10 text-white placeholder:text-slate-500 rounded-xl focus:ring-2 focus:ring-primarytext focus:border-transparent"
+                        />
+                      </FormLabel>
+                      <FormMessage className="text-xs text-red-400" />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Phone */}
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => {
+                    const displayValue = normalizePhoneNumberForDisplay(field.value);
+                    return (
                       <FormItem>
-                        <FormLabel className="text-sm font-medium text-slate-700">
-                          Contact Person
-                        </FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="John Doe"
-                            className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            {...field}
+                          <PhoneInput
+                            international
+                            defaultCountry="AE"
+                            countryCallingCodeEditable={false}
+                            placeholder="Phone number"
+                            value={displayValue}
+                            onChange={(value) => {
+                              const valueWithoutPlus = removePlusPrefix(value);
+                              field.onChange(valueWithoutPlus);
+                            }}
+                            countrySelectComponent={(props) => (
+                              <MobileCountrySelect
+                                {...props}
+                                searchInputClassName={registerCountrySearchInputClassName}
+                              />
+                            )}
+                            className="h-12 rounded-xl border border-white/10 bg-white/5 px-3 text-white focus-within:ring-2 focus-within:ring-primarytext w-full"
                           />
                         </FormControl>
-                        <FormMessage className="text-xs" />
+                        <FormMessage className="text-xs text-red-400" />
                       </FormItem>
-                    )}
-                  />
+                    );
+                  }}
+                />
 
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-medium text-slate-700">
-                          Phone Number
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="971 9876543210"
-                            className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage className="text-xs" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
+                {/* Company */}
                 <FormField
                   control={form.control}
                   name="company_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-slate-700">
-                        Company Name
-                      </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Your Company Name"
-                          className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Company name"
                           {...field}
+                          className="h-12 bg-white/5 border-white/10 text-white placeholder:text-slate-500 rounded-xl focus:ring-2 focus:ring-primarytext focus:border-transparent"
                         />
                       </FormControl>
-                      <FormMessage className="text-xs" />
+                      <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -148,18 +177,15 @@ export default function Signup() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-slate-700">
-                        Email Address
-                      </FormLabel>
                       <FormControl>
                         <Input
                           type="email"
-                          placeholder="john@company.com"
-                          className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="name@company.com"
                           {...field}
+                          className="h-12 bg-white/5 border-white/10 text-white placeholder:text-slate-500 rounded-xl focus:ring-2 focus:ring-primarytext focus:border-transparent"
                         />
                       </FormControl>
-                      <FormMessage className="text-xs" />
+                      <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
@@ -170,66 +196,54 @@ export default function Signup() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium text-slate-700">
-                        Password
-                      </FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
-                            type={showPassword ? "text" : "password"}
+                            type={showPassword ? 'text' : 'password'}
                             placeholder="Create a strong password"
-                            className="text-black h-11 border-slate-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10"
                             {...field}
+                            className="h-12 bg-white/5 border-white/10 text-white placeholder:text-slate-500 rounded-xl pr-10 focus:ring-2 focus:ring-primarytext focus:border-transparent"
                           />
                           <button
                             type="button"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                            onClick={() => setShowPassword((v) => !v)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
                           >
                             {showPassword ? (
-                              <EyeOff className="h-4 w-4" />
+                              <EyeOff className="h-5 w-5" />
                             ) : (
-                              <Eye className="h-4 w-4" />
+                              <Eye className="h-5 w-5" />
                             )}
                           </button>
                         </div>
                       </FormControl>
-                      <FormMessage className="text-xs" />
+                      <FormMessage className="text-xs text-red-400" />
                     </FormItem>
                   )}
                 />
 
-                {/* Submit Button */}
+                {/* CTA */}
                 <CustomButton
-                  onClick={() => form.handleSubmit(onSubmit)}
-                  className="w-full h-12 bg-gradient-to-r from-secondaryButton to-secondaryHover hover:secondarytext text-white shadow-green-500/2 font-semibold rounded-lg  hover:opacity-90"
+                  className="w-full h-12 rounded-xl bg-primarytext text-white font-semibold shadow-lg hover:bg-primaryHover hover:opacity-90 transition-all"
                   disabled={isPending}
                 >
                   {isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creating Account...
-                    </>
+                    <Loader2 className="animate-spin text-white" />
                   ) : (
-                    "Create Account"
+                    'Create Account'
                   )}
                 </CustomButton>
               </form>
             </Form>
 
-            {/* Login Link */}
-            <div className="mt-6 text-center">
-              <p className="text-sm text-slate-600">
-                Already have an account?{" "}
-                <Link
-                  href="/auth/login"
-                  className="text-blue-600 hover:text-blue-700 font-medium hover:underline"
-                >
-                  Login
-                </Link>
-              </p>
-            </div>
-          </CardContent>
+            {/* Footer */}
+            <p className="text-center text-sm text-slate-400">
+              Already have an account?{' '}
+              <Link href="/auth/login" className="text-white font-medium hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </Card>
       </div>
     </div>

@@ -11,11 +11,16 @@ export interface ReviewInfluencerResponse {
     status: string;
     admin_approved: boolean;
     company_approved: boolean;
+    last_offered_price : number;
+    negotiation_status : string;
     campaign_id: string;
     influencer_id: string;
     pricing: number;
     platform: PlatformType;
     psid?: number;
+    phone_number?: string;
+    min_price?: number;
+    max_price?: number;
 }
 
 export interface InfluencerReviewApiResponse {
@@ -29,3 +34,10 @@ export interface InfluencerReviewApiResponse {
     influencers?: ReviewInfluencerResponse[];
 }
 
+export interface AddInfluencersNumberRequest {
+    campaign_influencer_id: string;
+    phone_number: string;
+    platform: string;
+    max_price: number;
+    min_price: number;
+}

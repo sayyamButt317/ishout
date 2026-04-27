@@ -14,3 +14,28 @@ export const Platforms = [
     icon: <SiYoutube className="text-xl" />,
   },
 ];
+
+export const PLATFORM_CONFIG = {
+  instagram: {
+    icon: <SiInstagram className="text-xl" />,
+    color: "text-pink-500",
+  },
+  tiktok: {
+    icon: <SiTiktok className="text-xl" />,
+    color: "text-black dark:text-white",
+  },
+  youtube: {
+    icon: <SiYoutube className="text-xl" />,
+    color: "text-red-500",
+  },
+  all: {
+    icon: (
+      <div className="flex items-center gap-2">
+        <SiInstagram className="text-xl" />
+        <SiTiktok className="text-xl" />
+        <SiYoutube className="text-xl" />
+      </div>
+    ),
+    color: "",
+  },
+} as const;

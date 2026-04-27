@@ -37,3 +37,26 @@ export const LoginMutationApi = async (loginRequest: LoginRequestProps) => {
   const response = await api.post<LoginResponseProps>(AuthENDPOINT.LOGIN, loginRequest);
   return response.data;
 }
+
+export const verifyEmailApi = async (token: string) => {
+  const response = await api.get<{ message: string }>(
+    `${AuthENDPOINT.VERIFY_EMAIL}?token=${token}`
+  );
+  return response.data;
+};
+
+export const uploadUserLogoApi = async (user_id: string, file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const response = await api.post(
+    AuthENDPOINT.UPLOAD_USER_LOGO(user_id),
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  );
+  return response.data;
+};

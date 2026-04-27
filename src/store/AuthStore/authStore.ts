@@ -36,10 +36,6 @@ const useAuthStore = create<AuthStore>()(
                 setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
                 setCompanyName: (company_name: string) => set({ company_name }),
                 setCompanyUserId: (company_user_id: string) => set({ company_user_id }),
-                // role: "",
-                // setRole: (role: string) => set({ role }),
-                // access_token: "",
-                // setAccessToken: (access_token: string) => set({ access_token }),
                 // refresh_token: "",
                 // setRefreshToken: (refresh_token: string) => set({ refresh_token }),
                 getField: (field: keyof AuthStore) => get()[field],
@@ -48,7 +44,7 @@ const useAuthStore = create<AuthStore>()(
             }),
 
             {
-                name: "auth-storage",
+                name: "AuthStorage",
                 storage: createJSONStorage(() => localStorage),
             }
         ),

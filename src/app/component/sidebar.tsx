@@ -1,152 +1,222 @@
-"use client";
-import { cn } from "@/lib/utils";
-import { usePathname, useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { LogOut, Menu } from "lucide-react";
-import { useState, useCallback, useMemo } from "react";
-import CustomButton from "./button";
-import LogoutDialogue from "./logoutdialogue";
-import Image from "next/image";
+'use client';
 
-export interface SidebarLink {
-  label: string;
-  route: string;
-  icon?: React.ReactNode;
-}
+import { cn } from '@/lib/utils';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { ChevronDown, LogOut, Menu } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import LogoutDialogue from './logoutdialogue';
+import Image from 'next/image';
+import type { SidebarGroupLink } from '@/src/constant/sidebaritems';
 
 export interface SidebarProps {
-  links: SidebarLink[];
-  onLogout?: () => void;
+  links: SidebarGroupLink[];
 }
 
-export default function Sidebar({ links }: SidebarProps) {
+function NavGroup({
+  group,
+  onLinkClick,
+}: {
+  group: SidebarGroupLink;
+  onLinkClick?: () => void;
+}) {
   const pathname = usePathname();
-  const router = useRouter();
-  const [isLogout, setIsLogout] = useState(false);
 
-  const handleClick = useCallback(
-    (route: string) => {
-      if (pathname !== route) {
-        router.push(route);
-      }
-    },
-    [pathname, router]
+  const hasActive = group.children.some(
+    (c) => c.route && (pathname === c.route || pathname.startsWith(c.route)),
   );
 
-  const renderLink = useCallback(
-    (link: SidebarLink) => {
-      const isSelected =
-        link.route === pathname ||
-        (link.route !== "/auth/login" && pathname.includes(link.route));
+  const [open, setOpen] = useState(hasActive);
 
-      return (
-        <button
-          key={link.route}
-          onClick={() => handleClick(link.route)}
-          className={cn(
-            "group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out outline-none cursor-pointer",
-            isSelected
-              ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 text-white"
-              : "text-slate-300 hover:bg-white/10 hover:text-white hover:border-white/20 border border-transparent"
-          )}
-          aria-current={isSelected ? "page" : undefined}
-        >
-          <div className="flex-shrink-0">{link.icon}</div>
-          <span className="font-medium text-sm">{link.label}</span>
-
-          {isSelected && (
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-gradient-to-b from-blue-400 to-purple-500 rounded-r-full shadow-lg" />
-          )}
-
-          <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-        </button>
-      );
-    },
-    [pathname, handleClick]
-  );
-
-  // Memoize rendered links to prevent recreation on every render
-  const renderedLinks = useMemo(
-    () => links.map(renderLink),
-    [links, renderLink]
+  const isChildActive = useCallback(
+    (route: string) =>
+      !!route && (pathname === route || (route !== '/auth/login' && pathname.startsWith(route))),
+    [pathname],
   );
 
   return (
-    <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-[280px] p-6 bg-gradient-to-br from-slate-900/95 via-gray-900/95 to-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
-        {/* Header */}
-
-        <div className="mb-2 flex flex-row items-start gap-1">
-          <Image src="/assets/favicon.png" alt="logo" width={40} height={40} />
-          <h2 className="text-2xl font-bold text-slate-100 mt-1">iShout</h2>
-          <span className="text-primarytext font-extrabold text-2xl mt-1">
-            .
-          </span>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex flex-col gap-2">{renderedLinks}</nav>
-
-        {/* Footer */}
-        <div className="mt-8 pt-6 border-t border-white/10">
-          <CustomButton
-            onClick={() => setIsLogout(true)}
-            className="group flex items-center gap-3 px-4 py-3 rounded-xl text-primaryButton hover:bg-red-500/20 hover:text-red-300 hover:border-red-400/30 border border-transparent transition-all duration-300 ease-out w-full"
+    <div className="mb-3">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-white/55 transition-all duration-200 hover:bg-white/4 hover:text-white"
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className={cn(
+              'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg',
+              group.iconBg,
+            )}
           >
-            <LogOut className="w-5 h-5" /> Logout
-          </CustomButton>
+            <span className={group.iconColor}>{group.icon}</span>
+          </div>
+          <span className="text-sm font-bold tracking-tight">{group.label}</span>
+        </div>
+        <ChevronDown
+          className={cn(
+            'h-3.5 w-3.5 opacity-40 transition-transform duration-200',
+            open && 'rotate-180',
+          )}
+        />
+      </button>
+
+      <div
+        className={cn(
+          'overflow-hidden transition-all duration-200',
+          open ? 'mt-0.5 max-h-96' : 'max-h-0',
+        )}
+      >
+        <div className="space-y-0.5 pl-3">
+          {group.children
+            .filter((child) => !!child?.route)
+            .map((child) => {
+              const active = isChildActive(child.route);
+              return (
+                <Link
+                  key={child.route}
+                  href={child.route}
+                  onClick={onLinkClick}
+                  className={cn(
+                    'group relative flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 ease-out',
+                    active
+                      ? 'border border-white/10 bg-white/5 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)] backdrop-blur-xl'
+                      : 'border border-transparent text-slate-400 hover:bg-white/5 hover:text-white',
+                  )}
+                >
+                  {active && (
+                    <div className="absolute inset-0 -z-10 rounded-2xl bg-linear-to-r from-indigo-500/10 via-purple-500/10 to-transparent opacity-80 blur-xl" />
+                  )}
+                  <span className="text-sm font-medium tracking-wide">{child.label}</span>
+                </Link>
+              );
+            })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SidebarNav({
+  groups,
+  onLinkClick,
+}: {
+  groups: SidebarGroupLink[];
+  onLinkClick?: () => void;
+}) {
+  const pathname = usePathname();
+  return (
+    <nav className="flex flex-1 flex-col gap-2 overflow-y-auto pr-1">
+      {groups.map((group) => {
+        const groupHasActive = group.children.some(
+          (c) => c.route && (pathname === c.route || pathname.startsWith(c.route)),
+        );
+        return (
+          <NavGroup
+            key={`${group.label}-${groupHasActive}`}
+            group={group}
+            onLinkClick={onLinkClick}
+          />
+        );
+      })}
+    </nav>
+  );
+}
+
+export default function Sidebar({ links }: SidebarProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isLogout, setIsLogout] = useState(false);
+
+  return (
+    <>
+      {/* Desktop */}
+      <aside
+        className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-65 flex-col
+        rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10
+        shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6"
+      >
+        <a
+          href="https://ishout.ae"
+          rel="noopener noreferrer"
+          className="mb-8 flex cursor-pointer items-center justify-center transition-opacity hover:opacity-80"
+        >
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-indigo-500/30 blur-xl" />
+            <Image
+              src="/assets/iShout-gif-black-background.gif"
+              alt="logo"
+              width={50}
+              height={50}
+              className="relative z-10"
+              unoptimized={true}
+            />
+          </div>
+        </a>
+
+        <SidebarNav groups={links} />
+
+        <div className="cursor-pointer border-t border-white/10 pt-6">
+          <Button
+            variant="ghost"
+            className="w-full justify-start rounded-xl text-red-400 hover:bg-red-500/10"
+            onClick={() => setIsLogout(true)}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
         </div>
       </aside>
 
       <LogoutDialogue open={isLogout} onOpenChange={setIsLogout} />
 
-      {/* Mobile Sidebar */}
       <div className="md:hidden">
-        <Sheet>
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
-            <Button
-              variant="outline"
-              size="icon"
-              className="shrink-0 bg-white/10 border-white/20 text-white hover:bg-white/20"
+            <button
+              className="fixed left-4 top-4 z-50 rounded-xl border border-white/10 bg-white/10 p-2 text-white backdrop-blur-xl"
+              aria-label="Open menu"
             >
-              <Menu className="w-5 h-5" />
-            </Button>
+              <Menu />
+            </button>
           </SheetTrigger>
+
           <SheetContent
             side="left"
-            className="flex flex-col w-[280px] p-6 bg-gradient-to-br from-slate-900/95 via-gray-900/95 to-zinc-900/95 backdrop-blur-xl border-white/10"
+            className="w-65 border-r border-white/10 bg-slate-950 p-6"
+            onCloseAutoFocus={(e) => e.preventDefault()}
           >
-            {/* Mobile Header */}
-            <div className="mb-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl blur-sm opacity-75" />
-                  <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white text-lg font-bold shadow-lg">
-                    iS
-                  </div>
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">iShout</h2>
-                  <p className="text-slate-400 text-xs">Influencer Platform</p>
-                </div>
-              </div>
-            </div>
+            <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+            <a
+              href="https://ishout.ae"
+              rel="noopener noreferrer"
+              className="mb-6 flex cursor-pointer items-center gap-2 transition-opacity hover:opacity-80"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Image
+                src="/assets/iShout-gif-black-background.gif"
+                alt="logo"
+                width={36}
+                height={36}
+                unoptimized={true}
+              />
+              <h2 className="text-xl font-bold text-white">iShout</h2>
+            </a>
 
-            {/* Mobile Navigation */}
-            <nav className="flex flex-col gap-2">{renderedLinks}</nav>
+            <SidebarNav groups={links} onLinkClick={() => setMobileOpen(false)} />
 
-            {/* Mobile Footer */}
-            <div className="mt-8 pt-6 border-t border-white/10">
-              <CustomButton
-                onClick={() => setIsLogout(true)}
-                className="group flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-red-500/20 hover:text-red-300 hover:border-red-400/30 border border-transparent transition-all duration-300 ease-out w-full"
+            <div className="border-t border-white/10 pt-6">
+              <Button
+                variant="ghost"
+                className="w-full justify-start rounded-xl text-red-400 hover:bg-red-500/10"
+                onClick={() => {
+                  setMobileOpen(false);
+                  setIsLogout(true);
+                }}
               >
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium text-sm">Logout</span>
-                <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl" />
-              </CustomButton>
+                <LogOut className="mr-2 h-4 w-4" />
+                Logout
+              </Button>
             </div>
           </SheetContent>
         </Sheet>

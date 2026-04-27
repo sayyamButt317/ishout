@@ -43,13 +43,6 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   const [canScrollRight, setCanScrollRight] = React.useState(true);
   const [currentIndex] = useState(0);
 
-  useEffect(() => {
-    if (carouselRef.current) {
-      carouselRef.current.scrollLeft = initialScroll;
-      checkScrollability();
-    }
-  }, [initialScroll]);
-
   const checkScrollability = () => {
     if (carouselRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
@@ -57,6 +50,12 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth);
     }
   };
+  useEffect(() => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = initialScroll;
+      checkScrollability();
+    }
+  }, [initialScroll]);
 
   const scrollLeft = () => {
     if (carouselRef.current) {
@@ -184,10 +183,6 @@ export const Card = ({
   useOutsideClick(containerRef as React.RefObject<HTMLDivElement>, () =>
     handleClose()
   );
-
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
 
   return (
     <>

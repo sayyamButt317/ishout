@@ -1,7 +1,7 @@
 "use client";
 import ExcelJs from "exceljs";
 import { toast } from "sonner";
-import { ApprovedInfluencersStore } from "@/src/store/Campaign/approved-influencers.store";
+import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
 
 const ExportToExcel = () => {
   const data = ApprovedInfluencersStore.getState().approvedInfluencers;
@@ -115,8 +115,9 @@ const ExportToExcel = () => {
       URL.revokeObjectURL(link.href);
     })
     .catch((error) => {
-      console.error("Error creating Excel file:", error);
-      toast.error("Error creating Excel file. Please try again.");
+      toast.error("Error creating Excel file. Please try again.", {
+        description: error as string,
+      });
     });
 };
 

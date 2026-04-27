@@ -1,83 +1,85 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import CountButton from "@/src/app/component/custom-component/countbutton";
-import PlatformBadge from "@/src/app/component/custom-component/platformbadge";
-import StatusBadge from "@/src/app/component/custom-component/statusbadge";
-import TableComponent from "@/src/app/component/CustomTable";
-import CompanyApprovedCampaignHook from "@/src/routes/Company/api/Hooks/comanyapprovedCampaign.hook";
-import useAuthStore from "@/src/store/AuthStore/authStore";
-import { CompanyCampaignResponse } from "@/src/types/Admin-Type/Campaign.type";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { RefreshCcw } from "lucide-react";
+'use client';
+import { Button } from '@/components/ui/button';
+import CountButton from '@/src/app/component/custom-component/countbutton';
+import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
+import StatusBadge from '@/src/app/component/custom-component/statusbadge';
+import TableComponent from '@/src/app/component/CustomTable';
+import CompanyApprovedCampaignHook from '@/src/routes/Company/api/Hooks/comanyapprovedCampaign.hook';
+import useAuthStore from '@/src/store/AuthStore/authStore';
+import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { RefreshCcw, UserCheck } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
 
 export default function RevieInfluencer() {
   const [currentPage, setCurrentPage] = useState(1);
   // const { data, isLoading } = CompanyCampaignHook(currentPage);
   const { user_id } = useAuthStore();
-  const { data, isLoading, refetch, isRefetching } =
-    CompanyApprovedCampaignHook(user_id, currentPage);
+  const { data, isLoading, refetch, isRefetching } = CompanyApprovedCampaignHook(
+    user_id,
+    currentPage,
+  );
   const router = useRouter();
   return (
     <>
-      <div className="flex flex-row ">
-        <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
-          Review Onboarded Influencers
-        </h1>
-        <Button
-          className="cursor-pointer"
-          variant="ghost"
-          size="icon"
-          onClick={() => {
-            refetch();
-          }}
-          disabled={isRefetching}
-        >
-          <RefreshCcw
-            className={`mt-2 w-2 h-2 text-primary-text cursor-pointer ${
-              isRefetching ? "animate-spin" : ""
-            }`}
-          />
-        </Button>
-      </div>
-      <p className="italic text-xs text-slate-200 mt-2 mb-2">
-        Showing {data?.campaigns?.length} campaigns have onboarded influencers
-        that need to be reviewed
-      </p>
+      <PageHeader
+        title="Review Onboarded Influencers"
+        description="Campaigns with onboarded influencers that need to be reviewed"
+        icon={<UserCheck className="size-5" />}
+        actions={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+            aria-label="Refresh list"
+          >
+            <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
+          </Button>
+        }
+      />
       <TableComponent
         header={[
-          "Campaign ID",
-          "Campaign Name",
-          "followers",
-          "Platform",
-          "Requested ",
-          "Waiting for Approval",
-          "Status",
-          "Approved At",
-          "Detail",
+          'Campaign Name',
+          'followers',
+          'Platform',
+          'Category',
+          'Country',
+          'Requested ',
+          'Unapproved',
+          'Status',
+          'Approved At',
+          'View Influncers',
         ]}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
-          campaign?._id,
           <div key={`name-${campaign?._id}`} className="truncate">
             {campaign?.name}
           </div>,
           <div key={`followers-${campaign?._id}`} className="truncate">
-            {campaign?.followers?.join(", ")}
+            {campaign?.followers?.join(', ')}
           </div>,
           <div key={`platform-${campaign?._id}`} className="truncate">
-            <PlatformBadge platform={[campaign?.platform]} />
+            <PlatformBadge platform={campaign?.platform} />
+          </div>,
+          <div key={`category-${campaign.campaign_id}`} className="truncate">
+            {campaign?.category?.join(', ') || '-'}
+          </div>,
+          <div key={`country-${campaign?.campaign_id}`} className="truncate">
+            {campaign?.country?.join(', ')}
           </div>,
           <div
             key={`requested-${campaign?._id}`}
-            className="truncate flex items-center "
+            className="truncate text-center text-xs sm:text-sm"
           >
-            <CountButton count={campaign?.limit ?? 0} />
+            {campaign?.limit}
           </div>,
           <div
             key={`approved-${campaign?._id}`}
-            className="truncate flex items-center justify-center "
+            className="truncate text-center text-xs sm:text-sm"
           >
-            <CountButton count={campaign?.pending_influencers_count} />
+            {campaign?.pending_influencers_count}
           </div>,
           <div key={`status-${campaign?._id}`} className="truncate">
             <StatusBadge status={campaign.status} />
@@ -89,11 +91,9 @@ export default function RevieInfluencer() {
             <Button
               className="cursor-pointer"
               variant="outline"
-              onClick={() =>
-                router.push(`/client/influencer-review/${campaign?._id}`)
-              }
+              onClick={() => router.push(`/client/influencer-review/${campaign?._id}`)}
             >
-              Details
+              View Influncers
             </Button>
           </div>,
         ])}

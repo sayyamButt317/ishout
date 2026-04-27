@@ -6,6 +6,7 @@ import NetworkError from "./NetworkError";
 import ForbiddenError from "./Forbidden";
 import NotFoundError from "./NotFound";
 import MaintenanceError from "./Maintenance";
+import { toast } from "sonner";
 
 export class NetworkErrorType extends Error {
   constructor(message?: string) {
@@ -56,7 +57,9 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+    toast.error("ErrorBoundary caught an error. Please try again.", {
+      description: error.message + " " + errorInfo.componentStack,
+    });
   }
 
   handleReset = () => {

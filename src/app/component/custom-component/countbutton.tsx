@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+"use client";
 
 interface CountButtonProps {
   count: number;
@@ -6,12 +6,8 @@ interface CountButtonProps {
 
 export default function CountButton({ count }: CountButtonProps) {
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className="w-10 flex items-center gap-2 text-white bg-transparent border-2 cursor-pointer"
-    >
+    <span className="inline-flex items-center justify-center min-w-[2.5rem] h-7 px-3 rounded-md bg-white/10 text-white/90 text-sm font-medium border border-white/20">
       {count}
-    </Button>
+    </span>
   );
 }

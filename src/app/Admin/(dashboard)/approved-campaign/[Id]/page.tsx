@@ -3,36 +3,17 @@ import Spinner from "@/src/app/component/custom-component/spinner";
 import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
 import ApprovedCampaignByIdHook from "@/src/routes/Admin/Hooks/approvedCampaignById-hook";
 import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
-import { useMemo } from "react";
 import { useParams } from "next/navigation";
 import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
 
-interface ApprovedCampaignResponse {
-  approved_influencers?: ReadyMadeInfluencerResponse[];
-  data?: {
-    approved_influencers?: ReadyMadeInfluencerResponse[];
-    influencers?: ReadyMadeInfluencerResponse[];
-  };
-  total?: number;
-}
-
 export default function ApprovedInfluencerById() {
   const { Id } = useParams<{ Id: string }>();
   const { data, isLoading, isError } = ApprovedCampaignByIdHook(Id ?? "");
+
   const { data: campaignData } = CampaignByIdHook(Id ?? "");
   const router = useRouter();
-  const safeData = data as ApprovedCampaignResponse | undefined;
-
-  const approvedInfluencers = useMemo(() => {
-    const influencers =
-      safeData?.approved_influencers ??
-      safeData?.data?.approved_influencers ??
-      safeData?.data?.influencers ??
-      [];
-    return (influencers as ReadyMadeInfluencerResponse[]) ?? [];
-  }, [safeData]);
 
   return (
     <section className="min-h-screen space-y-4">
@@ -71,13 +52,13 @@ export default function ApprovedInfluencerById() {
         </div>
       </div>
       {isLoading && (
-        <div className="flex justify-center items-center min-h-[200px]">
+        <div className="flex justify-center items-center min-h-50">
           <Spinner size={20} />
         </div>
       )}
 
       {isError && (
-        <div className="flex justify-center items-center min-h-[200px]">
+        <div className="flex justify-center items-center min-h-50">
           <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
             Error loading approved influencers.
           </div>
@@ -86,17 +67,23 @@ export default function ApprovedInfluencerById() {
 
       {!isLoading && !isError && (
         <>
-          {approvedInfluencers.length ? (
-            <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
-              {approvedInfluencers.map((influencer) => (
-                <InfluencerCard
-                  key={influencer._id ?? influencer.id ?? influencer.username}
-                  influencer={influencer}
-                  showAccept={false}
-                  showReject={false}
-                  showDelete={false}
-                />
-              ))}
+          {data?.approved_influencers?.length ? (
+            <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-4">
+              {data?.approved_influencers?.map(
+                (influencer: ReadyMadeInfluencerResponse) => (
+                  <InfluencerCard
+                    key={
+                      influencer._id ??
+                      influencer.influencer_id ??
+                      influencer.username
+                    }
+                    influencer={influencer}
+                    showAccept={false}
+                    showReject={false}
+                    showDelete={false}
+                  />
+                )
+              )}
             </div>
           ) : (
             <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
@@ -105,7 +92,7 @@ export default function ApprovedInfluencerById() {
           )}
         </>
       )}
-      {approvedInfluencers.length > 0 && (
+      {data?.approved_influencers?.length > 0 && (
         <div className="flex flex-row items-center justify-center mt-4 px-4 sm:px-0 gap-3">
           <CustomButton
             className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer"

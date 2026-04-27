@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { DeleteCampaignApi } from "../API/admin.routes";
-import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign.type";
+import { AdminAllCampaignApiResponse } from "@/src/types/Admin-Type/Campaign-type";
 
 
 export default function DeleteCampaignHook() {
@@ -18,9 +18,10 @@ export default function DeleteCampaignHook() {
             toast.success('Campaign deleted successfully');
         },
         onError: (error: AxiosError<{ message: string }>) => {
-            toast.error('Failed to delete campaign', {
-                description: error.response?.data?.message,
-            });
+            console.log(error);
+            // toast.error('Failed to delete campaign', {
+            //     description: error.response?.data?.message,
+            // });
         },
     });
 }

@@ -3,7 +3,6 @@ node_modules
 .next
 
 # Ignore environment variables
-.env
 
 # Ignore logs
 logs
@@ -33,4 +32,5 @@ package-lock.json
 node_modules
 
 testsprite_tests/
-config.bat
+guided-questions/
+.env

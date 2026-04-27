@@ -1,13 +1,13 @@
-import Link from "next/link";
-import React, { useMemo } from "react";
-import CustomButton from "./button";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Link from 'next/link';
+import { useMemo } from 'react';
+import CustomButton from './button';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import {
   clearAuthTokenProvider,
   getAuthTokenProvider,
   getRoleProvider,
-} from "@/src/provider/auth-provide";
+} from '@/src/provider/auth-provide';
 
 const Header = () => {
   const router = useRouter();
@@ -15,9 +15,9 @@ const Header = () => {
   const role = getRoleProvider();
 
   const dashboardRoute = useMemo(() => {
-    if (token && role === "company") return "/client/create-campaign";
-    if (token && role === "admin") return "/Admin/all-campaign";
-    return "/auth/login";
+    if (token && role === 'company') return '/client/choose-campaign';
+    if (token && role === 'admin') return '/Admin/all-campaign';
+    return '/auth/login';
   }, [token, role]);
 
   const DashboardRedirect = () => {
@@ -26,73 +26,83 @@ const Header = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur px-4 sm:px-6 py-4 justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur px-4 sm:px-6 py-4 justify-between">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex flex-row gap-2">
             <Image
-              src="/assets/logo.svg"
+              src="/assets/iShout-gif-black-background.gif"
               alt="logo"
-              width={155}
-              height={155}
-              className="w-[155px] h-[40px]"
+              width={60}
+              height={60}
+              className="w-20 h-auto object-contain"
+              loading="eager"
+              priority
+              unoptimized={true}
             />
           </div>
-
           <div
-            className="hidden lg:flex items-center gap-8 text-sm font-thin"
+            className="hidden lg:flex items-center gap-8 text-md font-thin"
             style={{
-              maxWidth: "900px",
-              width: "100%",
-              justifyContent: "center",
+              maxWidth: '900px',
+              width: '100%',
+              justifyContent: 'center',
             }}
           >
-            <a
-              href="#about-us"
-              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+            <Link
+              href="https://app.ishout.ae/#about-us"
+              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
             >
               About Us
-            </a>
-            <a
-              href="#how-it-works"
-              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+            </Link>
+            <Link
+              href="https://app.ishout.ae/#how-it-works"
+              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
             >
               How It Works
-            </a>
-            <a
-              href="#case-studies"
-              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+            </Link>
+            <Link
+              href="https://app.ishout.ae/#case-studies"
+              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
             >
               Case Studies
-            </a>
+            </Link>
+            <Link
+              href="/feedback"
+              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
+            >
+              Feedback
+            </Link>
           </div>
 
           {!token ? (
-            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
-              <Link href="/auth/login">
-                <CustomButton className="px-3 sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap">
-                  Login
-                </CustomButton>
-              </Link>
+            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center shrink-0">
+              <CustomButton
+                asChild
+                className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap"
+              >
+                <Link href="/auth/login">Login</Link>
+              </CustomButton>
 
-              <Link href="/auth/register">
-                <CustomButton className="px-3 sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap">
-                  Register
-                </CustomButton>
-              </Link>
+              <CustomButton
+                asChild
+                className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap"
+              >
+                <Link href="/auth/register">Register</Link>
+              </CustomButton>
             </div>
           ) : (
-            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center flex-shrink-0">
+            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center shrink-0">
               <CustomButton
                 onClick={() => DashboardRedirect()}
                 className="px-3 sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap"
               >
                 Dashboard
               </CustomButton>
-              <CustomButton className="px-3 sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap">
-                <Link
-                  href="/auth/login"
-                  onClick={() => clearAuthTokenProvider()}
-                >
+              <CustomButton
+                asChild
+                className="px-3 sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap"
+              >
+                <Link href="/auth/login" onClick={() => clearAuthTokenProvider()}>
                   Sign Out
                 </Link>
               </CustomButton>

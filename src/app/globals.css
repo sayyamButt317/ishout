@@ -1,3 +1,4 @@
+/* Global styles */
 @import "tailwindcss";
 @custom-variant dark (&:is(.dark *));
 
@@ -157,8 +158,229 @@
   }
   body {
     @apply bg-background text-foreground;
+    overscroll-behavior: none;
   }
 }
 html {
   scroll-behavior: smooth;
 }
+
+.signup-phone-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.signup-phone-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+}
+
+/* --- FLAG BOX --- */
+.signup-phone-input .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  padding: 4px 6px;
+  border: 1px solid hsl(var(--input));
+  border-radius: 6px;
+  background: transparent;
+}
+
+.signup-phone-input .PhoneInputCountry:hover {
+  border-color: #cbd5e1;
+}
+
+/* Remove default select styling */
+.signup-phone-input .PhoneInputCountrySelect {
+  background-color: #0a0a1a;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  cursor: pointer;
+  color: white;
+  max-width: 100%;
+}
+
+.signup-phone-input .PhoneInputCountrySelect option {
+  background-color: #0a0a1a;
+  color: white;
+}
+
+/* Flag size */
+.signup-phone-input .PhoneInputCountryIcon {
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+/* Phone number input */
+.signup-phone-input .PhoneInputInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: white; /* WHITE TEXT */
+  min-width: 0;
+}
+.signup-phone-input .PhoneInputInput::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.profile-phone-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.profile-phone-input:focus-within {
+  border-color: var(--color-primaryButton) !important;
+  box-shadow: 0 0 0 2px rgba(255, 78, 126, 0.2);
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.profile-phone-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.profile-phone-input .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: transparent !important;
+  transition: border-color 0.2s ease;
+}
+
+.profile-phone-input:not(:disabled) .PhoneInputCountry:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.profile-phone-input .PhoneInputCountrySelect {
+  background-color: var(--color-background);
+  color-scheme: dark;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  cursor: pointer;
+  color: rgb(212, 212, 212);
+  padding: 2px 4px;
+}
+
+.profile-phone-input .PhoneInputCountrySelect option {
+  background-color: var(--color-background);
+  color: rgb(212, 212, 212);
+}
+
+.profile-phone-input:disabled .PhoneInputCountrySelect {
+  cursor: not-allowed;
+}
+
+.profile-phone-input .PhoneInputCountryIcon {
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.profile-phone-input .PhoneInputInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent !important;
+  font-size: 14px;
+  color: white;
+  min-width: 0;
+  padding-left: 8px;
+}
+
+.profile-phone-input .PhoneInputInput::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.profile-phone-input:disabled .PhoneInputInput {
+  cursor: not-allowed;
+}
+
+.admin-phone-input {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 44px;
+  padding: 0 12px;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: oklch(1 0 0 / 4.5%);
+  transition: all 0.2s ease;
+}
+
+.admin-phone-input:focus-within {
+  border-color: rgba(23, 15, 73, 0.5);
+  box-shadow: 0 0 0 2px rgba(23, 15, 73, 0.1);
+}
+
+.admin-phone-input .PhoneInputCountry {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  background: transparent;
+}
+
+.admin-phone-input .PhoneInputCountrySelect {
+  background-color: #0d0d1e;
+  color-scheme: dark;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  cursor: pointer;
+  color: rgb(212, 212, 212);
+  padding: 2px 4px;
+}
+
+.admin-phone-input .PhoneInputCountrySelect option {
+  background-color: #0d0d1e;
+  color: rgb(212, 212, 212);
+}
+
+.admin-phone-input .PhoneInputCountryIcon {
+  width: 20px;
+  height: 14px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.admin-phone-input .PhoneInputInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: white;
+  min-width: 0;
+  padding-left: 8px;
+}
+
+.admin-phone-input .PhoneInputInput::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
