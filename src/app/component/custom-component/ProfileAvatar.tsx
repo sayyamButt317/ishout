@@ -19,7 +19,9 @@ const initials      = (n: string)  => n?.split(' ').map(w => w[0]).join('').slic
 
 
 export const ProfileAvatar = ({
-  name, userId, logoUrl,
+  name,
+   userId,
+    logoUrl,
   pendingFile, onFileChange, onRemove,
 }: ProfileAvatarProps) => {
   const fileRef = useRef<HTMLInputElement>(null);

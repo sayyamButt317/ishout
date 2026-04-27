@@ -151,7 +151,7 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
             isediting
             name={data?.user?.contact_person ?? ""}
             userId={user_id ?? ""}
-            logoUrl={avatarRemoved ? undefined : (data?.user?.logo_url ?? undefined)}
+            logoUrl={data?.user?.logo_url ?? ""}
             pendingFile={pendingAvatarFile}
             onFileChange={(file) => { 
               setPendingAvatarFile(file); 
