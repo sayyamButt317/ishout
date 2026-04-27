@@ -80,7 +80,7 @@ export default function InfluencerReviewPage() {
                   });
                 }}
                 disabled={isUpdatingInfluencerStatus}
-                className="h-8 rounded-full border border-white/40 bg-white/2 px-3 text-sm font-medium text-white/90 hover:bg-white/6 hover:text-white"
+                className="h-8 rounded-full cursor-pointer border border-white/40 bg-white/2 px-3 text-sm font-medium text-white/90 hover:bg-white/6 hover:text-white"
               >
                 <CircleCheckIcon className="h-4 w-4 text-emerald-500" />
               </Button>
@@ -103,7 +103,7 @@ export default function InfluencerReviewPage() {
                   });
                 }}
                 disabled={isUpdatingInfluencerStatus}
-                className="h-8 rounded-full border border-white/40 bg-white/2 px-3 text-sm font-medium text-white/90 hover:bg-white/6 hover:text-white"
+                className="h-8 rounded-full border cursor-pointer border-white/40 bg-white/2 px-3 text-sm font-medium text-white/90 hover:bg-white/6 hover:text-white"
               >
                 <CircleXIcon className="h-4 w-4 text-destructive" />
               </Button>
@@ -134,17 +134,17 @@ export default function InfluencerReviewPage() {
 
         <div className="mt-4 grid grid-cols-2 gap-4">
           <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center">
-            <p className="text-sm text-white/75">iShout</p>
+            <p className="text-[11px] tracking-[0.16em] text-white/60">iShout</p>
             <p
-              className={`mt-1 text-lg font-normal ${influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'}`}
+              className={`mt-1 text-sm font-normal ${influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'}`}
             >
               {influencer?.admin_approved ? 'Approved' : 'Not Approved'}
             </p>
           </div>
           <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center">
-            <p className="text-sm text-white/75">Company Status</p>
+            <p className="text-[11px] tracking-[0.16em] text-white/60">Brand</p>
             <p
-              className={`mt-1 text-lg font-normal ${influencer?.company_approved === false
+              className={`mt-1 text-sm font-normal ${influencer?.company_approved === false
                 ? 'text-blue-400'
                 : influencer?.status === 'approved'
                   ? 'text-emerald-400'

@@ -180,7 +180,7 @@ const OnboardingCard = ({
             <p className="mt-1 text-lg font-semibold text-white">
               $
               {influencer.last_offered_price !== null &&
-              influencer.last_offered_price !== undefined
+                influencer.last_offered_price !== undefined
                 ? influencer.last_offered_price
                 : 0}
             </p>
@@ -191,9 +191,8 @@ const OnboardingCard = ({
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
             <p className="text-sm text-white/75 whitespace-nowrap">iShout</p>
             <p
-              className={`mt-1 text-xs font-normal ${
-                influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'
-              } whitespace-nowrap`}
+              className={`mt-1 text-xs font-normal ${influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'
+                } whitespace-nowrap`}
             >
               {influencer?.admin_approved ? 'Approved' : 'Not Approved'}
             </p>
@@ -203,9 +202,8 @@ const OnboardingCard = ({
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
             <p className="text-sm text-white/75 whitespace-nowrap">Brand</p>
             <p
-              className={`mt-1 text-xs font-normal ${
-                influencer?.company_approved ? 'text-emerald-400' : 'text-red-400'
-              } whitespace-nowrap`}
+              className={`mt-1 text-xs font-normal ${influencer?.company_approved ? 'text-emerald-400' : 'text-red-400'
+                } whitespace-nowrap`}
             >
               {influencer?.company_approved ? 'Approved' : 'Not Approved'}
             </p>
@@ -215,9 +213,8 @@ const OnboardingCard = ({
           <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
             <p className="text-sm text-white/75 whitespace-nowrap">Influencer</p>
             <p
-              className={`mt-1 capitalize text-xs font-normal ${
-                influencer?.negotiation_status ? 'text-emerald-400' : 'text-red-400'
-              } whitespace-nowrap`}
+              className={`mt-1 capitalize text-xs font-normal ${influencer?.negotiation_status ? 'text-emerald-400' : 'text-red-400'
+                } whitespace-nowrap`}
             >
               {influencer?.negotiation_status ?? 'Pending'}
             </p>

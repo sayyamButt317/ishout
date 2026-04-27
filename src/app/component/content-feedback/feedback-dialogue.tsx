@@ -55,7 +55,7 @@ export default function VideoFeedbackWorkspace({
   const [commentText, setCommentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const { addTimestamp, contentType, thread_id, message_id, removeTimestamp } = useRevisionMessageStore()
+  const { addTimestamp, } = useRevisionMessageStore()
 
 
   const openComposerAtTime = useCallback(
