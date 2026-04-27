@@ -13,7 +13,6 @@ export default function AdminDashboardLayout({
     <QueryProvider>
       <NotificationBootstrap />
       <WebSocketListener />
-
       <div className="flex min-h-screen">
         <AdminSidebar />
         <main className="flex-1 overflow-x-hidden md:ml-80 p-3 pt-6">{children}</main>

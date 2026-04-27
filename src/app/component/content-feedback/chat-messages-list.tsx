@@ -1,25 +1,8 @@
 'use client';
-
+import { MessageListProps } from '@/src/types/Admin-Type/chat/chat-type';
 import ChatMessageContent from './chat-message-content';
+import { Loader2 } from 'lucide-react';
 
-type MessageItem = {
-  _id: string;
-  sender: string;
-  username?: string;
-  message: unknown;
-  timestamp: string;
-};
-
-type Props = {
-  messages?: MessageItem[];
-  isLoading: boolean;
-  emptyMessage?: string;
-  isRightMessage: (message: MessageItem) => boolean;
-  roleLabels?: { right: string; left: string };
-  onSelectMedia: (url: string, type: 'video' | 'image') => void;
-  onSeekToTime?: (time: number) => void;
-  bubbleMaxWidthClassName?: string;
-};
 
 export default function ChatMessagesList({
   messages,
@@ -30,9 +13,11 @@ export default function ChatMessagesList({
   onSelectMedia,
   onSeekToTime,
   bubbleMaxWidthClassName,
-}: Props) {
+}: MessageListProps) {
   if (isLoading) {
-    return <p className="text-sm text-white/50">Loading messages…</p>;
+    return <p className="text-sm text-white/50">
+      <Loader2 className='animate-spin' />
+    </p>;
   }
 
   if (!messages?.length) {

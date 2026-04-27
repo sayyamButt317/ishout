@@ -28,7 +28,7 @@ export default function InfluencerReviewPage() {
 
   const InfluencerCard = ({ influencer }: { influencer: ReviewInfluencerResponse }) => (
     <div className="group relative w-full rounded-[28px] border border-white/10 bg-[#0f0f10] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-transparent" />
+      <div className="absolute inset-0 pointer-events-none bg-linear-to-b from-white/8 via-white/3 to-transparent" />
 
       <div className="relative p-6">
         <div className="flex items-start justify-between gap-4">
@@ -80,7 +80,7 @@ export default function InfluencerReviewPage() {
                   });
                 }}
                 disabled={isUpdatingInfluencerStatus}
-                className="h-8 rounded-full border border-white/40 bg-white/[0.02] px-3 text-sm font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
+                className="h-8 rounded-full border border-white/40 bg-white/2 px-3 text-sm font-medium text-white/90 hover:bg-white/6 hover:text-white"
               >
                 <CircleCheckIcon className="h-4 w-4 text-emerald-500" />
               </Button>
@@ -103,7 +103,7 @@ export default function InfluencerReviewPage() {
                   });
                 }}
                 disabled={isUpdatingInfluencerStatus}
-                className="h-8 rounded-full border border-white/40 bg-white/[0.02] px-3 text-sm font-medium text-white/90 hover:bg-white/[0.06] hover:text-white"
+                className="h-8 rounded-full border border-white/40 bg-white/2 px-3 text-sm font-medium text-white/90 hover:bg-white/6 hover:text-white"
               >
                 <CircleXIcon className="h-4 w-4 text-destructive" />
               </Button>
@@ -111,7 +111,7 @@ export default function InfluencerReviewPage() {
           )}
         </div>
 
-        <div className="mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.05] divide-x divide-white/10">
+        <div className="mt-5 grid grid-cols-3 overflow-hidden rounded-2xl border border-white/10 bg-white/5 divide-x divide-white/10">
           <div className="py-3 text-center">
             <p className="text-[11px] tracking-[0.16em] text-white/60">FOLLOWERS</p>
             <p className="mt-1 text-lg font-semibold text-white">
@@ -133,7 +133,7 @@ export default function InfluencerReviewPage() {
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-4">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-5 py-4 text-center">
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center">
             <p className="text-sm text-white/75">iShout</p>
             <p
               className={`mt-1 text-lg font-normal ${influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'}`}
@@ -141,18 +141,17 @@ export default function InfluencerReviewPage() {
               {influencer?.admin_approved ? 'Approved' : 'Not Approved'}
             </p>
           </div>
-          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-5 py-4 text-center">
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-5 py-4 text-center">
             <p className="text-sm text-white/75">Company Status</p>
             <p
-              className={`mt-1 text-lg font-normal ${
-                influencer?.company_approved === false
-                  ? 'text-blue-400'
-                  : influencer?.status === 'approved'
-                    ? 'text-emerald-400'
-                    : influencer?.status === 'rejected'
-                      ? 'text-red-400'
-                      : 'text-blue-400'
-              }`}
+              className={`mt-1 text-lg font-normal ${influencer?.company_approved === false
+                ? 'text-blue-400'
+                : influencer?.status === 'approved'
+                  ? 'text-emerald-400'
+                  : influencer?.status === 'rejected'
+                    ? 'text-red-400'
+                    : 'text-blue-400'
+                }`}
             >
               {influencer?.company_approved === false
                 ? 'Pending'
