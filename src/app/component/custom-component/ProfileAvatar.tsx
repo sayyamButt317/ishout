@@ -2,8 +2,6 @@ import { useRef, useMemo, useEffect } from "react";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface ProfileAvatarProps {
   name: string;
   userId: string;
@@ -14,13 +12,11 @@ interface ProfileAvatarProps {
   onRemove?: () => void;
 }
 
-// ─── Avatar helpers ───────────────────────────────────────────────────────────
 
 const AVATAR_COLORS = ['bg-pink-600', 'bg-violet-600', 'bg-indigo-600', 'bg-cyan-600', 'bg-emerald-600', 'bg-amber-600'];
 const avatarColor   = (id: string) => AVATAR_COLORS[(id?.charCodeAt(id.length - 1) ?? 0) % AVATAR_COLORS.length];
 const initials      = (n: string)  => n?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || '??';
 
-// ─── Component ────────────────────────────────────────────────────────────────
 
 export const ProfileAvatar = ({
   name, userId, logoUrl,
@@ -28,13 +24,11 @@ export const ProfileAvatar = ({
 }: ProfileAvatarProps) => {
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // ✅ useMemo prevents a new blob URL being created on every render
   const previewUrl = useMemo(
     () => (pendingFile ? URL.createObjectURL(pendingFile) : null),
     [pendingFile],
   );
 
-  // ✅ Revoke the blob URL when pendingFile changes or component unmounts
   useEffect(() => {
     return () => { if (previewUrl) URL.revokeObjectURL(previewUrl); };
   }, [previewUrl]);

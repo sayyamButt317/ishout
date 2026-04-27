@@ -32,16 +32,16 @@ const Header = () => {
             <Image
               src="/assets/iShout-gif-black-background.gif"
               alt="logo"
-              width={100}
-              height={100}
-              className="w-25 h-auto object-contain"
+              width={60}
+              height={60}
+              className="w-20 h-auto object-contain"
               loading="eager"
               priority
               unoptimized={true}
             />
           </div>
           <div
-            className="hidden lg:flex items-center gap-8 text-sm font-thin"
+            className="hidden lg:flex items-center gap-8 text-md font-thin"
             style={{
               maxWidth: '900px',
               width: '100%',
@@ -50,25 +50,25 @@ const Header = () => {
           >
             <Link
               href="https://app.ishout.ae/#about-us"
-              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
             >
               About Us
             </Link>
             <Link
               href="https://app.ishout.ae/#how-it-works"
-              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
             >
               How It Works
             </Link>
             <Link
               href="https://app.ishout.ae/#case-studies"
-              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
             >
               Case Studies
             </Link>
             <Link
               href="/feedback"
-              className="text-white hover:text-pink-400 transition-colors text-sm font-thin"
+              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
             >
               Feedback
             </Link>

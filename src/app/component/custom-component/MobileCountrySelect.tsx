@@ -41,7 +41,7 @@ function MobileCountrySelect({ value, onChange, options, iconComponent: Flag }: 
 
       {/* Bottom sheet — NO backdrop-blur so page doesn't blur */}
       {open && (
-        <div className="fixed inset-0 z-[200] flex items-end" onClick={handleClose}>
+        <div className="fixed inset-0 z-200 flex items-end" onClick={handleClose}>
           {/* Plain dark overlay, no blur */}
           <div className="absolute inset-0 bg-black/60" />
 

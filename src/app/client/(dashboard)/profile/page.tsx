@@ -18,13 +18,11 @@ import ProfileChangePasswordHook from "@/src/routes/Company/api/Hooks/profile-ch
 import MobileCountrySelect from "@/src/app/component/custom-component/MobileCountrySelect";
 import { ProfileAvatar } from "@/src/app/component/custom-component/ProfileAvatar";
 import { ConfirmationDialogue } from "@/src/app/component/ConfirmationDialogue";
-import UpdateProfilePictureHook from "@/src/hooks/update-profile-picture-hook";
+import UpdateProfilePictureHook from "@/src/routes/Company/api/Hooks/userProfile/update-profile-picture-hook";
 
-// ─── Shared styles ────────────────────────────────────────────────────────────
 
 const glassCard    = "backdrop-blur-xl bg-[#1c1b1b]/60 border border-white/5 rounded-xl px-8 py-6 w-full";
 const inputBase    = "h-11 rounded-xl border-0 border-b border-white/10 bg-[#0e0e0e] pl-10 text-white placeholder:text-white/30 transition-all focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-[#e8184d]/40 focus-visible:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed";
-// ✅ Phone wrapper matches inputBase exactly but without pl-10 (PhoneInput handles its own padding)
 const phoneWrapper = "h-11 rounded-xl border-0 border-b border-white/10 bg-[#0e0e0e] text-white transition-all focus-within:border-b-2 focus-within:border-[#e8184d]/40 focus-within:bg-white/[0.06] disabled:opacity-50 flex items-center ";
 const labelBase    = "block text-[10px] uppercase tracking-widest text-white/50 mb-1";
 const sectionTitle = "text-[10px] uppercase tracking-widest font-bold text-white/60 flex items-center gap-2";
@@ -34,7 +32,6 @@ const FieldIcon = ({ icon: Icon }: { icon: React.ElementType }) => (
   <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
 );
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function CompanyProfilePage() {
   const [isEditing, setIsEditing]                 = useState(false);
@@ -51,7 +48,7 @@ export default function CompanyProfilePage() {
   const { data, refetch, isRefetching }           = CompanyProfileDetailsHook(user_id);
   const { mutate: updateProfile, isPending }      = CompanyUpdateProfileHook(user_id);
   const { mutate: changePassword, isPending: isChangingPassword } = ProfileChangePasswordHook(user_id);
-  const { mutate: updateAvatar,   isPending: isUploadingAvatar  } = UpdateProfilePictureHook(user_id);
+const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfilePictureHook(user_id);
 
   const form = useForm<CompanyProfileFormValidator>({
     resolver: zodResolver(CompanyProfileFormSchema),
@@ -90,10 +87,18 @@ export default function CompanyProfilePage() {
 
   const handleSaveAvatar = () => {
     const formData = new FormData();
-    if (pendingAvatarFile)  formData.append("logo", pendingAvatarFile);
-    else if (avatarRemoved) formData.append("remove_logo", "true");
-    updateAvatar(formData, {
-      onSuccess: () => { setPendingAvatarFile(null); setAvatarRemoved(false); refetch(); },
+    if (pendingAvatarFile)
+       formData.append("logo", pendingAvatarFile);
+    else if (avatarRemoved)
+      formData.append("remove_logo", "true");
+    uploadProfileImage({ 
+      user_id, 
+      file: pendingAvatarFile! },
+      {
+      onSuccess: () => { 
+        setPendingAvatarFile(null); 
+        setAvatarRemoved(false);
+         refetch(); },
     });
   };
 
@@ -133,8 +138,11 @@ export default function CompanyProfilePage() {
                   onClick={() => { setPendingAvatarFile(null); setAvatarRemoved(false); }}>
                   Cancel
                 </Button>
-                <Button type="button" className={primaryBtn} disabled={isUploadingAvatar} onClick={handleSaveAvatar}>
-                  {isUploadingAvatar ? <Loader2 className="size-4 animate-spin" /> : "Save Picture"}
+                <Button
+                 type="button"
+                 className={primaryBtn}
+                 onClick={handleSaveAvatar}>
+                {imageuploading ? <Loader2 className="size-4 animate-spin" /> : "Save Picture"}
                 </Button>
               </div>
             )}
@@ -145,7 +153,10 @@ export default function CompanyProfilePage() {
             userId={user_id ?? ""}
             logoUrl={avatarRemoved ? undefined : (data?.user?.logo_url ?? undefined)}
             pendingFile={pendingAvatarFile}
-            onFileChange={(file) => { setPendingAvatarFile(file); setAvatarRemoved(false); }}
+            onFileChange={(file) => { 
+              setPendingAvatarFile(file); 
+              setAvatarRemoved(false);
+             }}
             onRemove={() => { setAvatarRemoved(true); setPendingAvatarFile(null); }}
           />
         </section>

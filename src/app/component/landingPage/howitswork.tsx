@@ -64,7 +64,7 @@ export default function HowItWorks({ id }: { id: string }) {
         </div>
 
         <div className="relative">
-          <svg className="pointer-events-none absolute top-0 left-10 hidden w-112.25 md:block stroke-white" viewBox="0 495 277.77 1600" preserveAspectRatio="xMinYMin slice">
+          <svg className="pointer-events-none absolute top-0 left-10 hidden w-112.25 md:block stroke-white" viewBox="0 495 253 1600" preserveAspectRatio="xMinYMin slice">
             <path fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.9" opacity="0.25" d="M5.53,2.48v1631c0,40.96,20.77,65.73,68.73,68.73h203.25" pathLength="1" strokeDashoffset="0px" strokeDasharray="1px 1px" />
           </svg>
 
@@ -85,7 +85,7 @@ export default function HowItWorks({ id }: { id: string }) {
               <div className="flex-1" />
               <div className="relative z-10">
                 <div className="absolute inset-0 rounded-full bg-white opacity-20 blur-2xl" />
-                <div className="mt-6 p-1.5 border border-red rounded-[22px] inline-block relative z-10">
+                <div className="mt-6  rounded-[22px] inline-block relative z-10">
                   <div className="p-2 border border-white/20 rounded-[20px] inline-block">
                     <CustomButton className="bg-linear-to-b from-white to-[#f8fafc] hover:from-gray-50 hover:to-[#f1f5f9] text-black text-xl font-black italic tracking-tight rounded-[14px] h-14 px-14 border-b-2 border-gray-200 cursor-pointer transition-all duration-150 active:scale-95 active:border-b-0">
                       Launch Your Campaign
