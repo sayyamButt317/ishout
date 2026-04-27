@@ -5,19 +5,8 @@ import Waveform from './audiowave';
 import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
 import { parseTimedFeedbackMessage } from '@/src/utils/content-feedback-chat';
 import { FiFileText } from 'react-icons/fi';
+import { ChatMessageContentProps, ChatMessageType } from '@/src/types/Admin-Type/chat/chat-type';
 
-type ChatMessageType = {
-  text?: string;
-  snapshot?: string;
-  timestamp?: number;
-  mediaUrl?: string;
-};
-
-type ChatMessageContentProps = {
-  message: unknown;
-  onSelectMedia: (url: string, type: 'video' | 'image') => void;
-  onSeekToTime?: (time: number) => void;
-};
 
 function normalizeMessage(raw: unknown): ChatMessageType {
   if (raw != null && typeof raw === 'object' && !Array.isArray(raw)) {

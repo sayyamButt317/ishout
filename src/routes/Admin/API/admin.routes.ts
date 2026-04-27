@@ -32,6 +32,7 @@ import {
   type WhatsAppAdminCompanyApproveVideoPayload,
   type WhatsAppAdminCompanyApproveVideoResponse,
 } from '@/src/types/Compnay/approved-video-type';
+import { SendRevisionPayload } from '@/src/types/Admin-Type/Feedback/revision-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -588,3 +589,24 @@ export const WhatsAppAdminInfluencerMessagesApi = async (
 
   return response.data;
 };
+
+export const SendRevisionMessage = async (data: SendRevisionPayload) => {
+  const response = await api.post(AdminENDPOINT.SENDREVISIONMESSAGE, data)
+  return response.data
+}
+
+export const ExtractContentRevisionforInfluencer = async (
+  negotiation_id: string,
+  message_id?: string
+) => {
+  const response = await api.get(
+    AdminENDPOINT.CONTENTDETAILSFORINFLUENCER(negotiation_id),
+    {
+      params: {
+        message_id: message_id,
+      },
+    }
+  )
+
+  return response.data
+}
