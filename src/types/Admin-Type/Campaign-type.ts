@@ -54,6 +54,12 @@ export interface AdminAllCampaignApiResponse {
   created_at: string;
   updated_at: string;
   brief_id?: string;
+  pending?: boolean;
+  ishout_approved?: boolean;
+  company_approved?: boolean;
+  negotiation?: boolean;
+  content?: boolean;
+  report?: boolean;
 }
 
 export interface CreateCampaignRequest {
@@ -86,6 +92,12 @@ export interface CompanyCampaignResponse {
   brief_id?: string;
   admin_approved?: boolean;
   company_approved?: boolean;
+  // New boolean flags from backend used by the Stepper
+  pending?: boolean;
+  ishout_approved?: boolean;
+  negotiation?: boolean;
+  content?: boolean;
+  report?: boolean;
 }
 
 export interface CampaignResponse {
@@ -106,7 +118,6 @@ export interface CampaignResponse {
 
 export interface ApprovedCampaignResponse {
   _id: string;
-  campaign_id: string;
   company_name: string;
   category: string[];
   followers: string[];
@@ -119,4 +130,11 @@ export interface ApprovedCampaignResponse {
   campaign_logo_url: string;
   created_at: string;
   brief_id?: string;
+  // New boolean flags from backend used by the Stepper
+  pending?: boolean;
+  ishout_approved?: boolean;
+  company_approved?: boolean;
+  negotiation?: boolean;
+  content?: boolean;
+  report?: boolean;
 }
