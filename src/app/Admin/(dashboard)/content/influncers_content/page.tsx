@@ -1,5 +1,5 @@
 'use client';
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
@@ -64,9 +64,9 @@ function ContentFeedbackPageContent() {
 
   const brief: UpdateCampaignBrief | null = briefData?.response
     ? {
-        ...briefData.response,
-        id: briefData.id,
-      }
+      ...briefData.response,
+      id: briefData.id,
+    }
     : null;
 
   return (
@@ -232,7 +232,7 @@ function ContentFeedbackPageContent() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         briefData={brief}
-        onUpdate={() => {}}
+        onUpdate={() => { }}
       />
     </div>
   );
