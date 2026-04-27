@@ -13,21 +13,22 @@ import ChooseOptionDialog from '@/src/app/component/custom-component/choseoption
 import OnboardingCard from '@/src/app/component/Ready-made/onboarding-card';
 import SendNegotiationHook from '@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
-  const { mutate: sendNegotiationMutation, isPending } = SendNegotiationHook();
+  const { mutate: sendNegotiationMutation } = SendNegotiationHook();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading, refetch, isRefetching } = OnboardingHook(Id, currentPage);
   const { data: negotiationData } = NegotiationStatsHook(1, 100);
-  console.log('respinse data', data);
 
   const getNegotiationForInfluencer = useCallback(
     (influencer: ReviewInfluencerResponse) => {
       if (!negotiationData?.negotiation_controls) return null;
       const negotiation = negotiationData.negotiation_controls.find(
-        (n: any) => n.influencer_id === influencer._id,
+        (n: { influencer_id: string; _id: string; last_offered_price: number }) =>
+          n.influencer_id === influencer._id,
       );
       return negotiation
         ? {
@@ -82,73 +83,67 @@ export default function OnboardingInfluencerByCampaignId() {
 
   return (
     <>
-      <PageHeader
-        title="Onboarded Influencers"
-        description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}
-        icon={<UserPlus className="size-5" />}
-        actions={
-          <>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
-              onClick={() => refetch()}
-              disabled={isRefetching}
-              aria-label="Refresh list"
-            >
-              <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
-            </Button>
-            <CustomButton
-              className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-[160px]"
-              onClick={() => router.replace('/Admin/onboarding')}
-            >
-              <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
-              Back to Onboarding
-            </CustomButton>
-          </>
-        }
-      />
+      <Skeleton name="influencer-card" loading={isLoading}>
+        <PageHeader
+          title="Onboarded Influencers"
+          description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}
+          icon={<UserPlus className="size-5" />}
+          actions={
+            <>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+                onClick={() => refetch()}
+                disabled={isRefetching}
+                aria-label="Refresh list"
+              >
+                <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
+              </Button>
+              <CustomButton
+                className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-[160px]"
+                onClick={() => router.replace('/Admin/onboarding')}
+              >
+                <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+                Back to Onboarding
+              </CustomButton>
+            </>
+          }
+        />
 
-      {isLoading && (
-        <div className="flex justify-center items-center min-h-[200px]">
-          <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
-            Loading onboarded influencers...
+        {data?.influencers?.length ? (
+          <div className="w-full flex flex-row flex-wrap gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
+            {data?.influencers?.map((influencer: ReviewInfluencerResponse) => {
+              const negotiation = getNegotiationForInfluencer(influencer);
+              return (
+                <OnboardingCard
+                  key={influencer._id}
+                  influencer={influencer}
+                  onEdit={handleEdit}
+                  onMessage={handleMessage}
+                  sendNegotiation={() => handleSendNegotiation(influencer._id)}
+                  negotiationId={negotiation?._id}
+                  lastOfferedPrice={negotiation?.last_offered_price}
+                />
+              );
+            })}
           </div>
-        </div>
-      )}
-
-      {data?.influencers?.length ? (
-        <div className="w-full flex flex-row flex-wrap gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
-          {data?.influencers?.map((influencer: ReviewInfluencerResponse) => {
-            const negotiation = getNegotiationForInfluencer(influencer);
-            return (
-              <OnboardingCard
-                key={influencer._id}
-                influencer={influencer}
-                onEdit={handleEdit}
-                onMessage={handleMessage}
-                sendNegotiation={() => handleSendNegotiation(influencer._id)}
-                negotiationId={negotiation?._id}
-                lastOfferedPrice={negotiation?.last_offered_price}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        !isLoading && (
-          <div className="flex justify-center items-center min-h-[200px]">
-            <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
-              No onboarded influencers found
+        ) : (
+          !isLoading && (
+            <div className="flex justify-center items-center min-h-[200px]">
+              <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
+                No onboarded influencers found
+              </div>
             </div>
-          </div>
-        )
-      )}
+          )
+        )}
 
-      <ChooseOptionDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        influencer={selectedInfluencer}
-      />
+        <ChooseOptionDialog
+          open={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          influencer={selectedInfluencer}
+        />
+      </Skeleton>
     </>
   );
 }

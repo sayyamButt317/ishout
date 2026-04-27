@@ -11,7 +11,6 @@ interface TimestampItem {
 
 export const RevisionBox = () => {
     const sendinfo = SendRevisionHook()
-
     const { buildPayload, removeTimestamp, timestamps } = useRevisionMessageStore()
 
     const sendRevisionTimeandMessage = () => {
