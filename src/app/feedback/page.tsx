@@ -6,6 +6,9 @@ import {
 } from 'lucide-react';
 import Header from '../component/header';
 import Image from 'next/image';
+import CalendlyDemo from '../component/calendly-demo';
+import CustomButton from '../component/button';
+import LogoFooter from '../component/logo-footer';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -270,11 +273,11 @@ export default function InfluencerFeedback() {
                   <p className="text-xs text-white/60">{msg}</p>
                 </GlassCard>
               ))}
-              <GlassCard className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl w-64 shadow-xl -rotate-3">
+              {/* <GlassCard className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 rounded-xl w-64 shadow-xl -rotate-3">
                 <Image src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3NtQvw0gR_cAsoiQr9wHZ6vQqlioRbsd6iGgTRWT53W3ZvqPEtKR0E--f6vd1vx8_i7HgbuRgqXQnukR_0YYnYh804DxdZANh9BoQmI1ooKTi98epu9zOrYQEwQwkdu0XetubKga2umhBDdv7SNT5czA2LtU-xPs57Aa-rKjNPSbw5kGB5MpxGB3uMsLBvc8J43IJoDOqRV6NGIvrBJuwn7M_crgG8UUpAEoJpEm6NuBW_o_XvG7Mhxsa3iXrwoCXOtuId7svz-Lo"
                   alt="Messy feedback" width={300} height={128} className="rounded h-32 w-full object-cover opacity-50 mb-2" />
                 <p className="text-[10px] font-mono text-[#e8184d]">Look at this spot specifically!</p>
-              </GlassCard>
+              </GlassCard> */}
             </div>
           </div>
         </section>
@@ -425,28 +428,43 @@ export default function InfluencerFeedback() {
             <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 text-white">Elevate Your Content<br />Workflow Today</h2>
             <p className="text-xl text-white/50 mb-12">Join 2,500+ influencers and editors who have reclaimed their creative sanity.</p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-              <button className="backdrop-blur-xl border border-white/10 bg-white/5 hover:bg-white/10 text-white px-10 py-5 rounded-full font-black text-lg uppercase tracking-wider transition-all">
-                Book a Demo
-              </button>
+              <CalendlyDemo>
+                        {/* Layer 1: The New Outer-most Border */}
+                        <div className="mt-6 rounded-[22px] inline-block">
+                          {/* Layer 2: Middle Border */}
+                          <div className="p-2 border border-white/30 rounded-[20px] inline-block">
+                            <CustomButton
+                              className="
+                        bg-[#ff3b8d]
+                        hover:bg-[#ff5a9e]
+                        cursor-pointer
+                        rounded-[14px]
+                        h-14
+                        px-20
+                        text-xl
+                        font-extrabold
+                        italic
+                        text-white
+              
+                        /* Hover glow - soft but visible */
+                        hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)]
+              
+                        transition-all
+                        duration-150
+                      "
+                            >
+                              Book a Demo
+                            </CustomButton>
+                          </div>
+                        </div>
+                      </CalendlyDemo>
             </div>
-            <p className="mt-8 text-white/30 text-sm font-medium tracking-widest uppercase">No Credit Card Required • Instant Setup</p>
           </div>
         </section>
 
       </main>
 
-      {/* FOOTER */}
-      <footer className="bg-[#0e0e0e] w-full py-16 border-t border-white/10">
-        <div className="flex flex-col md:flex-row justify-between items-center px-6 md:px-12 max-w-7xl mx-auto gap-8">
-          <div className="text-lg font-black text-white tracking-tighter">iShout</div>
-          <div className="flex flex-wrap justify-center gap-8 text-xs tracking-widest uppercase">
-            {footerLinks.map((link) => (
-              <a key={link} href="#" className="text-white/40 hover:text-[#d2bbff] transition-colors duration-200">{link}</a>
-            ))}
-          </div>
-          <div className="text-white/40 text-xs tracking-widest uppercase">© 2025 iShout AI. Precision in Motion.</div>
-        </div>
-      </footer>
+<LogoFooter />
 
     </div>
   );

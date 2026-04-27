@@ -33,5 +33,6 @@ export const CompanyENDPOINT = {
   CHANGE_PASSWORD: (user_id: string) => `/company/change-password/${user_id}`,
   RESET_PASSWORD: `/company/reset-password`,
 
-  UPLOADCAMPAIGNIMAGE: (brief_id: string) => `/company/uploadCampaign-productImage/${brief_id}`
+  UPLOADCAMPAIGNIMAGE: (brief_id: string) => `/company/uploadCampaign-productImage/${brief_id}`,
+  UPLOADPROFILEPICTURE: (user_id: string) => `/company/${user_id}/upload-logo`,
 };
