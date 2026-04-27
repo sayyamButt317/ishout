@@ -29,7 +29,10 @@ const ApprovedCampaignPage = () => {
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
   const deleteCampaignHook = DeleteCampaignHook();
 
-  // ✅ DELETE DIALOG STATE
+  const campaigns = (data?.campaigns ?? []) as ApprovedCampaignResponse[];
+  const totalPages = Math.max(data?.total_pages ?? 1, 1);
+  const totalCount = data?.total ?? campaigns.length;
+
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
@@ -47,7 +50,7 @@ const ApprovedCampaignPage = () => {
     <>
       <PageHeader
         title="Approved Campaigns"
-        description={`Showing ${data?.campaigns?.length ?? 0} of ${data?.total ?? 0} approved campaigns`}
+        description={`Showing ${campaigns.length} of ${totalCount} approved campaigns`}
         icon={<CircleCheck className="size-5" />}
         actions={
           <Button
@@ -62,7 +65,7 @@ const ApprovedCampaignPage = () => {
           </Button>
         }
       />
-      <TableComponent
+      <TableComponent<ApprovedCampaignResponse>
         header={[
           'Company Name',
           'Campaign Name',
@@ -71,102 +74,70 @@ const ApprovedCampaignPage = () => {
           'Followers',
           'Country',
           'Requested',
-          // "Approved",
           'Status',
           'Created At',
           'Delete',
           ' ',
           ' ',
         ]}
-        imageUrls={data?.campaigns?.map(
-          (campaign: ApprovedCampaignResponse) => campaign?.campaign_logo_url || null,
-        )}
-        statuses={data?.campaigns?.map(
-          (campaign: ApprovedCampaignResponse) => campaign?.status,
-        )}
-        campaignIds={data?.campaigns?.map(
-          (campaign: ApprovedCampaignResponse) => campaign?.campaign_id,
-        )}
-        subheader={data?.campaigns?.map((campaign: ApprovedCampaignResponse) => [
-          <div key={`company-name-${campaign?._id}`} className="truncate">
-            {campaign?.company_name}
-          </div>,
-          <div key={`campaign-name-${campaign?.campaign_id}`} className="truncate">
-            {campaign?.name}
-          </div>,
-          <div key={`platform-${campaign._id}`} className="truncate">
-            <PlatformBadge platform={campaign?.platform} />
-          </div>,
-          <div key={`category-${campaign._id}`} className="truncate">
-            {campaign?.category?.join(', ') || '-'}
-          </div>,
-          <div key={`followers-${campaign._id}`} className="truncate">
-            {campaign?.followers?.join(', ') || '-'}
-          </div>,
-          <div key={`country-${campaign._id}`} className="truncate">
-            {campaign?.country?.join(', ') || '-'}
-          </div>,
-          <div key={`requested-${campaign._id}`} className="truncate">
-            <CountButton count={campaign?.limit} />
-          </div>,
-          // <div key={`approved-${campaign._id}`} className="truncate">
-          //   <CountButton count={(campaign as any)?.approved_influencer_count || 0} />
-          // </div>,
-          <div key={`status-${campaign?._id}`} className="truncate">
-            <DropDownCustomStatus
-              status={campaign?.status}
-              updateStatus={(status: string) => {
-                updateCampaignStatusHook.mutate({
-                  campaign_id: campaign?.campaign_id,
-                  status: status,
-                });
-              }}
-            />
-          </div>,
-          <div key={`created-at-${campaign._id}`} className="truncate">
-            {new Date(campaign?.created_at).toLocaleDateString()}
-          </div>,
-          <div key={`delete-${campaign._id}`} className="truncate">
-            <Button
-              key={campaign._id + 'del'}
-              variant="ghost"
-              onClick={() => {
-                setSelectedCampaignId(campaign.campaign_id);
-                setDeleteOpen(true);
-              }}
-            >
-              <Trash className="size-5 text-red-300" />
-            </Button>
-          </div>,
-          <div key={`view-${campaign._id}`} className="truncate">
-            <div key={`view-${campaign._id}`} className="truncate">
-              <Button
-                className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-                onClick={() => {
-                  router.push(`/Admin/approved-campaign/${campaign?.campaign_id}`);
-                }}
-              >
-                View Influencers
-              </Button>
-            </div>
-          </div>,
-          <div key={`view-brief-${campaign._id}`} className="truncate">
-            <Button
-              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-              disabled={!campaign.brief_id}
-              onClick={() => {
-                if (campaign.brief_id) {
-                  setSelectedBriefId(campaign.brief_id);
-                  setDialogOpen(true);
-                }
-              }}
-            >
-              View Brief
-            </Button>
-          </div>,
+        imageUrls={campaigns.map((campaign) => campaign?.campaign_logo_url || null)}
+        statuses={campaigns.map((campaign) => campaign?.status)}
+        campaignIds={campaigns.map((campaign) => campaign?._id)}
+        campaigns={campaigns}
+        subheader={campaigns.map((campaign) => [
+          campaign.company_name,
+          campaign.name,
+          <PlatformBadge key={campaign._id} platform={campaign.platform} />,
+          campaign.category?.join(', ') || '-',
+          campaign.followers?.join(', ') || '-',
+          campaign.country?.join(', ') || '-',
+          <CountButton key={campaign._id} count={campaign.limit} />,
+          <DropDownCustomStatus
+            key={campaign._id}
+            status={campaign?.status}
+            updateStatus={(status: string) => {
+              updateCampaignStatusHook.mutate({
+                campaign_id: campaign?._id,
+                status: status,
+              });
+            }}
+          />,
+          new Date(campaign.created_at).toLocaleDateString(),
+          <Button
+            key={campaign._id}
+            variant="ghost"
+            onClick={() => {
+              setSelectedCampaignId(campaign._id);
+              setDeleteOpen(true);
+            }}
+          >
+            <Trash className="size-5 text-red-300" />
+          </Button>,
+          <Button
+            key={`view-${campaign._id}`}
+            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+            onClick={() => {
+              router.push(`/Admin/approved-campaign/${campaign?._id}`);
+            }}
+          >
+            View Influencers
+          </Button>,
+          <Button
+            key={`brief-${campaign._id}`}
+            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+            disabled={!campaign.brief_id}
+            onClick={() => {
+              if (campaign.brief_id) {
+                setSelectedBriefId(campaign.brief_id);
+                setDialogOpen(true);
+              }
+            }}
+          >
+            View Brief
+          </Button>,
         ])}
-        paginationstart={currentPage}
-        paginationend={data?.total_pages ?? 1}
+        paginationstart={data?.page ?? currentPage}
+        paginationend={totalPages}
         onPageChange={(page: number) => {
           setCurrentPage(page);
         }}
@@ -176,10 +147,19 @@ const ApprovedCampaignPage = () => {
         heading="Delete Campaign"
         subheading="Are you sure you want to delete this campaign?"
         open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedCampaignId(null);
+        }}
         ondelete={() => {
           if (selectedCampaignId) {
-            deleteCampaignHook.mutate(selectedCampaignId);
-            setDeleteOpen(false);
+            deleteCampaignHook.mutate(selectedCampaignId, {
+              onSuccess: () => {
+                setDeleteOpen(false);
+                setSelectedCampaignId(null);
+                refetch();
+              },
+            });
           }
         }}
       />

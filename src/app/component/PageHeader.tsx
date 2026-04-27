@@ -36,7 +36,7 @@ export default function PageHeader({
   className = '',
 }: PageHeaderProps) {
   return (
-    <header className={`mb-8 font-sans ${className}`} role="banner">
+    <header className={`mb-4 font-sans ${className}`} role="banner">
       {/* Breadcrumbs */}
       {breadcrumbs != null && breadcrumbs.length > 0 && (
         <nav className="mb-3 flex items-center gap-1.5" aria-label="Breadcrumb">
