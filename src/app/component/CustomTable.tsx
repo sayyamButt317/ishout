@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { Button } from '@/components/ui/button';
 import { Eye, Trash, Pencil } from 'lucide-react';
 import Spinner from './custom-component/spinner';
@@ -6,9 +6,9 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import ImageUploadModal from './custom-component/image-upload-modal';
 import { useRouter } from 'next/navigation';
-import Stepper from './stepper';
+import Stepper, { StepperCompatibleCampaign } from './stepper';
 
-interface TableProps {
+interface TableProps<T extends StepperCompatibleCampaign = StepperCompatibleCampaign> {
   header: string[];
   paginationstart: number;
   paginationend: number;
@@ -16,6 +16,7 @@ interface TableProps {
   imageUrls?: (string | null | undefined)[];
   statuses?: string[];
   campaignIds?: (string | null | undefined)[];
+  campaigns?: T[];
   showTrashIcon?: boolean;
   showEyeIcon?: boolean;
   showEditIcon?: boolean;
@@ -30,7 +31,9 @@ interface TableProps {
   };
 }
 
-export default function TableComponent({
+export default function TableComponent<
+  T extends StepperCompatibleCampaign = StepperCompatibleCampaign,
+>({
   header,
   paginationstart,
   paginationend,
@@ -38,6 +41,7 @@ export default function TableComponent({
   imageUrls,
   statuses,
   campaignIds,
+  campaigns,
   showTrashIcon = false,
   showEyeIcon = false,
   showEditIcon = false,
@@ -48,7 +52,7 @@ export default function TableComponent({
   onPageChange,
   isLoading = false,
   error,
-}: TableProps) {
+}: TableProps<T>) {
   const router = useRouter();
 
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
@@ -67,16 +71,6 @@ export default function TableComponent({
       onPageChange(paginationstart + 1);
     }
   };
-
-  // const toggleRowSelection = (rowIndex: number) => {
-  //   const newSelected = new Set(selectedRows);
-  //   if (newSelected.has(rowIndex)) {
-  //     newSelected.delete(rowIndex);
-  //   } else {
-  //     newSelected.add(rowIndex);
-  //   }
-  //   setSelectedRows(newSelected);
-  // };
 
   if (isLoading) {
     return (
@@ -107,20 +101,23 @@ export default function TableComponent({
       <div className="min-h-100 flex flex-col justify-between">
         <div className="space-y-3">
           {subheader.map((row, rowIndex) => {
-            // const isSelected = selectedRows.has(rowIndex);
             const currentStatus = statuses?.[rowIndex]?.toLowerCase() || 'pending';
             const campaignId = campaignIds?.[rowIndex];
+            const campaign = campaigns?.[rowIndex];
 
             return (
               <div key={rowIndex} className="w-full">
                 <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1A1A1A] p-3 sm:p-5 hover:border-white/20 transition-colors">
-                  {statuses && (
+                  {(campaigns || statuses) && (
                     <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-white/10 overflow-x-auto">
                       <Stepper
                         currentStatus={currentStatus}
-                        isStepClickable={(step) => step.key === 'approved' && Boolean(campaignId)}
+                        campaign={campaign}
+                        isStepClickable={(step) =>
+                          step.key === 'ishout_approved' && Boolean(campaignId)
+                        }
                         onStepClick={(step) => {
-                          if (step.key === 'approved' && campaignId) {
+                          if (step.key === 'ishout_approved' && campaignId) {
                             router.push(`/Admin/approved-campaign/${campaignId}`);
                           }
                         }}
@@ -164,7 +161,8 @@ export default function TableComponent({
                           }
                         }}
                       />
-                      {(uploadedImages[rowIndex] || (imageUrls && imageUrls[rowIndex])) && !imageErrors.has(rowIndex) ? (
+                      {(uploadedImages[rowIndex] || (imageUrls && imageUrls[rowIndex])) &&
+                      !imageErrors.has(rowIndex) ? (
                         <button
                           type="button"
                           onClick={() => {
@@ -220,7 +218,10 @@ export default function TableComponent({
                             const file = e.target.files?.[0];
                             if (file) {
                               setUploadedImages((prev) => {
-                                if (prev[rowIndex] && prev[rowIndex].startsWith('blob:')) {
+                                if (
+                                  prev[rowIndex] &&
+                                  prev[rowIndex].startsWith('blob:')
+                                ) {
                                   URL.revokeObjectURL(prev[rowIndex]);
                                 }
                                 const previewUrl = URL.createObjectURL(file);
@@ -241,7 +242,9 @@ export default function TableComponent({
                             }
                           }}
                         />
-                        {(uploadedImages[rowIndex] || (imageUrls && imageUrls[rowIndex])) && !imageErrors.has(rowIndex) ? (
+                        {(uploadedImages[rowIndex] ||
+                          (imageUrls && imageUrls[rowIndex])) &&
+                        !imageErrors.has(rowIndex) ? (
                           <button
                             type="button"
                             onClick={() => {
@@ -250,7 +253,9 @@ export default function TableComponent({
                             className="w-full h-full relative cursor-pointer hover:opacity-80 transition-opacity"
                           >
                             <Image
-                              src={uploadedImages[rowIndex] || imageUrls?.[rowIndex] || ''}
+                              src={
+                                uploadedImages[rowIndex] || imageUrls?.[rowIndex] || ''
+                              }
                               alt="Campaign"
                               width={80}
                               height={80}
@@ -275,7 +280,9 @@ export default function TableComponent({
                             }}
                             className="w-full h-full flex items-center justify-center cursor-pointer hover:bg-white/5 transition-colors"
                           >
-                            <span className="text-white/40 text-2xl font-semibold">+</span>
+                            <span className="text-white/40 text-2xl font-semibold">
+                              +
+                            </span>
                           </button>
                         )}
                       </div>
@@ -287,7 +294,10 @@ export default function TableComponent({
                           const isLastColumn = cellIndex === row.length - 1;
                           const shouldSpanTwo = isLastColumn && row.length <= 11;
                           return (
-                            <div key={cellIndex} className={`min-w-0 ${shouldSpanTwo ? 'lg:col-span-2' : ''}`}>
+                            <div
+                              key={cellIndex}
+                              className={`min-w-0 ${shouldSpanTwo ? 'lg:col-span-2' : ''}`}
+                            >
                               <p className="text-[10px] sm:text-xs text-white/60 mb-1 sm:mb-1.5 truncate font-medium">
                                 {header[cellIndex] || `Field ${cellIndex + 1}`}
                               </p>
@@ -300,7 +310,9 @@ export default function TableComponent({
 
                         {(showTrashIcon || showEyeIcon || showEditIcon) && (
                           <div className="min-w-0">
-                            <p className="text-[10px] sm:text-xs text-white/60 mb-1 sm:mb-1.5 font-medium">Action</p>
+                            <p className="text-[10px] sm:text-xs text-white/60 mb-1 sm:mb-1.5 font-medium">
+                              Action
+                            </p>
                             <div className="flex items-center gap-2 sm:gap-3">
                               {showEyeIcon && (
                                 <Eye
@@ -386,7 +398,9 @@ export default function TableComponent({
             }
             setUploadModalOpen(null);
           }}
-          currentImageUrl={imageUrls?.[uploadModalOpen] || uploadedImages[uploadModalOpen] || null}
+          currentImageUrl={
+            imageUrls?.[uploadModalOpen] || uploadedImages[uploadModalOpen] || null
+          }
         />
       )}
     </div>
