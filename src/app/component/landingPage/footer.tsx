@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+
 import Image from 'next/image';
 import CustomButton from '../button';
 import CalendlyDemo from '../calendly-demo';
@@ -23,24 +23,7 @@ export default function Footer() {
             <div className="p-2 border border-white/30 rounded-[20px] inline-block">
               <CustomButton
                 className="
-          bg-[#ff3b8d]
-          hover:bg-[#ff5a9e]
-          cursor-pointer
-          rounded-[14px]
-          h-14
-          px-20
-          text-xl
-          font-extrabold
-          italic
-          text-white
-
-          /* Hover glow - soft but visible */
-          hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)]
-
-          transition-all
-          duration-150
-        "
-              >
+          bg-[#ff3b8d] hover:bg-[#ff5a9e] cursor-pointer rounded-[14px] h-14 px-20 text-xl font-extrabold italic text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)] transition-all duration-150">
                 Book a Demo
               </CustomButton>
             </div>
