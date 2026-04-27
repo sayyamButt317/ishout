@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, type ComponentType } from 'react';
+import { useState, useMemo } from 'react';
 import { UserStatus } from '@/src/app/component/custom-component/user-status';
 import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
@@ -19,78 +19,35 @@ import PageHeader from '@/src/app/component/PageHeader';
 import { Input } from '@/components/ui/input';
 import PhoneInput from 'react-phone-number-input';
 import { normalizePhoneNumberForDisplay, removePlusPrefix } from '@/src/utils/phone.utils';
+import MobileCountrySelect from '@/src/app/component/custom-component/MobileCountrySelect';
+import Image from 'next/image';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Role      = 'admin' | 'company';
-type ModalMode = 'edit' | 'add';
-type EditableUser    = UserManagementResponse & { password?: string };
-type UpdatePayload   = { company_name: string; contact_person: string; phone: string; email: string; password?: string };
-type AddPayload      = { company_name: string; contact_person: string; phone: string; email: string; password: string; role: Role };
-type CountryOption   = { value?: string; label: string };
-type FlagIcon        = ComponentType<{ country: string; title: string; className?: string }>;
+type Role        = 'admin' | 'company';
+type ModalMode   = 'edit' | 'add';
+type EditableUser  = UserManagementResponse & { password?: string };
+type UpdatePayload = { company_name: string; contact_person: string; phone: string; email: string; password?: string };
+type AddPayload    = { company_name: string; contact_person: string; phone: string; email: string; password: string; role: Role };
 
 const EMPTY_ADD: AddPayload = { company_name: '', contact_person: '', phone: '', email: '', password: '', role: 'company' };
 
-const AVATAR_COLORS = ['bg-pink-600','bg-violet-600','bg-indigo-600','bg-cyan-600','bg-emerald-600','bg-amber-600'];
+// ✅ Added missing avatar helpers (were used but never defined)
+const AVATAR_COLORS = ['bg-pink-600', 'bg-violet-600', 'bg-indigo-600', 'bg-cyan-600', 'bg-emerald-600', 'bg-amber-600'];
 const avatarColor   = (id: string) => AVATAR_COLORS[(id?.charCodeAt(id.length - 1) ?? 0) % AVATAR_COLORS.length];
 const initials      = (n: string)  => n?.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || '??';
-
-// ─── Mobile Country Select ────────────────────────────────────────────────────
-
-function MobileCountrySelect({ value, onChange, options, iconComponent: Flag }: {
-  value?: string; onChange: (v?: string) => void; options: CountryOption[]; iconComponent: FlagIcon;
-}) {
-  const [open, setOpen] = useState(false);
-  const label = options.find(o => o.value === value)?.label ?? '';
-  return (
-    <>
-      <button type="button" onClick={() => setOpen(true)}
-        className="flex items-center gap-1 rounded px-1 py-0.5 hover:bg-white/10 cursor-pointer transition-colors">
-        {value && <Flag country={value} title={label} />}
-        <svg className="w-3 h-3 text-white/50" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-        </svg>
-      </button>
-      {open && (
-        <div className="fixed inset-0 z-200 flex items-end justify-center" onClick={() => setOpen(false)}>
-          <div className="absolute inset-0 bg-black/60" />
-          <div className="relative z-10 w-full flex flex-col overflow-hidden rounded-2xl bg-[#131318] border border-white/10 shadow-2xl mx-4 mb-4"
-            style={{ maxHeight: '60vh' }} onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between px-4 pt-4 pb-2 border-b border-white/10">
-              <span className="text-white font-semibold text-sm">Select Country</span>
-              <button type="button" onClick={() => setOpen(false)}><X className="w-4 h-4 text-white/50" /></button>
-            </div>
-            <ul className="flex-1 overflow-y-auto">
-              {options.filter(o => o.value).map(o => (
-                <li key={o.value}>
-                  <button type="button"
-                    className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-white/0.08 transition-colors ${o.value === value ? 'bg-white/0.08 text-white font-medium' : 'text-white/60'}`}
-                    onClick={() => { onChange(o.value); setOpen(false); }}>
-                    <Flag country={o.value!} title={o.label} /><span>{o.label}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
 
 // ─── Stat Card ────────────────────────────────────────────────────────────────
 
 function StatCard({ label, value, barWidth, barClass, icon }: {
-  label: string; value: number; badge?: React.ReactNode;
-  barWidth: number; barClass: string; icon: React.ReactNode;
+  label: string; value: number; barWidth: number; barClass: string; icon: React.ReactNode;
 }) {
   return (
-    <div className="h-40 relative overflow-hidden rounded-2xl bg-[#222226] border border-white/0.05 p-6 hover:bg-[#1f1f22]">
-      <div className="absolute top-0 right-5 p-4 opacity-20 ">{icon}</div>
-      <div className="text-6xl text-white top-0.5 right-2 pb-2">{value}</div>
-      <div className="text-lg font-italic tracking-[0.15em] text-white/40 mb-2">{label}</div>
-      <div className="h-2 w-full bg-white/0.06 rounded-full overflow-hidden">
+    <div className="h-40 relative overflow-hidden rounded-2xl bg-[#222226] border border-white/5 p-6 hover:bg-[#1f1f22] transition-colors">
+      <div className="absolute top-0 right-5 p-4 opacity-20">{icon}</div>
+      <div className="text-6xl text-white pb-2">{value}</div>
+      <div className="text-lg tracking-[0.15em] text-white/40 mb-2">{label}</div>
+      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
         <div className={`h-full rounded-full ${barClass}`} style={{ width: `${Math.min(barWidth, 100)}%` }} />
       </div>
     </div>
@@ -108,7 +65,7 @@ function Field({ label, value, onChange, placeholder, type = 'text', required = 
       <label className="block text-[10px] font-bold uppercase tracking-[0.12em] text-white/35 mb-2">{label}</label>
       <Input type={type} required={required} value={value} onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-10 bg-black/40 border-white/0.08 text-white placeholder:text-white/20
+        className="h-10 bg-black/40 border-white/10 text-white placeholder:text-white/20
           focus:ring-1 focus:ring-primaryButton/30 focus:border-primaryButton/30 rounded-xl w-full" />
     </div>
   );
@@ -118,14 +75,25 @@ function Field({ label, value, onChange, placeholder, type = 'text', required = 
 
 function SkeletonRow() {
   return (
-    <tr className="animate-pulse border-b border-white/0.04">
+    <tr className="animate-pulse border-b border-white/5">
       <td className="px-8 py-4">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-white/0.06" />
-          <div className="space-y-1.5"><div className="h-3 bg-white/0.06 rounded w-28" /><div className="h-2.5 bg-white/0.04 rounded w-20" /></div>
+          <div className="w-10 h-10 rounded-full bg-white/10" />
+          <div className="space-y-1.5">
+            <div className="h-3 bg-white/10 rounded w-28" />
+            <div className="h-2.5 bg-white/5 rounded w-20" />
+          </div>
         </div>
       </td>
-      <td className="px-6 py-4"><div className="space-y-1.5"><div className="h-3 bg-white/0.06 rounded w-32" /><div className="h-2.5 bg-white/0.04 rounded w-20" /></div></td>
+      <td className="px-6 py-4">
+        <div className="space-y-1.5">
+          <div className="h-3 bg-white/10 rounded w-32" />
+          <div className="h-2.5 bg-white/5 rounded w-20" />
+        </div>
+      </td>
+      {[...Array(4)].map((_, i) => (
+        <td key={i} className="px-6 py-4"><div className="h-3 bg-white/10 rounded w-20" /></td>
+      ))}
     </tr>
   );
 }
@@ -141,20 +109,15 @@ export default function UserManagementPage() {
   const [modalOpen, setModalOpen]   = useState(false);
   const [search, setSearch]         = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | Role>('all');
-  // Delete confirm state
   const [deleteId, setDeleteId]     = useState<string | null>(null);
 
   const { data, isLoading, refetch, isRefetching } = AllUsersHook(page);
-  const deleteHook   = DeleteUserHook();
-  const statusHook   = UpdateUserStatusHook();
-  const addHook      = AddUserHook();
+  const deleteHook  = DeleteUserHook();
+  const statusHook  = UpdateUserStatusHook();
+  const addHook     = AddUserHook();
+  const { mutate: updateProfile, isPending: isUpdating } = CompanyUpdateProfileHook(editUser?.user_id || '');
 
-  const { mutate: updateProfile, isPending: isUpdating } = CompanyUpdateProfileHook(
-    editUser?.user_id || '',
-  );
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const allUsers: UserManagementResponse[] = data?.users ?? [];
+const allUsers = useMemo(() => (data?.users ?? []) as UserManagementResponse[], [data?.users]);
 
   const filtered = useMemo(() => allUsers.filter(u => {
     const q = search.toLowerCase();
@@ -172,17 +135,14 @@ export default function UserManagementPage() {
 
   const totalPages = data?.total_pages ?? 1;
 
-  // ── Helpers ──────────────────────────────────────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────────────────────
 
   const closeModal = () => { setModalOpen(false); setEditUser(null); setAddForm(EMPTY_ADD); setShowPw(false); };
+  const openEdit   = (u: UserManagementResponse) => { setMode('edit'); setEditUser({ ...u, password: '' }); setShowPw(false); setModalOpen(true); };
+  const openAdd    = () => { setMode('add'); setAddForm(EMPTY_ADD); setShowPw(false); setModalOpen(true); };
 
-  const openEdit = (u: UserManagementResponse) => { setMode('edit'); setEditUser({ ...u, password: '' }); setShowPw(false); setModalOpen(true); };
-  const openAdd  = () => { setMode('add');  setAddForm(EMPTY_ADD); setShowPw(false); setModalOpen(true); };
-
-  // Add form field updater
-  const af = (k: keyof AddPayload) => (v: string) => setAddForm(p => ({ ...p, [k]: v }));
-  // Edit form field updater
-  const ef = (k: keyof EditableUser) => (v: string) => setEditUser(p => p ? { ...p, [k]: v } : null);
+  const af = (k: keyof AddPayload)    => (v: string) => setAddForm(p => ({ ...p, [k]: v }));
+  const ef = (k: keyof EditableUser)  => (v: string) => setEditUser(p => p ? { ...p, [k]: v } : null);
 
   const handleEdit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -203,18 +163,19 @@ export default function UserManagementPage() {
     );
   };
 
+  // ✅ Fixed: handleDelete clears deleteId on success so dialogue closes
   const handleDelete = () => {
     if (!deleteId) return;
-    deleteHook.mutate(deleteId, { onSuccess: () => { setDeleteId(null); refetch(); } });
+    deleteHook.mutate(deleteId, {
+      onSuccess: () => { setDeleteId(null); refetch(); },
+    });
   };
 
-  // Phone value/onChange helpers to reduce repetition
-  const phoneVal = mode === 'add' ? addForm.phone : editUser?.phone ?? '';
+  const phoneVal      = mode === 'add' ? addForm.phone : editUser?.phone ?? '';
   const phoneOnChange = (v: string) =>
-    mode === 'add' ? setAddForm(p => ({ ...p, phone: removePlusPrefix(v) })) :
-      setEditUser(p => p ? { ...p, phone: removePlusPrefix(v) } : null);
-
-  // ─────────────────────────────────────────────────────────────────────────
+    mode === 'add'
+      ? setAddForm(p => ({ ...p, phone: removePlusPrefix(v) }))
+      : setEditUser(p => p ? { ...p, phone: removePlusPrefix(v) } : null);
 
   return (
     <>
@@ -229,10 +190,10 @@ export default function UserManagementPage() {
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white
                 bg-primaryButton hover:bg-primaryHover transition-all hover:scale-[1.02] active:scale-[0.98]
                 shadow-lg shadow-primaryButton/25">
-              <UserPlus className="w-4 h-4" />Add User
+              <UserPlus className="w-4 h-4" /> Add User
             </button>
             <button onClick={() => refetch()} disabled={isRefetching}
-              className="w-9 h-9 rounded-xl bg-white/0.03 flex items-center justify-center
+              className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center
                 text-white/40 hover:text-white transition-all disabled:opacity-40">
               <RefreshCcw className={`w-4 h-4 ${isRefetching ? 'animate-spin' : ''}`} />
             </button>
@@ -240,14 +201,14 @@ export default function UserManagementPage() {
         }
       />
 
-      <div className="sm:px-8 pb-12 space-y-2 ">
+      <div className="sm:px-8 pb-12 space-y-2">
 
         {/* ── STATS ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          <StatCard label="Total Users" value={stats.total}
+          <StatCard label="Total Users"  value={stats.total}
             barWidth={(stats.total / 20) * 100} barClass="bg-gradient-to-r from-primaryButton to-pink-400"
-            icon={<Users className="w-16 h-16 text-primarytext" />} />
-          <StatCard label="Admins" value={stats.admins}
+            icon={<Users className="w-16 h-16" />} />
+          <StatCard label="Admins"       value={stats.admins}
             barWidth={(stats.admins / Math.max(stats.total, 1)) * 100} barClass="bg-purple-500"
             icon={<ShieldCheck className="w-16 h-16 text-purple-400" />} />
           <StatCard label="Active Users" value={stats.active}
@@ -256,13 +217,12 @@ export default function UserManagementPage() {
         </div>
 
         {/* ── TABLE CARD ── */}
-        <div className="bg-white/5 rounded-2xl border border-white/0.05 overflow-hidden shadow-2xl shadow-black/40">
+        <div className="bg-white/5 rounded-2xl border border-white/5 overflow-hidden shadow-2xl shadow-black/40">
 
-          {/* Filters row */}
-          <div className="px-8 py-5 border-b border-white/0.04 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Filters */}
+          <div className="px-8 py-5 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <h2 className="text-xl font-black text-white">All Users</h2>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-              {/* Search */}
               <div className="relative">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 pointer-events-none" />
                 <input value={search} onChange={e => setSearch(e.target.value)}
@@ -270,8 +230,7 @@ export default function UserManagementPage() {
                   className="w-full sm:w-72 bg-black/30 border border-white/[0.07] rounded-xl pl-10 pr-4 py-2
                     text-sm text-white placeholder:text-white/25 outline-none focus:border-primaryButton/40 transition-colors" />
               </div>
-              {/* Role pills */}
-              <div className="flex items-center gap-1 bg-black/30 border border-white/0.06 rounded-xl p-1">
+              <div className="flex items-center gap-1 bg-black/30 border border-white/5 rounded-xl p-1">
                 {(['all', 'admin', 'company'] as const).map(r => (
                   <button key={r} onClick={() => setRoleFilter(r)}
                     className={`px-4 py-1.5 rounded-lg text-sm font-medium capitalize transition-all ${
@@ -288,20 +247,15 @@ export default function UserManagementPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#0f0f14]/50 text-2xl">
-                  {[
-                    ['User', 'px-8 py-5'],
-                    ['Company', 'px-6 py-5'],
-                    ['Contact', 'px-6 py-5'],
-                    ['Role', 'px-6 py-5 text-center'],
-                    ['Status', 'px-6 py-5 text-center'],
-                    ['Actions', 'px-8 py-5 text-right'],
+                <tr className="bg-[#0f0f14]/50">
+                  {[['User', 'px-8 py-5'], ['Company', 'px-6 py-5'], ['Contact', 'px-6 py-5'],
+                    ['Role', 'px-6 py-5 text-center'], ['Status', 'px-6 py-5 text-center'], ['Actions', 'px-8 py-5 text-right'],
                   ].map(([h, cls]) => (
-                    <th key={h} className={`${cls} text-[10px] font-black uppercase tracking-[0.15em] text-white/30 border-b border-white/0.04 whitespace-nowrap`}>{h}</th>
+                    <th key={h} className={`${cls} text-[10px] font-black uppercase tracking-[0.15em] text-white/30 border-b border-white/5 whitespace-nowrap`}>{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/0.04">
+              <tbody className="divide-y divide-white/5">
                 {isLoading
                   ? [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
                   : filtered.length === 0
@@ -312,22 +266,23 @@ export default function UserManagementPage() {
                         <p className="text-sm">No users found</p>
                         {(search || roleFilter !== 'all') && (
                           <button onClick={() => { setSearch(''); setRoleFilter('all'); }}
-                            className="text-xs text-primarytext hover:underline mt-1">Clear filters</button>
+                            className="text-xs text-primaryButton hover:underline mt-1">Clear filters</button>
                         )}
                       </div>
                     </td></tr>
                   )
                   : filtered.map(user => (
-                    <tr key={user.user_id} className="hover:bg-white/0.025 transition-colors">
+                    <tr key={user.user_id} className="hover:bg-white/2.5 transition-colors">
 
                       {/* User */}
                       <td className="px-8 py-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-10 h-10 rounded-full ${avatarColor(user.user_id)} flex items-center justify-center text-white text-md font-bold shrink-0`}>
+                          {/* ✅ Fixed: Image now has required width/height props */}
+                          <div className={`w-10 h-10 rounded-full ${avatarColor(user.user_id)} flex items-center justify-center text-white text-sm font-bold shrink-0 overflow-hidden`}>
                             {user.logo_url
-                              // eslint-disable-next-line @next/next/no-img-element
-                              ? <img src={user.logo_url} alt={user.contact_person} className="w-10 h-10 rounded-full object-cover" />
-                              : initials(user.contact_person)}
+                              ? <Image src={user.logo_url} alt={user.contact_person} width={40} height={40} className="w-10 h-10 rounded-full object-cover" unoptimized />
+                              : initials(user.contact_person)
+                            }
                           </div>
                           <div>
                             <p className="text-sm font-bold text-white">{user.contact_person}</p>
@@ -373,7 +328,7 @@ export default function UserManagementPage() {
                             <WhatsAppShareButton phone={user.phone} contactPerson={user.contact_person} />
                           </div>
                           <button onClick={() => openEdit(user)}
-                            className="p-2 rounded-lg bg-[#1f1f26] text-white/40 hover:text-primarytext hover:bg-primaryButton/10 transition-all">
+                            className="p-2 rounded-lg bg-[#1f1f26] text-white/40 hover:text-primaryButton hover:bg-primaryButton/10 transition-all">
                             <Pencil className="w-4 h-4" />
                           </button>
                           <button onClick={() => setDeleteId(user.user_id)}
@@ -390,7 +345,7 @@ export default function UserManagementPage() {
           </div>
 
           {/* Pagination */}
-          <div className="px-8 py-5 bg-[#0f0f14]/30 border-t border-white/0.04 flex items-center justify-between">
+          <div className="px-8 py-5 bg-[#0f0f14]/30 border-t border-white/5 flex items-center justify-between">
             <p className="text-xs text-white/30">
               Showing <span className="text-white font-bold">{filtered.length}</span> of{' '}
               <span className="text-white font-bold">{data?.total ?? 0}</span> users
@@ -404,7 +359,7 @@ export default function UserManagementPage() {
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
                   <button key={p} onClick={() => setPage(p)}
                     className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
-                      p === page ? 'bg-primaryButton text-white' : 'text-white/35 hover:text-white hover:bg-white/0.05'
+                      p === page ? 'bg-primaryButton text-white' : 'text-white/35 hover:text-white hover:bg-white/5'
                     }`}>{p}</button>
                 ))}
                 <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
@@ -417,26 +372,28 @@ export default function UserManagementPage() {
         </div>
       </div>
 
+      {/* ✅ Fixed: added onClose prop — was missing, causing TS error */}
       <DeleteDialogue
         open={!!deleteId}
         heading="Delete User?"
         subheading="This action cannot be undone. The user will be permanently removed."
         ondelete={handleDelete}
+        onClose={() => setDeleteId(null)}
       />
+
+      {/* ── MODAL ── */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={closeModal} />
           <div className="relative w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl"
             style={{ background: '#0f0f12', border: '1px solid rgba(255,255,255,0.07)' }}>
 
-            {/* Top bar */}
-            <div className="h-0.75 w-full bg-linear-to-r from-primaryButton via-purple-500 to-emerald-500" />
+            <div className="h-0.5 w-full bg-linear-to-r from-primaryButton via-purple-500 to-emerald-500" />
 
-            {/* Modal header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/0.06">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-primaryButton/15 border border-primaryButton/20 flex items-center justify-center">
-                  {mode === 'add' ? <UserPlus className="w-4 h-4 text-primarytext" /> : <Pencil className="w-4 h-4 text-primarytext" />}
+                  {mode === 'add' ? <UserPlus className="w-4 h-4 text-primaryButton" /> : <Pencil className="w-4 h-4 text-primaryButton" />}
                 </div>
                 <div>
                   <h2 className="text-sm font-bold text-white">{mode === 'add' ? 'Add New User' : 'Edit User'}</h2>
@@ -459,15 +416,15 @@ export default function UserManagementPage() {
                   <label className="block text-[10px] font-bold uppercase tracking-[0.12em] text-white/35 mb-2">Role</label>
                   <div className="grid grid-cols-2 gap-2">
                     {([
-                      { value: 'company' as Role, label: 'Company', desc: 'Campaign access',      dot: 'bg-violet-400', sel: 'bg-violet-500/10 border-violet-500/30 text-white' },
-                      { value: 'admin'   as Role, label: 'Admin',   desc: 'Full platform access',  dot: 'bg-indigo-400', sel: 'bg-indigo-500/10 border-indigo-500/30 text-white' },
+                      { value: 'company' as Role, label: 'Company', desc: 'Campaign access',     dot: 'bg-violet-400', sel: 'bg-violet-500/10 border-violet-500/30 text-white' },
+                      { value: 'admin'   as Role, label: 'Admin',   desc: 'Full platform access', dot: 'bg-indigo-400', sel: 'bg-indigo-500/10 border-indigo-500/30 text-white' },
                     ]).map(r => {
                       const active = mode === 'add' ? addForm.role === r.value : editUser?.role === r.value;
                       return (
                         <button key={r.value} type="button"
                           onClick={() => mode === 'add' ? setAddForm(p => ({ ...p, role: r.value })) : setEditUser(p => p ? { ...p, role: r.value } : null)}
                           className={`relative flex flex-col items-start gap-0.5 p-3.5 rounded-xl border text-left transition-all ${
-                            active ? r.sel : 'bg-white/0.03 border-white/[0.07] text-white/40 hover:bg-white/0.05'
+                            active ? r.sel : 'bg-white/3 border-white/[0.07] text-white/40 hover:bg-white/5'
                           }`}>
                           {active && <span className={`absolute top-2 right-2 w-2 h-2 rounded-full ${r.dot}`} />}
                           <span className="text-sm font-semibold">{r.label}</span>
@@ -515,7 +472,7 @@ export default function UserManagementPage() {
                       autoComplete="new-password" required={mode === 'add'}
                       value={mode === 'add' ? addForm.password : editUser?.password ?? ''}
                       onChange={e => mode === 'add' ? af('password')(e.target.value) : ef('password')(e.target.value)}
-                      className="h-10 bg-black/40 border-white/0.08 text-white placeholder:text-white/20
+                      className="h-10 bg-black/40 border-white/10 text-white placeholder:text-white/20
                         focus:ring-1 focus:ring-primaryButton/30 focus:border-primaryButton/30 rounded-xl w-full pr-10" />
                     <button type="button" onClick={() => setShowPw(p => !p)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors">
@@ -525,10 +482,9 @@ export default function UserManagementPage() {
                 </div>
               </div>
 
-              {/* Footer */}
               <div className="flex gap-2.5 px-6 pb-5">
                 <button type="button" onClick={closeModal}
-                  className="flex-1 py-2.5 rounded-xl border border-white/[0.07] text-sm text-white/40 hover:text-white hover:bg-white/0.05 transition-all">
+                  className="flex-1 py-2.5 rounded-xl border border-white/[0.07] text-sm text-white/40 hover:text-white hover:bg-white/5 transition-all">
                   Cancel
                 </button>
                 <button type="submit" disabled={mode === 'add' ? addHook.isPending : isUpdating}

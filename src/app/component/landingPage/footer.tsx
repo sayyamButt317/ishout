@@ -18,7 +18,7 @@ export default function Footer() {
 
         <CalendlyDemo>
           {/* Layer 1: The New Outer-most Border */}
-          <div className="mt-6 p-1.5 border border-white/15 rounded-[22px] inline-block">
+          <div className="mt-6 rounded-[22px] inline-block">
             {/* Layer 2: Middle Border */}
             <div className="p-2 border border-white/30 rounded-[20px] inline-block">
               <CustomButton
@@ -33,9 +33,6 @@ export default function Footer() {
           font-extrabold
           italic
           text-white
-
-          /* Base glow - subtle */
-          shadow-[0_0_12px_rgba(255,255,255,0.25),0_0_25px_rgba(255,255,255,0.15),0_0_40px_rgba(255,255,255,0.08)]
 
           /* Hover glow - soft but visible */
           hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)]

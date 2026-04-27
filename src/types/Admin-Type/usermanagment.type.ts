@@ -9,7 +9,6 @@ export interface UserManagementResponse {
     logo_url?: string;
 }
 
-
 export interface UpdateUserStatusRequest {
     user_id: string;
     status: string;

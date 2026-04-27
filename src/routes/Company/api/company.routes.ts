@@ -268,3 +268,23 @@ export const UploadImageToCampaign = async (
 
   return response.data
 }
+
+export const UploadProfilePictureFunction = async (
+  user_id: string,
+  file: File
+) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await api.patch(
+    CompanyENDPOINT.UPLOADPROFILEPICTURE(user_id),
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+};
