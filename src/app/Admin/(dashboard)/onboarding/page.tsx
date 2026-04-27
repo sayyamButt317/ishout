@@ -32,6 +32,10 @@ export default function OnboardingCampaignPage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
+  const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
+  const totalPages = Math.max(data?.total_pages ?? 1, 1);
+  const totalCount = data?.total ?? campaigns.length;
+
   useEffect(() => {
     if (briefData) {
       setAdminBrief({
@@ -45,7 +49,7 @@ export default function OnboardingCampaignPage() {
     <>
       <PageHeader
         title="Onboarding Influencers"
-        description="Showing campaigns waiting for influencers to be onboarded"
+        description={`Showing ${campaigns.length} of ${totalCount} onboarding campaigns`}
         icon={<UserPlus className="size-5" />}
         actions={
           <Button
@@ -61,7 +65,7 @@ export default function OnboardingCampaignPage() {
         }
       />
 
-      <TableComponent
+      <TableComponent<CompanyCampaignResponse>
         header={[
           'Company Name',
           'Campaign Name',
@@ -77,15 +81,10 @@ export default function OnboardingCampaignPage() {
           ' ',
           ' ',
         ]}
-        imageUrls={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
-        )}
-        statuses={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign.status,
-        )}
-        campaignIds={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign._id,
-        )}
+        imageUrls={campaigns.map((campaign) => campaign?.campaign_logo_url || null)}
+        statuses={campaigns.map((campaign) => campaign.status)}
+        campaignIds={campaigns.map((campaign) => campaign._id)}
+        campaigns={campaigns}
         subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
           <div key={`company-${campaign._id}`} className="truncate">
             {campaign?.company_name}
@@ -154,8 +153,8 @@ export default function OnboardingCampaignPage() {
             </Button>
           </div>,
         ])}
-        paginationstart={currentPage}
-        paginationend={data?.total_pages ?? 1}
+        paginationstart={data?.page ?? currentPage}
+        paginationend={totalPages}
         onPageChange={(page: number) => setCurrentPage(page)}
         isLoading={isLoading}
       />
