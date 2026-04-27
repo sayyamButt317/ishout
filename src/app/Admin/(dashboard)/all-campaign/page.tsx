@@ -233,7 +233,7 @@ export default function AllCampaignPage() {
         }
       />
 
-      <TableComponent
+      <TableComponent<AdminAllCampaignApiResponse>
         header={[
           'Company Name',
           'Campaign Name',
@@ -253,6 +253,7 @@ export default function AllCampaignPage() {
         )}
         statuses={filteredAndSortedCampaigns.map((campaign) => campaign.status)}
         campaignIds={filteredAndSortedCampaigns.map((campaign) => campaign._id)}
+        campaigns={filteredAndSortedCampaigns}
         subheader={filteredAndSortedCampaigns.map((campaign) => [
           campaign.company_name,
           campaign.name,
@@ -308,13 +309,14 @@ export default function AllCampaignPage() {
         onPageChange={handlePageChange}
         isLoading={isLoading}
       />
+      
       <DeleteDialogue
         heading="Delete Campaign"
         subheading="Are you sure you want to delete this campaign?"
         open={deleteOpen}
         onClose={() => {
           setDeleteOpen(false);
-          setSelectedCampaignId(null); // optional but recommended
+          setSelectedCampaignId(null);
         }}
         ondelete={() => {
           if (selectedCampaignId) {
@@ -335,6 +337,7 @@ export default function AllCampaignPage() {
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
       />
+      
       <ImageUploadModal
         open={uploadModalOpen !== null}
         onClose={() => setUploadModalOpen(null)}
