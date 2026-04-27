@@ -15,8 +15,8 @@ import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
-import { resolveCampaignStepperStatus } from '@/src/app/component/stepper';
 import { Trash } from 'lucide-react';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 export default function OnboardingCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,6 +28,13 @@ export default function OnboardingCampaignPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const deleteCampaignHook = DeleteCampaignHook();
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
+
+  const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
+  const totalPages = Math.max(data?.total_pages ?? 1, 1);
+  const totalCount = data?.total ?? campaigns.length;
 
   useEffect(() => {
     if (briefData) {
@@ -42,7 +49,7 @@ export default function OnboardingCampaignPage() {
     <>
       <PageHeader
         title="Brand Approved Influencer"
-        description="Showing campaigns with influencers approved by the brand, pending onboarding."
+        description={`Showing ${campaigns.length} of ${totalCount} brand approved campaigns`}
         icon={<UserPlus className="size-5" />}
         actions={
           <Button
@@ -58,7 +65,7 @@ export default function OnboardingCampaignPage() {
         }
       />
 
-      <TableComponent
+      <TableComponent<CompanyCampaignResponse>
         header={[
           'Company Name',
           'Campaign Name',
@@ -72,95 +79,97 @@ export default function OnboardingCampaignPage() {
           'Delete',
           ' ',
           ' ',
-          ' ',
         ]}
-        imageUrls={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
-        )}
-        statuses={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) =>
-            resolveCampaignStepperStatus({
-              status: campaign.status,
-              admin_approved: campaign.admin_approved,
-              company_approved: campaign.company_approved,
-            }),
-        )}
-        campaignIds={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign._id,
-        )}
-        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
-          <div key={`company-${campaign._id}`} className="truncate">
-            {campaign?.company_name}
-          </div>,
-          <div key={`campaign-name-${campaign._id}`} className="truncate">
-            {campaign?.name}
-          </div>,
-          <div key={`platform-${campaign._id}`} className="truncate">
-            <PlatformBadge platform={campaign?.platform} />
-          </div>,
-          <div key={`category-${campaign._id}`} className="truncate">
-            {campaign?.category?.join(', ') || '-'}
-          </div>,
-          <div key={`country-${campaign._id}`} className="truncate">
-            {campaign?.country?.join(', ') || '-'}
-          </div>,
-          <div key={`status-${campaign._id}`} className="truncate">
-            <StatusBadge status={campaign?.status} />
-          </div>,
-          <div key={`requested-influencers-${campaign._id}`} className="truncate">
-            <CountButton count={campaign?.limit} />
-          </div>,
-          <div key={`onboarding-influencers-${campaign._id}`} className="truncate">
-            <CountButton count={campaign?.approved_influencer_count} />
-          </div>,
-
-          <div key={`created-at-${campaign._id}`} className="truncate">
-            {new Date(campaign?.created_at).toLocaleDateString()}
-          </div>,
-          <div key={`delete-${campaign._id}`} className="truncate">
-            <Button
-              variant="ghost"
-              size="icon"
-              disabled={deleteCampaignHook.isPending}
-              onClick={() => {
-                if (confirm('Are you sure you want to delete this campaign?')) {
-                  deleteCampaignHook.mutate(campaign.campaign_id);
-                }
-              }}
-            >
-              <Trash className="size-5 text-red-300 cursor-pointer" />
-            </Button>
-          </div>,
-          <div key={`view-${campaign._id}`} className="truncate">
-            <Button
-              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-              onClick={() => {
-                router.push(`/Admin/brand-approved/${campaign?._id}`);
-              }}
-            >
-              View Influencers
-            </Button>
-          </div>,
-          <div key={`view-brief-${campaign._id}`} className="truncate">
-            <CustomButton
-              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
-              disabled={!campaign.brief_id}
-              onClick={() => {
-                if (campaign.brief_id) {
-                  setSelectedBriefId(campaign.brief_id);
-                  setDialogOpen(true);
-                }
-              }}
-            >
-              View Brief
-            </CustomButton>
-          </div>,
+        imageUrls={campaigns.map((campaign) => campaign?.campaign_logo_url || null)}
+        statuses={campaigns.map((campaign) => campaign?.status)}
+        campaignIds={campaigns.map((campaign) => campaign?._id || campaign?.campaign_id)}
+        campaigns={campaigns}
+        subheader={campaigns.map((campaign) => [
+          campaign.company_name,
+          campaign.name,
+          <PlatformBadge
+            key={campaign._id || campaign.campaign_id}
+            platform={campaign.platform}
+          />,
+          campaign.category?.join(', ') || '-',
+          campaign.country?.join(', ') || '-',
+          <StatusBadge
+            key={campaign._id || campaign.campaign_id}
+            status={campaign.status}
+          />,
+          <CountButton
+            key={campaign._id || campaign.campaign_id}
+            count={campaign.limit}
+          />,
+          <CountButton
+            key={campaign._id || campaign.campaign_id}
+            count={campaign.approved_influencer_count}
+          />,
+          new Date(campaign.created_at).toLocaleDateString(),
+          <Button
+            key={campaign._id || campaign.campaign_id}
+            variant="ghost"
+            size="icon"
+            disabled={deleteCampaignHook.isPending}
+            onClick={() => {
+              setSelectedCampaignId(campaign.campaign_id);
+              setDeleteOpen(true);
+            }}
+          >
+            <Trash className="size-5 text-red-300 cursor-pointer" />
+          </Button>,
+          <CustomButton
+            key={campaign._id || campaign.campaign_id}
+            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+            onClick={() => {
+              router.push(
+                `/Admin/brand-approved/${campaign._id || campaign.campaign_id}`,
+              );
+            }}
+          >
+            View Influencers
+          </CustomButton>,
+          <CustomButton
+            key={`brief-${campaign._id || campaign.campaign_id}`}
+            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+            disabled={!campaign.brief_id}
+            onClick={() => {
+              if (campaign.brief_id) {
+                setSelectedBriefId(campaign.brief_id);
+                setDialogOpen(true);
+              }
+            }}
+          >
+            View Brief
+          </CustomButton>,
         ])}
-        paginationstart={currentPage}
-        paginationend={data?.total_pages ?? 1}
+        paginationstart={data?.page ?? currentPage}
+        paginationend={totalPages}
         onPageChange={(page: number) => setCurrentPage(page)}
         isLoading={isLoading}
       />
+
+      <DeleteDialogue
+        heading="Delete Campaign"
+        subheading="Are you sure you want to delete this campaign?"
+        open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedCampaignId(null);
+        }}
+        ondelete={() => {
+          if (selectedCampaignId) {
+            deleteCampaignHook.mutate(selectedCampaignId, {
+              onSuccess: () => {
+                setDeleteOpen(false);
+                setSelectedCampaignId(null);
+                refetch();
+              },
+            });
+          }
+        }}
+      />
+
       <CampaignBriefDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}

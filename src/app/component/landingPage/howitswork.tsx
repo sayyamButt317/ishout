@@ -1,13 +1,6 @@
 import Image from 'next/image';
 import CustomButton from '../button';
-
-const STEPS = [
-  { number: 1, title: '  Briefing', classname: 'pl-10', description: 'Define your campaign goals, audience, and deliverables in minutes.', image: 'https://ik.imagekit.io/dtdxnyskk/briefing.svg' },
-  { number: 2, title: 'AI Matching', description: 'Our algorithm identifies the most relevant influencers for your brand — instantly.', image: 'https://ik.imagekit.io/dtdxnyskk/matching.svg' },
-  { number: 3, title: 'Approval', description: 'Review and confirm partnerships in one streamlined dashboard.', image: 'https://ik.imagekit.io/dtdxnyskk/approval.svg' },
-  { number: 4, title: 'Campaign Launch', description: 'Manage content creation, approvals, and live performance in real time.', image: 'https://ik.imagekit.io/dtdxnyskk/campaign-launch.svg' },
-  { number: 5, title: 'Reporting', description: 'Access real-time analytics and insights to optimize future campaigns.', image: 'https://ik.imagekit.io/dtdxnyskk/reporting.svg' },
-];
+import { CAMPAIGNSTEPS } from '@/src/constant/Data/campaignsteps';
 
 const VerticalConnector = () => (
   <svg className="absolute left-1/2 -translate-x-1/2" width="2" height="90" viewBox="0 10 2 50" fill="none">
@@ -15,9 +8,9 @@ const VerticalConnector = () => (
   </svg>
 );
 
-function DesktopStep({ number, title, description, image }: (typeof STEPS)[0]) {
+function DesktopStep({ number, title, description, image }: (typeof CAMPAIGNSTEPS)[0]) {
   return (
-    <div className="relative grid items-center gap-2 md:grid-cols-2 p-2 rounded-3xl shadow-xl">
+    <div className="relative grid items-center gap-8 md:grid-cols-2 rounded-3xl shadow-xl">
       <div className="relative flex items-start gap-5">
         <span className="-ml-4 block text-[60pt] leading-none font-extralight text-[#224085]">{number}</span>
         <div className="absolute top-7.5 left-9 z-10 flex items-center justify-center">
@@ -36,7 +29,7 @@ function DesktopStep({ number, title, description, image }: (typeof STEPS)[0]) {
   );
 }
 
-function MobileStep({ title, description, image }: (typeof STEPS)[0]) {
+function MobileStep({ title, description, image }: (typeof CAMPAIGNSTEPS)[0]) {
   return (
     <div className="relative">
       <div className="rounded-3xl border-2 border-[#1a1a1a] bg-[#000006] p-4 shadow-xl">
@@ -69,13 +62,13 @@ export default function HowItWorks({ id }: { id: string }) {
           </svg>
 
           {/* Desktop */}
-          <div className=" space-y-14 md:block pb-10">
-            {STEPS.map((step) => <DesktopStep key={step.number} {...step} />)}
+          <div className="hidden space-y-14 md:block pb-20">
+            {CAMPAIGNSTEPS.map((step) => <DesktopStep key={step.number} {...step} />)}
           </div>
 
           {/* Mobile */}
           <div className="block space-y-6 pb-16 md:hidden">
-            {STEPS.map((step) => <MobileStep key={step.number} {...step} />)}
+            {CAMPAIGNSTEPS.map((step) => <MobileStep key={step.number} {...step} />)}
           </div>
         </div>
 

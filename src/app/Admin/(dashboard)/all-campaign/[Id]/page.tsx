@@ -58,11 +58,13 @@ export default function CampaignByIdPage() {
                 </div>
                 <div className="min-w-0">
                   <h1 className="truncate text-2xl font-semibold tracking-tight text-white sm:text-3xl">
-                    {campaignTitle}
+                    <h1 className="truncate text-2xl font-semibold tracking-tight text-white sm:text-3xl">
+                      {campaignTitle}
+                    </h1>
+                    <p className="mt-0.5 text-sm font-medium text-white/50">
+                      Influencers · {totalCount} total
+                    </p>
                   </h1>
-                  <p className="mt-0.5 text-sm font-medium text-white/50">
-                    Influencers · {totalCount} total
-                  </p>
                 </div>
               </div>
 
@@ -75,11 +77,8 @@ export default function CampaignByIdPage() {
                   </span>
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2">
-                  <UserX
-                    className="size-4 text-[var(--color-deleteButton)]"
-                    aria-hidden
-                  />
-                  <span className="text-sm font-semibold text-[var(--color-deleteButton)]">
+                  <UserX className="size-4 text-(--color-deleteButton)" aria-hidden />
+                  <span className="text-sm font-semibold text-(--color-deleteButton)">
                     {rejectedCount} rejected
                   </span>
                 </div>
@@ -97,6 +96,7 @@ export default function CampaignByIdPage() {
               </CustomButton>
               <Button
                 className="h-11 gap-2 rounded-xl bg-(--color-primaryButton) px-4 text-sm font-semibold text-white transition-all hover:opacity-95"
+
                 onClick={() => ExportToExcel()}
               >
                 <Download className="size-4" />
