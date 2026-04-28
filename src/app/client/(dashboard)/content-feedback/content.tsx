@@ -15,10 +15,10 @@ import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages
 import ContentFeedbackBrandSidebar from '@/src/app/component/content-feedback-client/content-feedback-brand-sidebar';
 import ContentFeedbackMediaPreview from '@/src/app/component/content-feedback-client/content-feedback-media-preview';
 import type {
-  ChatMessage,
   NegotiationItem,
 } from '@/src/types/Compnay/feeedback-content-type';
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
+import { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 
 export type SelectedContentFeedbackCard = {
   item: NegotiationItem;
@@ -120,7 +120,7 @@ export default function ContentFeedbackModal({
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-        (isVideoUrl(msg.message) || isImageUrl(msg.message))
+          (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
@@ -188,8 +188,8 @@ export default function ContentFeedbackModal({
   const approvedCopyDraft =
     selectedMediaKey != null
       ? (approvedCopyDraftByUrl[selectedMediaKey] ?? {
-          hashtags: '',
-        })
+        hashtags: '',
+      })
       : { hashtags: '' };
 
   const setApprovedCopyDraftField = (field: 'hashtags', value: string) => {
@@ -217,9 +217,8 @@ export default function ContentFeedbackModal({
       onClick={asPage ? undefined : onClose}
     >
       <div
-        className={`flex h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl ${
-          asPage ? '' : 'max-h-[90vh] max-w-6xl'
-        }`}
+        className={`flex h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl ${asPage ? '' : 'max-h-[90vh] max-w-6xl'
+          }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex flex-1 flex-col border-r border-white/10">
@@ -337,7 +336,7 @@ export default function ContentFeedbackModal({
                             if (
                               data?.success &&
                               (data.video_approve_brand ?? '').toLowerCase().trim() ===
-                                'approved'
+                              'approved'
                             ) {
                               setBrandApprovedByVideoUrl((prev) => ({
                                 ...prev,

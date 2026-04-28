@@ -45,13 +45,10 @@ export interface NegotiationResponse {
   campaign_logo_url?: string;
 
   negotiations?: NegotiationItem[];
- 
+  negotiation_controls: string
   total?: number;
 }
 
-/**
- * UI CARD TYPE (Admin-aligned)
- */
 export interface CardType {
   id: string;
   campaign_id?: string;
@@ -67,5 +64,5 @@ export interface CardType {
   comments?: number;
   status?: string;
 
-  source: NegotiationItem; // IMPORTANT for navigation
+  source: NegotiationItem;
 }
