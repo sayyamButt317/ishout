@@ -14,9 +14,8 @@ import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-
 import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages-list';
 import ContentFeedbackBrandSidebar from '@/src/app/component/content-feedback-client/content-feedback-brand-sidebar';
 import ContentFeedbackMediaPreview from '@/src/app/component/content-feedback-client/content-feedback-media-preview';
-import type {
-  NegotiationItem,
-} from '@/src/types/Compnay/feeedback-content-type';
+import type { NegotiationItem } from '@/src/types/Compnay/feeedback-content-type';
+import type { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
 import { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 
