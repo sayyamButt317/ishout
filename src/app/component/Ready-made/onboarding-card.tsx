@@ -12,8 +12,6 @@ import {
 } from '@/src/helper/followersformat';
 import { SiInstagram, SiTiktok, SiWhatsapp, SiYoutube } from 'react-icons/si';
 import { useRouter } from 'next/navigation';
-import NegotiationPage from '../../Admin/(dashboard)/negotiation/page';
-import InfluencerCard from '@/src/app/component/Ready-made/influencer-card';
 
 interface OnboardingCardProps {
   influencer: ReviewInfluencerResponse;
@@ -24,7 +22,7 @@ interface OnboardingCardProps {
   onDelete?: (influencer: ReviewInfluencerResponse) => void;
   sendNegotiation?: (influencer: ReviewInfluencerResponse) => void;
   negotiationId?: string;
-  lastOfferedPrice?: number | null;
+  phoneNumber?: string;
 }
 
 const OnboardingCard = ({
@@ -36,7 +34,7 @@ const OnboardingCard = ({
   onDelete,
   sendNegotiation,
   negotiationId,
-  lastOfferedPrice,
+  phoneNumber,
 }: OnboardingCardProps) => {
   const router = useRouter();
 
@@ -51,8 +49,10 @@ const OnboardingCard = ({
   };
 
   const handleViewNegotiation = () => {
-    if (negotiationId) {
-      router.push(`/Admin/negotiation-chat/${negotiationId}`);
+    if (negotiationId && phoneNumber) {
+      router.push(
+        `/Admin/negotiation-chat/${encodeURIComponent(phoneNumber)}?negotiation_id=${encodeURIComponent(negotiationId)}`,
+      );
     }
   };
 
