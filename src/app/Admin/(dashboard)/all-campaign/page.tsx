@@ -18,6 +18,7 @@ import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: 'all' },
@@ -60,6 +61,9 @@ export default function AllCampaignPage() {
 
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string | null>(null);
 
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const [uploadModalOpen, setUploadModalOpen] = useState<string | null>(null);
@@ -229,7 +233,7 @@ export default function AllCampaignPage() {
         }
       />
 
-      <TableComponent
+      <TableComponent<AdminAllCampaignApiResponse>
         header={[
           'Company Name',
           'Campaign Name',
@@ -249,6 +253,7 @@ export default function AllCampaignPage() {
         )}
         statuses={filteredAndSortedCampaigns.map((campaign) => campaign.status)}
         campaignIds={filteredAndSortedCampaigns.map((campaign) => campaign._id)}
+        campaigns={filteredAndSortedCampaigns}
         subheader={filteredAndSortedCampaigns.map((campaign) => [
           campaign.company_name,
           campaign.name,
@@ -270,7 +275,10 @@ export default function AllCampaignPage() {
             key={campaign._id}
             variant="ghost"
             size="icon"
-            onClick={() => deleteCampaignHook.mutate(campaign._id)}
+            onClick={() => {
+              setSelectedCampaignId(campaign._id);
+              setDeleteOpen(true);
+            }}
           >
             <Trash className="text-red-300 size-5" />
           </Button>,
@@ -301,6 +309,27 @@ export default function AllCampaignPage() {
         onPageChange={handlePageChange}
         isLoading={isLoading}
       />
+      
+      <DeleteDialogue
+        heading="Delete Campaign"
+        subheading="Are you sure you want to delete this campaign?"
+        open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedCampaignId(null);
+        }}
+        ondelete={() => {
+          if (selectedCampaignId) {
+            deleteCampaignHook.mutate(selectedCampaignId, {
+              onSuccess: () => {
+                setDeleteOpen(false);
+                setSelectedCampaignId(null);
+                refetch();
+              },
+            });
+          }
+        }}
+      />
 
       <CampaignBriefDialog
         open={dialogOpen}
@@ -308,6 +337,7 @@ export default function AllCampaignPage() {
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
       />
+      
       <ImageUploadModal
         open={uploadModalOpen !== null}
         onClose={() => setUploadModalOpen(null)}

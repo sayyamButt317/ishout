@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { RefreshCcw, UserCheck } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
+import CustomButton from '@/src/app/component/button';
 
 export default function RevieInfluencer() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -88,13 +89,12 @@ export default function RevieInfluencer() {
             {new Date(campaign?.created_at).toLocaleDateString()}
           </div>,
           <div key={`view-${campaign?._id}`} className="truncate">
-            <Button
-              className="cursor-pointer"
-              variant="outline"
+            <CustomButton
+              className="cursor-pointer bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
               onClick={() => router.push(`/client/influencer-review/${campaign?._id}`)}
             >
-              View Influncers
-            </Button>
+              View Influencers
+            </CustomButton>
           </div>,
         ])}
         paginationstart={data?.page ?? 1}

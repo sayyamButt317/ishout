@@ -10,6 +10,7 @@ import useAuthStore from '@/src/store/AuthStore/authStore';
 import { toast } from 'sonner';
 import axios, { AxiosResponse } from 'axios';
 import { getAuthTokenProvider } from '@/src/provider/auth-provide';
+import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import {
   UpdateCampaignStatusRequestProps,
   UpdateInfluencerStatusRequestProps,
@@ -31,6 +32,7 @@ import {
   type WhatsAppAdminCompanyApproveVideoPayload,
   type WhatsAppAdminCompanyApproveVideoResponse,
 } from '@/src/types/Compnay/approved-video-type';
+import { SendRevisionPayload } from '@/src/types/Admin-Type/Feedback/revision-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -403,12 +405,15 @@ export const NegotiationStatsApi = async (page: number = 1, page_size: number = 
   return response.data;
 };
 
-export const NegotiationAgreedByCampaignApi = async (campaign_id: string) => {
+export const NegotiationAgreedByCampaignApi = async (
+  campaign_id: string,
+): Promise<AgreedNegotiationResponse> => {
   const response = await api.get(
     AdminENDPOINT.NEGOTIATION_AGREED_BY_CAMPAIGN(campaign_id),
   );
   return response.data;
 };
+
 
 export const NegotiationChatDetailApi = async (_id: string) => {
   const response = await api.get(AdminENDPOINT.NEGOTIATION_CHAT_DETAIL, {
@@ -584,3 +589,24 @@ export const WhatsAppAdminInfluencerMessagesApi = async (
 
   return response.data;
 };
+
+export const SendRevisionMessage = async (data: SendRevisionPayload) => {
+  const response = await api.post(AdminENDPOINT.SENDREVISIONMESSAGE, data)
+  return response.data
+}
+
+export const ExtractContentRevisionforInfluencer = async (
+  negotiation_id: string,
+  message_id?: string
+) => {
+  const response = await api.get(
+    AdminENDPOINT.CONTENTDETAILSFORINFLUENCER(negotiation_id),
+    {
+      params: {
+        message_id: message_id,
+      },
+    }
+  )
+
+  return response.data
+}

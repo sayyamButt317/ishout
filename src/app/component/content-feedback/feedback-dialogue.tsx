@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { MessageSquarePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,8 @@ import {
 import { formatVideoDuration } from '@/src/utils/video-duration';
 import { VideoFeedbackWorkspaceProps } from '@/src/types/Admin-Type/Content-type';
 import { captureVideoFrameDataUrl } from '@/src/utils/content-feedback-chat';
+import { RevisionBox } from './revisionbox';
+import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
 
 export default function VideoFeedbackWorkspace({
   videoRef,
@@ -52,6 +54,8 @@ export default function VideoFeedbackWorkspace({
   const [composerSnapshot, setComposerSnapshot] = useState<string | null>(null);
   const [commentText, setCommentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const { addTimestamp, } = useRevisionMessageStore()
 
 
   const openComposerAtTime = useCallback(
@@ -116,21 +120,23 @@ export default function VideoFeedbackWorkspace({
   );
 
   const handleSubmit = async () => {
-    const text = commentText.trim();
-    if (!text) return;
-    setSubmitting(true);
+    const text = commentText.trim()
+    if (!text) return
+    setSubmitting(true)
     try {
-      await onSubmitTimedFeedback({
-        text,
-        timestamp: composerTime,
-        snapshotDataUrl: composerSnapshot,
-      });
-      setComposerOpen(false);
-      setPinMode(false);
+      addTimestamp({
+        time: Number(composerTime.toFixed(2)),
+        feedback: text,
+
+      })
+
+      setComposerOpen(false)
+      setPinMode(false)
+      setCommentText("")
     } finally {
-      setSubmitting(false);
+      setSubmitting(false)
     }
-  };
+  }
 
   const progressPct =
     duration && duration > 0
@@ -246,6 +252,7 @@ export default function VideoFeedbackWorkspace({
           scrubVideoRef={scrubVideoRef}
           pendingScrubTimeRef={pendingScrubTimeRef}
         />
+
       )}
 
       <Dialog open={composerOpen} onOpenChange={setComposerOpen}>
@@ -289,14 +296,15 @@ export default function VideoFeedbackWorkspace({
             <Button
               type="button"
               disabled={submitting || !commentText.trim()}
-              className="bg-(--color-primaryButton) text-white hover:opacity-90"
+              className="bg-primaryButton text-white hover:opacity-90"
               onClick={() => void handleSubmit()}
             >
-              {submitting ? 'Sending…' : 'Send feedback'}
+              Add Feedback
             </Button>
           </div>
         </DialogContent>
       </Dialog>
+
     </div>
   );
 }

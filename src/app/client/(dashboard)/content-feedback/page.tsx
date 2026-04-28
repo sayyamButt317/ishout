@@ -3,9 +3,13 @@
 import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
-
+import ContentHeader from '@/src/app/component/custom-component/ContentHeader';
+import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
+import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { MessageSquare, MoreHorizontal, Search, Video } from 'lucide-react';
 import Image from 'next/image';
+import { Button } from '@/components/ui/button';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import {
   CardType,
@@ -26,42 +30,61 @@ const countStyles: Record<string, string> = {
   emerald: 'bg-emerald-100 border-emerald-200 text-emerald-700',
 };
 
+const handleViewProfile = (username?: string, platform?: string) => {
+  if (!username || !platform) return;
+
+  const cleanUsername = username.replace(/^@/, '');
+
+  const urls: Record<string, string> = {
+    instagram: `https://www.instagram.com/${cleanUsername}`,
+    tiktok: `https://www.tiktok.com/@${cleanUsername}`,
+    youtube: `https://www.youtube.com/@${cleanUsername}`,
+  };
+
+  const url = urls[platform.toLowerCase()];
+  if (url) window.open(url, '_blank');
+};
+
 function ContentFeedbackPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
 
   const [search, setSearch] = useState('');
+  const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
     data?: NegotiationResponse;
   };
 
-  const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
+  const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
+
+  const negotiationItems = data?.negotiations ?? [];
 
   type CardWithSource = CardType & { source: NegotiationItem };
+
+  // Keeping the admin_approved filter as requested
   const apiCards: CardWithSource[] = negotiationItems
-    .filter(
-      (item) =>
-        item.negotiation_status === 'agreed' && item.admin_approved === 'Approved',
-    )
+    .filter((item) => item.admin_approved === 'Approved')
     .map((item) => ({
       id: item._id,
       campaign_id: item.campaign_id,
       title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
       campaign: item.campaign_brief?.title ?? 'Campaign',
-      rights: 'Full Rights',
-      status: 'Ready to Post',
-
-      thumb:
-        item.campaign_logo_url ??
-        item.campaign_brief?.campaign_logo_url ??
-        '/assets/logo.svg',
-
+      thumb: item.influencer?.picture ?? '',
       thread_id: item.thread_id,
       brand_thread_id: item.brand_thread_id,
       Brand_approved: item.Brand_approved,
       source: item,
     }));
+
+  const brief: UpdateCampaignBrief | null = briefData?.response
+    ? {
+        ...briefData.response,
+        id: briefData.id,
+      }
+    : null;
 
   return (
     <div className="font-sans">
@@ -88,8 +111,24 @@ function ContentFeedbackPageContent() {
           </div>
         }
       />
+      <ContentHeader
+        title={data?.campaign_brief?.title ?? ''}
+        logo={data?.campaign_logo_url ?? ''}
+        description="Showing influencers content waiting for content feedback review"
+        category="Influencers Content"
+        deliverables={data?.campaign_brief?.deliverables_per_influencer}
+        timeline={data?.campaign_brief?.timeline}
+        platform={data?.campaign?.platform}
+        companyName={data?.campaign?.company_name}
+        briefId={data?.campaign?.brief_id}
+        brandThreadId={data?.campaign?.brand_thread_id}
+        onViewBrief={(id) => {
+          setSelectedBriefId(id);
+          setDialogOpen(true);
+        }}
+      />
 
-      <div className="flex gap-6 overflow-x-auto pb-4">
+      <div className="flex gap-6 mt-6 overflow-x-auto pb-4 items-start">
         {COLUMNS.map((col) => {
           const combinedCards: CardWithSource[] =
             col.id === 'approved'
@@ -110,7 +149,7 @@ function ContentFeedbackPageContent() {
           return (
             <div
               key={col.id}
-              className="flex w-80 shrink-0 flex-col gap-4 rounded-xl border border-white/10 bg-white/2 p-4"
+              className="flex w-96 shrink-0 flex-col gap-4 rounded-xl border border-white/10 bg-white/2 p-4"
             >
               <div className="flex items-center justify-between px-2">
                 <div className="flex items-center gap-2">
@@ -124,7 +163,7 @@ function ContentFeedbackPageContent() {
                         : countStyles[col.color]
                     }`}
                   >
-                    {col.count}
+                    {combinedCards.length}
                   </span>
                 </div>
                 <button className="text-white/40 hover:text-white/70 transition-colors">
@@ -159,43 +198,101 @@ function ContentFeedbackPageContent() {
                         `/client/content-feedback/content?${params.toString()}`,
                       );
                     }}
-                    className="cursor-pointer rounded-xl border border-white/10 bg-white/5 p-3 transition-all hover:border-(--color-primaryButton)/30 hover:shadow-lg"
+                    className="cursor-pointer rounded-2xl border border-white/10 bg-[#0F0F0F] p-6 transition-all hover:border-white/20 min-h-[260px] flex flex-col justify-between"
                   >
-                    <div className="relative aspect-4/3 overflow-hidden rounded-lg ">
-                      <Image
-                        src={card.thumb}
-                        alt={card.title}
-                        fill
-                        className="object-cover"
-                        sizes="320px"
-                      />
-
-                      <div className="absolute top-2 right-2 rounded-lg bg-white/90 p-1">
-                        <Video className="size-3 text-slate-700" />
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="relative w-20 h-20 overflow-hidden rounded-full border border-white/10">
+                        <Image
+                          src={card.source?.influencer?.picture ?? ''}
+                          alt={card.source?.influencer?.username ?? ''}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <h4 className="text-base font-bold text-white">
+                          @{card.source?.influencer?.username ?? ''}
+                        </h4>
                       </div>
                     </div>
-                    <h4 className="truncate text-sm font-bold text-white">
-                      {card.title}
-                    </h4>
-                    <p className="mb-3 text-xs text-white/50">{card.campaign}</p>
 
-                    <div className="flex items-center justify-between">
-                      <span className="rounded-md border border-blue-500/30 bg-blue-500/10 px-2 py-1 text-[10px] font-bold uppercase text-blue-400">
-                        {'rights' in card ? card.rights : 'Full Rights'}
-                      </span>
-
-                      {'comments' in card && card.comments && (
-                        <div className="flex items-center gap-1 text-white/50">
-                          <MessageSquare className="size-3" />
-                          <span className="text-xs font-bold">{card.comments}</span>
-                        </div>
-                      )}
-
-                      {'status' in card && card.status && (
-                        <span className="text-[10px] font-bold text-emerald-400">
-                          {card.status}
+                    {/* DETAILS - Influencer Information */}
+                    <div className="space-y-4 mb-6">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">
+                          Engagement Rate
                         </span>
-                      )}
+                        <span className="text-sm text-white/90">
+                          {card.source?.influencer?.engagementRate
+                            ? `${(card.source.influencer.engagementRate * 100).toFixed(2)}%`
+                            : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">
+                          Country
+                        </span>
+                        <span className="text-sm text-white/90">
+                          {card.source?.influencer?.country || 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">
+                          Platform
+                        </span>
+                        <span className="text-sm text-white/90 capitalize">
+                          {card.source?.influencer?.platform || 'N/A'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* ACTIONS */}
+                    <div className="flex gap-3">
+                      <Button
+                        variant="outline"
+                        className="flex-1 h-11 rounded-xl bg-white/5 border-white/5 text-white hover:bg-white/10"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleViewProfile(
+                            card.source?.influencer?.username,
+                            card.source?.influencer?.platform,
+                          );
+                        }}
+                      >
+                        View Profile
+                      </Button>
+
+                      <Button
+                        variant="default"
+                        onClick={(e) => {
+                          e.stopPropagation();
+
+                          const campaignId = card.campaign_id ?? campaignIdFromQuery;
+                          if (!campaignId) return;
+
+                          const selectedCardPayload = {
+                            item: card.source,
+                            title: card.title,
+                            campaign: card.campaign,
+                          };
+                          if (typeof window !== 'undefined') {
+                            sessionStorage.setItem(
+                              'content-feedback:selected-card',
+                              JSON.stringify(selectedCardPayload),
+                            );
+                          }
+                          const params = new URLSearchParams({
+                            negotiation_id: card.id,
+                            campaign_id: campaignId,
+                          });
+                          router.push(
+                            `/client/content-feedback/content?${params.toString()}`,
+                          );
+                        }}
+                        className="flex-1 h-11 rounded-xl bg-primaryButton hover:bg-primaryHover text-white font-bold"
+                      >
+                        View Content
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -204,6 +301,13 @@ function ContentFeedbackPageContent() {
           );
         })}
       </div>
+
+      <CampaignBriefDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        briefData={brief}
+        onUpdate={() => {}}
+      />
     </div>
   );
 }
