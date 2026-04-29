@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card'
 import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store'
 import CustomButton from '../button'
 import SendRevisionHook from '@/src/routes/Admin/Hooks/feedback/send-revision-hook'
-import { MessageCircleWarning, TimerIcon } from 'lucide-react';
+import { MessageCircleWarning, RefreshCw, TimerIcon } from 'lucide-react';
 
 interface TimestampItem {
     time: number
@@ -47,9 +47,10 @@ export const RevisionBox = () => {
 
                 <CustomButton
                     onClick={sendRevisionTimeandMessage}
-                    className='w-full bg-primaryButton'
+                    className='w-full bg-primaryButton cursor-pointer'
                 >
-                    Send Feedback
+                    <RefreshCw className="size-4" />
+                    Request Revision
                 </CustomButton>
             </Card>
         </div>

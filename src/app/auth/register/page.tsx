@@ -69,7 +69,7 @@ export default function Signup() {
       </div>
 
       {/* Right - Signup Form */}
-      <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-950 via-black to-slate-900 p-6">
+      <div className="min-h-screen w-full flex items-center justify-center bg-linear-to-br from-slate-950 via-black to-slate-900 p-6">
         <Card className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl">
           <div className="p-10 space-y-8">
             {/* Logo */}

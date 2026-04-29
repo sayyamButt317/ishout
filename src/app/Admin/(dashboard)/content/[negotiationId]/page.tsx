@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { Check, MessageSquare } from 'lucide-react';
+import { Check, ChevronLeft, MessageSquare } from 'lucide-react';
 
 import PageHeader from '@/src/app/component/PageHeader';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
@@ -31,6 +31,7 @@ import { toast } from 'sonner';
 import { mapAdminInfluencerMessageError } from '@/src/types/Admin-Type/admin-influencer-message-type';
 import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
 import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
+import InfluencerDetailDialog from '@/src/app/component/content-feedback/influencerdetail';
 
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
@@ -48,6 +49,8 @@ export default function ContentFeedbackDetailPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
   const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
+  const [isExtractDialogOpen, setIsExtractDialogOpen] = useState(false);
+
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -149,6 +152,7 @@ export default function ContentFeedbackDetailPage() {
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
+  const { setContentType } = useRevisionMessageStore();
 
   const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
     'admin-content-feedback-id-map',
@@ -363,9 +367,6 @@ export default function ContentFeedbackDetailPage() {
             </button>
           }
         />
-        <div className="mt-4 text-white/60">
-          Negotiation not found (or missing `campaign_id`).
-        </div>
       </div>
     );
   }
@@ -377,9 +378,9 @@ export default function ContentFeedbackDetailPage() {
           <div className="flex w-full shrink-0 flex-col border-b border-white/10 lg:min-h-0 lg:min-w-0 lg:flex-1 lg:border-r lg:border-b-0">
             <div className="flex items-center justify-between border-b border-white/10 p-4">
               <div className="flex items-center gap-3">
-                {/* <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
-                                    <ChevronLeft className="size-5" />
-                                </div> */}
+                <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
+                  <ChevronLeft className="size-5" />
+                </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">{selectedCard.title}</h3>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
@@ -387,15 +388,18 @@ export default function ContentFeedbackDetailPage() {
                   </p>
                 </div>
               </div>
-              {/* <div className="flex items-center gap-2">
-                                <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-(--color-primaryButton) focus:outline-none">
-                                    <option>Version 1 (Active)</option>
-                                    <option disabled>Version 2 (Draft)</option>
-                                </select>
-                                <button className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors">
-                                    <Maximize2 className="size-5" />
-                                </button>
-                            </div> */}
+              <div className="flex items-center gap-2">
+                <select
+                  // onClick={setContentType}
+                  className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
+                  <option>Story</option>
+                  <option>Post</option>
+                </select>
+                <select className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
+                  <option>Version 1</option>
+                  <option>Version 2</option>
+                </select>
+              </div>
             </div>
 
             <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-2 pt-2 lg:flex-row lg:items-stretch">
@@ -444,10 +448,12 @@ export default function ContentFeedbackDetailPage() {
 
               <div className="flex flex-col items-end gap-2 text-white/50">
                 <div className="flex items-center gap-2">
-                  {/* <button className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors">
-                                        <RefreshCw className="size-4" />
-                                        Request Revision
-                                    </button> */}
+                  <button
+                    onClick={() => setIsExtractDialogOpen(true)}
+                    className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-2 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors"
+                  >
+                    Ready For Posting
+                  </button>
                   <button
                     onClick={() => {
                       if (
@@ -520,6 +526,11 @@ export default function ContentFeedbackDetailPage() {
           setFeedbackId={setFeedbackId}
         />
       </div>
+      <InfluencerDetailDialog
+        open={isExtractDialogOpen}
+        onOpenChange={setIsExtractDialogOpen}
+      />
     </div>
+
   );
 }
