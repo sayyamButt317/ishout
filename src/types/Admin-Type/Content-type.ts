@@ -66,6 +66,7 @@ export interface SaveContentFeedbackPayload {
   review_side: ContentFeedbackReviewSide;
   negotiation_id?: string;
   campaign_id?: string;
+  content_id?: string;
   content_url?: string | null;
   snapshot?: string | null;
   Brand_approved?: string | null;

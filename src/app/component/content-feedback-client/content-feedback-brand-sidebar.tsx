@@ -29,7 +29,7 @@ export type ContentFeedbackBrandSidebarProps = {
   saveContentFeedbackMutation: SaveContentFeedbackMutation;
   selectedPreviewMediaUrl: string | null;
   negotiationId: string;
-  campaignId: string | undefined;
+  contentId: string | undefined;
   setFeedbackId: (negotiationId: string, contentUrl: string, feedbackId: string) => void;
   activeFeedbackId: string | undefined;
   refetchBrandFeedback: () => Promise<unknown>;
@@ -52,7 +52,7 @@ export default function ContentFeedbackBrandSidebar({
   saveContentFeedbackMutation,
   selectedPreviewMediaUrl,
   negotiationId,
-  campaignId,
+  contentId,
   setFeedbackId,
   activeFeedbackId,
   refetchBrandFeedback,
@@ -84,7 +84,7 @@ export default function ContentFeedbackBrandSidebar({
               !selectedContentFeedback.trim() ||
               !selectedPreviewMediaUrl ||
               !negotiationId ||
-              !campaignId
+              !contentId
             ) {
               return;
             }
@@ -92,7 +92,7 @@ export default function ContentFeedbackBrandSidebar({
             try {
               const response = await saveContentFeedbackMutation.mutateAsync({
                 negotiation_id: negotiationId,
-                campaign_id: campaignId,
+                content_id: contentId,
                 content_url: selectedPreviewMediaUrl,
                 msg: selectedContentFeedback.trim(),
                 review_side: 'brand_review',
