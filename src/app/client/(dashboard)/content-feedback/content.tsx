@@ -17,7 +17,6 @@ import ContentFeedbackMediaPreview from '@/src/app/component/content-feedback-cl
 import type { NegotiationItem } from '@/src/types/Compnay/feeedback-content-type';
 import type { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
-import { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 
 export type SelectedContentFeedbackCard = {
   item: NegotiationItem;
@@ -119,7 +118,7 @@ export default function ContentFeedbackModal({
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-          (isVideoUrl(msg.message) || isImageUrl(msg.message))
+        (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
@@ -187,8 +186,8 @@ export default function ContentFeedbackModal({
   const approvedCopyDraft =
     selectedMediaKey != null
       ? (approvedCopyDraftByUrl[selectedMediaKey] ?? {
-        hashtags: '',
-      })
+          hashtags: '',
+        })
       : { hashtags: '' };
 
   const setApprovedCopyDraftField = (field: 'hashtags', value: string) => {
@@ -210,17 +209,20 @@ export default function ContentFeedbackModal({
     <div
       className={
         asPage
-          ? 'h-full min-h-[calc(100vh-120px)] p-4'
+          ? 'h-full min-h-[calc(100vh-120px)] overflow-y-auto'
           : 'fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4'
       }
       onClick={asPage ? undefined : onClose}
     >
       <div
-        className={`flex h-full w-full overflow-hidden rounded-2xl border border-white/10 bg-(--color-background) shadow-2xl ${asPage ? '' : 'max-h-[90vh] max-w-6xl'
-          }`}
+        className={`flex h-full w-full min-h-0 overflow-hidden bg-(--color-background) ${
+          asPage
+            ? 'max-h-[min(920px,96vh)] rounded-none border-0 shadow-none'
+            : 'max-h-[90vh] max-w-6xl rounded-2xl border border-white/10 shadow-2xl'
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex flex-1 flex-col border-r border-white/10">
+        <div className="flex min-h-0 flex-1 flex-col border-b border-white/10 lg:border-r lg:border-b-0">
           <div className="flex items-center justify-between border-b border-white/10 p-4">
             <div className="flex items-center gap-3">
               <button
@@ -246,7 +248,7 @@ export default function ContentFeedbackModal({
               </button>
             </div>
           </div>
-          <div className="flex flex-1 flex-col lg:flex-row items-start lg:items-stretch justify-start lg:justify-center overflow-y-auto lg:overflow-hidden bg-slate-900 p-4 gap-4">
+          <div className="flex min-h-0 flex-1 flex-col items-start justify-start gap-3 overflow-y-auto bg-black/20 p-3 lg:flex-row lg:items-stretch lg:justify-center lg:overflow-hidden">
             <ContentFeedbackMediaPreview
               selectedPreviewMediaUrl={selectedPreviewMediaUrl}
               selectedPreviewMediaType={selectedPreviewMediaType}
@@ -254,24 +256,6 @@ export default function ContentFeedbackModal({
               setIsPlaying={setIsPlaying}
               setSelectedVideoDuration={setSelectedVideoDuration}
               setSelectedVideoResolution={setSelectedVideoResolution}
-            />
-            <ContentFeedbackBrandSidebar
-              selectedContentFeedback={selectedContentFeedback}
-              onSelectedContentFeedbackChange={setSelectedContentFeedback}
-              saveContentFeedbackMutation={saveContentFeedbackMutation}
-              selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-              negotiationId={negotiationId}
-              campaignId={campaignId}
-              setFeedbackId={setFeedbackId}
-              activeFeedbackId={activeFeedbackId}
-              refetchBrandFeedback={refetchBrandFeedback}
-              brandFeedbackData={brandFeedbackData}
-              selectedMediaKey={selectedMediaKey}
-              approveVideoResponseByUrl={approveVideoResponseByUrl}
-              approvedCopyDraft={approvedCopyDraft}
-              setApprovedCopyDraftField={setApprovedCopyDraftField}
-              setApprovedCopyDraftByUrl={setApprovedCopyDraftByUrl}
-              updateApprovedContentMutation={updateApprovedContentMutation}
             />
           </div>
           <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-4">
@@ -335,7 +319,7 @@ export default function ContentFeedbackModal({
                             if (
                               data?.success &&
                               (data.video_approve_brand ?? '').toLowerCase().trim() ===
-                              'approved'
+                                'approved'
                             ) {
                               setBrandApprovedByVideoUrl((prev) => ({
                                 ...prev,
@@ -374,7 +358,7 @@ export default function ContentFeedbackModal({
             </div>
           </div>
         </div>
-        <div className="flex w-100 shrink-0 flex-col bg-white/2">
+        <div className="flex w-full min-h-0 shrink-0 flex-col bg-white/2 lg:max-w-md">
           <div className="flex-1 space-y-4 overflow-y-auto p-5">
             <ChatMessagesList
               messages={chatData?.messages}
@@ -419,6 +403,26 @@ ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-prim
             </div>
           </div>
         </div>
+      </div>
+      <div className="mt-3">
+        <ContentFeedbackBrandSidebar
+          selectedContentFeedback={selectedContentFeedback}
+          onSelectedContentFeedbackChange={setSelectedContentFeedback}
+          saveContentFeedbackMutation={saveContentFeedbackMutation}
+          selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+          negotiationId={negotiationId}
+          campaignId={campaignId}
+          setFeedbackId={setFeedbackId}
+          activeFeedbackId={activeFeedbackId}
+          refetchBrandFeedback={refetchBrandFeedback}
+          brandFeedbackData={brandFeedbackData}
+          selectedMediaKey={selectedMediaKey}
+          approveVideoResponseByUrl={approveVideoResponseByUrl}
+          approvedCopyDraft={approvedCopyDraft}
+          setApprovedCopyDraftField={setApprovedCopyDraftField}
+          setApprovedCopyDraftByUrl={setApprovedCopyDraftByUrl}
+          updateApprovedContentMutation={updateApprovedContentMutation}
+        />
       </div>
     </div>
   );
