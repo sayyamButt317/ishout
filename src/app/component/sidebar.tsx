@@ -107,7 +107,7 @@ function SidebarNav({
 }) {
   const pathname = usePathname();
   return (
-    <nav className="flex flex-1 flex-col gap-2 overflow-y-auto pr-1">
+    <nav className="flex flex-1 flex-col gap-2 overflow-y-hidden pr-1">
       {groups.map((group) => {
         const groupHasActive = group.children.some(
           (c) => c.route && (pathname === c.route || pathname.startsWith(c.route)),

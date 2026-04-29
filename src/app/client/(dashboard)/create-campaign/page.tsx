@@ -9,8 +9,8 @@ import Summary from "@/src/app/component/Ready-made/summary";
 
 export default function ClientCampaign() {
   return (
-    <main className=" mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 ">
-      <section className="lg:col-span-8 space-y-6">
+    <main className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
+      <section className="lg:col-span-8 ">
         <ChoosePlatform />
         <CampaignName />
         <InfluencersFollowersRange />

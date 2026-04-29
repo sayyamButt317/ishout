@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <section className="relative w-full flex flex-col items-center overflow-hidden">
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center max-w-7xl w-full px-4 sm:px-6 md:px-10 py-16 md:py-24 gap-8 text-center">
+      <div className="relative z-10 flex flex-col items-center justify-center max-w-7xl w-full px-4 sm:px-6 md:px-10 py-16 md:py-24 gap-2 text-center">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold italic text-gray-200 leading-tight">
           Ready to activate at scale?
         </h1>
@@ -20,7 +20,7 @@ export default function Footer() {
           {/* Layer 1: The New Outer-most Border */}
           <div className="mt-6 rounded-[22px] inline-block">
             {/* Layer 2: Middle Border */}
-            <div className="p-2 border border-white/30 rounded-[20px] inline-block">
+            <div className="p-2 border border-white/30 rounded-[20px]">
               <CustomButton
                 className="
           bg-[#ff3b8d] hover:bg-[#ff5a9e] cursor-pointer rounded-[14px] h-14 px-20 text-xl font-extrabold italic text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)] transition-all duration-150">

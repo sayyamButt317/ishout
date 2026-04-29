@@ -56,7 +56,7 @@ export const ProfileAvatar = ({
           <div className={`w-24 h-24 rounded-full overflow-hidden border-2 border-primaryButton flex items-center justify-center ${!hasImage ? avatarColor(userId) : ""}`}>
             {hasImage ? (
               <Image
-                src={imageSrc!}
+                src={imageSrc}
                 alt={name}
                 width={200}
                 height={200}
@@ -80,7 +80,7 @@ export const ProfileAvatar = ({
               Click the avatar button to change your picture.
           </p>
 
-          <div className="flex items-center gap-3 justify-center sm:justify-start">
+          {/* <div className="flex items-center gap-3 justify-center sm:justify-start">
 
             {hasImage && (
               <button
@@ -91,7 +91,7 @@ export const ProfileAvatar = ({
                 Remove Picture
               </button>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
