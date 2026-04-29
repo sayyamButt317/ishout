@@ -49,7 +49,7 @@ function MobileStep({ title, description, image }: (typeof CAMPAIGNSTEPS)[0]) {
 
 export default function HowItWorks({ id }: { id: string }) {
   return (
-    <section className="overflow-hidden pt-36.75 max-sm:pt-15">
+    <section className="overflow-hidden pt-36.75 max-sm:pt-2">
       <div className="container mx-auto max-md:px-2 md:px-28 md:pb-23.75">
         <div className="text-center">
           <h1 id={id} className="italic text-3xl sm:text-4xl md:text-5xl text-center font-extrabold">How It Works</h1>
@@ -57,7 +57,7 @@ export default function HowItWorks({ id }: { id: string }) {
         </div>
 
         <div className="relative">
-          <svg className="pointer-events-none absolute top-0 left-10 hidden w-112.25 md:block stroke-white" viewBox="0 495 253 1600" preserveAspectRatio="xMinYMin slice">
+          <svg className="pointer-events-none absolute top-0 left-8 hidden w-112.25 md:block stroke-white" viewBox="0 517 253 1600" preserveAspectRatio="xMinYMin slice">
             <path fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.9" opacity="0.25" d="M5.53,2.48v1631c0,40.96,20.77,65.73,68.73,68.73h203.25" pathLength="1" strokeDashoffset="0px" strokeDasharray="1px 1px" />
           </svg>
 
@@ -67,7 +67,7 @@ export default function HowItWorks({ id }: { id: string }) {
           </div>
 
           {/* Mobile */}
-          <div className="block space-y-6 pb-16 md:hidden">
+          <div className="block space-y-6 pb-2 md:hidden">
             {CAMPAIGNSTEPS.map((step) => <MobileStep key={step.number} {...step} />)}
           </div>
         </div>

@@ -57,7 +57,7 @@ export default function CampaignBriefPage() {
 
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white px-4 md:px-12 py-10">
+    <div className="min-h-screen bg-neutral-950 text-white">
       <PageHeader
         title="Campaign Briefs"
         description="Search, manage and download your AI-generated campaign strategies."

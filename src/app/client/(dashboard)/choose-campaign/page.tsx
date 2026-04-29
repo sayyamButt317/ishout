@@ -11,7 +11,7 @@ import { OPTIONS } from '@/src/constant/campaign-option';
 
 export default function ChooseCampaign() {
   return (
-    <div className="w-full min-h-screen flex flex-col px-4 sm:px-8 py-6">
+    <div className="w-full min-h-screen flex flex-col">
       <Header />
       <CampaignList />
       <Footer />
@@ -28,9 +28,8 @@ function Header() {
         icon={<Sparkles className="size-5" />}
       />
 
-      <div className="text-center mt-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primaryButton/10 border border-primaryButton/20 text-primarytext text-xs font-bold tracking-widest uppercase">
-          <Sparkles className="w-3 h-3 fill-primarytext" />
+      <div className="text-center">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primaryButton/10 border border-primaryButton/20 text-primarytext text-xs font-extralight tracking-widest uppercase">
           Campaign Builder
         </div>
       </div>
@@ -40,7 +39,7 @@ function Header() {
 
 function CampaignList() {
   return (
-    <div className="w-full mx-auto flex flex-col gap-12 border-t border-white/10 mt-8 pt-10">
+    <div className="w-full mx-auto flex flex-col gap-4 border-t border-white/10 mt-3 pt-3">
       {OPTIONS.map((option) => (
         <CampaignCard key={option.id} option={option} />
       ))}
@@ -67,27 +66,27 @@ function CampaignCard({ option }: { option: CampaignOption }) {
       />
       {/* Card */}
       <div
-        className={`relative bg-black/40 backdrop-blur-xl border border-gray-500/30 ${a.border} rounded-3xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1.5 ${a.cardGlow} flex flex-col md:flex-row`}
+        className={` bg-black/40 backdrop-blur-xl border border-gray-500/30 ${a.border} rounded-3xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1.5 ${a.cardGlow} flex flex-col gap-x-30 gap-y-6 sm:p md:flex-row`}
       >
         {/* Content */}
-        <div className="flex-1 p-8 md:p-12 flex flex-col justify-center">
-          <div className={`w-14 h-14 rounded-2xl ${a.iconBg} flex items-center justify-center mb-6`}>
+        <div className="flex-1 md:px-6 md:py-4 flex flex-col justify-center">
+          <div className={`w-14 h-14 rounded-2xl ${a.iconBg} flex items-center justify-center mb-2`}>
             <Icon className={`w-6 h-6 ${a.iconColor}`} />
           </div>
 
           <h3
-            className={`text-2xl md:text-3xl font-extrabold text-white mb-4 transition ${a.titleGlow}`}
+            className={`text-2xl md:text-2xl font-bold tracking-wide text-white mb-2 transition ${a.titleGlow}`}
           >
             {option.title}
           </h3>
 
-          <p className="text-white/60 text-sm md:text-base mb-6 max-w-md">
+          <p className="text-white/60 text-sm italic mb-2 max-w-md">
             {option.description}
           </p>
 
           <Button
             onClick={handleClick}
-            className={`inline-flex cursor-pointer w-fit whitespace-nowrap items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition active:scale-95 hover:scale-[1.03] ${a.btnClass}`}
+            className={`inline-flex cursor-pointer w-fit whitespace-nowrap items-center gap-2 px-2 py-3 rounded-full text-sm font-semibold text-white transition active:scale-95 hover:scale-[1.03] ${a.btnClass}`}
             aria-label={`Start ${option.title}`}
           >
             Get Started
@@ -96,13 +95,13 @@ function CampaignCard({ option }: { option: CampaignOption }) {
         </div>
 
         {/* Image */}
-        <div className="flex-1 flex items-center justify-center p-6">
+        <div className="flex-1 flex items-center justify-center p-2">
           <div className="flex items-center justify-center">
             <Image
               src={option.img}
               alt={option.title}
-              width={option.imgWidth}
-              height={option.imgHeight}
+              width={100}
+              height={100}
               className="object-contain rounded-xl"
               priority
             />
@@ -115,8 +114,8 @@ function CampaignCard({ option }: { option: CampaignOption }) {
 
 function Footer() {
   return (
-    <div className="mt-16 text-center">
-      <p className="text-sm text-white/40">
+    <div className="mt-2 text-center">
+      <p className="text-sm text-white/40 font-extralight">
         Not sure which one to choose?{' '}
         <a
           href="mailto:info@ishout.com"

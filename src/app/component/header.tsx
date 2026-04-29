@@ -1,5 +1,7 @@
+'use client';
+
 import Link from 'next/link';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import CustomButton from './button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -13,6 +15,7 @@ const Header = () => {
   const router = useRouter();
   const token = getAuthTokenProvider();
   const role = getRoleProvider();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const dashboardRoute = useMemo(() => {
     if (token && role === 'company') return '/client/choose-campaign';
@@ -25,92 +28,98 @@ const Header = () => {
   };
 
   return (
-    <>
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur px-4 sm:px-6 py-4 justify-between">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex flex-row gap-2">
-            <Image
-              src="/assets/iShout-gif-black-background.gif"
-              alt="logo"
-              width={60}
-              height={60}
-              className="w-20 h-auto object-contain"
-              loading="eager"
-              priority
-              unoptimized={true}
-            />
-          </div>
-          <div
-            className="hidden lg:flex items-center gap-8 text-md font-thin"
-            style={{
-              maxWidth: '900px',
-              width: '100%',
-              justifyContent: 'center',
-            }}
-          >
-            <Link
-              href="https://app.ishout.ae/#about-us"
-              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
-            >
-              About Us
-            </Link>
-            <Link
-              href="https://app.ishout.ae/#how-it-works"
-              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
-            >
-              How It Works
-            </Link>
-            <Link
-              href="https://app.ishout.ae/#case-studies"
-              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
-            >
-              Case Studies
-            </Link>
-            <Link
-              href="/feedback"
-              className="text-white hover:text-pink-400 transition-colors text-md font-thin"
-            >
-              Feedback
-            </Link>
-          </div>
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur px-4 sm:px-6 py-4">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        
+        {/* Logo */}
+        <Image
+          src="/assets/iShout-gif-black-background.gif"
+          alt="logo"
+          width={60}
+          height={60}
+          className="w-16 sm:w-20 h-auto object-contain"
+          priority
+          unoptimized
+        />
 
-          {!token ? (
-            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center shrink-0">
-              <CustomButton
-                asChild
-                className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap"
-              >
-                <Link href="/auth/login">Login</Link>
-              </CustomButton>
-
-              <CustomButton
-                asChild
-                className="px-3 text-white sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap"
-              >
-                <Link href="/auth/register">Register</Link>
-              </CustomButton>
-            </div>
-          ) : (
-            <div className="flex flex-row gap-1 sm:gap-2 justify-end items-center shrink-0">
-              <CustomButton
-                onClick={() => DashboardRedirect()}
-                className="px-3 sm:px-6 text-xs sm:text-sm bg-secondaryButton hover:bg-secondaryHover cursor-pointer whitespace-nowrap"
-              >
-                Dashboard
-              </CustomButton>
-              <CustomButton
-                asChild
-                className="px-3 sm:px-6 text-xs sm:text-sm bg-primaryButton hover:bg-primaryHover cursor-pointer whitespace-nowrap"
-              >
-                <Link href="/auth/login" onClick={() => clearAuthTokenProvider()}>
-                  Sign Out
-                </Link>
-              </CustomButton>
-            </div>
-          )}
+        {/* Desktop Menu */}
+        <div className="hidden lg:flex items-center gap-8 text-md font-thin">
+          <Link href="https://app.ishout.ae/#about-us" className="text-white hover:text-pink-400">
+            About Us
+          </Link>
+          <Link href="https://app.ishout.ae/#how-it-works" className="text-white hover:text-pink-400">
+            How It Works
+          </Link>
+          <Link href="https://app.ishout.ae/#case-studies" className="text-white hover:text-pink-400">
+            Case Studies
+          </Link>
+          <Link href="/feedback" className="text-white hover:text-pink-400">
+            Feedback
+          </Link>
         </div>
-      </nav>
-    </>
+
+
+        {/* Mobile Hamburger */}
+        <div className="flex flex-row gap-2 pt-2 ">
+
+            {!token ? (
+              <>
+                <CustomButton asChild className="w-fit  max-sm:w-fit bg-secondaryButton text-white sm:text-sm">
+                  <Link href="/auth/login">Login</Link>
+                </CustomButton>
+                <CustomButton asChild className="w-fit  max-sm:w-fit bg-primaryButton text-white sm:text-sm">
+                  <Link href="/auth/register">Register</Link>
+                </CustomButton>
+              </>
+            ) : (
+              <>
+                <CustomButton onClick={DashboardRedirect} className="w-fit max-sm:w-fit bg-secondaryButton sm:text-sm">
+                  Dashboard
+                </CustomButton>
+                <CustomButton asChild className="w-fit max-sm:w-fit bg-primaryButton sm:text-sm">
+                  <Link href="/auth/login" onClick={() => clearAuthTokenProvider()}>
+                    Sign Out
+                  </Link>
+                </CustomButton>
+              </>
+            )}
+                    <button
+          className="lg:hidden text-white text-2xl"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          ☰
+        </button>
+          </div>
+        
+        {/* <button
+          className="lg:hidden text-white text-2xl"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          ☰
+        </button> */}
+        </div>
+
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="lg:hidden mt-4 bg-black/90 backdrop-blur rounded-xl p-4 flex flex-col gap-4">
+          
+          <Link href="https://app.ishout.ae/#about-us" onClick={() => setMenuOpen(false)} className="text-white">
+            About Us
+          </Link>
+          <Link href="https://app.ishout.ae/#how-it-works" onClick={() => setMenuOpen(false)} className="text-white">
+            How It Works
+          </Link>
+          <Link href="https://app.ishout.ae/#case-studies" onClick={() => setMenuOpen(false)} className="text-white">
+            Case Studies
+          </Link>
+          <Link href="/feedback" onClick={() => setMenuOpen(false)} className="text-white">
+            Feedback
+          </Link>
+
+          
+        </div>
+      )}
+    </nav>
   );
 };
 
