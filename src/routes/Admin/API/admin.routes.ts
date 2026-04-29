@@ -610,3 +610,15 @@ export const ExtractContentRevisionforInfluencer = async (
 
   return response.data
 }
+
+export const ExtractDemoGraphics = async (
+  username: string,
+  url: string
+) => {
+  const response = await api.post(AdminENDPOINT.EXTRACTDEMOGRAPHICS, {
+    username,
+    url,
+  });
+
+  return response.data;
+};
