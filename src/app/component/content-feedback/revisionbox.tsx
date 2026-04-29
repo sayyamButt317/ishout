@@ -11,47 +11,70 @@ interface TimestampItem {
 
 export const RevisionBox = () => {
     const sendinfo = SendRevisionHook()
-    const { buildPayload, removeTimestamp, timestamps } = useRevisionMessageStore()
+
+    const {
+        buildPayload,
+        removeTimestamp,
+        timestamps,
+        reset,
+    } = useRevisionMessageStore()
 
     const sendRevisionTimeandMessage = () => {
         const payload = buildPayload()
-        sendinfo.mutate(payload)
+
+        if (!payload) return // ✅ prevent invalid send
+
+        sendinfo.mutate(payload, {
+            onSuccess: () => {
+                reset() // ✅ CLEAR STORE + LOCAL STORAGE
+            },
+        })
     }
 
     return (
         <div className="mt-3 space-y-2">
-            <Card className='px-2'>
-                <h1 className='text-xl font-semibold'>Revision Timeline</h1>
-                {timestamps.map((item: TimestampItem, index: number) => (
-                    <div
-                        key={index}
-                        className="flex items-start justify-between rounded-lg border border-white/10 bg-white/5 p-3"
+            <Card className='px-4 py-3'>
+
+                {/* HEADER */}
+                <div className="flex items-center justify-between mb-3">
+                    <h1 className='text-lg font-semibold'>Revision Timeline</h1>
+
+                    <CustomButton
+                        onClick={sendRevisionTimeandMessage}
+                        disabled={!timestamps.length}
+                        className='bg-primaryButton cursor-pointer flex items-center gap-2 px-4 py-2 disabled:opacity-50'
                     >
-                        <div>
-                            <p className="text-xs text-white/50 flex items-center gap-1">
-                                <TimerIcon size={14} /> {item.time}s
-                            </p>
-                            <p className="text-sm text-white flex items-center gap-1">
-                                <MessageCircleWarning size={14} /> {item.feedback}
-                            </p>
-                        </div>
+                        <RefreshCw className="size-4" />
+                        Request Revision
+                    </CustomButton>
+                </div>
 
-                        <button
-                            onClick={() => removeTimestamp(index)}
-                            className="text-xs text-red-400 hover:underline"
+                {/* TIMELINE */}
+                <div className="space-y-2">
+                    {timestamps.map((item: TimestampItem, index: number) => (
+                        <div
+                            key={index}
+                            className="flex items-start justify-between rounded-lg border border-white/10 bg-white/5 p-3"
                         >
-                            Remove
-                        </button>
-                    </div>
-                ))}
+                            <div>
+                                <p className="text-xs text-white/50 flex items-center gap-1">
+                                    <TimerIcon size={14} /> {item.time}s
+                                </p>
+                                <p className="text-sm text-white flex items-center gap-1">
+                                    <MessageCircleWarning size={14} /> {item.feedback}
+                                </p>
+                            </div>
 
-                <CustomButton
-                    onClick={sendRevisionTimeandMessage}
-                    className='w-full bg-primaryButton cursor-pointer'
-                >
-                    <RefreshCw className="size-4" />
-                    Request Revision
-                </CustomButton>
+                            <button
+                                onClick={() => removeTimestamp(index)}
+                                className="text-xs text-red-400 hover:underline"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
             </Card>
         </div>
     )

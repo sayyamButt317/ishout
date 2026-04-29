@@ -95,5 +95,7 @@ export const AdminENDPOINT = {
   CONTENTDETAILSFORINFLUENCER: (negotiation_id: string) =>
     `/${ROLE}/feedback/${negotiation_id}`,
 
-  EXTRACTDEMOGRAPHICS: `/${ROLE}/extract-report`
+  EXTRACTDEMOGRAPHICS: `/${ROLE}/extract-report`,
+  EXTRACTCAMPAIGNALLINFLUENCERREPORT: (campaign_id: string) =>
+    `/${ROLE}/campaign-influncersReport?campaign_id=${campaign_id}`
 };
