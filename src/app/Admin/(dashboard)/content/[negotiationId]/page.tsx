@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import { Check, ChevronLeft, MessageSquare } from 'lucide-react';
+import { ChevronLeft, MessageSquare } from 'lucide-react';
 
 import PageHeader from '@/src/app/component/PageHeader';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
@@ -32,6 +32,8 @@ import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
 import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
 import type { AdminInfluencerMessageItem } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import InfluencerDetailDialog from '@/src/app/component/content-feedback/influencerdetail';
+import useReportStore from '@/src/store/Feedback/report-store';
+import CustomButton from '@/src/app/component/button';
 
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
@@ -58,9 +60,18 @@ export default function ContentFeedbackDetailPage() {
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
 
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
-    data?: NegotiationResponse;
+    data?: NegotiationResponse
   };
-  console.log('data', data);
+
+  const { setcampaignIdForReport } = useReportStore()
+
+  // set campaign_id when data arrives
+  useEffect(() => {
+    if (data?.campaign_id) {
+      setcampaignIdForReport(data.campaign_id);
+    }
+  }, [data?.campaign_id, setcampaignIdForReport]);
+
 
   const { setAll } = useRevisionMessageStore();
   useEffect(() => {
@@ -150,6 +161,7 @@ export default function ContentFeedbackDetailPage() {
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
+  const [open, setOpen] = useState(false);
   const { setContentType } = useRevisionMessageStore();
 
   const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
@@ -376,15 +388,17 @@ export default function ContentFeedbackDetailPage() {
       <div className="w-full">
         <div className="flex h-full max-h-[min(920px,96vh)] w-full min-h-0 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
           <div className="flex w-full shrink-0 flex-col border-b border-white/10 lg:min-h-0 lg:min-w-0 lg:flex-1 lg:border-r lg:border-b-0">
-            <div className="flex items-center justify-between border-b border-white/10 p-4">
+            <div className="flex items-center justify-between border-b border-white/10 p-2">
               <div className="flex items-center gap-3">
                 <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
-                  <ChevronLeft className="size-5" />
+                  <ChevronLeft
+                    onClick={() => router.back()}
+                    className="size-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">{selectedCard.title}</h3>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
-                    {selectedCard.campaign} Campaign
+                    {selectedCard.campaign}
                   </p>
                 </div>
               </div>
@@ -448,45 +462,17 @@ export default function ContentFeedbackDetailPage() {
 
               <div className="flex flex-col items-end gap-2 text-white/50">
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => setIsExtractDialogOpen(true)}
-                    className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-2 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors"
-                  >
-                    Ready For Posting
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (
-                        threadId &&
-                        brandThreadId &&
-                        negotiationId &&
-                        selectedPreviewMediaUrl &&
-                        selectedCard.campaign_id
-                      ) {
-                        approveNegotiation({
-                          thread_id: threadId,
-                          payload: { admin_approved: 'Approved' },
-                        });
-                        approveVideoMutation.mutate({
-                          brand_thread_id: brandThreadId,
-                          campaign_id: selectedCard.campaign_id,
-                          negotiation_id: negotiationId,
-                          video_url: selectedPreviewMediaUrl,
-                          content_id: selectedInfluencerMessageContentId,
-                          video_approve_admin: 'approved',
-                        });
-                      }
-                    }}
-                    disabled={
-                      isApproving ||
-                      approveVideoMutation.isPending ||
-                      !selectedPreviewMediaUrl
-                    }
-                    className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <Check className="size-4" />
-                    Approve for Brand
-                  </button>
+                  <InfluencerDetailDialog
+                    open={open}
+                    onOpenChange={setOpen}
+                  />
+
+                  <CustomButton
+
+                    className="bg-primaryButton "
+                    onClick={() => setOpen(true)}>
+                    Open Influencer Analytics
+                  </CustomButton>
                 </div>
               </div>
             </div>
@@ -512,6 +498,38 @@ export default function ContentFeedbackDetailPage() {
             bubbleMaxWidthClassName="max-w-[90%]"
           />
         </div>
+        <button
+          onClick={() => {
+            if (
+              threadId &&
+              brandThreadId &&
+              negotiationId &&
+              selectedPreviewMediaUrl &&
+              selectedCard.campaign_id
+            ) {
+              approveNegotiation({
+                thread_id: threadId,
+                payload: { admin_approved: 'Approved' },
+              });
+              approveVideoMutation.mutate({
+                brand_thread_id: brandThreadId,
+                campaign_id: selectedCard.campaign_id,
+                negotiation_id: negotiationId,
+                video_url: selectedPreviewMediaUrl,
+                content_id: selectedInfluencerMessageContentId,
+                video_approve_admin: 'approved',
+              });
+            }
+          }}
+          disabled={
+            isApproving ||
+            approveVideoMutation.isPending ||
+            !selectedPreviewMediaUrl
+          }
+          className="flex items-center cursor-pointer justify-center gap-2 rounded-lg bg-primaryButton px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Approve for Brand
+        </button>
         <RevisionBox />
         <ContentFeedbackPanel
           videoRef={videoRef}
@@ -523,11 +541,6 @@ export default function ContentFeedbackDetailPage() {
           selectedCard={selectedCard}
         />
       </div>
-      <InfluencerDetailDialog
-        open={isExtractDialogOpen}
-        onOpenChange={setIsExtractDialogOpen}
-      />
     </div>
-
   );
 }

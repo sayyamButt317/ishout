@@ -581,7 +581,7 @@ export const GetBrandContentFeedbackApi = async (content_id: string) => {
 export const WhatsAppAdminInfluencerMessagesApi = async (
   thread_id: string,
   { page, page_size }: { page: number; page_size: number },
-) : Promise<AdminInfluencerMessagesResponse> => {
+): Promise<AdminInfluencerMessagesResponse> => {
   const response = await api.get(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_BY_ID(thread_id),
     {
@@ -617,13 +617,22 @@ export const ExtractContentRevisionforInfluencer = async (
 }
 
 export const ExtractDemoGraphics = async (
+  campaign_id: string,
   username: string,
   url: string
 ) => {
   const response = await api.post(AdminENDPOINT.EXTRACTDEMOGRAPHICS, {
+    campaign_id,
     username,
     url,
   });
 
   return response.data;
 };
+
+export const ExtractAllInfluencerDemoGraphics = async (campaign_id: string) => {
+  const response = await api.get(
+    AdminENDPOINT.EXTRACTCAMPAIGNALLINFLUENCERREPORT(campaign_id)
+  )
+  return response.data;
+}
