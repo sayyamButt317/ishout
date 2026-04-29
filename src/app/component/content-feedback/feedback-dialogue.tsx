@@ -151,34 +151,6 @@ export default function VideoFeedbackWorkspace({
 
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col gap-2">
-      {showVideoTools && (
-        <div className="flex flex-wrap items-center gap-2 px-1">
-          <Button
-            type="button"
-            size="sm"
-            variant={pinMode ? 'default' : 'outline'}
-            disabled={!sendEnabled}
-            onClick={() => setPinMode((p) => !p)}
-            className={
-              pinMode
-                ? 'bg-(--color-primaryButton) text-white'
-                : 'border-white/20 bg-white/5 text-white hover:bg-white/10'
-            }
-          >
-            <MessageSquarePlus className="mr-1.5 size-3.5" />
-            {pinMode ? 'Pin mode on' : 'Pin mode'}
-          </Button>
-          <span className="text-[11px] text-white/50">
-            {pinMode
-              ? 'Click the video to comment on this frame'
-              : 'Scrub the bar below or turn on Pin mode'}
-          </span>
-          <span className="ml-auto font-mono text-xs tabular-nums text-white/70">
-            {formatVideoDuration(currentTime)} / {formatVideoDuration(duration)}
-          </span>
-        </div>
-      )}
-
       <VideoPanel
         ref={videoRef}
         selectedPreviewMediaUrl={selectedPreviewMediaUrl}
