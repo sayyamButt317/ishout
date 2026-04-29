@@ -45,7 +45,8 @@ export interface NegotiationResponse {
   campaign_logo_url?: string;
 
   negotiations?: NegotiationItem[];
-  negotiation_controls: string
+  negotiation_controls?: NegotiationItem[];
+ 
   total?: number;
 }
 

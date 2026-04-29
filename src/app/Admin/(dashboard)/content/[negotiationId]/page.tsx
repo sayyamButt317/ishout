@@ -60,25 +60,23 @@ export default function ContentFeedbackDetailPage() {
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
     data?: NegotiationResponse;
   };
-  console.log("data", data)
+  console.log('data', data);
 
-  const { setAll } = useRevisionMessageStore()
+  const { setAll } = useRevisionMessageStore();
   useEffect(() => {
-    if (!data?.negotiations?.length) return
-    const n = data.negotiations[0]
+    if (!data?.negotiations?.length) return;
+    const n = data.negotiations[0];
 
     setAll({
       negotiation_id: n._id,
       thread_id: n.thread_id,
-      message_id: "",
-      contentType: "VIDEO",
-      contentUrl: "",
+      message_id: '',
+      contentType: 'VIDEO',
+      contentUrl: '',
       current_version: 0,
-      status: "UNDER_REVIEW",
-    })
-  }, [data, setAll])
-
-
+      status: 'UNDER_REVIEW',
+    });
+  }, [data, setAll]);
 
   const apiCards: CardType[] = useMemo(() => {
     const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
@@ -253,25 +251,25 @@ export default function ContentFeedbackDetailPage() {
     const messages = chatData?.messages ?? [];
     const matchedMessage = messages.find(
       (msg: ChatMessage) =>
-        typeof msg.message === "string" &&
+        typeof msg.message === 'string' &&
         msg.message === selectedPreviewMediaUrl &&
         (isVideoUrl(msg.message) || isImageUrl(msg.message)),
     );
     const contentType =
-      selectedPreviewMediaType === "image"
-        ? "IMAGE"
-        : selectedPreviewMediaType === "video"
-          ? "VIDEO"
-          : "VIDEO";
+      selectedPreviewMediaType === 'image'
+        ? 'IMAGE'
+        : selectedPreviewMediaType === 'video'
+          ? 'VIDEO'
+          : 'VIDEO';
 
     setAll({
       negotiation_id: selectedCard.id,
-      thread_id: chatMode === "influencer" ? threadId : brandThreadId,
-      message_id: matchedMessage?._id ?? "",
+      thread_id: chatMode === 'influencer' ? threadId : brandThreadId,
+      message_id: matchedMessage?._id ?? '',
       contentType,
-      contentUrl: selectedPreviewMediaUrl ?? "",
+      contentUrl: selectedPreviewMediaUrl ?? '',
       current_version: 0,
-      status: "UNDER_REVIEW",
+      status: 'UNDER_REVIEW',
     });
   }, [
     selectedCard?.id,
@@ -489,7 +487,6 @@ export default function ContentFeedbackDetailPage() {
                     Approve for Brand
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
