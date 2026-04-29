@@ -32,9 +32,9 @@ export default function OnboardingInfluencerByCampaignId() {
       );
       return negotiation
         ? {
-          _id: negotiation._id,
-          last_offered_price: negotiation.last_offered_price,
-        }
+            _id: negotiation._id,
+            last_offered_price: negotiation.last_offered_price,
+          }
         : null;
     },
     [negotiationData],
@@ -123,7 +123,7 @@ export default function OnboardingInfluencerByCampaignId() {
                   onMessage={handleMessage}
                   sendNegotiation={() => handleSendNegotiation(influencer._id)}
                   negotiationId={negotiation?._id}
-                  lastOfferedPrice={negotiation?.last_offered_price}
+                  phoneNumber={influencer.phone_number || ''}
                 />
               );
             })}
