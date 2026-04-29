@@ -25,6 +25,6 @@ export interface CompanyProfileDetailsResponseProps {
         contact_person: string;
         phone: string;
         email: string;
-        logo_url?: string;
+        profile_url?: string;
     }
 }

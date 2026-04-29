@@ -43,7 +43,7 @@ export default function LogoutDialogue({
             />
             Logout?
           </AlertDialogTitle>
-          <hr className="my-4 w-full bg-[#1E4B8E] h-[1px]" />
+          <hr className="my-4 w-full bg-[#1E4B8E] h-px" />
           <AlertDialogDescription className=" font-open-sans font-normal text-base text-center text-white">
             Are you sure you want to Logout?
           </AlertDialogDescription>
