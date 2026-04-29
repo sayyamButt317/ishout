@@ -4,7 +4,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 
 interface ContentHeaderProps {
   title: string;
-  logo: string;
+  logo?: string;
   description: string;
   category: string;
 
@@ -43,14 +43,18 @@ const ContentHeader = ({
         <div className="relative shrink-0">
           <div className="h-48 w-48 overflow-hidden rounded-full border-4 border-primaryButton/20 p-1 md:h-64 md:w-64">
             <div className="h-full w-full overflow-hidden rounded-full">
-              <Image
-                src={logo}
-                alt={title}
-                width={256}
-                height={256}
-                className="h-full w-full object-cover"
-                priority
-              />
+              {logo ? (
+                <Image
+                  src={logo}
+                  alt={title}
+                  width={256}
+                  height={256}
+                  className="h-full w-full object-cover"
+                  priority
+                />
+              ) : (
+                <div className="h-full w-full bg-white/5" />
+              )}
             </div>
           </div>
 

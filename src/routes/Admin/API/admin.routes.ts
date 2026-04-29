@@ -33,6 +33,8 @@ import {
   type WhatsAppAdminCompanyApproveVideoResponse,
 } from '@/src/types/Compnay/approved-video-type';
 import { SendRevisionPayload } from '@/src/types/Admin-Type/Feedback/revision-type';
+import { AdminInfluencerMessagesResponse } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
+import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-messages-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -474,7 +476,7 @@ export const WhatsAppAdminCompanyMessagesApi = async (
   thread_id: string,
   negotiation_id: string,
   { page, page_size }: { page: number; page_size: number },
-) => {
+): Promise<CompanyAdminMessagesResponse> => {
   const response = await api.get(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_COMPANY_MESSAGES_BY_ID(thread_id),
     {
@@ -539,6 +541,9 @@ export const WhatsAppAdminCompanyApproveVideoApi = async (
     video_url: payload.video_url,
     brand_thread_id: payload.brand_thread_id,
   };
+  if (payload.content_id != null) {
+    body.content_id = payload.content_id;
+  }
   if (payload.video_approve_admin != null) {
     body.video_approve_admin = payload.video_approve_admin;
   }
@@ -559,16 +564,16 @@ export const SaveContentFeedbackApi = async (payload: SaveContentFeedbackPayload
   return response.data;
 };
 
-export const GetAdminContentFeedbackApi = async (feedback_id: string) => {
+export const GetAdminContentFeedbackApi = async (content_id: string) => {
   const response = await api.get(AdminENDPOINT.ADMIN_CONTENT_FEEDBACK_ADMIN_READ, {
-    params: { feedback_id },
+    params: { content_id },
   });
   return response.data;
 };
 
-export const GetBrandContentFeedbackApi = async (feedback_id: string) => {
+export const GetBrandContentFeedbackApi = async (content_id: string) => {
   const response = await api.get(AdminENDPOINT.ADMIN_CONTENT_FEEDBACK_BRAND_READ, {
-    params: { feedback_id },
+    params: { content_id },
   });
   return response.data;
 };
@@ -576,7 +581,7 @@ export const GetBrandContentFeedbackApi = async (feedback_id: string) => {
 export const WhatsAppAdminInfluencerMessagesApi = async (
   thread_id: string,
   { page, page_size }: { page: number; page_size: number },
-) => {
+) : Promise<AdminInfluencerMessagesResponse> => {
   const response = await api.get(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_BY_ID(thread_id),
     {
@@ -610,3 +615,15 @@ export const ExtractContentRevisionforInfluencer = async (
 
   return response.data
 }
+
+export const ExtractDemoGraphics = async (
+  username: string,
+  url: string
+) => {
+  const response = await api.post(AdminENDPOINT.EXTRACTDEMOGRAPHICS, {
+    username,
+    url,
+  });
+
+  return response.data;
+};

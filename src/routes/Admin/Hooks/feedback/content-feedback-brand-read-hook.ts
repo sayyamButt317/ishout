@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { GetBrandContentFeedbackApi } from '../../API/admin.routes';
 
 export default function useBrandContentFeedbackReadHook(
-  feedback_id: string,
+  content_id: string,
   enabled: boolean = true,
 ) {
   return useQuery({
-    queryKey: ['brand-content-feedback-read', feedback_id],
-    queryFn: () => GetBrandContentFeedbackApi(feedback_id),
-    enabled: enabled && !!feedback_id,
+    queryKey: ['brand-content-feedback-read', content_id],
+    queryFn: () => GetBrandContentFeedbackApi(content_id),
+    enabled: enabled && !!content_id,
     refetchOnWindowFocus: false,
   });
 }

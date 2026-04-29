@@ -64,9 +64,9 @@ function ContentFeedbackPageContent() {
 
   const brief: UpdateCampaignBrief | null = briefData?.response
     ? {
-        ...briefData.response,
-        id: briefData.id,
-      }
+      ...briefData.response,
+      id: briefData.id,
+    }
     : null;
 
   return (
@@ -232,7 +232,7 @@ function ContentFeedbackPageContent() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         briefData={brief}
-        onUpdate={() => {}}
+        onUpdate={() => { }}
       />
     </div>
   );

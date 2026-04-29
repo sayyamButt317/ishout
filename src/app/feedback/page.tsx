@@ -1,49 +1,17 @@
 'use client';
 import {
   CheckCircle2, CirclePlay, Clock3,
-  History, PencilLine, Volume2, Timer, Pencil,
-  RefreshCw, Shield, MessageCircle, X,
+  History, PencilLine, Volume2,
+  Shield, MessageCircle, X,
 } from 'lucide-react';
 import Header from '../component/header';
 import Image from 'next/image';
 import CalendlyDemo from '../component/calendly-demo';
 import CustomButton from '../component/button';
 import LogoFooter from '../component/logo-footer';
+import { chaosCards, contextFeatures, reviewCards } from '@/src/constant/Data/feedback';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
-
-const reviewCards = [
-  {
-    name: 'Marcus Chen', role: 'Project Admin', time: '0:12',
-    message: 'The color grading in this transition feels a bit too warm. Can we pull back the magenta levels by about 15%?',
-    badge: 'Action Required', badgeClass: 'bg-red-500/10 text-red-300 border-red-400/30', ringClass: 'border-pink-300',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCqbVGJUfHWU4DERH0SNnans2IIwxhopZD0QGBoJv2tTBOPAOW8NFqHygSoyJwakffjw_OGq2ACO23aULACVEW6AE5GBknW5SqZSYgmh_wUNsv0ko_hPVwVFmovFvBCsMdhBLVd0MaO_IbYUTy6GUU--0rVkaFj_3EjTs04sQaLDIJuag70HRcLdxdjdoBQOHyHx5FLzjWNEO7Fo427RNiSbW-evYOFAlykAxOBCnwlD3cuyxp9mfnaZ0LDudf3W8zWxoyObdLpRA8',
-  },
-  {
-    name: 'Luxury Brand X', role: 'Brand Partner', time: '0:45',
-    message: 'Logo placement approved. The motion blur on the reveal looks professional and matches our brand guidelines perfectly.',
-    badge: 'Fixed & Approved', badgeClass: 'bg-indigo-500/10 text-indigo-200 border-indigo-300/30', ringClass: 'border-indigo-300',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCY4XWaWlRp-pUrokPGDUJwFA72O6PQjlBUDwzVs_bHa49zFg19UORLwUJOa0IYziLSsjNzi4gnGt0YBcrQwYUqX7GC9_DNt84fq4VW4cMo9CWr16nXRMkbqEuhKCKkphhi-KxRBt7yk0UKKtB-g5b4wCnDwfQi8zXMjKnr7KClzFg2G9tXOByPMKnh5MLK9zSPfijrH-gWD-ftlAk0l7agP9LdmPGQ7XTwDDA2NSvMCR6jVABvvEGd4pjxmTeN9vuns51l_sOK_Fc',
-  },
-  {
-    name: 'Sofia Rivera', role: 'Senior Reviewer', time: '1:12',
-    message: 'Note for the final export: please ensure we use the ProRes 4444 XQ format for the master file to preserve dynamic range.',
-    badge: 'Admin Note', badgeClass: 'bg-sky-500/10 text-sky-200 border-sky-300/30', ringClass: 'border-sky-300',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRkv_dFhk_wMOm2zeKSBFl85_SfFN7BaFl-ZocbMxYAYDsCPZS1OzlltX5knDL6yyw91V52FQK9hybjXUqaxLenL3kdAmgBlDDQA6yVlertwDopdrNZ8sTl6NeCWE18iDV7CxF2M1EntP1Myu4ZnqeoJSTH96vRf59_CYk8mxoDD_N2vWIy5GUu3DXtoAcdKvhdLN1_XJ-_izNjGYTZwemv7t6iF2dju9v09eV16QyL8KX_CbZGP8sykVrqa97CIHmysPg-qV3SQU',
-  },
-];
-
-const chaosCards = [
-  { channel: 'WhatsApp • 10:42 AM', cls: 'top-0 right-0 -rotate-6 z-10', msg: '"Change the text color on the third clip to something more \'pop-y\'."' },
-  { channel: 'Email • 11:15 AM', cls: 'bottom-10 left-10 rotate-12 z-20', msg: '"Subject: RE: RE: Feedback V2 - Let\'s use that other take for the intro."' },
-];
-
-const contextFeatures = [
-  { icon: Timer, color: 'text-[#ff4e7e]', bg: 'bg-[#ff4e7e]/10', title: 'Frame-Specific', desc: 'Every comment is hardcoded to a timestamp. Click the comment, jump to the moment.' },
-  { icon: Pencil, color: 'text-[#d2bbff]', bg: 'bg-[#d2bbff]/10', title: 'Visual Annotations', desc: 'Draw directly on the video player to highlight exact pixels that need adjustment.', highlight: true },
-  { icon: RefreshCw, color: 'text-[#b2c5ff]', bg: 'bg-[#b2c5ff]/10', title: 'Auto-V Syncing', desc: 'Versions are automatically stacked. Compare V1 and V2 side-by-side in real-time.' },
-];
-
 const workflowSteps = [
   {
     num: '01', color: 'text-[#ff4e7e]', border: 'border-[#ff4e7e]', title: 'Submit Content', reverse: false,
@@ -134,7 +102,7 @@ export default function InfluencerFeedback() {
         </div>
       </nav> */}
 
-      <Header/>
+      <Header />
 
       <main className="w-full">
 
@@ -220,8 +188,8 @@ export default function InfluencerFeedback() {
             <div className="lg:col-span-8">
               <div className="relative">
                 <div className="absolute -inset-1 bg-linear-to-r from-[#e8184d]/20 to-[#d2bbff]/20 rounded-2xl blur-2xl opacity-50" />
-                  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#1d1e30] shadow-2xl">
-                    <Image src="https://i.pinimg.com/1200x/22/bf/a1/22bfa183386fa4e08775d045b78f7c22.jpg"
+                <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#1d1e30] shadow-2xl">
+                  <Image src="https://i.pinimg.com/1200x/22/bf/a1/22bfa183386fa4e08775d045b78f7c22.jpg"
                     alt="Video Editor UI" unoptimized loading="lazy" width={1000} height={1000} className="aspect-video w-full object-cover opacity-80"
                   />
                   <GlassCard className="absolute left-[30%] top-[20%] rounded-2xl p-3">
@@ -339,7 +307,7 @@ export default function InfluencerFeedback() {
               <div className="absolute -inset-1 bg-linear-to-r from-[#e8184d]/10 to-[#d2bbff]/10 rounded-3xl blur-xl" />
               <video src="https://ishout.s3.us-east-2.amazonaws.com/whatsapp-media/video/2026-04-17/936465739226340_f48456f9-60aa-4d90-bf35-305d5805c270.mp4"
                 className="relative w-full rounded-2xl border border-white/10 object-cover object-center"
-                controls autoPlay muted loop playsInline width={1000} height={1000}
+                controls autoPlay muted loop playsInline width={500} height={300}
               />
             </div>
             <div className="grid gap-8 lg:grid-cols-12">
@@ -429,43 +397,23 @@ export default function InfluencerFeedback() {
             <p className="text-xl text-white/50 mb-12">Join 2,500+ influencers and editors who have reclaimed their creative sanity.</p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-6">
               <CalendlyDemo>
-                        {/* Layer 1: The New Outer-most Border */}
-                        <div className="mt-6 rounded-[22px] inline-block">
-                          {/* Layer 2: Middle Border */}
-                          <div className="p-2 border border-white/30 rounded-[20px] inline-block">
-                            <CustomButton
-                              className="
-                        bg-[#ff3b8d]
-                        hover:bg-[#ff5a9e]
-                        cursor-pointer
-                        rounded-[14px]
-                        h-14
-                        px-20
-                        text-xl
-                        font-extrabold
-                        italic
-                        text-white
-              
-                        /* Hover glow - soft but visible */
-                        hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)]
-              
-                        transition-all
-                        duration-150
-                      "
-                            >
-                              Book a Demo
-                            </CustomButton>
-                          </div>
-                        </div>
-                      </CalendlyDemo>
+                <div className="mt-6 rounded-[22px] inline-block">
+                  <div className="p-2 border border-white/30 rounded-[20px] inline-block">
+                    <CustomButton
+                      className="
+                      bg-[#ff3b8d] hover:bg-[#ff5a9e] cursor-pointer rounded-[14px] h-14 px-20 text-xl font-extrabold italic text-white hover:shadow-[0_0_20px_rgba(255,255,255,0.45),0_0_40px_rgba(255,255,255,0.25),0_0_60px_rgba(255,255,255,0.12)]
+              transition-all duration-150"
+                    >
+                      Book a Demo
+                    </CustomButton>
+                  </div>
+                </div>
+              </CalendlyDemo>
             </div>
           </div>
         </section>
-
       </main>
-
-<LogoFooter />
-
+      <LogoFooter />
     </div>
   );
 }

@@ -1,5 +1,4 @@
 'use client';
-
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
@@ -34,10 +33,9 @@ function ContentFeedbackContentPageInner() {
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
     data?: NegotiationResponse;
   };
-  const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
-
   const selectedCardFromApi = useMemo<SelectedContentFeedbackCard | null>(() => {
-    const item = negotiationItems.find((entry: NegotiationItem) => {
+    const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
+    const item = (negotiationItems as unknown as NegotiationItem[]).find((entry: NegotiationItem) => {
       return entry._id === negotiationIdFromQuery;
     });
     if (!item) return null;
@@ -46,7 +44,7 @@ function ContentFeedbackContentPageInner() {
       title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
       campaign: item.campaign_brief?.title ?? 'Campaign',
     };
-  }, [negotiationItems, negotiationIdFromQuery]);
+  }, [data?.negotiations, data?.negotiation_controls, negotiationIdFromQuery]);
 
   const selectedCard = selectedCardFromStorage ?? selectedCardFromApi;
 

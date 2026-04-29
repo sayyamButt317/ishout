@@ -29,7 +29,7 @@ export type ContentFeedbackBrandSidebarProps = {
   saveContentFeedbackMutation: SaveContentFeedbackMutation;
   selectedPreviewMediaUrl: string | null;
   negotiationId: string;
-  campaignId: string | undefined;
+  contentId: string | undefined;
   setFeedbackId: (negotiationId: string, contentUrl: string, feedbackId: string) => void;
   activeFeedbackId: string | undefined;
   refetchBrandFeedback: () => Promise<unknown>;
@@ -52,7 +52,7 @@ export default function ContentFeedbackBrandSidebar({
   saveContentFeedbackMutation,
   selectedPreviewMediaUrl,
   negotiationId,
-  campaignId,
+  contentId,
   setFeedbackId,
   activeFeedbackId,
   refetchBrandFeedback,
@@ -65,7 +65,11 @@ export default function ContentFeedbackBrandSidebar({
   updateApprovedContentMutation,
 }: ContentFeedbackBrandSidebarProps) {
   return (
-    <div className="flex w-full lg:w-72 shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+    <div className="flex w-full shrink-0 flex-col gap-3 overflow-y-auto rounded-lg border border-white/10 bg-white/5 p-3">
+      <h1 className="text-2xl font-bold text-white">Add Feedback</h1>
+      <p className="text-sm font-thin text-white">
+        Add feedback on the selected content.
+      </p>
       <div className="relative">
         <textarea
           value={selectedContentFeedback}
@@ -80,7 +84,7 @@ export default function ContentFeedbackBrandSidebar({
               !selectedContentFeedback.trim() ||
               !selectedPreviewMediaUrl ||
               !negotiationId ||
-              !campaignId
+              !contentId
             ) {
               return;
             }
@@ -88,7 +92,7 @@ export default function ContentFeedbackBrandSidebar({
             try {
               const response = await saveContentFeedbackMutation.mutateAsync({
                 negotiation_id: negotiationId,
-                campaign_id: campaignId,
+                content_id: contentId,
                 content_url: selectedPreviewMediaUrl,
                 msg: selectedContentFeedback.trim(),
                 review_side: 'brand_review',
@@ -107,7 +111,7 @@ export default function ContentFeedbackBrandSidebar({
             }
           }}
           disabled={saveContentFeedbackMutation.isPending}
-          className="mt-2 w-full rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saveContentFeedbackMutation.isPending ? 'Saving...' : 'Save Brand Feedback'}
         </button>

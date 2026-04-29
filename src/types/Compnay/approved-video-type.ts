@@ -3,6 +3,7 @@ export type WhatsAppAdminCompanyApproveVideoPayload = {
   campaign_id: string;
   negotiation_id: string;
   video_url: string;
+  content_id?: string;
   video_approve_admin?: string;
   video_approve_brand?: string;
 };
