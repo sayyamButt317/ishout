@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query';
 import { GetAdminContentFeedbackApi } from '../../API/admin.routes';
 
 export default function useAdminContentFeedbackReadHook(
-  feedback_id: string,
+  content_id: string,
   enabled: boolean = true,
 ) {
   return useQuery({
-    queryKey: ['admin-content-feedback-read', feedback_id],
-    queryFn: () => GetAdminContentFeedbackApi(feedback_id),
-    enabled: enabled && !!feedback_id,
+    queryKey: ['admin-content-feedback-read', content_id],
+    queryFn: () => GetAdminContentFeedbackApi(content_id),
+    enabled: enabled && !!content_id,
     refetchOnWindowFocus: false,
   });
 }

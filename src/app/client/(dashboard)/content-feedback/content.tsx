@@ -17,6 +17,7 @@ import ContentFeedbackMediaPreview from '@/src/app/component/content-feedback-cl
 import type { NegotiationItem } from '@/src/types/Compnay/feeedback-content-type';
 import type { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
+import type { CompanyAdminMessageItem } from '@/src/types/Compnay/company-admin-messages-type';
 
 export type SelectedContentFeedbackCard = {
   item: NegotiationItem;
@@ -100,16 +101,24 @@ export default function ContentFeedbackModal({
   const updateApprovedContentMutation = useUpdateApprovedContent();
   const saveContentFeedbackMutation = useSaveContentFeedbackHook();
 
-  const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
-    'brand-content-feedback-id-map',
-  );
-  const activeFeedbackId = getFeedbackId(negotiationId, selectedPreviewMediaUrl);
-  const { data: brandFeedbackData, refetch: refetchBrandFeedback } =
-    useBrandContentFeedbackReadHook(activeFeedbackId, !!activeFeedbackId);
+  const { setFeedbackId } = useFeedbackIdMap('brand-content-feedback-id-map');
 
   const selectedMediaKey = selectedPreviewMediaUrl
     ? normalizeMediaUrlKey(selectedPreviewMediaUrl)
     : null;
+  const selectedCompanyMessageContentId = useMemo(() => {
+    if (!selectedPreviewMediaUrl) return undefined;
+    const messages = chatData?.messages ?? [];
+    const matched = messages.find(
+      (msg: CompanyAdminMessageItem) => msg.message === selectedPreviewMediaUrl,
+    );
+    return matched?.content_id ?? undefined;
+  }, [chatData?.messages, selectedPreviewMediaUrl]);
+  const { data: brandFeedbackData, refetch: refetchBrandFeedback } =
+    useBrandContentFeedbackReadHook(
+      selectedCompanyMessageContentId ?? '',
+      !!selectedCompanyMessageContentId,
+    );
 
   const isBrandContentApprovedInBrandChat = useMemo(() => {
     const url = selectedPreviewMediaUrl;
@@ -189,7 +198,6 @@ export default function ContentFeedbackModal({
           hashtags: '',
         })
       : { hashtags: '' };
-
   const setApprovedCopyDraftField = (field: 'hashtags', value: string) => {
     if (!selectedMediaKey) return;
     setApprovedCopyDraftByUrl((prev) => {
@@ -411,9 +419,9 @@ ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-prim
           saveContentFeedbackMutation={saveContentFeedbackMutation}
           selectedPreviewMediaUrl={selectedPreviewMediaUrl}
           negotiationId={negotiationId}
-          campaignId={campaignId}
+          contentId={selectedCompanyMessageContentId}
           setFeedbackId={setFeedbackId}
-          activeFeedbackId={activeFeedbackId}
+          activeFeedbackId={selectedCompanyMessageContentId}
           refetchBrandFeedback={refetchBrandFeedback}
           brandFeedbackData={brandFeedbackData}
           selectedMediaKey={selectedMediaKey}

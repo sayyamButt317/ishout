@@ -11,7 +11,6 @@ import useSendAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admi
 import useSendAdminCompanyMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-send-message-hook';
 import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-approval-status-hook';
 import useWhatsAppAdminCompanyApproveVideo from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-approve-video-hook';
-import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-map';
 import ChatPanel from '@/src/app/component/content-feedback/chat-panel';
 
 import {
@@ -31,6 +30,7 @@ import { toast } from 'sonner';
 import { mapAdminInfluencerMessageError } from '@/src/types/Admin-Type/admin-influencer-message-type';
 import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
 import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
+import type { AdminInfluencerMessageItem } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import InfluencerDetailDialog from '@/src/app/component/content-feedback/influencerdetail';
 
 export default function ContentFeedbackDetailPage() {
@@ -152,15 +152,8 @@ export default function ContentFeedbackDetailPage() {
     useAdminNegotiationApprovalStatus();
   const { setContentType } = useRevisionMessageStore();
 
-  const { getFeedbackId, setFeedbackId } = useFeedbackIdMap(
-    'admin-content-feedback-id-map',
-  );
-
   const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
   const isImageUrl = useCallback((value: string) => AnalyzeURL(value).isImageUrl, []);
-  const isAdminAlreadyApproved =
-    (selectedCard?.admin_approved ?? '').toLowerCase() === 'approved';
-  const activeFeedbackId2 = getFeedbackId(negotiationId, selectedPreviewMediaUrl);
 
   const timelineMarkers = useMemo((): TimelineMarkerData[] => {
     const messages = chatData?.messages ?? [];
@@ -286,6 +279,15 @@ export default function ContentFeedbackDetailPage() {
 
   const sendEnabled =
     chatMode === 'influencer' ? !!threadId : !!brandThreadId && !!negotiationId;
+  const selectedInfluencerMessageContentId = useMemo(() => {
+    if (!selectedPreviewMediaUrl) return undefined;
+    const influencerMessages = influencerChatQuery.data?.messages ?? [];
+    const matchedMessage = influencerMessages.find(
+      (msg: AdminInfluencerMessageItem) => msg.message === selectedPreviewMediaUrl,
+    );
+    return matchedMessage?.content_id ?? undefined;
+  }, [influencerChatQuery.data?.messages, selectedPreviewMediaUrl]);
+  const activeFeedbackId2 = selectedInfluencerMessageContentId ?? '';
 
   const handleSendMessage = async (textOrFile: string | File) => {
     if (textOrFile instanceof File) {
@@ -461,17 +463,16 @@ export default function ContentFeedbackDetailPage() {
                         selectedPreviewMediaUrl &&
                         selectedCard.campaign_id
                       ) {
-                        if (!isAdminAlreadyApproved) {
-                          approveNegotiation({
-                            thread_id: threadId,
-                            payload: { admin_approved: 'Approved' },
-                          });
-                        }
+                        approveNegotiation({
+                          thread_id: threadId,
+                          payload: { admin_approved: 'Approved' },
+                        });
                         approveVideoMutation.mutate({
                           brand_thread_id: brandThreadId,
                           campaign_id: selectedCard.campaign_id,
                           negotiation_id: negotiationId,
                           video_url: selectedPreviewMediaUrl,
+                          content_id: selectedInfluencerMessageContentId,
                           video_approve_admin: 'approved',
                         });
                       }
@@ -520,7 +521,6 @@ export default function ContentFeedbackDetailPage() {
           selectedPreviewMediaUrl={selectedPreviewMediaUrl}
           negotiationId={negotiationId}
           selectedCard={selectedCard}
-          setFeedbackId={setFeedbackId}
         />
       </div>
       <InfluencerDetailDialog
