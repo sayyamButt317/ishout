@@ -168,7 +168,7 @@ const ApprovedCampaignPage = () => {
         onOpenChange={setDialogOpen}
         briefData={adminBrief}
         onUpdate={(updatedBrief) => {
-          setAdminBrief(updatedBrief); // update local state
+          setAdminBrief(updatedBrief);
         }}
       />
     </>

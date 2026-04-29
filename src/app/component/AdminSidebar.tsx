@@ -13,8 +13,8 @@ import { adminSidebarLinks } from '@/src/constant/sidebaritems';
 
 const badgeStyles: Record<string, string> = {
   violet: 'bg-violet-500/20 text-violet-400',
-  amber:  'bg-amber-500/20 text-amber-400',
-  green:  'bg-emerald-500/20 text-emerald-400',
+  amber: 'bg-amber-500/20 text-amber-400',
+  green: 'bg-emerald-500/20 text-emerald-400',
 };
 
 function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
@@ -49,7 +49,7 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
                 className={cn(
                   'flex h-9 w-9 items-center justify-center rounded-2xl transition-all duration-300 flex-shrink-0',
                   isGroupActive && !isOpen
-                    ? 'bg-gradient-to-br from-indigo-500/20 to-purple-500/20 text-white'
+                    ? 'bg-linear-to-br from-indigo-500/20 to-purple-500/20 text-white'
                     : cn('text-slate-400 group-hover:bg-white/10', group.iconBg),
                 )}
               >
@@ -61,7 +61,7 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
               <ChevronRight
                 size={14}
                 className={cn(
-                  'opacity-40 transition-transform duration-200 flex-shrink-0',
+                  'opacity-40 transition-transform duration-200 shrink-0',
                   isOpen && 'rotate-90 opacity-70',
                 )}
               />
@@ -91,12 +91,12 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
                     >
                       <span
                         className={cn(
-                          'w-2 h-2 rounded-full flex-shrink-0',
+                          'w-2 h-2 rounded-full shrink-0',
                           isActive ? 'bg-violet-400' : 'bg-white/20',
                         )}
                       />
                       <span className="flex-1">{child.label}</span>
-        
+
                     </Link>
                   );
                 })}
@@ -116,14 +116,14 @@ export default function AdminSidebar() {
 
   const sidebarContent = (onNavigate?: () => void) => (
     <>
-    <a href="https://app.ishout.ae" target="_blank" rel="noopener noreferrer" className="mb-8 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
-      {/* Logo */}
-      
+      <a href="https://app.ishout.ae" target="_blank" rel="noopener noreferrer" className="mb-8 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
+        {/* Logo */}
+
         {/* href="https://ishout.ae"
         rel="noopener noreferrer"
         
          /</>> */}
-         
+
         <div className="relative">
           <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
           <Image
@@ -135,7 +135,7 @@ export default function AdminSidebar() {
             unoptimized={true}
           />
         </div>
-</a>
+      </a>
 
       <NavGroups onNavigate={onNavigate} />
 
@@ -189,8 +189,4 @@ export default function AdminSidebar() {
       </div>
     </>
   );
-}
-
-function onNavigate(): void {
-    throw new Error('Function not implemented.');
 }
