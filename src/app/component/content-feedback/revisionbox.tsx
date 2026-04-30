@@ -26,11 +26,11 @@ export const RevisionBox = ({ reviewSide = 'admin' }: RevisionBoxProps) => {
     const sendRevisionTimeandMessage = () => {
         const payload = buildPayload()
 
-        if (!payload) return // ✅ prevent invalid send
+        if (!payload) return
 
         sendinfo.mutate({ ...payload, review_side: reviewSide }, {
             onSuccess: () => {
-                reset() // ✅ CLEAR STORE + LOCAL STORAGE
+                reset()
             },
         })
     }
@@ -42,15 +42,6 @@ export const RevisionBox = ({ reviewSide = 'admin' }: RevisionBoxProps) => {
                 {/* HEADER */}
                 <div className="flex items-center justify-between mb-3">
                     <h1 className='text-lg font-semibold'>Revision Timeline</h1>
-
-                    <CustomButton
-                        onClick={sendRevisionTimeandMessage}
-                        disabled={!timestamps.length}
-                        className='bg-primaryButton cursor-pointer flex items-center gap-2 px-4 py-2 disabled:opacity-50'
-                    >
-                        <RefreshCw className="size-4" />
-                        Request Revision
-                    </CustomButton>
                 </div>
 
                 {/* TIMELINE */}
@@ -77,6 +68,16 @@ export const RevisionBox = ({ reviewSide = 'admin' }: RevisionBoxProps) => {
                             </button>
                         </div>
                     ))}
+                </div>
+                <div className="flex justify-end mt-3">
+                    <CustomButton
+                        onClick={sendRevisionTimeandMessage}
+                        disabled={!timestamps.length}
+                        className="bg-primaryButton cursor-pointer flex items-center gap-2 px-4 py-2 disabled:opacity-50"
+                    >
+                        <RefreshCw className="size-4" />
+                        Request Revision
+                    </CustomButton>
                 </div>
 
             </Card>
