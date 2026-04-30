@@ -530,7 +530,7 @@ export default function ContentFeedbackDetailPage() {
         >
           Approve for Brand
         </button>
-        <RevisionBox />
+        <RevisionBox reviewSide="admin" />
         <ContentFeedbackPanel
           videoRef={videoRef}
           activeFeedbackId={activeFeedbackId2}

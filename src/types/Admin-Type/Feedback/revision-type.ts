@@ -18,6 +18,7 @@ export interface Revision {
 export interface SendRevisionPayload {
     negotiation_id: string
     thread_id: string
+    review_side?: 'admin' | 'brand'
     message_id?: string
     contentType: MediaType
     contentUrl?: string
