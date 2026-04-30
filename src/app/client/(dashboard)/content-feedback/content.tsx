@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Check, ChevronLeft, Maximize2, RefreshCw } from 'lucide-react';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-hook';
@@ -13,11 +13,15 @@ import useUpdateApprovedContent from '@/src/routes/Company/api/Hooks/use-update-
 import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-map';
 import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages-list';
 import ContentFeedbackBrandSidebar from '@/src/app/component/content-feedback-client/content-feedback-brand-sidebar';
-import ContentFeedbackMediaPreview from '@/src/app/component/content-feedback-client/content-feedback-media-preview';
 import type { NegotiationItem } from '@/src/types/Compnay/feeedback-content-type';
 import type { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
 import type { CompanyAdminMessageItem } from '@/src/types/Compnay/company-admin-messages-type';
+import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/feedback-dialogue';
+import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
+import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
+import type { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
+import { extractTimelineMarkersFromMessages } from '@/src/utils/content-feedback-chat';
 
 export type SelectedContentFeedbackCard = {
   item: NegotiationItem;
@@ -80,6 +84,7 @@ export default function ContentFeedbackModal({
   const [approvedCopyDraftByUrl, setApprovedCopyDraftByUrl] = useState<
     Record<string, { hashtags: string }>
   >({});
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const threadId = selectedCard?.item.thread_id || '';
   const brandThreadId = selectedCard?.item.brand_thread_id || '';
@@ -102,6 +107,7 @@ export default function ContentFeedbackModal({
   const saveContentFeedbackMutation = useSaveContentFeedbackHook();
 
   const { setFeedbackId } = useFeedbackIdMap('brand-content-feedback-id-map');
+  const { setAll } = useRevisionMessageStore();
 
   const selectedMediaKey = selectedPreviewMediaUrl
     ? normalizeMediaUrlKey(selectedPreviewMediaUrl)
@@ -140,6 +146,10 @@ export default function ContentFeedbackModal({
     if (brandApprovedByVideoUrl[selectedMediaKey]) return true;
     return isBrandContentApprovedInBrandChat;
   }, [selectedMediaKey, brandApprovedByVideoUrl, isBrandContentApprovedInBrandChat]);
+  const timelineMarkers = useMemo((): TimelineMarkerData[] => {
+    const messages = chatData?.messages ?? [];
+    return extractTimelineMarkersFromMessages(messages, selectedPreviewMediaUrl);
+  }, [chatData?.messages, selectedPreviewMediaUrl]);
 
   useEffect(() => {
     setFeedback('');
@@ -210,6 +220,49 @@ export default function ContentFeedbackModal({
       };
     });
   };
+  const handleSeekPreviewToTime = useCallback((time: number) => {
+    const v = videoRef.current;
+    if (!v || !Number.isFinite(time)) return;
+    v.currentTime = time;
+    setIsPlaying(true);
+  }, []);
+
+  const handleTimedFeedbackSubmit = async () => {
+    // Kept for compatibility with VideoFeedbackWorkspace props.
+  };
+
+  useEffect(() => {
+    const messages = chatData?.messages ?? [];
+    const matchedMessage = messages.find(
+      (msg: ChatMessage) =>
+        typeof msg.message === 'string' &&
+        msg.message === selectedPreviewMediaUrl &&
+        (isVideoUrl(msg.message) || isImageUrl(msg.message)),
+    );
+    const contentType =
+      selectedPreviewMediaType === 'image'
+        ? 'IMAGE'
+        : selectedPreviewMediaType === 'video'
+          ? 'VIDEO'
+          : 'VIDEO';
+
+    setAll({
+      negotiation_id: negotiationId,
+      thread_id: effectiveBrandThreadId,
+      message_id: matchedMessage?._id ?? '',
+      contentType,
+      contentUrl: selectedPreviewMediaUrl ?? '',
+      current_version: 0,
+      status: 'UNDER_REVIEW',
+    });
+  }, [
+    chatData?.messages,
+    selectedPreviewMediaUrl,
+    selectedPreviewMediaType,
+    negotiationId,
+    effectiveBrandThreadId,
+    setAll,
+  ]);
 
   if (!selectedCard) return null;
 
@@ -256,15 +309,24 @@ export default function ContentFeedbackModal({
               </button>
             </div>
           </div>
-          <div className="flex min-h-0 flex-1 flex-col items-start justify-start gap-3 overflow-y-auto bg-black/20 p-3 lg:flex-row lg:items-stretch lg:justify-center lg:overflow-hidden">
-            <ContentFeedbackMediaPreview
-              selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-              selectedPreviewMediaType={selectedPreviewMediaType}
-              isPlaying={isPlaying}
-              setIsPlaying={setIsPlaying}
-              setSelectedVideoDuration={setSelectedVideoDuration}
-              setSelectedVideoResolution={setSelectedVideoResolution}
-            />
+          <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-2 pt-2 lg:flex-row lg:items-stretch">
+            <div className="relative flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto lg:min-h-[min(580px,70vh)]">
+              <VideoFeedbackWorkspace
+                videoRef={videoRef}
+                selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                selectedPreviewMediaType={selectedPreviewMediaType}
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
+                setSelectedVideoDuration={setSelectedVideoDuration}
+                setSelectedVideoResolution={setSelectedVideoResolution}
+                duration={selectedVideoDuration}
+                markers={timelineMarkers}
+                sendEnabled={!!effectiveBrandThreadId && !!negotiationId}
+                contentUrl={selectedPreviewMediaUrl}
+                onSubmitTimedFeedback={handleTimedFeedbackSubmit}
+                onMarkerSeek={handleSeekPreviewToTime}
+              />
+            </div>
           </div>
           <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-4">
             <div className="flex gap-8 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
@@ -412,6 +474,7 @@ ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-prim
           </div>
         </div>
       </div>
+      <RevisionBox reviewSide="brand" />
       <div className="mt-3">
         <ContentFeedbackBrandSidebar
           selectedContentFeedback={selectedContentFeedback}
