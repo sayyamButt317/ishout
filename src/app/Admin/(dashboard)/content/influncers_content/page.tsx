@@ -14,11 +14,12 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { Trash2 } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import useDeleteAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/delete-admin-influencer-messages-hook';
+import { CircleDashed, CircleCheck, RefreshCcw } from 'lucide-react';
 
 const COLUMNS = [
-  { id: 'review', label: 'Under Review', color: 'primary' },
-  { id: 'revision', label: 'Revision', color: 'amber' },
-  { id: 'approved', label: 'Approved', color: 'emerald' },
+  { icon: <CircleDashed />,id: 'review', label: 'Under Review', color: 'primary' },
+  { icon: <RefreshCcw />,id: 'revision', label: 'Revision', color: 'amber' },
+  { icon: <CircleCheck />,id: 'approved', label: 'Approved', color: 'emerald' },
 ];
 
 function ContentFeedbackPageContent() {
@@ -116,9 +117,12 @@ function ContentFeedbackPageContent() {
               key={col.id}
               className="flex w-1/3 shrink-0 flex-col mt-2 gap-4 rounded-xl border border-white/10 bg-white/2 p-4"
             >
-              <div className="flex items-center justify-between px-2">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-white/50">
+              
+              <div className="flex flex-row items-center justify-between px-2">
+                <h3 className="flex flex-row gap-2 text-xs font-bold uppercase tracking-widest text-white/50">
+                  {col.icon}
                   {col.label}
+
                 </h3>
 
                 <span
@@ -229,7 +233,7 @@ function ContentFeedbackPageContent() {
                             )}?campaign_id=${encodeURIComponent(campaignId)}`,
                           );
                         }}
-                        className="flex-1 h-11 rounded-xl bg-primaryButton hover:bg-primaryHover text-white font-bold"
+                        className="flex-1 h-11 rounded-xl curcor-pointer bg-primaryButton hover:bg-primaryHover text-white font-bold"
                       >
                         View Content
                       </Button>
@@ -237,7 +241,7 @@ function ContentFeedbackPageContent() {
                   </div>
                 ))}
 
-                {/* Empty State */}
+
                 {combinedCards.length === 0 && (
                   <p className="text-xs text-white/40 text-center py-4">No items</p>
                 )}

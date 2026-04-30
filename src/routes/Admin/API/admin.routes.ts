@@ -655,3 +655,10 @@ export const ExtractAllInfluencerDemoGraphics = async (campaign_id: string) => {
   )
   return response.data;
 }
+
+export const CampaignAnalytics = async (campaign_id: string) => {
+  const response = await api.get(
+    AdminENDPOINT.CAMPAIGNANALTICS(campaign_id)
+  );
+  return response.data;
+};
