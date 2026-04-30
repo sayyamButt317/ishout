@@ -597,9 +597,19 @@ export const WhatsAppAdminInfluencerMessagesApi = async (
 
 export const DeleteAdminInfluencerMessagesApi = async (
   thread_id: string,
-): Promise<{ success: boolean; thread_id: string; deleted_count: number }> => {
+  negotiation_id?: string,
+): Promise<{
+  success: boolean;
+  thread_id: string;
+  influencer_deleted_count?: number;
+  company_deleted_count?: number;
+  deleted_count?: number;
+}> => {
+  const query = negotiation_id
+    ? `?negotiation_id=${encodeURIComponent(negotiation_id)}`
+    : '';
   const response = await api.delete(
-    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_DELETE(thread_id),
+    `${AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MESSAGES_DELETE(thread_id)}${query}`,
   );
   return response.data;
 };

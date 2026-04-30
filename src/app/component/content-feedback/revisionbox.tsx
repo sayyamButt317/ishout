@@ -9,7 +9,11 @@ interface TimestampItem {
     feedback: string
 }
 
-export const RevisionBox = () => {
+type RevisionBoxProps = {
+    reviewSide?: 'admin' | 'brand'
+}
+
+export const RevisionBox = ({ reviewSide = 'admin' }: RevisionBoxProps) => {
     const sendinfo = SendRevisionHook()
 
     const {
@@ -24,7 +28,7 @@ export const RevisionBox = () => {
 
         if (!payload) return // ✅ prevent invalid send
 
-        sendinfo.mutate(payload, {
+        sendinfo.mutate({ ...payload, review_side: reviewSide }, {
             onSuccess: () => {
                 reset() // ✅ CLEAR STORE + LOCAL STORAGE
             },

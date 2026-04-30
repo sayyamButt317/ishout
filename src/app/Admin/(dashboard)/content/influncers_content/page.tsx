@@ -32,6 +32,7 @@ function ContentFeedbackPageContent() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
+  const [selectedNegotiationId, setSelectedNegotiationId] = useState<string | null>(null);
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
   const deleteAdminInfluencerMessagesHook = useDeleteAdminInfluencerMessagesHook();
 
@@ -154,6 +155,7 @@ function ContentFeedbackPageContent() {
                         e.stopPropagation();
                         if (!card.thread_id) return;
                         setSelectedThreadId(card.thread_id);
+                        setSelectedNegotiationId(card.id);
                         setDeleteOpen(true);
                       }}
                       className="absolute right-3 top-3 rounded-full border border-red-500/30 bg-red-500/10 p-1.5 text-red-300 transition-colors hover:bg-red-500/20"
@@ -258,13 +260,18 @@ function ContentFeedbackPageContent() {
         onClose={() => {
           setDeleteOpen(false);
           setSelectedThreadId(null);
+          setSelectedNegotiationId(null);
         }}
         ondelete={async () => {
           if (!selectedThreadId) return;
           try {
-            await deleteAdminInfluencerMessagesHook.mutateAsync(selectedThreadId);
+            await deleteAdminInfluencerMessagesHook.mutateAsync({
+              thread_id: selectedThreadId,
+              negotiation_id: selectedNegotiationId ?? undefined,
+            });
             setDeleteOpen(false);
             setSelectedThreadId(null);
+            setSelectedNegotiationId(null);
           } catch {
             // toast is already handled in hook
           }
