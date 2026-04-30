@@ -97,5 +97,7 @@ export const AdminENDPOINT = {
 
   EXTRACTDEMOGRAPHICS: `/${ROLE}/extract-report`,
   EXTRACTCAMPAIGNALLINFLUENCERREPORT: (campaign_id: string) =>
-    `/${ROLE}/campaign-influncersReport?campaign_id=${campaign_id}`
+    `/${ROLE}/campaign-influncersReport?campaign_id=${campaign_id}`,
+  CAMPAIGNANALTICS: (campaign_id: string) =>
+    `/${ROLE}/campaign-analytics/${campaign_id}`,
 };
