@@ -1,5 +1,5 @@
 'use client';
-import { Suspense,useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
@@ -11,6 +11,9 @@ import { Button } from '@/components/ui/button';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
+import { Trash2 } from 'lucide-react';
+import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import useDeleteAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/delete-admin-influencer-messages-hook';
 
 const COLUMNS = [
   { id: 'review', label: 'Under Review', color: 'primary' },
@@ -27,7 +30,10 @@ function ContentFeedbackPageContent() {
   const negotiationItems = data?.negotiations ?? [];
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
+  const deleteAdminInfluencerMessagesHook = useDeleteAdminInfluencerMessagesHook();
 
   const handleViewProfile = (username?: string, platform?: string) => {
     if (!username || !platform) return;
@@ -64,9 +70,9 @@ function ContentFeedbackPageContent() {
 
   const brief: UpdateCampaignBrief | null = briefData?.response
     ? {
-      ...briefData.response,
-      id: briefData.id,
-    }
+        ...briefData.response,
+        id: briefData.id,
+      }
     : null;
 
   return (
@@ -93,16 +99,16 @@ function ContentFeedbackPageContent() {
           const combinedCards =
             col.id === 'approved'
               ? apiCards.filter(
-                (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
-              )
+                  (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
+                )
               : col.id === 'revision'
                 ? apiCards.filter(
-                  (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
-                )
+                    (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
+                  )
                 : apiCards.filter((card) => {
-                  const status = (card.admin_approved ?? '').toLowerCase();
-                  return status !== 'approved' && status !== 'revision';
-                });
+                    const status = (card.admin_approved ?? '').toLowerCase();
+                    return status !== 'approved' && status !== 'revision';
+                  });
 
           return (
             <div
@@ -115,10 +121,11 @@ function ContentFeedbackPageContent() {
                 </h3>
 
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
-                    ? 'bg-(--color-primaryButton) text-white'
-                    : countStyles[col.color]
-                    }`}
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                    col.color === 'primary'
+                      ? 'bg-(--color-primaryButton) text-white'
+                      : countStyles[col.color]
+                  }`}
                 >
                   {combinedCards.length}
                 </span>
@@ -130,18 +137,30 @@ function ContentFeedbackPageContent() {
                   <div
                     key={card.id}
                     onClick={() => {
-                      const campaignId =
-                        card.campaign_id ?? campaignIdFromQuery;
+                      const campaignId = card.campaign_id ?? campaignIdFromQuery;
                       if (!campaignId) return;
 
                       router.push(
                         `/Admin/content/${encodeURIComponent(
-                          card.id
-                        )}?campaign_id=${encodeURIComponent(campaignId)}`
+                          card.id,
+                        )}?campaign_id=${encodeURIComponent(campaignId)}`,
                       );
                     }}
-                    className="cursor-pointer rounded-2xl border border-white/10 bg-[#0F0F0F] p-5 transition-all hover:border-white/20"
+                    className="relative cursor-pointer rounded-2xl border border-white/10 bg-[#0F0F0F] p-5 transition-all hover:border-white/20"
                   >
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (!card.thread_id) return;
+                        setSelectedThreadId(card.thread_id);
+                        setDeleteOpen(true);
+                      }}
+                      className="absolute right-3 top-3 rounded-full border border-red-500/30 bg-red-500/10 p-1.5 text-red-300 transition-colors hover:bg-red-500/20"
+                      aria-label="Delete admin-influencer chat"
+                    >
+                      <Trash2 className="size-4" />
+                    </button>
                     <div className="flex items-center gap-4 mb-6">
                       <div className="relative size-12 overflow-hidden rounded-full border border-white/10">
                         <Image
@@ -218,9 +237,7 @@ function ContentFeedbackPageContent() {
 
                 {/* Empty State */}
                 {combinedCards.length === 0 && (
-                  <p className="text-xs text-white/40 text-center py-4">
-                    No items
-                  </p>
+                  <p className="text-xs text-white/40 text-center py-4">No items</p>
                 )}
               </div>
             </div>
@@ -232,7 +249,26 @@ function ContentFeedbackPageContent() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         briefData={brief}
-        onUpdate={() => { }}
+        onUpdate={() => {}}
+      />
+      <DeleteDialogue
+        heading="Delete Chat"
+        subheading={`This will delete all chat history between admin and influencer.\nAre you sure?`}
+        open={deleteOpen}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedThreadId(null);
+        }}
+        ondelete={async () => {
+          if (!selectedThreadId) return;
+          try {
+            await deleteAdminInfluencerMessagesHook.mutateAsync(selectedThreadId);
+            setDeleteOpen(false);
+            setSelectedThreadId(null);
+          } catch {
+            // toast is already handled in hook
+          }
+        }}
       />
     </div>
   );
