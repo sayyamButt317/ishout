@@ -43,6 +43,119 @@ export default function CampaignBriefDialog({
     setLocalBrief({ ...localBrief, [key]: value });
   };
 
+  /**
+   * Load image bytes for jsPDF. S3 URLs fail in the browser (CORS), so we try the
+   * same-origin API proxy first: GET /api/campaign-brief-image?url=...
+   */
+  const loadImageForPdf = async (
+    url: string,
+  ): Promise<{
+    dataUrl: string;
+    format: 'JPEG' | 'PNG' | 'WEBP';
+    w: number;
+    h: number;
+  } | null> => {
+    const trimmed = url.trim();
+    const blobToPdfImage = (
+      blob: Blob,
+    ): Promise<{
+      dataUrl: string;
+      format: 'JPEG' | 'PNG' | 'WEBP';
+      w: number;
+      h: number;
+    } | null> =>
+      new Promise((resolve) => {
+        if (!blob.type.startsWith('image/')) {
+          resolve(null);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          const img = new window.Image();
+          img.onload = () => {
+            let format: 'JPEG' | 'PNG' | 'WEBP' = 'JPEG';
+            if (blob.type.includes('png')) format = 'PNG';
+            else if (blob.type.includes('webp')) format = 'WEBP';
+            resolve({
+              dataUrl,
+              format,
+              w: img.naturalWidth,
+              h: img.naturalHeight,
+            });
+          };
+          img.onerror = () => resolve(null);
+          img.src = dataUrl;
+        };
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(blob);
+      });
+
+    const proxyPath = `/api/campaign-brief-image?url=${encodeURIComponent(trimmed)}`;
+    try {
+      const proxied = await fetch(proxyPath);
+      if (proxied.ok) {
+        const blob = await proxied.blob();
+        const fromProxy = await blobToPdfImage(blob);
+        if (fromProxy) return fromProxy;
+      }
+    } catch {
+      // fall through
+    }
+
+    return new Promise((resolve) => {
+      const finish = (dataUrl: string, mime: string, w: number, h: number) => {
+        let format: 'JPEG' | 'PNG' | 'WEBP' = 'JPEG';
+        if (mime.includes('png')) format = 'PNG';
+        else if (mime.includes('webp')) format = 'WEBP';
+        resolve({ dataUrl, format, w, h });
+      };
+
+      fetch(trimmed, { mode: 'cors' })
+        .then((res) => {
+          if (!res.ok) throw new Error('fetch failed');
+          return res.blob();
+        })
+        .then((blob) => {
+          if (!blob.type.startsWith('image/')) throw new Error('not an image');
+          const reader = new FileReader();
+          reader.onload = () => {
+            const dataUrl = reader.result as string;
+            const img = new window.Image();
+            img.onload = () =>
+              finish(dataUrl, blob.type, img.naturalWidth, img.naturalHeight);
+            img.onerror = () => resolve(null);
+            img.src = dataUrl;
+          };
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(blob);
+        })
+        .catch(() => {
+          const img = new window.Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            try {
+              const canvas = document.createElement('canvas');
+              canvas.width = img.naturalWidth;
+              canvas.height = img.naturalHeight;
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                resolve(null);
+                return;
+              }
+              ctx.drawImage(img, 0, 0);
+              const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+              finish(dataUrl, 'image/jpeg', img.naturalWidth, img.naturalHeight);
+            } catch {
+              resolve(null);
+            }
+          };
+          img.onerror = () => resolve(null);
+          img.src = trimmed;
+        });
+    });
+  };
+
   const handleExportPDF = async () => {
     if (!localBrief) return;
 
@@ -126,17 +239,61 @@ export default function CampaignBriefDialog({
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
-      doc.text('Product Image URLs', margin, y);
+      doc.text('Product Images', margin, y);
       y += 10;
 
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(11);
-      localBrief.product_image_urls.forEach((link: string) => {
-        const splitText = doc.splitTextToSize(link, textWidth);
-        doc.text(splitText, margin, y);
-        doc.link(margin, y - 4, textWidth, 6, { url: link });
-        y += splitText.length * 6 + 4;
-      });
+      const maxImgW = textWidth;
+      const maxImgH = 90;
+
+      for (const link of localBrief.product_image_urls) {
+        const loaded = await loadImageForPdf(link.trim());
+        if (!loaded) {
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(9);
+          doc.setTextColor(120, 120, 120);
+          const fallback = doc.splitTextToSize(
+            `(Could not embed image) ${link}`,
+            textWidth,
+          );
+          if (y + fallback.length * 5 > pageHeight - 15) {
+            doc.addPage();
+            y = 20;
+          }
+          doc.text(fallback, margin, y);
+          y += fallback.length * 5 + 4;
+          doc.setTextColor(0, 0, 0);
+          doc.link(margin, y - fallback.length * 5 - 2, textWidth, 6, { url: link });
+          continue;
+        }
+
+        const { w, h, dataUrl, format } = loaded;
+        let drawW = maxImgW;
+        let drawH = (h / w) * drawW;
+        if (drawH > maxImgH) {
+          drawH = maxImgH;
+          drawW = (w / h) * drawH;
+        }
+
+        if (y + drawH > pageHeight - 15) {
+          doc.addPage();
+          y = 20;
+        }
+
+        try {
+          doc.addImage(dataUrl, format, margin, y, drawW, drawH);
+        } catch {
+          try {
+            doc.addImage(dataUrl, 'JPEG', margin, y, drawW, drawH);
+          } catch {
+            const splitText = doc.splitTextToSize(link, textWidth);
+            doc.text(splitText, margin, y);
+            doc.link(margin, y - 4, textWidth, 6, { url: link });
+            y += splitText.length * 6 + 4;
+            continue;
+          }
+        }
+        y += drawH + 8;
+      }
     }
     if (localBrief.video_links?.length) {
       doc.addPage();
