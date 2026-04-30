@@ -97,6 +97,18 @@ export default function InfluencersContentPage() {
             >
               <Trash className="text-red-300 cursor-pointer size-5" />
             </Button>,
+            <Button
+              key={`view-${id}`}
+              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+              onClick={() => {
+                router.push(
+                  `/Admin/content/influncers_content?campaign_id=${campaign.campaign_id ?? campaign._id
+                  }`,
+                );
+              }}
+            >
+              View Content
+            </Button>,
             <CustomButton
               key={`view-brief-${id}`}
               className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
@@ -110,19 +122,7 @@ export default function InfluencersContentPage() {
             >
               View Brief
             </CustomButton>,
-            <Button
-              key={`view-${id}`}
-              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-              onClick={() => {
-                router.push(
-                  `/Admin/content/influncers_content?campaign_id=${
-                    campaign.campaign_id ?? campaign._id
-                  }`,
-                );
-              }}
-            >
-              View Content
-            </Button>,
+
           ];
         })}
         paginationstart={data?.page ?? currentPage}

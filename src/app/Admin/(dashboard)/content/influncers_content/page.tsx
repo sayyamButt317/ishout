@@ -1,5 +1,5 @@
 'use client';
-import { Suspense,useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
@@ -208,7 +208,7 @@ function ContentFeedbackPageContent() {
                             )}?campaign_id=${encodeURIComponent(campaignId)}`,
                           );
                         }}
-                        className="flex-1 h-11 rounded-xl bg-primaryButton hover:bg-primaryHover text-white font-bold"
+                        className="flex-1 h-11 rounded-xl curcor-pointer bg-primaryButton hover:bg-primaryHover text-white font-bold"
                       >
                         View Content
                       </Button>
@@ -216,7 +216,7 @@ function ContentFeedbackPageContent() {
                   </div>
                 ))}
 
-                {/* Empty State */}
+
                 {combinedCards.length === 0 && (
                   <p className="text-xs text-white/40 text-center py-4">
                     No items
