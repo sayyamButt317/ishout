@@ -11,11 +11,6 @@ import LogoutDialogue from './logoutdialogue';
 import Image from 'next/image';
 import { adminSidebarLinks } from '@/src/constant/sidebaritems';
 
-const badgeStyles: Record<string, string> = {
-  violet: 'bg-violet-500/20 text-violet-400',
-  amber: 'bg-amber-500/20 text-amber-400',
-  green: 'bg-emerald-500/20 text-emerald-400',
-};
 
 function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
@@ -47,7 +42,7 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
             >
               <div
                 className={cn(
-                  'flex h-9 w-9 items-center justify-center rounded-2xl transition-all duration-300 flex-shrink-0',
+                  'flex h-9 w-9 items-center justify-center rounded-2xl transition-all duration-300 shrink-0',
                   isGroupActive && !isOpen
                     ? 'bg-linear-to-br from-indigo-500/20 to-purple-500/20 text-white'
                     : cn('text-slate-400 group-hover:bg-white/10', group.iconBg),

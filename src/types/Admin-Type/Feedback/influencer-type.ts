@@ -64,14 +64,3 @@ export interface Profile {
     media_count: number;
 }
 
-export interface Reel {
-    url: string;
-    thumbnail: string;
-    media_url: string;
-    likes: number;
-    comments: number;
-    views: number;
-    interaction: number;
-    caption: string;
-    timestamp: string;
-}
