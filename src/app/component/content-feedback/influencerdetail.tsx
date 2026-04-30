@@ -26,12 +26,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import Image from "next/image";
 import useReportStore from "@/src/store/Feedback/report-store";
-
-import {
-    InfluencerReportResponse,
-    Influencer,
-} from "@/src/types/Admin-Type/Feedback/influencer-type";
-
+import { Profile, Reel } from "@/src/types/Admin-Type/Feedback/influencer-type";
 import {
     ExtractSchema,
     FormValues,
@@ -41,16 +36,16 @@ interface DialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
+type ReportData = {
+    profile: Profile;
+    reel: Reel;
+};
 
 const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
-    const { mutate: extractdemographics } =
-        ExtractPostDemoGraphicsHook();
-
+    const { mutate: extractdemographics } = ExtractPostDemoGraphicsHook();
     const { campaign_id } = useReportStore();
 
-    const [reportData, setReportData] =
-        useState<InfluencerReportResponse | null>(null);
-
+    const [reportData, setReportData] = useState<ReportData | null>(null);
     const [loading, setLoading] = useState(false);
 
     const form = useForm<FormValues>({
@@ -66,7 +61,9 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
             toast.error("Campaign ID missing");
             return;
         }
+
         setLoading(true);
+
         extractdemographics(
             {
                 campaign_id,
@@ -94,38 +91,15 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
         }
     };
 
-    const influencer = reportData?.influencers?.[0];
-
-    const profile = influencer?.data?.profile ?? {
-        username: "",
-        name: "",
-        profile_image: "",
-        biography: "",
-        followers: 0,
-        following: 0,
-        media_count: 0,
-    };
-
-    const reel = influencer?.data?.reel ?? {
-        url: "",
-        thumbnail: "",
-        media_url: "",
-        likes: 0,
-        comments: 0,
-        views: "N/A",
-        interaction: 0,
-        caption: "",
-        timestamp: "",
-    };
+    const profile = reportData?.profile;
+    const reel = reportData?.reel;
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
             <DialogContent className="sm:max-w-4xl rounded-2xl">
 
                 <DialogHeader>
-                    <DialogTitle>
-                        Influencer Analytics
-                    </DialogTitle>
+                    <DialogTitle>Influencer Analytics</DialogTitle>
                 </DialogHeader>
 
                 {/* LOADING */}
@@ -186,12 +160,12 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
                 )}
 
                 {/* RESULT */}
-                {!loading && influencer && (
+                {!loading && profile && reel && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
 
                         {/* MEDIA */}
                         <div className="rounded-xl overflow-hidden border bg-black">
-                            {reel?.media_url ? (
+                            {reel.media_url ? (
                                 <video
                                     src={reel.media_url}
                                     controls
@@ -199,7 +173,7 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
                                 />
                             ) : (
                                 <Image
-                                    src={reel?.thumbnail || ""}
+                                    src={reel.thumbnail || ""}
                                     alt="reel"
                                     width={400}
                                     height={400}
@@ -214,7 +188,7 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
                             <Card className="p-4 rounded-xl">
                                 <div className="flex items-center gap-3">
                                     <Image
-                                        src={profile?.profile_image || ""}
+                                        src={profile.profile_image || ""}
                                         alt="profile"
                                         width={50}
                                         height={50}
@@ -222,34 +196,34 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
                                     />
                                     <div>
                                         <p className="font-semibold">
-                                            {profile?.name}
+                                            {profile.name || "N/A"}
                                         </p>
                                         <p className="text-sm text-gray-500">
-                                            @{profile?.username}
+                                            @{profile.username}
                                         </p>
                                     </div>
                                 </div>
 
                                 <p className="mt-3 text-sm text-gray-600">
-                                    {profile?.biography}
+                                    {profile.biography}
                                 </p>
                             </Card>
 
                             <Card className="p-4 rounded-xl space-y-2">
-                                <p>❤️ Likes: {reel?.likes}</p>
-                                <p>💬 Comments: {reel?.comments}</p>
-                                <p>👀 Views: {reel?.views}</p>
-                                <p>⚡ Engagement: {reel?.interaction}</p>
+                                <p>❤️ Likes: {reel.likes}</p>
+                                <p>💬 Comments: {reel.comments}</p>
+                                <p>👀 Views: {reel.views}</p>
+                                <p>⚡ Engagement: {reel.interaction}</p>
                             </Card>
 
                             <Card className="p-4 rounded-xl">
                                 <p className="text-sm">
-                                    {reel?.caption}
+                                    {reel.caption}
                                 </p>
                             </Card>
 
                             <p className="text-xs text-gray-400">
-                                {reel?.timestamp &&
+                                {reel.timestamp &&
                                     new Date(reel.timestamp).toLocaleString()}
                             </p>
 

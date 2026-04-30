@@ -35,3 +35,32 @@ export interface InfluencerReportResponse {
     total: number;
     influencers: Influencer[];
 }
+
+export interface CampaignInfluencerApiResponse {
+    campaign_id: string;
+    total: number;
+    influencers: Influencer[];
+}
+
+export interface Influencer {
+    username: string;
+    shortcode: string;
+    data: InfluencerData;
+    updated_at: string;
+}
+
+export interface InfluencerData {
+    profile: Profile;
+    reel: Reel;
+}
+
+export interface Profile {
+    username: string;
+    name: string;
+    profile_image: string;
+    biography: string;
+    followers: number;
+    following: number;
+    media_count: number;
+}
+

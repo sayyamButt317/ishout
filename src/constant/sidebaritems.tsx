@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutGrid, User, Video, Users} from 'lucide-react';
+import { LayoutGrid, User, Video, Users } from 'lucide-react';
 
 // ─── Shared types ─────────────────────────────────────────────────────────────
 
@@ -25,12 +25,12 @@ export const employeeSidebarLinks: SidebarGroupLink[] = [
     iconBg: 'bg-primaryButton/10',
     iconColor: 'text-primarytext',
     children: [
-      { label: 'All Campaigns',      route: '/client/all-campaign' },
-      { label: 'Create Campaign',    route: '/client/choose-campaign' },
-      { label: 'Campaign Brief',     route: '/client/briefs' },
+      { label: 'All Campaigns', route: '/client/all-campaign' },
+      { label: 'Create Campaign', route: '/client/choose-campaign' },
+      { label: 'Campaign Brief', route: '/client/briefs' },
       { label: 'Review Influencers', route: '/client/influencer-review' },
-      { label: 'Content Feedback',   route: '/client/influncers-content' },
-      { label: 'Approved Content',   route: '/client/approved-contents/all-campaigns' },
+      { label: 'Content Feedback', route: '/client/influncers-content' },
+      { label: 'Approved Content', route: '/client/approved-contents/all-campaigns' },
     ],
   },
   {
@@ -63,13 +63,13 @@ export const adminSidebarLinks: SidebarGroupLink[] = [
     iconBg: 'bg-primaryButton/10',
     iconColor: 'text-primarytext',
     children: [
-      { label: 'All Campaigns',   route: '/Admin/all-campaign' },
-      { label: 'Pending',         route: '/Admin/pending-campaign' },
+      { label: 'All Campaigns', route: '/Admin/all-campaign' },
+      { label: 'Pending', route: '/Admin/pending-campaign' },
       { label: 'iShout Approved', route: '/Admin/approved-campaign' },
-      { label: 'Brand Approved',  route: '/Admin/brand-approved' },
-      { label: 'Onboarding',      route: '/Admin/onboarding' },
-      { label: 'Content',         route: '/Admin/content' },
-      { label: 'Report',          route: '/Admin/report' },
+      { label: 'Brand Approved', route: '/Admin/brand-approved' },
+      { label: 'Onboarding', route: '/Admin/onboarding' },
+      { label: 'Content', route: '/Admin/content' },
+      { label: 'Report', route: '/Admin/campaign-report' },
     ],
   },
   {
@@ -79,8 +79,8 @@ export const adminSidebarLinks: SidebarGroupLink[] = [
     iconColor: 'text-purple-400',
     children: [
       { label: 'User Management', route: '/Admin/user-management' },
-      { label: 'WhatsApp',        route: '/Admin/whatsapp-chat' },
-      { label: 'Negotiation',     route: '/Admin/negotiation' },
+      { label: 'WhatsApp', route: '/Admin/whatsapp-chat' },
+      { label: 'Negotiation', route: '/Admin/negotiation' },
     ],
   },
 ];

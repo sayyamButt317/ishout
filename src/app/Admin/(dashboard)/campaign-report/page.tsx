@@ -19,6 +19,8 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import CampaignAllInfluencerHook from "@/src/routes/Admin/Hooks/feedback/CampaignInfluencer-hook";
+import { useRouter } from 'next/navigation';
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: 'all' },
@@ -41,7 +43,7 @@ const SORT_OPTIONS = [
   { label: 'Campaign Name Z→A', value: 'name_desc' },
 ];
 
-export default function AllCampaignPage() {
+export default function CampaignReport() {
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,7 +51,7 @@ export default function AllCampaignPage() {
     key: 'created_at' | 'status' | 'company_name' | 'name';
     direction: 'asc' | 'desc';
   } | null>(null);
-
+  const router = useRouter();
   const deleteCampaignHook = DeleteCampaignHook();
   const appliedStatus = statusFilter === 'all' ? undefined : statusFilter.toLowerCase();
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
@@ -58,6 +60,8 @@ export default function AllCampaignPage() {
     currentPage,
     appliedStatus,
   );
+
+  const { data: reportdata } = CampaignAllInfluencerHook(data?.campaigns?._id);
 
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -143,7 +147,7 @@ export default function AllCampaignPage() {
   return (
     <>
       <PageHeader
-        title="Company Generated Report"
+        title="Campaigns Report"
         description={
           <>
             Showing{' '}
@@ -285,16 +289,10 @@ export default function AllCampaignPage() {
           <CustomButton
             key={campaign._id}
             className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
-            disabled={!campaign.brief_id}
-            onClick={() => {
-              if (campaign.brief_id) {
-                setSelectedBriefId(campaign.brief_id);
-                setDialogOpen(true);
-              }
-            }}
+            onClick={() => router.push(`/Admin/campaign-report/${campaign._id}`)}
           >
-            View Brief
-          </CustomButton>,
+            View Report
+          </CustomButton>
         ])}
         onImageUpload={(rowIndex, file) => {
           const campaign = filteredAndSortedCampaigns[rowIndex];
