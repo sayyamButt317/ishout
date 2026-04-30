@@ -408,8 +408,10 @@ export default function ContentFeedbackDetailPage() {
                   className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
                   <option>Story</option>
                   <option>Post</option>
+                  <option>DemoGraphics</option>
                 </select>
-                <select className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
+                <select
+                  className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
                   <option>Version 1</option>
                   <option>Version 2</option>
                 </select>
@@ -466,12 +468,44 @@ export default function ContentFeedbackDetailPage() {
                     open={open}
                     onOpenChange={setOpen}
                   />
+                  <button
+                    onClick={() => {
+                      if (
+                        threadId &&
+                        brandThreadId &&
+                        negotiationId &&
+                        selectedPreviewMediaUrl &&
+                        selectedCard.campaign_id
+                      ) {
+                        approveNegotiation({
+                          thread_id: threadId,
+                          payload: { admin_approved: 'Approved' },
+                        });
+                        approveVideoMutation.mutate({
+                          brand_thread_id: brandThreadId,
+                          campaign_id: selectedCard.campaign_id,
+                          negotiation_id: negotiationId,
+                          video_url: selectedPreviewMediaUrl,
+                          content_id: selectedInfluencerMessageContentId,
+                          video_approve_admin: 'approved',
+                        });
+                      }
+                    }}
+                    disabled={
+                      isApproving ||
+                      approveVideoMutation.isPending ||
+                      !selectedPreviewMediaUrl
+                    }
+                    className="flex items-center cursor-pointer justify-center gap-2 rounded-lg bg-primaryButton px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Forward to Brand
+                  </button>
 
                   <CustomButton
 
                     className="bg-primaryButton "
                     onClick={() => setOpen(true)}>
-                    Open Influencer Analytics
+                    Influencer Analytics
                   </CustomButton>
                 </div>
               </div>
@@ -498,48 +532,24 @@ export default function ContentFeedbackDetailPage() {
             bubbleMaxWidthClassName="max-w-[90%]"
           />
         </div>
-        <button
-          onClick={() => {
-            if (
-              threadId &&
-              brandThreadId &&
-              negotiationId &&
-              selectedPreviewMediaUrl &&
-              selectedCard.campaign_id
-            ) {
-              approveNegotiation({
-                thread_id: threadId,
-                payload: { admin_approved: 'Approved' },
-              });
-              approveVideoMutation.mutate({
-                brand_thread_id: brandThreadId,
-                campaign_id: selectedCard.campaign_id,
-                negotiation_id: negotiationId,
-                video_url: selectedPreviewMediaUrl,
-                content_id: selectedInfluencerMessageContentId,
-                video_approve_admin: 'approved',
-              });
-            }
-          }}
-          disabled={
-            isApproving ||
-            approveVideoMutation.isPending ||
-            !selectedPreviewMediaUrl
-          }
-          className="flex items-center cursor-pointer justify-center gap-2 rounded-lg bg-primaryButton px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Approve for Brand
-        </button>
-        <RevisionBox />
-        <ContentFeedbackPanel
-          videoRef={videoRef}
-          activeFeedbackId={activeFeedbackId2}
-          selectedContentFeedback={selectedContentFeedback}
-          setSelectedContentFeedback={setSelectedContentFeedback}
-          selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-          negotiationId={negotiationId}
-          selectedCard={selectedCard}
-        />
+
+        <div className="flex gap-4">
+          <div className="w-1/2">
+            <RevisionBox />
+          </div>
+
+          <div className="w-1/2">
+            <ContentFeedbackPanel
+              videoRef={videoRef}
+              activeFeedbackId={activeFeedbackId2}
+              selectedContentFeedback={selectedContentFeedback}
+              setSelectedContentFeedback={setSelectedContentFeedback}
+              selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+              negotiationId={negotiationId}
+              selectedCard={selectedCard}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -61,9 +61,7 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
             toast.error("Campaign ID missing");
             return;
         }
-
         setLoading(true);
-
         extractdemographics(
             {
                 campaign_id,
@@ -102,14 +100,12 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
                     <DialogTitle>Influencer Analytics</DialogTitle>
                 </DialogHeader>
 
-                {/* LOADING */}
                 {loading && (
                     <div className="p-10 flex items-center justify-center">
                         <Loader2 className="animate-spin" />
                     </div>
                 )}
 
-                {/* FORM */}
                 {!loading && !reportData && (
                     <Card className="p-6 bg-white/5 border border-white/10 rounded-2xl">
                         <Form {...form}>
@@ -159,11 +155,8 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
                     </Card>
                 )}
 
-                {/* RESULT */}
                 {!loading && profile && reel && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-
-                        {/* MEDIA */}
                         <div className="rounded-xl overflow-hidden border bg-black">
                             {reel.media_url ? (
                                 <video
@@ -229,7 +222,7 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
 
                             <CustomButton
                                 onClick={() => setReportData(null)}
-                                className="w-full"
+                                className="w-full bg-primaryHover"
                             >
                                 Back
                             </CustomButton>
