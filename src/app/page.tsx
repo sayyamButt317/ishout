@@ -14,7 +14,7 @@ export default function LandingPage() {
   return (
     <div className="relative min-h-screen w-full bg-black overflow-hidden bg-linear-to-b from-black to-black text-white font-family-poppins">
       <Header />
-      <section className="relative w-full flex flex-col items-center pt-35 pb-40 md:pt-20 md:pb-30 overflow-hidden">
+      <section className="relative w-full flex flex-col items-center pt-35 pb-20 max-sm:pb-2 md:pt-20 md:pb-30 overflow-hidden">
         <Image
           src="https://ik.imagekit.io/dtdxnyskk/leftVector.svg"
           alt="leftVector"
@@ -34,7 +34,7 @@ export default function LandingPage() {
           className="absolute right-0 top-20 h-full w-auto object-contain pointer-events-none opacity-70"
         />
         {/* heading section */}
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between max-w-7xl w-full px-6 md:px-10 pt-10 pb-20 md:pb-28 gap-12 mt-12 md:mt-0">
+        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between max-w-7xl w-full px-6 md:px-10 pt-10 pb-20 md:pb-28 gap-12  md:mt-0">
           <div className="flex-1 flex flex-col justify-center items-start text-left space-y-4">
             <h1 className="text-6xl font-extralight text-transparent bg-clip-text bg-linear-to-r from-gray-500  to-white italic" >
               Activate at Scale, 1,000 <br/> collaborations

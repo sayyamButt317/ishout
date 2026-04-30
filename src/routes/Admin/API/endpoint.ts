@@ -93,5 +93,9 @@ export const AdminENDPOINT = {
   ADMIN_CONTENT_FEEDBACK_BRAND_READ: `/${ROLE}/content-feedback/brand`,
   SENDREVISIONMESSAGE: `/${ROLE}/send-revision`,
   CONTENTDETAILSFORINFLUENCER: (negotiation_id: string) =>
-    `/${ROLE}/feedback/${negotiation_id}`
+    `/${ROLE}/feedback/${negotiation_id}`,
+
+  EXTRACTDEMOGRAPHICS: `/${ROLE}/extract-report`,
+  EXTRACTCAMPAIGNALLINFLUENCERREPORT: (campaign_id: string) =>
+    `/${ROLE}/campaign-influncersReport?campaign_id=${campaign_id}`
 };
