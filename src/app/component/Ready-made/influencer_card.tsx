@@ -18,6 +18,7 @@ interface InfluencerCardProps {
   sendNegotiation?: (influencer: ReviewInfluencerResponse) => void;
   negotiationId?: string;
   lastOfferedPrice?: number | null;
+  negotiationStatus?: string | null;
 }
 
 export default function InfluencerCard({
@@ -26,6 +27,7 @@ export default function InfluencerCard({
   onMessage,
   sendNegotiation,
   negotiationId,
+  negotiationStatus,
 }: InfluencerCardProps) {
   const router = useRouter();
 
@@ -119,10 +121,6 @@ export default function InfluencerCard({
               )}
             </div>
           </div>
-
-          <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-bold text-white/60 whitespace-nowrap">
-            {influencer?.status ?? 'ASSET PENDING'}
-          </span>
         </div>
 
         {/* Followers / Engage / Price */}
@@ -176,7 +174,7 @@ export default function InfluencerCard({
         </div> */}
 
         {/* iShout / Brand Status */}
-        <div className="mt-3 grid grid-cols-2 gap-2">
+        <div className="mt-3 grid grid-cols-3 gap-2">
           <div className="rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center">
             <p className="text-[12px] font-bold text-white/70">iShout</p>
             <p
@@ -198,6 +196,19 @@ export default function InfluencerCard({
               {influencer?.company_approved ? 'Approved' : 'Not Approved'}
             </p>
           </div>
+
+          <div className="rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center">
+            <p className="text-[12px] font-bold text-white/70">Influencer</p>
+            <p
+              className={`mt-1 text-[11px] font-bold capitalize ${
+                (negotiationStatus ?? influencer?.negotiation_status)
+                  ? 'text-emerald-300'
+                  : 'text-red-300'
+              }`}
+            >
+              {negotiationStatus ?? influencer?.negotiation_status ?? 'Pending'}
+            </p>
+          </div>
         </div>
 
         {/* Bottom Actions */}
@@ -211,7 +222,7 @@ export default function InfluencerCard({
             Message
           </CustomButton>
           <CustomButton
-            className="h-10 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal text-sm"
+            className="h-10 rounded-full bg-primaryButton hover:bg-primaryHover text-white font-normal text-sm"
             onClick={handleViewProfile}
           >
             View Profile

@@ -1,0 +1,109 @@
+'use client';
+import { Button } from '@/components/ui/button';
+import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
+import StatusBadge from '@/src/app/component/custom-component/statusbadge';
+import TableComponent from '@/src/app/component/CustomTable';
+import CompanyApprovedCampaignHook from '@/src/routes/Company/api/Hooks/comanyapprovedCampaign.hook';
+import useAuthStore from '@/src/store/AuthStore/authStore';
+import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { RefreshCcw, UserCheck } from 'lucide-react';
+import PageHeader from '@/src/app/component/PageHeader';
+import CustomButton from '@/src/app/component/button';
+
+export default function OnboardingInfluencerPage() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const { user_id } = useAuthStore();
+  const { data, isLoading, refetch, isRefetching } = CompanyApprovedCampaignHook(
+    user_id,
+    currentPage,
+  );
+  const router = useRouter();
+
+  return (
+    <>
+      <PageHeader
+        title="Review Onboarded Influencers"
+        description="Campaigns with onboarded influencers that need to be reviewed"
+        icon={<UserCheck className="size-5" />}
+        actions={
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 text-white/70 hover:bg-white/10 hover:text-white"
+            onClick={() => refetch()}
+            disabled={isRefetching}
+            aria-label="Refresh list"
+          >
+            <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
+          </Button>
+        }
+      />
+
+      <TableComponent
+        header={[
+          'Campaign Name',
+          'followers',
+          'Platform',
+          'Category',
+          'Country',
+          'Requested ',
+          'Unapproved',
+          'Status',
+          'Approved At',
+          'View Influncers',
+        ]}
+        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
+          <div key={`name-${campaign?._id}`} className="truncate">
+            {campaign?.name}
+          </div>,
+          <div key={`followers-${campaign?._id}`} className="truncate">
+            {campaign?.followers?.join(', ')}
+          </div>,
+          <div key={`platform-${campaign?._id}`} className="truncate">
+            <PlatformBadge platform={campaign?.platform} />
+          </div>,
+          <div key={`category-${campaign.campaign_id}`} className="truncate">
+            {campaign?.category?.join(', ') || '-'}
+          </div>,
+          <div key={`country-${campaign?.campaign_id}`} className="truncate">
+            {campaign?.country?.join(', ')}
+          </div>,
+          <div
+            key={`requested-${campaign?._id}`}
+            className="truncate text-center text-xs sm:text-sm"
+          >
+            {campaign?.limit}
+          </div>,
+          <div
+            key={`approved-${campaign?._id}`}
+            className="truncate text-center text-xs sm:text-sm"
+          >
+            {campaign?.pending_influencers_count}
+          </div>,
+          <div key={`status-${campaign?._id}`} className="truncate">
+            <StatusBadge status={campaign.status} />
+          </div>,
+          <div key={`approved-at-${campaign?._id}`} className="truncate">
+            {new Date(campaign?.created_at).toLocaleDateString()}
+          </div>,
+          <div key={`view-${campaign?._id}`} className="truncate">
+            <CustomButton
+              className="cursor-pointer bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+              onClick={() => router.push(`/client/onboarding/${campaign?._id}`)}
+            >
+              View Influencers
+            </CustomButton>
+          </div>,
+        ])}
+        paginationstart={data?.page ?? 1}
+        paginationend={data?.total_pages ?? 1}
+        onPageChange={(page: number) => {
+          setCurrentPage(page);
+        }}
+        isLoading={isLoading}
+      />
+    </>
+  );
+}

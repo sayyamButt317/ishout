@@ -102,4 +102,7 @@ export const AdminENDPOINT = {
     `/${ROLE}/campaign-influncersReport?campaign_id=${campaign_id}`,
   CAMPAIGNANALTICS: (campaign_id: string) =>
     `/${ROLE}/campaign-analytics/${campaign_id}`,
+
+  /** POST JSON — store influencer demographics row */
+  ADMIN_STORE_INFLUENCER_DEMOGRAPHICS: `/${ROLE}/store/Influencer-demographics`,
 };
