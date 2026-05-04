@@ -33,6 +33,7 @@ import {
   type WhatsAppAdminCompanyApproveVideoResponse,
 } from '@/src/types/Compnay/approved-video-type';
 import { SendRevisionPayload } from '@/src/types/Admin-Type/Feedback/revision-type';
+import type { StoreInfluencerDemographicsRequest } from '@/src/types/Admin-Type/Feedback-Type';
 import { AdminInfluencerMessagesResponse } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-messages-type';
 
@@ -561,6 +562,16 @@ export const WhatsAppAdminCompanyApproveVideoApi = async (
 
 export const SaveContentFeedbackApi = async (payload: SaveContentFeedbackPayload) => {
   const response = await api.post(AdminENDPOINT.ADMIN_CONTENT_FEEDBACK, payload);
+  return response.data;
+};
+
+export const storeInfluencerDemographicsApi = async (
+  payload: StoreInfluencerDemographicsRequest,
+) => {
+  const response = await api.post(
+    AdminENDPOINT.ADMIN_STORE_INFLUENCER_DEMOGRAPHICS,
+    payload,
+  );
   return response.data;
 };
 
