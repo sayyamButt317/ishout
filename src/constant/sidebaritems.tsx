@@ -29,6 +29,7 @@ export const employeeSidebarLinks: SidebarGroupLink[] = [
       { label: 'Create Campaign', route: '/client/choose-campaign' },
       { label: 'Campaign Brief', route: '/client/briefs' },
       { label: 'Review Influencers', route: '/client/influencer-review' },
+      { label: 'Onboarded Influencers', route: '/client/onboarding' },
       { label: 'Content Feedback', route: '/client/influncers-content' },
       { label: 'Approved Content', route: '/client/approved-contents/all-campaigns' },
     ],
@@ -48,9 +49,7 @@ export const employeeSidebarLinks: SidebarGroupLink[] = [
     icon: React.createElement(User, { size: 15 }),
     iconBg: 'bg-emerald-500/10',
     iconColor: 'text-emerald-400',
-    children: [
-      { label: 'Profile', route: '/client/profile' },
-    ],
+    children: [{ label: 'Profile', route: '/client/profile' }],
   },
 ];
 
