@@ -34,6 +34,10 @@ import type { AdminInfluencerMessageItem } from '@/src/types/Admin-Type/Feedback
 import InfluencerDetailDialog from '@/src/app/component/content-feedback/influencerdetail';
 import useReportStore from '@/src/store/Feedback/report-store';
 import CustomButton from '@/src/app/component/button';
+import useStoreInfluencerDemographicsHook from '@/src/routes/Admin/Hooks/feedback/store-influencer-demographics-hook';
+import type { StoreInfluencerDemographicsResponse } from '@/src/types/Admin-Type/Feedback-Type';
+
+type ContentPreviewKind = 'story' | 'post' | 'demographics';
 
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
@@ -53,17 +57,17 @@ export default function ContentFeedbackDetailPage() {
   const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
   const [isExtractDialogOpen, setIsExtractDialogOpen] = useState(false);
 
-
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const searchParams = useSearchParams();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
 
   const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
-    data?: NegotiationResponse
+    data?: NegotiationResponse;
   };
 
-  const { setcampaignIdForReport } = useReportStore()
+  const { setcampaignIdForReport } = useReportStore();
+  const reportCampaignId = useReportStore((s) => s.campaign_id);
 
   // set campaign_id when data arrives
   useEffect(() => {
@@ -71,7 +75,6 @@ export default function ContentFeedbackDetailPage() {
       setcampaignIdForReport(data.campaign_id);
     }
   }, [data?.campaign_id, setcampaignIdForReport]);
-
 
   const { setAll } = useRevisionMessageStore();
   useEffect(() => {
@@ -162,7 +165,13 @@ export default function ContentFeedbackDetailPage() {
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
   const [open, setOpen] = useState(false);
+  const [contentPreviewKind, setContentPreviewKind] =
+    useState<ContentPreviewKind>('post');
+  const [contentVersion, setContentVersion] = useState<'1' | '2'>('1');
   const { setContentType } = useRevisionMessageStore();
+
+  const { mutate: saveInfluencerDemographics, isPending: isSavingDemographics } =
+    useStoreInfluencerDemographicsHook();
 
   const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
   const isImageUrl = useCallback((value: string) => AnalyzeURL(value).isImageUrl, []);
@@ -301,6 +310,53 @@ export default function ContentFeedbackDetailPage() {
   }, [influencerChatQuery.data?.messages, selectedPreviewMediaUrl]);
   const activeFeedbackId2 = selectedInfluencerMessageContentId ?? '';
 
+  const effectiveCampaignIdForDemographics = useMemo(() => {
+    const fromStore = (reportCampaignId ?? '').trim();
+    if (fromStore) return fromStore;
+    return (
+      (selectedCard?.campaign_id ?? '').trim() ||
+      campaignIdFromQuery.trim() ||
+      (data?.campaign_id ?? '').trim()
+    );
+  }, [
+    reportCampaignId,
+    selectedCard?.campaign_id,
+    campaignIdFromQuery,
+    data?.campaign_id,
+  ]);
+
+  const isDemographicsView = contentPreviewKind === 'demographics';
+
+  const handleSaveDemographics = useCallback(() => {
+    const campaign_id = effectiveCampaignIdForDemographics;
+    const content_id = (selectedInfluencerMessageContentId ?? '').trim();
+    const image_url = (selectedPreviewMediaUrl ?? '').trim();
+    if (!campaign_id || !content_id || !image_url) {
+      toast.error(
+        'Campaign, content, and preview media are required. Select media in chat and ensure campaign is loaded.',
+      );
+      return;
+    }
+    saveInfluencerDemographics(
+      {
+        campaign_id,
+        content_id,
+        image_url,
+        content_type: 'demographics',
+      },
+      {
+        onSuccess: (res: StoreInfluencerDemographicsResponse) =>
+          toast.success(res.message ?? 'Demographic added successfully'),
+        onError: () => toast.error('Failed to save demographics'),
+      },
+    );
+  }, [
+    effectiveCampaignIdForDemographics,
+    selectedInfluencerMessageContentId,
+    selectedPreviewMediaUrl,
+    saveInfluencerDemographics,
+  ]);
+
   const handleSendMessage = async (textOrFile: string | File) => {
     if (textOrFile instanceof File) {
       if (chatMode !== 'influencer') {
@@ -391,9 +447,7 @@ export default function ContentFeedbackDetailPage() {
             <div className="flex items-center justify-between border-b border-white/10 p-2">
               <div className="flex items-center gap-3">
                 <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
-                  <ChevronLeft
-                    onClick={() => router.back()}
-                    className="size-5" />
+                  <ChevronLeft onClick={() => router.back()} className="size-5" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-white">{selectedCard.title}</h3>
@@ -404,16 +458,25 @@ export default function ContentFeedbackDetailPage() {
               </div>
               <div className="flex items-center gap-2">
                 <select
-                  // onClick={setContentType}
-                  className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
-                  <option>Story</option>
-                  <option>Post</option>
-                  <option>DemoGraphics</option>
+                  value={contentPreviewKind}
+                  onChange={(e) =>
+                    setContentPreviewKind(e.target.value as ContentPreviewKind)
+                  }
+                  className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none"
+                  aria-label="Content type"
+                >
+                  <option value="story">Story</option>
+                  <option value="post">Post</option>
+                  <option value="demographics">DemoGraphics</option>
                 </select>
                 <select
-                  className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
-                  <option>Version 1</option>
-                  <option>Version 2</option>
+                  value={contentVersion}
+                  onChange={(e) => setContentVersion(e.target.value as '1' | '2')}
+                  className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none"
+                  aria-label="Content version"
+                >
+                  <option value="1">Version 1</option>
+                  <option value="2">Version 2</option>
                 </select>
               </div>
             </div>
@@ -464,49 +527,65 @@ export default function ContentFeedbackDetailPage() {
 
               <div className="flex flex-col items-end gap-2 text-white/50">
                 <div className="flex items-center gap-2">
-                  <InfluencerDetailDialog
-                    open={open}
-                    onOpenChange={setOpen}
-                  />
-                  <button
-                    onClick={() => {
-                      if (
-                        threadId &&
-                        brandThreadId &&
-                        negotiationId &&
-                        selectedPreviewMediaUrl &&
-                        selectedCard.campaign_id
-                      ) {
-                        approveNegotiation({
-                          thread_id: threadId,
-                          payload: { admin_approved: 'Approved' },
-                        });
-                        approveVideoMutation.mutate({
-                          brand_thread_id: brandThreadId,
-                          campaign_id: selectedCard.campaign_id,
-                          negotiation_id: negotiationId,
-                          video_url: selectedPreviewMediaUrl,
-                          content_id: selectedInfluencerMessageContentId,
-                          video_approve_admin: 'approved',
-                        });
+                  {isDemographicsView ? (
+                    <button
+                      type="button"
+                      onClick={handleSaveDemographics}
+                      disabled={
+                        isSavingDemographics ||
+                        !selectedPreviewMediaUrl ||
+                        !selectedInfluencerMessageContentId ||
+                        !effectiveCampaignIdForDemographics
                       }
-                    }}
-                    disabled={
-                      isApproving ||
-                      approveVideoMutation.isPending ||
-                      !selectedPreviewMediaUrl
-                    }
-                    className="flex items-center cursor-pointer justify-center gap-2 rounded-lg bg-primaryButton px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Forward to Brand
-                  </button>
+                      className="flex items-center cursor-pointer justify-center gap-2 rounded-lg bg-primaryButton px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Save Demographics
+                    </button>
+                  ) : (
+                    <>
+                      <InfluencerDetailDialog open={open} onOpenChange={setOpen} />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (
+                            threadId &&
+                            brandThreadId &&
+                            negotiationId &&
+                            selectedPreviewMediaUrl &&
+                            selectedCard.campaign_id
+                          ) {
+                            approveNegotiation({
+                              thread_id: threadId,
+                              payload: { admin_approved: 'Approved' },
+                            });
+                            approveVideoMutation.mutate({
+                              brand_thread_id: brandThreadId,
+                              campaign_id: selectedCard.campaign_id,
+                              negotiation_id: negotiationId,
+                              video_url: selectedPreviewMediaUrl,
+                              content_id: selectedInfluencerMessageContentId,
+                              video_approve_admin: 'approved',
+                            });
+                          }
+                        }}
+                        disabled={
+                          isApproving ||
+                          approveVideoMutation.isPending ||
+                          !selectedPreviewMediaUrl
+                        }
+                        className="flex items-center cursor-pointer justify-center gap-2 rounded-lg bg-primaryButton px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Forward to Brand
+                      </button>
 
-                  <CustomButton
-
-                    className="bg-primaryButton "
-                    onClick={() => setOpen(true)}>
-                    Influencer Analytics
-                  </CustomButton>
+                      <CustomButton
+                        className="bg-primaryButton "
+                        onClick={() => setOpen(true)}
+                      >
+                        Influencer Analytics
+                      </CustomButton>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
