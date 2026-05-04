@@ -408,7 +408,7 @@ export default function ContentFeedbackDetailPage() {
                   className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
                   <option>Story</option>
                   <option>Post</option>
-                  <option>DemoGraphics</option>
+                  <option>Demographics</option>
                 </select>
                 <select
                   className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none">
