@@ -13,6 +13,7 @@ import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 export default function ClientInfluencersContentPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = CompanyCampaignHook(currentPage);
+  const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
   const router = useRouter();
 
   const rowKey = (campaign: CompanyCampaignResponse) =>
@@ -29,7 +30,7 @@ export default function ClientInfluencersContentPage() {
         }
         icon={<LayoutGrid className="size-5" />}
       />
-      <TableComponent
+      <TableComponent<CompanyCampaignResponse>
         header={[
           'Campaign Name',
           'followers',
@@ -41,10 +42,11 @@ export default function ClientInfluencersContentPage() {
           'Created At',
           'View Content',
         ]}
-        imageUrls={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
-        )}
-        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => {
+        imageUrls={campaigns.map((campaign) => campaign?.campaign_logo_url || null)}
+        statuses={campaigns.map((campaign) => campaign.status)}
+        campaignIds={campaigns.map((campaign) => campaign._id ?? campaign.campaign_id)}
+        campaigns={campaigns}
+        subheader={campaigns.map((campaign) => {
           const id = rowKey(campaign);
           return [
             <div key={`name-${id}`} className="truncate">

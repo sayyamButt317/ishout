@@ -19,6 +19,7 @@ import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 export default function AllCampaign() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = CompanyCampaignHook(currentPage);
+  const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
@@ -44,7 +45,7 @@ export default function AllCampaign() {
         }
         icon={<LayoutGrid className="size-5" />}
       />
-      <TableComponent
+      <TableComponent<CompanyCampaignResponse>
         header={[
           'Campaign Name',
           'followers',
@@ -59,10 +60,11 @@ export default function AllCampaign() {
           'Delete',
           'View',
         ]}
-        imageUrls={data?.campaigns?.map(
-          (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
-        )}
-        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
+        imageUrls={campaigns.map((campaign) => campaign?.campaign_logo_url || null)}
+        statuses={campaigns.map((campaign) => campaign.status)}
+        campaignIds={campaigns.map((campaign) => campaign._id ?? campaign.campaign_id)}
+        campaigns={campaigns}
+        subheader={campaigns.map((campaign) => [
           <div key={`name-${campaign?.campaign_id}`} className="truncate">
             {campaign?.name}
           </div>,
