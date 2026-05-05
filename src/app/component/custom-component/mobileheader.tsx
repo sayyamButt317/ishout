@@ -47,7 +47,7 @@ const MobileHeader = () => {
           }}
         >
           <Link
-            href="https://app.ishout.ae/#about-us"
+            href="https://app.ishout.ae/about-us"
             className="text-white hover:text-pink-400 transition-colors text-md font-thin"
           >
             About Us

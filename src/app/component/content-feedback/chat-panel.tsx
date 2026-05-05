@@ -64,16 +64,16 @@ export default function ChatPanel({
   };
 
   return (
-    <div className={`flex shrink-0 flex-col bg-white/2 ${className ?? ''}`}>
+    <div className={`flex h-full min-h-0 flex-col bg-white/2 ${className ?? ''}`}>
       {modeToggle && (
         <div className="border-b border-white/10 px-4 pt-3 pb-2">
           <div className="mx-auto flex max-w-md rounded-full border border-white/10 bg-white/5 p-1">
             <button
               type="button"
               onClick={() => modeToggle.onChange('influencer')}
-              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'influencer'
+              className={`flex-1 rounded-full py-2 text-center cursor-pointer text-xs font-bold transition-colors ${modeToggle.value === 'influencer'
                 ? 'bg-primaryButton text-white shadow-sm'
-                : 'text-white/45 hover:text-white/70'
+                : 'text-white/45 cursor-pointer  hover:text-white/70'
                 }`}
             >
               Influencer Chat
@@ -81,7 +81,7 @@ export default function ChatPanel({
             <button
               type="button"
               onClick={() => modeToggle.onChange('brand')}
-              className={`flex-1 rounded-full py-2 text-center text-xs font-bold transition-colors ${modeToggle.value === 'brand'
+              className={`flex-1 rounded-full py-2 text-center cursor-pointer text-xs font-bold transition-colors ${modeToggle.value === 'brand'
                 ? 'bg-primaryButton text-white shadow-sm'
                 : 'text-white/45 hover:text-white/70'
                 }`}
@@ -92,7 +92,7 @@ export default function ChatPanel({
         </div>
       )}
 
-      <div className="flex-1 space-y-4 overflow-y-auto p-5">
+      <div className=" space-y-4 overflow-y-auto p-5">
         {messagesAvailable ? (
           <ChatMessagesList
             messages={messages}
@@ -125,7 +125,7 @@ export default function ChatPanel({
           />
           <div className="absolute bottom-4 right-4 flex items-center gap-2">
             {selectedFile ? (
-              <div className="flex max-w-[170px] items-center gap-1 rounded-lg bg-white/10 px-2 py-1 text-[11px] font-semibold text-white/80">
+              <div className="flex max-w-42.5 items-center gap-1 rounded-lg bg-white/10 px-2 py-1 text-[11px] font-semibold text-white/80">
                 <span className="truncate" title={selectedFile.name}>
                   {selectedFile.name}
                 </span>

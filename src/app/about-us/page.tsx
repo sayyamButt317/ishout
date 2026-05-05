@@ -2,7 +2,6 @@
 import Header from '../component/header';
 import Footer from '../component/landingPage/footer';
 import LogoFooter from '../component/logo-footer';
-import CalendlyDemo from '../component/calendly-demo';
 import CustomButton from '../component/button';
 import Image from 'next/image';
 
@@ -66,12 +65,11 @@ export default function AboutPage() {
           <span className="text-xs font-semibold tracking-widest uppercase text-[#ff3b8d] border border-[#ff3b8d]/30 rounded-full px-4 py-1">
             About iShout
           </span>
-          <h1 className="text-4xl md:text-6xl font-extralight italic text-transparent bg-clip-text bg-linear-to-r from-gray-400 to-white leading-tight">
+          <h1 className=" text-6xl font-extrabold text-transparent tracking-wide bg-clip-text bg-linear-to-r from-[#ff3b8d]  to-[#1e3a6e] italic">
             The Next Era of Influencer
             <br />
-            <span className="font-extrabold text-transparent bg-clip-text bg-linear-to-r from-[#ff3b8d] via-pink-400 to-white">
-              Marketing is Intelligent.
-            </span>
+            Marketing is Intelligent.
+            <br/>
           </h1>
           <p className="text-sm md:text-base italic font-thin text-slate-300 max-w-xl">
             iShout Media empowers brands to run high-performing influencer
