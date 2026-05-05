@@ -18,7 +18,7 @@ export default function useAdminInfluencerMessagesHook(
       WhatsAppAdminInfluencerMessagesApi(thread_id, { page, page_size }),
     enabled: enabled && !!thread_id,
     refetchOnWindowFocus: false,
-    placeholderData: (prev) => prev, // ✅ for pagination (v5)
+    placeholderData: (prev) => prev,
   });
 
   const refetchMessages = () => {
