@@ -44,7 +44,7 @@ const Header = () => {
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-8 text-md font-thin">
-          <Link href="https://app.ishout.ae/#about-us" className="text-white hover:text-pink-400">
+          <Link href="https://app.ishout.ae/about-us" className="text-white hover:text-pink-400">
             About Us
           </Link>
           <Link href="https://app.ishout.ae/#how-it-works" className="text-white hover:text-pink-400">
@@ -103,7 +103,7 @@ const Header = () => {
       {menuOpen && (
         <div className="lg:hidden mt-4 bg-black/90 backdrop-blur rounded-xl p-4 flex flex-col gap-4">
           
-          <Link href="https://app.ishout.ae/#about-us" onClick={() => setMenuOpen(false)} className="text-white">
+          <Link href="https://app.ishout.ae/about-us" onClick={() => setMenuOpen(false)} className="text-white">
             About Us
           </Link>
           <Link href="https://app.ishout.ae/#how-it-works" onClick={() => setMenuOpen(false)} className="text-white">
