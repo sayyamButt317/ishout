@@ -39,7 +39,7 @@ export default function NavbarDemo() {
   const navItems = [
     {
       name: "About Us",
-      link: "https://app.ishout.ae/#about-us",
+      link: "https://app.ishout.ae/about-us",
     },
     {
       name: "How it Works",

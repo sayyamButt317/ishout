@@ -14,12 +14,13 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { Trash2 } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import useDeleteAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/delete-admin-influencer-messages-hook';
-import { CircleDashed, CircleCheck, RefreshCcw } from 'lucide-react';
+import { CircleDashed, CircleCheck, RefreshCcw, CircleCheckBig  } from 'lucide-react';
 
 const COLUMNS = [
   { icon: <CircleDashed />,id: 'review', label: 'Under Review', color: 'primary' },
   { icon: <RefreshCcw />,id: 'revision', label: 'Revision', color: 'amber' },
   { icon: <CircleCheck />,id: 'approved', label: 'Approved', color: 'emerald' },
+  { icon: <CircleCheckBig />,id: 'posted', label: 'Rejected', color: 'green' },
 ];
 
 function ContentFeedbackPageContent() {
