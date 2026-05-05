@@ -1,6 +1,5 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import CountButton from '@/src/app/component/custom-component/countbutton';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import TableComponent from '@/src/app/component/CustomTable';
@@ -21,6 +20,7 @@ export default function RevieInfluencer() {
     user_id,
     currentPage,
   );
+  const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
   const router = useRouter();
   return (
     <>
@@ -41,7 +41,7 @@ export default function RevieInfluencer() {
           </Button>
         }
       />
-      <TableComponent
+      <TableComponent<CompanyCampaignResponse>
         header={[
           'Campaign Name',
           'followers',
@@ -54,7 +54,10 @@ export default function RevieInfluencer() {
           'Approved At',
           'View Influncers',
         ]}
-        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
+        statuses={campaigns.map((campaign) => campaign.status)}
+        campaignIds={campaigns.map((campaign) => campaign._id ?? campaign.campaign_id)}
+        campaigns={campaigns}
+        subheader={campaigns.map((campaign) => [
           <div key={`name-${campaign?._id}`} className="truncate">
             {campaign?.name}
           </div>,
