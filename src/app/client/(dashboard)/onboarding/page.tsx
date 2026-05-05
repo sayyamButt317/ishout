@@ -19,12 +19,13 @@ export default function OnboardingInfluencerPage() {
     user_id,
     currentPage,
   );
+  const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
   const router = useRouter();
 
   return (
     <>
       <PageHeader
-        title="Review Onboarded Influencers"
+        title="Onboarded Influencers"
         description="Campaigns with onboarded influencers that need to be reviewed"
         icon={<UserCheck className="size-5" />}
         actions={
@@ -41,7 +42,7 @@ export default function OnboardingInfluencerPage() {
         }
       />
 
-      <TableComponent
+      <TableComponent<CompanyCampaignResponse>
         header={[
           'Campaign Name',
           'followers',
@@ -54,7 +55,10 @@ export default function OnboardingInfluencerPage() {
           'Approved At',
           'View Influncers',
         ]}
-        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => [
+        statuses={campaigns.map((campaign) => campaign.status)}
+        campaignIds={campaigns.map((campaign) => campaign._id ?? campaign.campaign_id)}
+        campaigns={campaigns}
+        subheader={campaigns.map((campaign) => [
           <div key={`name-${campaign?._id}`} className="truncate">
             {campaign?.name}
           </div>,
