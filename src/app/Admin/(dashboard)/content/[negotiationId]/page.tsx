@@ -33,6 +33,11 @@ import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store'
 import type { AdminInfluencerMessageItem } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import InfluencerDetailDialog from '@/src/app/component/content-feedback/influencerdetail';
 import useReportStore from '@/src/store/Feedback/report-store';
+import CustomButton from '@/src/app/component/button';
+import useStoreInfluencerDemographicsHook from '@/src/routes/Admin/Hooks/feedback/store-influencer-demographics-hook';
+import type { StoreInfluencerDemographicsResponse } from '@/src/types/Admin-Type/Feedback-Type';
+
+type ContentPreviewKind = 'story' | 'post' | 'demographics';
 
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
@@ -48,7 +53,6 @@ export default function ContentFeedbackDetailPage() {
   const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
   const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
 
-
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const searchParams = useSearchParams();
@@ -59,6 +63,7 @@ export default function ContentFeedbackDetailPage() {
   };
 
   const { setcampaignIdForReport } = useReportStore();
+  const reportCampaignId = useReportStore((s) => s.campaign_id);
 
   useEffect(() => {
     if (data?.campaign_id) {
@@ -129,7 +134,13 @@ export default function ContentFeedbackDetailPage() {
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
   const { mutate: approveNegotiation, isPending: isApproving } = useAdminNegotiationApprovalStatus();
   const [open, setOpen] = useState(false);
+  const [contentPreviewKind, setContentPreviewKind] =
+    useState<ContentPreviewKind>('post');
+  const [contentVersion, setContentVersion] = useState<'1' | '2'>('1');
   const { setContentType } = useRevisionMessageStore();
+
+  const { mutate: saveInfluencerDemographics, isPending: isSavingDemographics } =
+    useStoreInfluencerDemographicsHook();
 
   const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
   const isImageUrl = useCallback((value: string) => AnalyzeURL(value).isImageUrl, []);
@@ -226,6 +237,53 @@ export default function ContentFeedbackDetailPage() {
 
   const activeFeedbackId2 = selectedInfluencerMessageContentId ?? '';
 
+  const effectiveCampaignIdForDemographics = useMemo(() => {
+    const fromStore = (reportCampaignId ?? '').trim();
+    if (fromStore) return fromStore;
+    return (
+      (selectedCard?.campaign_id ?? '').trim() ||
+      campaignIdFromQuery.trim() ||
+      (data?.campaign_id ?? '').trim()
+    );
+  }, [
+    reportCampaignId,
+    selectedCard?.campaign_id,
+    campaignIdFromQuery,
+    data?.campaign_id,
+  ]);
+
+  const isDemographicsView = contentPreviewKind === 'demographics';
+
+  const handleSaveDemographics = useCallback(() => {
+    const campaign_id = effectiveCampaignIdForDemographics;
+    const content_id = (selectedInfluencerMessageContentId ?? '').trim();
+    const image_url = (selectedPreviewMediaUrl ?? '').trim();
+    if (!campaign_id || !content_id || !image_url) {
+      toast.error(
+        'Campaign, content, and preview media are required. Select media in chat and ensure campaign is loaded.',
+      );
+      return;
+    }
+    saveInfluencerDemographics(
+      {
+        campaign_id,
+        content_id,
+        image_url,
+        content_type: 'demographics',
+      },
+      {
+        onSuccess: (res: StoreInfluencerDemographicsResponse) =>
+          toast.success(res.message ?? 'Demographic added successfully'),
+        onError: () => toast.error('Failed to save demographics'),
+      },
+    );
+  }, [
+    effectiveCampaignIdForDemographics,
+    selectedInfluencerMessageContentId,
+    selectedPreviewMediaUrl,
+    saveInfluencerDemographics,
+  ]);
+
   const handleSendMessage = async (textOrFile: string | File) => {
     if (textOrFile instanceof File) {
       if (chatMode !== 'influencer') { toast.error('Attach files in Influencer Chat only.'); return; }
@@ -296,10 +354,46 @@ export default function ContentFeedbackDetailPage() {
   }
 
   return (
-    <div className="flex w-full flex-col font-sans overflow-y-auto lg:h-[calc(100vh-24px)] lg:flex-row lg:overflow-hidden">
-
-      {/* ══════════ LEFT — Video column ══════════ */}
-      <div className="flex w-full flex-col lg:flex-1 lg:overflow-hidden lg:border-r lg:border-white/10">
+    <div className="font-sans">
+      <div className="w-full">
+        <div className="flex h-full max-h-[min(920px,96vh)] w-full min-h-0 flex-col overflow-y-auto lg:flex-row lg:overflow-hidden">
+          <div className="flex w-full shrink-0 flex-col border-b border-white/10 lg:min-h-0 lg:min-w-0 lg:flex-1 lg:border-r lg:border-b-0">
+            <div className="flex items-center justify-between border-b border-white/10 p-2">
+              <div className="flex items-center gap-3">
+                <div className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70">
+                  <ChevronLeft onClick={() => router.back()} className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">{selectedCard.title}</h3>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
+                    {selectedCard.campaign}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <select
+                  value={contentPreviewKind}
+                  onChange={(e) =>
+                    setContentPreviewKind(e.target.value as ContentPreviewKind)
+                  }
+                  className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none"
+                  aria-label="Content type"
+                >
+                  <option value="story">Story</option>
+                  <option value="post">Post</option>
+                  <option value="demographics">DemoGraphics</option>
+                </select>
+                <select
+                  value={contentVersion}
+                  onChange={(e) => setContentVersion(e.target.value as '1' | '2')}
+                  className="rounded-lg border bg-black px-4 py-2 text-xs font-bold text-white focus:outline-none"
+                  aria-label="Content version"
+                >
+                  <option value="1">Version 1</option>
+                  <option value="2">Version 2</option>
+                </select>
+              </div>
+            </div>
 
         {/* Header */}
         <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-white/10 px-3 py-2">
@@ -330,43 +424,93 @@ export default function ContentFeedbackDetailPage() {
           </div>
         </div>
 
-        {/* Video workspace */}
-        <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
-          <div className="aspect-9/16 w-full lg:aspect-auto lg:flex lg:flex-1">
-            <VideoFeedbackWorkspace
-              videoRef={videoRef}
-              selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-              selectedPreviewMediaType={selectedPreviewMediaType}
-              isPlaying={isPlaying}
-              setIsPlaying={setIsPlaying}
-              setSelectedVideoDuration={setSelectedVideoDuration}
-              setSelectedVideoResolution={setSelectedVideoResolution}
-              duration={selectedVideoDuration}
-              markers={timelineMarkers}
-              sendEnabled={sendEnabled}
-              contentUrl={selectedPreviewMediaUrl}
-              onSubmitTimedFeedback={handleTimedFeedbackSubmit}
-              onMarkerSeek={handleSeekPreviewToTime}
-            />
-          </div>
-        </div>
+            <div className="flex items-center justify-between border-t border-white/10 bg-black/20 p-3">
+              <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-white/40">
+                    Duration
+                  </p>
+                  <p className="text-sm font-bold text-white">
+                    {AnalyzeURL(selectedPreviewMediaUrl ?? '')?.type === 'video'
+                      ? formatVideoDuration(selectedVideoDuration)
+                      : '--:--'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold uppercase text-white/40">
+                    Resolution
+                  </p>
+                  <p className="text-sm font-bold text-white">
+                    {selectedPreviewMediaType === 'video'
+                      ? selectedVideoResolution
+                      : 'Image'}
+                  </p>
+                </div>
+              </div>
 
-        {/* Footer */}
-        <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-white/10 bg-black/20 px-3 py-2">
-          <div className="flex gap-4 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-            <div>
-              <p className="text-[10px] font-bold uppercase text-white/40">Duration</p>
-              <p className="text-sm font-bold text-white">
-                {AnalyzeURL(selectedPreviewMediaUrl ?? '')?.type === 'video'
-                  ? formatVideoDuration(selectedVideoDuration)
-                  : '--:--'}
-              </p>
-            </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase text-white/40">Resolution</p>
-              <p className="text-sm font-bold text-white">
-                {selectedPreviewMediaType === 'video' ? selectedVideoResolution : 'Image'}
-              </p>
+              <div className="flex flex-col items-end gap-2 text-white/50">
+                <div className="flex items-center gap-2">
+                  {isDemographicsView ? (
+                    <button
+                      type="button"
+                      onClick={handleSaveDemographics}
+                      disabled={
+                        isSavingDemographics ||
+                        !selectedPreviewMediaUrl ||
+                        !selectedInfluencerMessageContentId ||
+                        !effectiveCampaignIdForDemographics
+                      }
+                      className="flex items-center cursor-pointer justify-center gap-2 rounded-lg bg-primaryButton px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Save Demographics
+                    </button>
+                  ) : (
+                    <>
+                      <InfluencerDetailDialog open={open} onOpenChange={setOpen} />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (
+                            threadId &&
+                            brandThreadId &&
+                            negotiationId &&
+                            selectedPreviewMediaUrl &&
+                            selectedCard.campaign_id
+                          ) {
+                            approveNegotiation({
+                              thread_id: threadId,
+                              payload: { admin_approved: 'Approved' },
+                            });
+                            approveVideoMutation.mutate({
+                              brand_thread_id: brandThreadId,
+                              campaign_id: selectedCard.campaign_id,
+                              negotiation_id: negotiationId,
+                              video_url: selectedPreviewMediaUrl,
+                              content_id: selectedInfluencerMessageContentId,
+                              video_approve_admin: 'approved',
+                            });
+                          }
+                        }}
+                        disabled={
+                          isApproving ||
+                          approveVideoMutation.isPending ||
+                          !selectedPreviewMediaUrl
+                        }
+                        className="flex items-center cursor-pointer justify-center gap-2 rounded-lg bg-primaryButton px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        Forward to Brand
+                      </button>
+
+                      <CustomButton
+                        className="bg-primaryButton "
+                        onClick={() => setOpen(true)}
+                      >
+                        Influencer Analytics
+                      </CustomButton>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">

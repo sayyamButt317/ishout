@@ -122,7 +122,7 @@ export default function OnboardingInfluencerByCampaignId() {
           {data?.influencers?.map((influencer: ReviewInfluencerResponse) => {
             const negotiation = getNegotiationForInfluencer(influencer);
             return (
-              <InfluencerCard
+              <InfluencerCard 
                 key={influencer._id}
                 influencer={influencer}
                 onEdit={handleEdit}

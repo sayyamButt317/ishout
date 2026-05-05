@@ -1,3 +1,16 @@
+/** POST `/admin/store/Influencer-demographics` */
+export interface StoreInfluencerDemographicsRequest {
+  campaign_id: string;
+  content_id: string;
+  image_url: string;
+  content_type: string;
+}
+
+export interface StoreInfluencerDemographicsResponse {
+  message: string;
+  _id: string;
+}
+
 export interface SelectedCardType {
     id: string;
     campaign_id?: string;

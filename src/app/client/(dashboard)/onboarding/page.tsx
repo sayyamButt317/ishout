@@ -12,9 +12,8 @@ import { RefreshCcw, UserCheck } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import CustomButton from '@/src/app/component/button';
 
-export default function RevieInfluencer() {
+export default function OnboardingInfluencerPage() {
   const [currentPage, setCurrentPage] = useState(1);
-  // const { data, isLoading } = CompanyCampaignHook(currentPage);
   const { user_id } = useAuthStore();
   const { data, isLoading, refetch, isRefetching } = CompanyApprovedCampaignHook(
     user_id,
@@ -22,10 +21,11 @@ export default function RevieInfluencer() {
   );
   const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
   const router = useRouter();
+
   return (
     <>
       <PageHeader
-        title="Review Onboarded Influencers"
+        title="Onboarded Influencers"
         description="Campaigns with onboarded influencers that need to be reviewed"
         icon={<UserCheck className="size-5" />}
         actions={
@@ -41,6 +41,7 @@ export default function RevieInfluencer() {
           </Button>
         }
       />
+
       <TableComponent<CompanyCampaignResponse>
         header={[
           'Campaign Name',
@@ -94,7 +95,7 @@ export default function RevieInfluencer() {
           <div key={`view-${campaign?._id}`} className="truncate">
             <CustomButton
               className="cursor-pointer bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
-              onClick={() => router.push(`/client/influencer-review/${campaign?._id}`)}
+              onClick={() => router.push(`/client/onboarding/${campaign?._id}`)}
             >
               View Influencers
             </CustomButton>
