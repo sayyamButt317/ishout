@@ -83,7 +83,7 @@ export default function OnboardingInfluencerByCampaignId() {
 
   return (
     <>
-      <Skeleton name="influencer-card" loading={isLoading}>
+      <Skeleton name="admin-influencer-grid" loading={isLoading}>
         <PageHeader
           title="Onboarded Influencers"
           description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}

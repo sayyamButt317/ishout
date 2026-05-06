@@ -14,6 +14,7 @@ import axios from "axios";
 import { RefreshCcw, Send, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import CustomButton from "@/src/app/component/button";
+import { Skeleton } from "boneyard-js/react";
 
 export default function InstagramInbox() {
     const [activeConversationId, setActiveConversationId] = useState<string>();
@@ -94,105 +95,107 @@ export default function InstagramInbox() {
     };
 
     return (
-        <div className="flex h-screen bg-gray-900 text-white">
-            {/* LEFT SIDEBAR */}
-            <aside className="w-1/3 border-r border-gray-700">
-                <header className="p-4 flex items-center gap-3 border-b border-gray-700">
-                    <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
-                        <SiInstagram className="text-2xl" />
-                    </div>
-                    <div>
-                        <h2 className="font-bold text-lg">Instagram Messages</h2>
-                        <div className="flex flex-row items-center gap-2">
-                            <p className="text-xs text-gray-400">Direct messages</p>
-                            <RefreshCcw
-                                className={`w-4 h-4 text-primary-text cursor-pointer ${isRefetchingConversations ? "animate-spin" : ""
-                                    }`}
-                                onClick={() => {
-                                    refetchConversations();
-                                    refetch();
-                                }}
-                            />
+        <Skeleton name="admin-instagram-inbox" loading={isLoading}>
+            <div className="flex h-screen bg-gray-900 text-white">
+                {/* LEFT SIDEBAR */}
+                <aside className="w-1/3 border-r border-gray-700">
+                    <header className="p-4 flex items-center gap-3 border-b border-gray-700">
+                        <div className="p-2 bg-linear-to-br from-purple-600 to-pink-600 rounded-xl">
+                            <SiInstagram className="text-2xl" />
                         </div>
-                    </div>
-                </header>
-                <div className="overflow-y-auto">
-                    {conversations?.data?.map((conv: InstagramConversation) => (
-                        <div
-                            key={conv.id}
-                            onClick={() => setActiveConversationId(conv.id)}
-                            className={`w-full px-4 py-6 text-left hover:bg-gray-800 transition cursor-pointer
+                        <div>
+                            <h2 className="font-bold text-lg">Instagram Messages</h2>
+                            <div className="flex flex-row items-center gap-2">
+                                <p className="text-xs text-gray-400">Direct messages</p>
+                                <RefreshCcw
+                                    className={`w-4 h-4 text-primary-text cursor-pointer ${isRefetchingConversations ? "animate-spin" : ""
+                                        }`}
+                                    onClick={() => {
+                                        refetchConversations();
+                                        refetch();
+                                    }}
+                                />
+                            </div>
+                        </div>
+                    </header>
+                    <div className="overflow-y-auto">
+                        {conversations?.data?.map((conv: InstagramConversation) => (
+                            <div
+                                key={conv.id}
+                                onClick={() => setActiveConversationId(conv.id)}
+                                className={`w-full px-4 py-6 text-left hover:bg-gray-800 transition cursor-pointer
                 ${activeConversationId === conv.id ? "bg-gray-800" : ""}
               `}
-                        >
+                            >
 
-                            <h1 className=" font-bold text-lg truncate flex items-center gap-2 ">
+                                <h1 className=" font-bold text-lg truncate flex items-center gap-2 ">
+                                    <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
+                                        <User size={16} />
+                                    </div>
+                                    {participant2Name || "Unknown user"}
+                                </h1>
+                            </div>
+                        ))}
+                    </div>
+                </aside>
+
+                {/* RIGHT PANEL */}
+                <main className="flex-1 flex flex-col">
+                    {!activeConversationId ? (
+                        <div className="flex-1 flex items-center justify-center text-gray-500">
+                            Select a conversation
+                        </div>
+                    ) : (
+                        <>
+                            <header className="p-4 flex items-center gap-3 border-b border-gray-700">
                                 <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
                                     <User size={16} />
                                 </div>
-                                {participant2Name || "Unknown user"}
-                            </h1>
-                        </div>
-                    ))}
-                </div>
-            </aside>
-
-            {/* RIGHT PANEL */}
-            <main className="flex-1 flex flex-col">
-                {!activeConversationId ? (
-                    <div className="flex-1 flex items-center justify-center text-gray-500">
-                        Select a conversation
-                    </div>
-                ) : (
-                    <>
-                        <header className="p-4 flex items-center gap-3 border-b border-gray-700">
-                            <div className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl">
-                                <User size={16} />
-                            </div>
-                            <div className="flex flex-row items-center gap-2 justify-between w-full">
-                                <h2 className="font-bold text-lg">{otherUsername}</h2>
-                                <RefreshCcw
-                                    className={`w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
-                                        }`}
-                                    onClick={() => refetch()}
-                                />
-                            </div>
-                        </header>
-                        <InstagramMessageThread
-                            messages={messages}
-                            isLoading={isLoading}
-                            businessUsername={BUSINESS_USERNAME}
-                        />
-
-                        {/* Input send message */}
-                        <div className="border-t border-gray-700 p-3 flex flex-row gap-2">
-                            <Input
-                                disabled={!otherPSID}
-                                placeholder="Reply coming next…"
-                                className="w-full bg-gray-800 rounded px-3 py-2 text-sm"
-                                value={replyText[otherPSID ?? ""] ?? ""}
-                                onChange={(e) =>
-                                    setReplyText((prev) => ({
-                                        ...prev,
-                                        [otherPSID ?? ""]: e.target.value,
-                                    }))
-                                }
+                                <div className="flex flex-row items-center gap-2 justify-between w-full">
+                                    <h2 className="font-bold text-lg">{otherUsername}</h2>
+                                    <RefreshCcw
+                                        className={`w-4 h-4 text-primary-text cursor-pointer ${isRefetching ? "animate-spin" : ""
+                                            }`}
+                                        onClick={() => refetch()}
+                                    />
+                                </div>
+                            </header>
+                            <InstagramMessageThread
+                                messages={messages}
+                                isLoading={isLoading}
+                                businessUsername={BUSINESS_USERNAME}
                             />
-                            <CustomButton
-                                onClick={() =>
-                                    handleSendReply(otherPSID ?? "", otherPSID ?? "").then(() => {
-                                        refetch()
-                                    })
-                                }
-                                disabled={sending[otherPSID ?? ""]}
-                                className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                            >
-                                <Send className="h-4 w-4" />
-                            </CustomButton>
-                        </div>
-                    </>
-                )}
-            </main>
-        </div>
+
+                            {/* Input send message */}
+                            <div className="border-t border-gray-700 p-3 flex flex-row gap-2">
+                                <Input
+                                    disabled={!otherPSID}
+                                    placeholder="Reply coming next…"
+                                    className="w-full bg-gray-800 rounded px-3 py-2 text-sm"
+                                    value={replyText[otherPSID ?? ""] ?? ""}
+                                    onChange={(e) =>
+                                        setReplyText((prev) => ({
+                                            ...prev,
+                                            [otherPSID ?? ""]: e.target.value,
+                                        }))
+                                    }
+                                />
+                                <CustomButton
+                                    onClick={() =>
+                                        handleSendReply(otherPSID ?? "", otherPSID ?? "").then(() => {
+                                            refetch()
+                                        })
+                                    }
+                                    disabled={sending[otherPSID ?? ""]}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                                >
+                                    <Send className="h-4 w-4" />
+                                </CustomButton>
+                            </div>
+                        </>
+                    )}
+                </main>
+            </div>
+        </Skeleton>
     );
 }

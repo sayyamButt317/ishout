@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { MessageSquare } from 'lucide-react';
+import { Skeleton } from 'boneyard-js/react';
 
 import PageHeader from '@/src/app/component/PageHeader';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
@@ -53,8 +54,9 @@ export default function ContentFeedbackDetailPage() {
   const searchParams = useSearchParams();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
 
-  const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
+  const { data, isLoading: isNegotiationLoading } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
     data?: NegotiationResponse;
+    isLoading: boolean;
   };
 
 
@@ -303,32 +305,35 @@ export default function ContentFeedbackDetailPage() {
 
   if (!selectedCard) {
     return (
-      <div className="font-sans p-4">
-        <PageHeader
-          title="Content Review & Feedback Pipeline"
-          description="Select a negotiation to review"
-          icon={<MessageSquare className="size-5" />}
-          actions={
-            <button
-              onClick={backToList}
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white hover:bg-white/10"
-            >
-              Back
-            </button>
-          }
-        />
-      </div>
+      <Skeleton name="admin-content-review" loading={isNegotiationLoading}>
+        <div className="font-sans p-4">
+          <PageHeader
+            title="Content Review & Feedback Pipeline"
+            description="Select a negotiation to review"
+            icon={<MessageSquare className="size-5" />}
+            actions={
+              <button
+                onClick={backToList}
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white hover:bg-white/10"
+              >
+                Back
+              </button>
+            }
+          />
+        </div>
+      </Skeleton>
     );
   }
 
   return (
-    <div className="flex w-full flex-col font-sans overflow-y-auto lg:h-[calc(100vh-24px)] lg:flex-row lg:overflow-hidden">
-      <div className="flex w-full flex-col lg:flex-1 lg:overflow-hidden lg:border-r lg:border-white/10">
-        <FeedbackDetailHeader
-          title={selectedCard.title}
-          campaign={selectedCard.campaign}
-          onBack={() => router.back()}
-        />
+    <Skeleton name="admin-content-review" loading={isNegotiationLoading}>
+      <div className="flex w-full flex-col font-sans overflow-y-auto lg:h-[calc(100vh-24px)] lg:flex-row lg:overflow-hidden">
+        <div className="flex w-full flex-col lg:flex-1 lg:overflow-hidden lg:border-r lg:border-white/10">
+          <FeedbackDetailHeader
+            title={selectedCard.title}
+            campaign={selectedCard.campaign}
+            onBack={() => router.back()}
+          />
 
         {/* Video workspace */}
         <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
@@ -358,31 +363,32 @@ export default function ContentFeedbackDetailPage() {
           isForwardLoading={isForwardToBrandLoading}
           onForwardToBrand={handleForwardToBrand}
         />
-      </div>
+        </div>
 
-      <FeedbackTabsSection
-        videoRef={videoRef}
-        chatMode={chatMode}
-        setChatMode={setChatMode}
-        messages={chatData?.messages}
-        isChatLoading={chatLoading}
-        brandThreadId={brandThreadId}
-        sendEnabled={sendEnabled}
-        onSendMessage={handleSendMessage}
-        onSeekToTime={handleSeekPreviewToTime}
-        onSelectMedia={(url, type) => {
-          setSelectedPreviewMediaUrl(url);
-          setSelectedPreviewMediaType(type);
-          setIsPlaying(false);
-        }}
-        activeFeedbackId={activeFeedbackId2}
-        selectedContentFeedback={selectedContentFeedback}
-        setSelectedContentFeedback={setSelectedContentFeedback}
-        selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-        mediaUrls={mediaUrls}
-        negotiationId={negotiationId}
-        selectedCard={selectedCard}
-      />
-    </div>
+        <FeedbackTabsSection
+          videoRef={videoRef}
+          chatMode={chatMode}
+          setChatMode={setChatMode}
+          messages={chatData?.messages}
+          isChatLoading={chatLoading}
+          brandThreadId={brandThreadId}
+          sendEnabled={sendEnabled}
+          onSendMessage={handleSendMessage}
+          onSeekToTime={handleSeekPreviewToTime}
+          onSelectMedia={(url, type) => {
+            setSelectedPreviewMediaUrl(url);
+            setSelectedPreviewMediaType(type);
+            setIsPlaying(false);
+          }}
+          activeFeedbackId={activeFeedbackId2}
+          selectedContentFeedback={selectedContentFeedback}
+          setSelectedContentFeedback={setSelectedContentFeedback}
+          selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+          mediaUrls={mediaUrls}
+          negotiationId={negotiationId}
+          selectedCard={selectedCard}
+        />
+      </div>
+    </Skeleton>
   );
 }

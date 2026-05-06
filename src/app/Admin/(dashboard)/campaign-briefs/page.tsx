@@ -15,6 +15,7 @@ import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBr
 import Image from 'next/image';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function CampaignBriefPage() {
   const { user_id } = useAuthStore();
@@ -57,7 +58,8 @@ export default function CampaignBriefPage() {
 
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white">
+    <Skeleton name="admin-brief-grid" loading={isLoading}>
+      <div className="min-h-screen bg-neutral-950 text-white">
       <PageHeader
         title="Campaign Briefs"
         description="Search, manage and download your AI-generated campaign strategies."
@@ -230,6 +232,7 @@ export default function CampaignBriefPage() {
           );
         }}
       />
-    </div>
+      </div>
+    </Skeleton>
   );
 }

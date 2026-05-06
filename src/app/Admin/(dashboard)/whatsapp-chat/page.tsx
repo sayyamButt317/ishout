@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWhatsAppChatStore } from '@/src/store/Campaign/chat.store';
 import DeleteWhatsappChatHook from '@/src/routes/Admin/Hooks/Whatsapp/delete-whatsappchat-hook';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function WhatsAppChat() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function WhatsAppChat() {
   const unreadMap = useWhatsAppChatStore((s) => s.unread);
 
   return (
-    <>
+    <Skeleton name="admin-whatsapp-table" loading={isLoading}>
       <PageHeader
         title="WhatsApp User Sessions"
         description={`Showing ${data?.users?.length ?? 0} of ${data?.total ?? 0} user sessions`}
@@ -115,6 +116,6 @@ export default function WhatsAppChat() {
         }}
         isLoading={isLoading}
       />
-    </>
+    </Skeleton>
   );
 }
