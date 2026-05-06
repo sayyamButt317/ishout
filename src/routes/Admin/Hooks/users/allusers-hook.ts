@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { AdminUserManagementApi } from "../API/admin.routes"
+import { AdminUserManagementApi } from "../../API/admin.routes"
 
 
 export default function AllUsersHook(page: number = 1) {

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { WhatsAppUserMessagesApi } from "../API/admin.routes";
+import { WhatsAppUserMessagesApi } from "../../API/admin.routes";
 
 export default function useWhatsAppMessagesHook(
     thread_id: string,

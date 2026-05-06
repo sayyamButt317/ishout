@@ -2,16 +2,15 @@
 import { Button } from '@/components/ui/button';
 import TableComponent from '@/src/app/component/CustomTable';
 import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
-import AllCampaignHook from '@/src/routes/Admin/Hooks/Allcampaign-hook';
 import { RefreshCcw, Trash, LayoutList, Filter, Search, ArrowUpDown } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import React, { useState, useEffect, useMemo } from 'react';
 import { AdminAllCampaignApiResponse } from '@/src/types/Admin-Type/Campaign-type';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import CountButton from '@/src/app/component/custom-component/countbutton';
-import UpdateStatusHook from '@/src/routes/Admin/Hooks/updateStatus-hook';
+import UpdateStatusHook from '@/src/routes/Admin/Hooks/Campaign/updateStatus-hook';
 import { DropDownCustomStatus } from '@/src/app/component/custom-component/dropdownstatus';
-import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
+import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
@@ -19,6 +18,7 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import AllCampaignHook from '@/src/routes/Admin/Hooks/Campaign/Allcampaign-hook';
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: 'all' },

@@ -1,7 +1,7 @@
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AdminRejectandRegenerateInfluencerApi } from "../API/admin.routes";
+import { AdminRejectandRegenerateInfluencerApi } from "../../API/admin.routes";
 import { RejectandRegenerateInfluencerRequest } from "@/src/types/Admin-Type/reject-influencers.type";
 
 export default function RejectedandRegenerateInfluencershook() {

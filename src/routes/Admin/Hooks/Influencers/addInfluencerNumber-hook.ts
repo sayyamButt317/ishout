@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AdminAddInfluencersNumberApi } from "../API/admin.routes";
 import { AddInfluencersNumberRequest } from "@/src/types/Admin-Type/review-influencer";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { AdminAddInfluencersNumberApi } from "../../API/admin.routes";
 
 export default function AddInfluencerNumberHook() {
     const queryClient = useQueryClient();

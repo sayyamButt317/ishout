@@ -1,6 +1,6 @@
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { HumanTakeoverApi } from "../API/admin.routes";
+import { HumanTakeoverApi } from "../../API/admin.routes";
 import { AxiosError } from "axios";
 
 export default function HumanTakeoverHook(thread_id: string) {

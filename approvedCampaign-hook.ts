@@ -1,4 +1,4 @@
-import { AdminApprovedCampaignApi } from "../API/admin.routes";
+import { AdminApprovedCampaignApi } from "./src/routes/Admin/API/admin.routes";
 import { useQuery } from "@tanstack/react-query";
 
 export default function ApprovedCampaignHook(page: number = 1) {

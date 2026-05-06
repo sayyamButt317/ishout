@@ -1,12 +1,12 @@
 "use client";
 import Spinner from "@/src/app/component/custom-component/spinner";
 import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
-import ApprovedCampaignByIdHook from "@/src/routes/Admin/Hooks/approvedCampaignById-hook";
 import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
 import { useParams } from "next/navigation";
 import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
-import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
+import ApprovedCampaignByIdHook from "@/src/routes/Admin/Hooks/Campaign/approvedCampaignById-hook";
+import CampaignByIdHook from "@/src/routes/Admin/Hooks/Campaign/campaignById-hook";
 
 export default function ApprovedInfluencerById() {
   const { Id } = useParams<{ Id: string }>();

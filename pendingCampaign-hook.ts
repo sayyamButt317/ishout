@@ -1,4 +1,4 @@
-import { AdminPendingCampaignApi } from "../API/admin.routes";
+import { AdminPendingCampaignApi } from "./src/routes/Admin/API/admin.routes";
 import { useQuery } from "@tanstack/react-query";
 
 export function usePendingCampaigns(page: number = 1) {
