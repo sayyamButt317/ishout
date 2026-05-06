@@ -42,30 +42,38 @@ export default function ContentFeedbackDetailPage() {
 
   const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
   const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
-  const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(null);
-  const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<'video' | 'image' | null>(null);
+  const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
+    null,
+  );
+  const [selectedPreviewMediaType, setSelectedPreviewMediaType] = useState<
+    'video' | 'image' | null
+  >(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
   const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
-
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const searchParams = useSearchParams();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
 
-  const { data, isLoading: isNegotiationLoading } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
+  const { data, isLoading: isNegotiationLoading } = NegotiationAgreedByCampaignHook(
+    campaignIdFromQuery,
+  ) as {
     data?: NegotiationResponse;
     isLoading: boolean;
   };
 
-
-  const { data: mediaUrlsData } = useInfluencerMediaUrlsHook(data?.negotiations?.[0]?.thread_id ?? '');
+  const { data: mediaUrlsData } = useInfluencerMediaUrlsHook(
+    data?.negotiations?.[0]?.thread_id ?? '',
+  );
   const mediaUrls = useMemo(() => {
     if (!mediaUrlsData || typeof mediaUrlsData !== 'object') return [];
     const maybeUrls = (mediaUrlsData as { media_urls?: unknown }).media_urls;
     if (!Array.isArray(maybeUrls)) return [];
-    return maybeUrls.filter((url): url is string => typeof url === 'string' && url.length > 0);
+    return maybeUrls.filter(
+      (url): url is string => typeof url === 'string' && url.length > 0,
+    );
   }, [mediaUrlsData]);
 
   const { setcampaignIdForReport } = useReportStore();
@@ -128,24 +136,49 @@ export default function ContentFeedbackDetailPage() {
   const brandThreadId = selectedCard?.brand_thread_id || '';
   const negotiationId = selectedCard?.id || negotiationIdParam || '';
 
-  const influencerChatQuery = useAdminInfluencerMessagesHook(threadId, 1, 20, chatMode === 'influencer');
-  const companyChatQuery = useAdminCompanyMessagesHook(brandThreadId, negotiationId, 1, 20, chatMode === 'brand');
+  const influencerChatQuery = useAdminInfluencerMessagesHook(
+    threadId,
+    1,
+    20,
+    chatMode === 'influencer',
+  );
+  const companyChatQuery = useAdminCompanyMessagesHook(
+    brandThreadId,
+    negotiationId,
+    1,
+    20,
+    chatMode === 'brand',
+  );
 
-  const chatData = chatMode === 'influencer' ? influencerChatQuery.data : companyChatQuery.data;
-  const chatLoading = chatMode === 'influencer' ? influencerChatQuery.isLoading : companyChatQuery.isLoading;
+  const chatData =
+    chatMode === 'influencer' ? influencerChatQuery.data : companyChatQuery.data;
+  const chatLoading =
+    chatMode === 'influencer'
+      ? influencerChatQuery.isLoading
+      : companyChatQuery.isLoading;
 
-  const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(threadId, negotiationId);
-  const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(brandThreadId, negotiationId);
+  const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(
+    threadId,
+    negotiationId,
+  );
+  const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(
+    brandThreadId,
+    negotiationId,
+  );
 
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
-  const { mutate: approveNegotiation, isPending: isApproving } = useAdminNegotiationApprovalStatus();
+  const { mutate: approveNegotiation, isPending: isApproving } =
+    useAdminNegotiationApprovalStatus();
 
   const isVideoUrl = useCallback((value: string) => AnalyzeURL(value).isVideoUrl, []);
   const isImageUrl = useCallback((value: string) => AnalyzeURL(value).isImageUrl, []);
 
   const timelineMarkers = useMemo((): TimelineMarkerData[] => {
     const messages = chatData?.messages ?? [];
-    const fromSerialized = extractTimelineMarkersFromMessages(messages, selectedPreviewMediaUrl);
+    const fromSerialized = extractTimelineMarkersFromMessages(
+      messages,
+      selectedPreviewMediaUrl,
+    );
     const fromObjects: TimelineMarkerData[] = [];
     for (const msg of messages) {
       if (
@@ -155,12 +188,19 @@ export default function ContentFeedbackDetailPage() {
         typeof (msg.message as { timestamp: unknown }).timestamp === 'number'
       ) {
         const m = msg.message as { text?: string; timestamp: number; snapshot?: string };
-        fromObjects.push({ id: msg._id, timestamp: m.timestamp, text: m.text ?? '', snapshot: m.snapshot });
+        fromObjects.push({
+          id: msg._id,
+          timestamp: m.timestamp,
+          text: m.text ?? '',
+          snapshot: m.snapshot,
+        });
       }
     }
     const map = new Map<string, TimelineMarkerData>();
     for (const m of fromObjects) map.set(m.id, m);
-    for (const m of fromSerialized) { if (!map.has(m.id)) map.set(m.id, m); }
+    for (const m of fromSerialized) {
+      if (!map.has(m.id)) map.set(m.id, m);
+    }
     return [...map.values()].sort((a, b) => a.timestamp - b.timestamp);
   }, [chatData?.messages, selectedPreviewMediaUrl]);
 
@@ -178,7 +218,8 @@ export default function ContentFeedbackDetailPage() {
     const mediaMessages =
       chatData?.messages?.filter(
         (msg: ChatMessage) =>
-          typeof msg.message === 'string' && (isVideoUrl(msg.message) || isImageUrl(msg.message)),
+          typeof msg.message === 'string' &&
+          (isVideoUrl(msg.message) || isImageUrl(msg.message)),
       ) ?? [];
 
     if (mediaMessages.length === 0) {
@@ -190,12 +231,18 @@ export default function ContentFeedbackDetailPage() {
       return;
     }
 
-    if (selectedPreviewMediaUrl && mediaMessages.some((msg: ChatMessage) => msg.message === selectedPreviewMediaUrl)) return;
+    if (
+      selectedPreviewMediaUrl &&
+      mediaMessages.some((msg: ChatMessage) => msg.message === selectedPreviewMediaUrl)
+    )
+      return;
 
     const latestMedia = mediaMessages[mediaMessages.length - 1];
     const analyzed = AnalyzeURL(latestMedia.message ?? '');
     setSelectedPreviewMediaUrl(latestMedia.message);
-    setSelectedPreviewMediaType(analyzed.type === 'video' || analyzed.type === 'image' ? analyzed.type : null);
+    setSelectedPreviewMediaType(
+      analyzed.type === 'video' || analyzed.type === 'image' ? analyzed.type : null,
+    );
     setSelectedVideoResolution(analyzed.resolution);
     setIsPlaying(false);
     setSelectedVideoDuration(null);
@@ -220,9 +267,21 @@ export default function ContentFeedbackDetailPage() {
       current_version: 0,
       status: 'UNDER_REVIEW',
     });
-  }, [selectedCard?.id, chatData?.messages, selectedPreviewMediaUrl, selectedPreviewMediaType, chatMode, threadId, brandThreadId, isVideoUrl, isImageUrl, setAll]);
+  }, [
+    selectedCard?.id,
+    chatData?.messages,
+    selectedPreviewMediaUrl,
+    selectedPreviewMediaType,
+    chatMode,
+    threadId,
+    brandThreadId,
+    isVideoUrl,
+    isImageUrl,
+    setAll,
+  ]);
 
-  const sendEnabled = chatMode === 'influencer' ? !!threadId : !!brandThreadId && !!negotiationId;
+  const sendEnabled =
+    chatMode === 'influencer' ? !!threadId : !!brandThreadId && !!negotiationId;
 
   const selectedInfluencerMessageContentId = useMemo(() => {
     if (!selectedPreviewMediaUrl) return undefined;
@@ -234,25 +293,38 @@ export default function ContentFeedbackDetailPage() {
   }, [influencerChatQuery.data?.messages, selectedPreviewMediaUrl]);
 
   const activeFeedbackId2 = selectedInfluencerMessageContentId ?? '';
-  const durationText = AnalyzeURL(selectedPreviewMediaUrl ?? '')?.type === 'video'
-    ? formatVideoDuration(selectedVideoDuration)
-    : '--:--';
-  const resolutionText = selectedPreviewMediaType === 'video' ? selectedVideoResolution : 'Image';
+  const durationText =
+    AnalyzeURL(selectedPreviewMediaUrl ?? '')?.type === 'video'
+      ? formatVideoDuration(selectedVideoDuration)
+      : '--:--';
+  const resolutionText =
+    selectedPreviewMediaType === 'video' ? selectedVideoResolution : 'Image';
   const canForwardToBrand = Boolean(selectedPreviewMediaUrl);
   const isForwardToBrandLoading = isApproving || approveVideoMutation.isPending;
 
   const handleSendMessage = async (textOrFile: string | File) => {
     if (textOrFile instanceof File) {
-      if (chatMode !== 'influencer') { toast.error('Attach files in Influencer Chat only.'); return; }
+      if (chatMode !== 'influencer') {
+        toast.error('Attach files in Influencer Chat only.');
+        return;
+      }
       if (!threadId) return;
-      try { await sendInfluencerMessage({ file: textOrFile }); await influencerChatQuery.refetch(); }
-      catch (error) { toast.error(mapAdminInfluencerMessageError(error)); }
+      try {
+        await sendInfluencerMessage({ file: textOrFile });
+        await influencerChatQuery.refetch();
+      } catch (error) {
+        toast.error(mapAdminInfluencerMessageError(error));
+      }
       return;
     }
     if (chatMode === 'influencer') {
       if (!threadId) return;
-      try { await sendInfluencerMessage({ message: textOrFile }); await influencerChatQuery.refetch(); }
-      catch (error) { toast.error(mapAdminInfluencerMessageError(error)); }
+      try {
+        await sendInfluencerMessage({ message: textOrFile });
+        await influencerChatQuery.refetch();
+      } catch (error) {
+        toast.error(mapAdminInfluencerMessageError(error));
+      }
       return;
     }
     if (!brandThreadId || !negotiationId) return;
@@ -291,7 +363,16 @@ export default function ContentFeedbackDetailPage() {
   };
 
   const handleForwardToBrand = () => {
-    if (!(threadId && brandThreadId && negotiationId && selectedPreviewMediaUrl && selectedCard?.campaign_id)) return;
+    if (
+      !(
+        threadId &&
+        brandThreadId &&
+        negotiationId &&
+        selectedPreviewMediaUrl &&
+        selectedCard?.campaign_id
+      )
+    )
+      return;
     approveNegotiation({ thread_id: threadId, payload: { admin_approved: 'Approved' } });
     approveVideoMutation.mutate({
       brand_thread_id: brandThreadId,
@@ -335,34 +416,34 @@ export default function ContentFeedbackDetailPage() {
             onBack={() => router.back()}
           />
 
-        {/* Video workspace */}
-        <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
-          <div className="aspect-9/16 w-full lg:aspect-auto lg:flex lg:flex-1">
-            <VideoFeedbackWorkspace
-              videoRef={videoRef}
-              selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-              selectedPreviewMediaType={selectedPreviewMediaType}
-              isPlaying={isPlaying}
-              setIsPlaying={setIsPlaying}
-              setSelectedVideoDuration={setSelectedVideoDuration}
-              setSelectedVideoResolution={setSelectedVideoResolution}
-              duration={selectedVideoDuration}
-              markers={timelineMarkers}
-              sendEnabled={sendEnabled}
-              contentUrl={selectedPreviewMediaUrl}
-              onSubmitTimedFeedback={handleTimedFeedbackSubmit}
-              onMarkerSeek={handleSeekPreviewToTime}
-            />
+          {/* Video workspace */}
+          <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
+            <div className="aspect-9/16 w-full lg:aspect-auto lg:flex lg:flex-1">
+              <VideoFeedbackWorkspace
+                videoRef={videoRef}
+                selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                selectedPreviewMediaType={selectedPreviewMediaType}
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
+                setSelectedVideoDuration={setSelectedVideoDuration}
+                setSelectedVideoResolution={setSelectedVideoResolution}
+                duration={selectedVideoDuration}
+                markers={timelineMarkers}
+                sendEnabled={sendEnabled}
+                contentUrl={selectedPreviewMediaUrl}
+                onSubmitTimedFeedback={handleTimedFeedbackSubmit}
+                onMarkerSeek={handleSeekPreviewToTime}
+              />
+            </div>
           </div>
-        </div>
 
-        <FeedbackDetailFooter
-          durationText={durationText}
-          resolutionText={resolutionText}
-          canForward={canForwardToBrand}
-          isForwardLoading={isForwardToBrandLoading}
-          onForwardToBrand={handleForwardToBrand}
-        />
+          <FeedbackDetailFooter
+            durationText={durationText}
+            resolutionText={resolutionText}
+            canForward={canForwardToBrand}
+            isForwardLoading={isForwardToBrandLoading}
+            onForwardToBrand={handleForwardToBrand}
+          />
         </div>
 
         <FeedbackTabsSection
