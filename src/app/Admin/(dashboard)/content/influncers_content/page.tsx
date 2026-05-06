@@ -20,7 +20,7 @@ const COLUMNS = [
   { icon: <CircleDashed />,id: 'review', label: 'Under Review', color: 'primary' },
   { icon: <RefreshCcw />,id: 'revision', label: 'Revision', color: 'amber' },
   { icon: <CircleCheck />,id: 'approved', label: 'Approved', color: 'emerald' },
-  { icon: <CircleCheckBig />,id: 'posted', label: 'Rejected', color: 'green' },
+  { icon: <CircleCheckBig />,id: 'posted', label: 'Posted', color: 'green' },
 ];
 
 function ContentFeedbackPageContent() {
