@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button';
 import TableComponent from '@/src/app/component/CustomTable';
 import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
-import AllCampaignHook from '@/src/routes/Admin/Hooks/Allcampaign-hook';
 import { RefreshCcw, Trash, LayoutList, Filter, Search, ArrowUpDown } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import React, { useState, useEffect, useMemo } from 'react';
@@ -19,6 +18,7 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import AllCampaignHook from '@/src/routes/Admin/Hooks/Campaign/Allcampaign-hook';
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: 'all' },

@@ -3,12 +3,12 @@ import { Button } from '@/components/ui/button';
 import InfluencerCard from '@/src/app/component/Ready-made/influencer-card';
 import ExportToExcel from '@/src/app/component/custom-component/exportToExcel';
 import Spinner from '@/src/app/component/custom-component/spinner';
-import CampaignByIdHook from '@/src/routes/Admin/Hooks/campaignById-hook';
 import { ReadyMadeInfluencerResponse } from '@/src/types/readymadeinfluencers-type';
 import { ArrowLeft, ChevronRight, Download, UserCheck, UserX, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import CustomButton from '@/src/app/component/button';
+import CampaignByIdHook from '@/src/routes/Admin/Hooks/Campaign/campaignById-hook';
 
 export default function CampaignByIdPage() {
   const { Id } = useParams<{ Id: string }>();

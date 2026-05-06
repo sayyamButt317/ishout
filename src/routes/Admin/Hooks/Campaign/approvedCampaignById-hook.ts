@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ApprovedCampaignByIdApi } from "../API/admin.routes";
+import { ApprovedCampaignByIdApi } from "../../API/admin.routes";
 
 
 export default function ApprovedCampaignByIdHook(campaign_id: string) {

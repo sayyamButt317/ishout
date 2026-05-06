@@ -3,7 +3,6 @@ import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
 import CustomButton from "@/src/app/component/button";
 import { useParams, useRouter } from "next/navigation";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
-import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
 import UpdateInfluencerStatusHook from "@/src/routes/Admin/Hooks/Influencers/updateinfluencerstatus-hook";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign-type";
 import { Download, Loader2Icon } from "lucide-react";
@@ -15,6 +14,7 @@ import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-ty
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import GeneratedInfluencersByIdHook from "@/src/routes/Admin/Hooks/Influencers/generated-influencers-hook";
 import GenerateMoreInfluencersHook from "@/src/routes/Admin/Hooks/Influencers/generatemore-influencers-hook";
+import CampaignByIdHook from "@/src/routes/Admin/Hooks/Campaign/campaignById-hook";
 // import { useRejectedInfluencersStore } from "@/src/store/Campaign/reject-influencer.store";
 
 export default function PendingCampaignByIdPage() {
