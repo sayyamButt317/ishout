@@ -71,11 +71,13 @@ const styles = StyleSheet.create({
   },
 });
 
+
+interface CampaignBriefTimelinePageProps {
+  negotiationData: AgreedNegotiationResponse;
+}
 export default function CampaignBriefTimelinePage({
   negotiationData,
-}: {
-  negotiationData: AgreedNegotiationResponse;
-}) {
+}: CampaignBriefTimelinePageProps) {
   const brief = negotiationData?.campaign_brief?.brand_name_influencer_campaign_brief ?? 'No brief available.';
   const timelineText = negotiationData?.campaign_brief?.timeline?.[0] ?? '1 Month';
 
