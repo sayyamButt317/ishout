@@ -15,6 +15,7 @@ import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
 import { Trash } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function InfluencersContentPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +48,7 @@ export default function InfluencersContentPage() {
   }, [briefData]);
 
   return (
-    <>
+    <Skeleton name="admin-campaign-table" loading={isLoading}>
       <PageHeader
         title="Content Feedback & Pipeline"
         description={`Showing ${campaigns.length} of ${totalCount} campaigns waiting for content feedback review`}
@@ -156,6 +157,6 @@ export default function InfluencersContentPage() {
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
       />
-    </>
+    </Skeleton>
   );
 }

@@ -17,6 +17,7 @@ import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
 import { Trash } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function OnboardingCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,7 +47,7 @@ export default function OnboardingCampaignPage() {
   }, [briefData]);
 
   return (
-    <>
+    <Skeleton name="admin-campaign-table" loading={isLoading}>
       <PageHeader
         title="Brand Approved Influencer"
         description={`Showing ${campaigns.length} of ${totalCount} brand approved campaigns`}
@@ -176,6 +177,6 @@ export default function OnboardingCampaignPage() {
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
       />
-    </>
+    </Skeleton>
   );
 }

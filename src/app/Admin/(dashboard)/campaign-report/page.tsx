@@ -21,6 +21,7 @@ import ImageUploadModal from '@/src/app/component/custom-component/image-upload-
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import CampaignAllInfluencerHook from "@/src/routes/Admin/Hooks/feedback/CampaignInfluencer-hook";
 import { useRouter } from 'next/navigation';
+import { Skeleton } from 'boneyard-js/react';
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: 'all' },
@@ -145,7 +146,7 @@ export default function CampaignReport() {
   }, [campaigns, searchQuery, sortConfig]);
 
   return (
-    <>
+    <Skeleton name="admin-campaign-table" loading={isLoading}>
       <PageHeader
         title="Campaigns Report"
         description={
@@ -352,6 +353,6 @@ export default function CampaignReport() {
           );
         }}
       />
-    </>
+    </Skeleton>
   );
 }

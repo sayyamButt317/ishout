@@ -19,6 +19,7 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import { Skeleton } from 'boneyard-js/react';
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: 'all' },
@@ -141,7 +142,7 @@ export default function AllCampaignPage() {
   }, [campaigns, searchQuery, sortConfig]);
 
   return (
-    <>
+    <Skeleton name="admin-campaign-table" loading={isLoading}>
       <PageHeader
         title="Company Generated Report"
         description={
@@ -354,6 +355,6 @@ export default function AllCampaignPage() {
           );
         }}
       />
-    </>
+    </Skeleton>
   );
 }

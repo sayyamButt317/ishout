@@ -2,13 +2,13 @@
 import { Button } from '@/components/ui/button';
 import InfluencerCard from '@/src/app/component/Ready-made/influencer-card';
 import ExportToExcel from '@/src/app/component/custom-component/exportToExcel';
-import Spinner from '@/src/app/component/custom-component/spinner';
 import CampaignByIdHook from '@/src/routes/Admin/Hooks/campaignById-hook';
 import { ReadyMadeInfluencerResponse } from '@/src/types/readymadeinfluencers-type';
 import { ArrowLeft, ChevronRight, Download, UserCheck, UserX, Users } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import CustomButton from '@/src/app/component/button';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function CampaignByIdPage() {
   const { Id } = useParams<{ Id: string }>();
@@ -21,7 +21,8 @@ export default function CampaignByIdPage() {
   const totalCount = approvedCount + rejectedCount;
 
   return (
-    <div className="font-sans">
+    <Skeleton name="admin-influencer-grid" loading={isLoading}>
+      <div className="font-sans">
       <header
         className="mb-10 relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset,0_24px_48px_-24px_rgba(0,0,0,0.4)]"
         role="banner"
@@ -107,11 +108,6 @@ export default function CampaignByIdPage() {
         </div>
       </header>
 
-      {isLoading && (
-        <div className="flex justify-center items-center min-h-50">
-          <Spinner size={20} />
-        </div>
-      )}
       {isError && (
         <div className="flex justify-center items-center min-h-50">
           <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
@@ -173,6 +169,7 @@ export default function CampaignByIdPage() {
           No rejected influencers found
         </div>
       )}
-    </div>
+      </div>
+    </Skeleton>
   );
 }

@@ -22,6 +22,7 @@ import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
 import { Trash } from 'lucide-react';
 import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsappshare';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function AdminPendingCampaigns() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -57,7 +58,7 @@ export default function AdminPendingCampaigns() {
   const router = useRouter();
 
   return (
-    <>
+    <Skeleton name="admin-campaign-table" loading={isLoading}>
       <PageHeader
         title="Pending Campaigns"
         description={`Showing ${campaigns.length} of ${totalCount} pending campaigns`}
@@ -213,6 +214,6 @@ export default function AdminPendingCampaigns() {
           setAdminBrief(updatedBrief);
         }}
       />
-    </>
+    </Skeleton>
   );
 }

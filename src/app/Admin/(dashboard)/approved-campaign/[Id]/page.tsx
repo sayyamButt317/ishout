@@ -1,5 +1,4 @@
 "use client";
-import Spinner from "@/src/app/component/custom-component/spinner";
 import InfluencerCard from "@/src/app/component/Ready-made/influencer-card";
 import ApprovedCampaignByIdHook from "@/src/routes/Admin/Hooks/approvedCampaignById-hook";
 import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
@@ -7,6 +6,7 @@ import { useParams } from "next/navigation";
 import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
+import { Skeleton } from "boneyard-js/react";
 
 export default function ApprovedInfluencerById() {
   const { Id } = useParams<{ Id: string }>();
@@ -16,7 +16,8 @@ export default function ApprovedInfluencerById() {
   const router = useRouter();
 
   return (
-    <section className="min-h-screen space-y-4">
+    <Skeleton name="admin-influencer-grid" loading={isLoading}>
+      <section className="min-h-screen space-y-4">
       <div className="relative rounded-xl border border-white/20 backdrop-blur">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="hidden sm:block absolute -top-24 -left-20 h-72 w-72 rounded-full bg-emerald-200/20 blur-3xl" />
@@ -51,11 +52,6 @@ export default function ApprovedInfluencerById() {
           </div>
         </div>
       </div>
-      {isLoading && (
-        <div className="flex justify-center items-center min-h-50">
-          <Spinner size={20} />
-        </div>
-      )}
 
       {isError && (
         <div className="flex justify-center items-center min-h-50">
@@ -104,6 +100,7 @@ export default function ApprovedInfluencerById() {
           </CustomButton>
         </div>
       )}
-    </section>
+      </section>
+    </Skeleton>
   );
 }
