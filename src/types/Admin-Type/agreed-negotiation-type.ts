@@ -1,7 +1,19 @@
 export interface CampaignBrief {
   title?: string;
+  brand_name_influencer_campaign_brief?: string;
+  campaign_overview?: string[];
+  campaign_objectives?: string[];
+  target_audience?: string[];
+  influencer_profile?: string[];
+  key_campaign_message?: string[];
+  content_direction?: string[];
   deliverables_per_influencer?: string[];
+  hashtags_mentions?: string[];
   timeline?: string[];
+  approval_process?: string[];
+  kpis_success_metrics?: string[];
+  usage_rights?: string[];
+  dos_donts?: string[];
 }
 
 export interface Influencer {
@@ -37,8 +49,6 @@ export interface CampaignMeta {
 
 export interface AgreedNegotiationResponse {
   campaign_id: string;
-  // The API previously returned `campaign` and `campaign_brief` at the top level.
-  // Newer responses may omit those and instead include `campaign_brief` per negotiation.
   campaign?: CampaignMeta;
   campaign_brief?: CampaignBrief;
   campaign_logo_url?: string;
