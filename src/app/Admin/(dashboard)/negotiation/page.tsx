@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
 import { NegotiationStatsResponse } from '@/src/types/Admin-Type/negotiation.type';
 import { useWhatsAppChatStore } from '@/src/store/Campaign/chat.store';
-import DeleteNegotiationHook from '@/src/routes/Admin/Hooks/negotiation-delete-hook';
+import DeleteNegotiationHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-delete-hook';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 
 export default function NegotiationPage() {

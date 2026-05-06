@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ApprovedOnBoardingInfluencers } from "../API/admin.routes";
+import { ApprovedOnBoardingInfluencers } from "../../API/admin.routes";
 
 export default function OnboardingHook(campaign_id: string, page: number = 1) {
     return useQuery({

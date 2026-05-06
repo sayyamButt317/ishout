@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
-import { AdminDeleteUserApi } from '../API/admin.routes';
+import { AdminDeleteUserApi } from '../../API/admin.routes';
 
 export default function DeleteUserHook() {
   const queryClient = useQueryClient();

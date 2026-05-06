@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { ToogleStatusApi } from '../API/admin.routes';
+import { ToogleStatusApi } from '../../API/admin.routes';
 
 export default function ToogleStatusHook(thread_id: string, enabled: boolean = true) {
   return useQuery({

@@ -4,17 +4,17 @@ import CustomButton from "@/src/app/component/button";
 import { useParams, useRouter } from "next/navigation";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/campaignById-hook";
-import UpdateInfluencerStatusHook from "@/src/routes/Admin/Hooks/updateinfluencerstatus-hook";
+import UpdateInfluencerStatusHook from "@/src/routes/Admin/Hooks/Influencers/updateinfluencerstatus-hook";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign-type";
 import { Download, Loader2Icon } from "lucide-react";
 import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
 import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
-import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/updateCamapignStatus-hook";
+import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/Campaign/updateCamapignStatus-hook";
 import { DropDownCustomStatus } from "@/src/app/component/custom-component/dropdownstatus";
 import { ReadyMadeInfluencerResponse } from "@/src/types/readymadeinfluencers-type";
 import useAuthStore from "@/src/store/AuthStore/authStore";
-import GeneratedInfluencersByIdHook from "@/src/routes/Admin/Hooks/generated-influencers-hook";
-import GenerateMoreInfluencersHook from "@/src/routes/Admin/Hooks/generatemore-influencers-hook";
+import GeneratedInfluencersByIdHook from "@/src/routes/Admin/Hooks/Influencers/generated-influencers-hook";
+import GenerateMoreInfluencersHook from "@/src/routes/Admin/Hooks/Influencers/generatemore-influencers-hook";
 // import { useRejectedInfluencersStore } from "@/src/store/Campaign/reject-influencer.store";
 
 export default function PendingCampaignByIdPage() {

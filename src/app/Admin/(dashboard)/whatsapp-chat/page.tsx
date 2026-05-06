@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import CustomButton from '@/src/app/component/button';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import TableComponent from '@/src/app/component/CustomTable';
-import WhatsappUserSessionHook from '@/src/routes/Admin/Hooks/usersession-hook';
+import WhatsappUserSessionHook from '@/src/routes/Admin/Hooks/users/usersession-hook';
 import { WhatsAppUserSessionResponse } from '@/src/types/Admin-Type/whatsapp-type';
 import { RefreshCcw, Trash } from 'lucide-react';
 import { SiWhatsapp } from 'react-icons/si';
@@ -11,7 +11,7 @@ import PageHeader from '@/src/app/component/PageHeader';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useWhatsAppChatStore } from '@/src/store/Campaign/chat.store';
-import DeleteWhatsappChatHook from '@/src/routes/Admin/Hooks/delete-whatsappchat-hook';
+import DeleteWhatsappChatHook from '@/src/routes/Admin/Hooks/Whatsapp/delete-whatsappchat-hook';
 
 export default function WhatsAppChat() {
   const router = useRouter();
