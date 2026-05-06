@@ -91,6 +91,8 @@ export const AdminENDPOINT = {
     `/${ROLE}/whatsapp-admin-company/send-human-message/${thread_id}`,
 
   ADMIN_CONTENT_FEEDBACK: `/${ROLE}/content-feedback`,
+  ADMIN_CONTENT_REVISION_HISTORY: (negotiation_id: string) =>
+    `/${ROLE}/content-revision/${negotiation_id}`,
   ADMIN_CONTENT_FEEDBACK_ADMIN_READ: `/${ROLE}/content-feedback/admin`,
   ADMIN_CONTENT_FEEDBACK_BRAND_READ: `/${ROLE}/content-feedback/brand`,
   SENDREVISIONMESSAGE: `/${ROLE}/send-revision`,
