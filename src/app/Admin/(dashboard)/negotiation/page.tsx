@@ -9,8 +9,9 @@ import { useRouter } from 'next/navigation';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
 import { NegotiationStatsResponse } from '@/src/types/Admin-Type/negotiation.type';
 import { useWhatsAppChatStore } from '@/src/store/Campaign/chat.store';
-import DeleteNegotiationHook from '@/src/routes/Admin/Hooks/negotiation-delete-hook';
+import DeleteNegotiationHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-delete-hook';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function NegotiationPage() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function NegotiationPage() {
   const [deletingThreadId, setDeletingThreadId] = useState<string | null>(null);
 
   return (
-    <>
+    <Skeleton name="admin-negotiation-table" loading={isLoading}>
       <PageHeader
         title="Influencer Negotiation"
         description={`Showing ${data?.negotiation_controls?.length ?? 0} of ${data?.total ?? 0} user sessions`}
@@ -235,6 +236,6 @@ export default function NegotiationPage() {
           }
         }}
       />
-    </>
+    </Skeleton>
   );
 }

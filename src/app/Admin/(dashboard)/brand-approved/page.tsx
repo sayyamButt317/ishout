@@ -6,17 +6,18 @@ import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import { RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { Button } from '@/components/ui/button';
-import OnboardingCampaignHook from '@/src/routes/Admin/Hooks/onboardingCampaign-hook';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import CountButton from '@/src/app/component/custom-component/countbutton';
 import { useRouter } from 'next/navigation';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
-import DeleteCampaignHook from '@/src/routes/Admin/Hooks/deleteCampaign.hook';
+import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
 import { Trash } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import { Skeleton } from 'boneyard-js/react';
+import OnboardingCampaignHook from '@/src/routes/Admin/Hooks/Campaign/onboardingCampaign-hook';
 
 export default function OnboardingCampaignPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -46,7 +47,7 @@ export default function OnboardingCampaignPage() {
   }, [briefData]);
 
   return (
-    <>
+    <Skeleton name="admin-campaign-table" loading={isLoading}>
       <PageHeader
         title="Brand Approved Influencer"
         description={`Showing ${campaigns.length} of ${totalCount} brand approved campaigns`}
@@ -176,6 +177,6 @@ export default function OnboardingCampaignPage() {
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
       />
-    </>
+    </Skeleton>
   );
 }

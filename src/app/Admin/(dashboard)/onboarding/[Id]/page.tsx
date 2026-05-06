@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useState } from 'react';
-import OnboardingHook from '@/src/routes/Admin/Hooks/onboarding-hook';
+import OnboardingHook from '@/src/routes/Admin/Hooks/Campaign/onboarding-hook';
 import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influencer';
 import { ArrowLeft, RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
@@ -83,7 +83,7 @@ export default function OnboardingInfluencerByCampaignId() {
 
   return (
     <>
-      <Skeleton name="influencer-card" loading={isLoading}>
+      <Skeleton name="admin-influencer-grid" loading={isLoading}>
         <PageHeader
           title="Onboarded Influencers"
           description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}
