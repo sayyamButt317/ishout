@@ -33,7 +33,10 @@ import {
   type WhatsAppAdminCompanyApproveVideoResponse,
 } from '@/src/types/Compnay/approved-video-type';
 import { SendRevisionPayload } from '@/src/types/Admin-Type/Feedback/revision-type';
-import type { StoreInfluencerDemographicsRequest } from '@/src/types/Admin-Type/Feedback-Type';
+import type {
+  ContentRevisionHistoryResponse,
+  StoreInfluencerDemographicsRequest,
+} from '@/src/types/Admin-Type/Feedback-Type';
 import { AdminInfluencerMessagesResponse } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-messages-type';
 
@@ -579,6 +582,15 @@ export const GetAdminContentFeedbackApi = async (content_id: string) => {
   const response = await api.get(AdminENDPOINT.ADMIN_CONTENT_FEEDBACK_ADMIN_READ, {
     params: { content_id },
   });
+  return response.data;
+};
+
+export const GetContentRevisionHistoryApi = async (
+  negotiation_id: string,
+): Promise<ContentRevisionHistoryResponse> => {
+  const response = await api.get(
+    AdminENDPOINT.ADMIN_CONTENT_REVISION_HISTORY(negotiation_id),
+  );
   return response.data;
 };
 

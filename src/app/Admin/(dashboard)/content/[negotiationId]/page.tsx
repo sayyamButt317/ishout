@@ -450,7 +450,7 @@ export default function ContentFeedbackDetailPage() {
         {/* REVISIONS TAB */}
         {activeTab === 'revisions' && (
           <div className="min-h-75 flex-1 overflow-y-auto p-3 lg:min-h-0">
-            <RevisionBox />
+            <RevisionBox negotiationId={negotiationId} />
           </div>
         )}
 
