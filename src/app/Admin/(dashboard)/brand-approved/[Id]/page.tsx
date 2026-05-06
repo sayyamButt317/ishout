@@ -13,6 +13,7 @@ import ChooseOptionDialog from '@/src/app/component/custom-component/choseoption
 import InfluencerCard from '@/src/app/component/Ready-made/influencer_card';
 import SendNegotiationHook from '@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
+import { Skeleton } from 'boneyard-js/react';
 
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
@@ -81,7 +82,7 @@ export default function OnboardingInfluencerByCampaignId() {
   );
 
   return (
-    <>
+    <Skeleton name="admin-influencer-grid" loading={isLoading}>
       <PageHeader
         title="Brand Approved Influencer"
         description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}
@@ -108,14 +109,6 @@ export default function OnboardingInfluencerByCampaignId() {
           </>
         }
       />
-
-      {isLoading && (
-        <div className="flex justify-center items-center min-h-[200px]">
-          <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
-            Loading onboarded influencers...
-          </div>
-        </div>
-      )}
 
       {data?.influencers?.length ? (
         <div className="w-full flex flex-row flex-wrap gap-4 border border-white/10 rounded-2xl p-6 bg-black/10 backdrop-blur-lg mt-6">
@@ -149,6 +142,6 @@ export default function OnboardingInfluencerByCampaignId() {
         onClose={() => setDialogOpen(false)}
         influencer={selectedInfluencer}
       />
-    </>
+    </Skeleton>
   );
 }

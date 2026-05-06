@@ -14,13 +14,21 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { Trash2 } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import useDeleteAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/delete-admin-influencer-messages-hook';
-import { CircleDashed, CircleCheck, RefreshCcw, CircleCheckBig  } from 'lucide-react';
+import { CircleDashed, CircleCheck, RefreshCcw, CircleCheckBig } from 'lucide-react';
+import { Skeleton } from 'boneyard-js/react';
 
 const COLUMNS = [
+
   { icon: <CircleDashed />,id: 'review', label: 'Under Review', color: 'primary' },
   { icon: <RefreshCcw />,id: 'revision', label: 'Revision', color: 'amber' },
   { icon: <CircleCheck />,id: 'approved', label: 'Approved', color: 'emerald' },
   { icon: <CircleCheckBig />,id: 'posted', label: 'Posted', color: 'green' },
+=======
+  { icon: <CircleDashed />, id: 'review', label: 'Under Review', color: 'primary' },
+  { icon: <RefreshCcw />, id: 'revision', label: 'Revision', color: 'amber' },
+  { icon: <CircleCheck />, id: 'approved', label: 'Approved', color: 'emerald' },
+  { icon: <CircleCheckBig />, id: 'posted', label: 'Rejected', color: 'green' },
+>>>>>>> c922e81c240b5e9643914acca216ea0af159fcfe
 ];
 
 function ContentFeedbackPageContent() {
@@ -28,7 +36,7 @@ function ContentFeedbackPageContent() {
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
   const router = useRouter();
 
-  const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery);
+  const { data, isLoading } = NegotiationAgreedByCampaignHook(campaignIdFromQuery);
   const negotiationItems = data?.negotiations ?? [];
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -79,6 +87,7 @@ function ContentFeedbackPageContent() {
     : null;
 
   return (
+    <Skeleton name="admin-content-kanban" loading={isLoading}>
     <div className="font-sans">
       <ContentHeader
         title={data?.campaign_brief?.title ?? ''}
@@ -118,7 +127,6 @@ function ContentFeedbackPageContent() {
               key={col.id}
               className="flex w-1/3 shrink-0 flex-col mt-2 gap-4 rounded-xl border border-white/10 bg-white/2 p-4"
             >
-              
               <div className="flex flex-row items-center justify-between px-2">
                 <h3 className="flex flex-row gap-2 text-xs font-bold uppercase tracking-widest text-white/50">
                   {col.icon}
@@ -127,8 +135,7 @@ function ContentFeedbackPageContent() {
                 </h3>
 
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                    col.color === 'primary'
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
                       ? 'bg-(--color-primaryButton) text-white'
                       : countStyles[col.color]
                   }`}
@@ -256,7 +263,7 @@ function ContentFeedbackPageContent() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         briefData={brief}
-        onUpdate={() => {}}
+          onUpdate={() => { }}
       />
       <DeleteDialogue
         heading="Delete Chat"
@@ -283,6 +290,7 @@ function ContentFeedbackPageContent() {
         }}
       />
     </div>
+    </Skeleton>
   );
 }
 
