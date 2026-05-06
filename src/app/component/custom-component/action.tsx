@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import DeleteCampaignHook from "@/src/routes/Admin/Hooks/deleteCampaign.hook";
+import DeleteCampaignHook from "@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook";
 import { EllipsisVerticalIcon, Trash } from "lucide-react";
 import { WhatsAppShareButton } from "./whatsappshare";
 

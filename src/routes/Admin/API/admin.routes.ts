@@ -673,3 +673,10 @@ export const CampaignAnalytics = async (campaign_id: string) => {
   );
   return response.data;
 };
+
+export const WhatsAppAdminInfluencerMediaUrlsApi = async (thread_id: string) => {
+  const response = await api.get(
+    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS(thread_id)
+  );
+  return response.data;
+};
