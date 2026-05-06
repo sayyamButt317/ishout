@@ -2,7 +2,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
-import { AdminDeleteNegotiationApi } from '../API/admin.routes';
+import { AdminDeleteNegotiationApi } from '../../API/admin.routes';
 
 interface DeleteNegotiationResponse {
   success: boolean;

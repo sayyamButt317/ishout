@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AdminCompanyDetailsByIdApi } from "../API/admin.routes";
+import { AdminCompanyDetailsByIdApi } from "../../API/admin.routes";
 
 export default function CompanyDetailsHook(user_id: string) {
     return useQuery({

@@ -1,9 +1,9 @@
 import { toast } from "sonner";
-import { DeleteInfluencer } from "../API/admin.routes";
+import { DeleteInfluencer } from "../../API/admin.routes";
 import { useMutation } from "@tanstack/react-query";
-import { DeleterInfluenceerequest, ReadyMadeInfluencersApiResponse } from "../../../types/readymadeinfluencers-type";
+import { DeleterInfluenceerequest, ReadyMadeInfluencersApiResponse } from "../../../../types/readymadeinfluencers-type";
 import { AxiosError } from "axios";
-import { useReadyMadeTemplateStore } from "../../../store/Campaign/campaign.store";
+import { useReadyMadeTemplateStore } from "../../../../store/Campaign/campaign.store";
 
 interface DeleteInfluencerContext {
     previousResults: ReadyMadeInfluencersApiResponse[] | undefined;

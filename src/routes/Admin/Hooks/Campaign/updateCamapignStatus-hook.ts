@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AdminUpdateCampaignStatusApi } from "../API/admin.routes";
+import { AdminUpdateCampaignStatusApi } from "../../API/admin.routes";
 import { UpdateCampaignStatusRequestProps } from "@/src/types/Admin-Type/Campaign-type";
 import { toast } from "sonner";
 import { AxiosError } from "axios";

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { WhatsAppuserSessionApi } from "../API/admin.routes";
+import { WhatsAppuserSessionApi } from "../../API/admin.routes";
 
 
 export default function WhatsappUserSessionHook(page: number = 1, page_size: number = 10) {

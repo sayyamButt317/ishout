@@ -4,7 +4,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { AdminDeleteWhatsappUserMessagesApi } from "../API/admin.routes";
+import { AdminDeleteWhatsappUserMessagesApi } from "../../API/admin.routes";
 
 
 export default function DeleteWhatsappChatHook() {

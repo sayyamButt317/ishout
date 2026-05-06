@@ -1,5 +1,6 @@
-import { AdminAllCampaignApi } from "../API/admin.routes";
+
 import { useQuery } from "@tanstack/react-query";
+import { AdminAllCampaignApi } from "../../API/admin.routes";
 
 export default function AllCampaignHook(page: number = 1, status?: string) {
     return useQuery({

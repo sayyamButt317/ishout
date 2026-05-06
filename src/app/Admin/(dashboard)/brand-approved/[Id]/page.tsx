@@ -1,6 +1,6 @@
 'use client';
 import { useCallback, useState } from 'react';
-import OnboardingHook from '@/src/routes/Admin/Hooks/onboarding-hook';
+import OnboardingHook from '@/src/routes/Admin/Hooks/Campaign/onboarding-hook';
 import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influencer';
 import { ArrowLeft, RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';

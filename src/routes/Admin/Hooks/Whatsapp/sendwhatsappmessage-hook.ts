@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SendWhatsappMessageApi } from "../API/admin.routes";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import { SendWhatsappMessageApi } from "../../API/admin.routes";
 
 export default function SendWhatsappMessageHook(thread_id: string) {
     const queryClient = useQueryClient();
