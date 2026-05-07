@@ -1,7 +1,7 @@
-
-const ROLE = "admin"
+const ROLE = 'admin';
 export const AdminENDPOINT = {
-  INFLUENCERS_CAMPAIGN_BY_ID: (campaign_id: string) => `/${ROLE}/campaigns/${campaign_id}`,
+  INFLUENCERS_CAMPAIGN_BY_ID: (campaign_id: string) =>
+    `/${ROLE}/campaigns/${campaign_id}`,
   INFLUENCERS_LIST_BY_ID: (campaign_id: string) =>
     `/${ROLE}/campaigns/${campaign_id}/generate-influencers`,
 
@@ -26,7 +26,8 @@ export const AdminENDPOINT = {
     `/${ROLE}/generated-influencers/${campaign_id}`,
   UPDATE_CAMPAIGN_STATUS: () => `/${ROLE}/campaigns/update-status`,
   STATUS_UPDATE: `/${ROLE}/campaigns/status-update`,
-  ADMIN_DELETE_CAMPAIGN: (campaign_id: string) => `/${ROLE}/delete-campaign/${campaign_id}`,
+  ADMIN_DELETE_CAMPAIGN: (campaign_id: string) =>
+    `/${ROLE}/delete-campaign/${campaign_id}`,
   ADMIN_NOTIFICATION: `/ws/admin`,
   ADMIN_COMPANY_DETAILS_BY_ID: (user_id: string) => `/${ROLE}/company-data/${user_id}`,
 
@@ -102,12 +103,12 @@ export const AdminENDPOINT = {
   EXTRACTDEMOGRAPHICS: `/${ROLE}/extract-report`,
   EXTRACTCAMPAIGNALLINFLUENCERREPORT: (campaign_id: string) =>
     `/${ROLE}/campaign-influncersReport?campaign_id=${campaign_id}`,
-  CAMPAIGNANALTICS: (campaign_id: string) =>
-    `/${ROLE}/campaign-analytics/${campaign_id}`,
+  CAMPAIGNANALTICS: (campaign_id: string) => `/${ROLE}/campaign-analytics/${campaign_id}`,
+  CAMPAIGN_BRIEF_AND_INFLUENCER_STATS: (campaign_id: string) =>
+    `/${ROLE}/campaign-brief-and-influencer-stats/${campaign_id}`,
 
   /** POST JSON — store influencer demographics row */
   ADMIN_STORE_INFLUENCER_DEMOGRAPHICS: `/${ROLE}/store/Influencer-demographics`,
   ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS: (thread_id: string) =>
     `/${ROLE}/whatsapp-admin-influencer/media-urls/${thread_id}`,
-
 };
