@@ -25,7 +25,7 @@ import CustomButton from "../button";
 import { toast } from "sonner";
 import { useState } from "react";
 import Image from "next/image";
-import useReportStore from "@/src/store/Feedback/report-store";
+import useReportStore from "@/src/store/Report/report-store";
 import { Profile, Reel } from "@/src/types/Admin-Type/Feedback/influencer-type";
 import {
     ExtractSchema,
