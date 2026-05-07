@@ -1,54 +1,60 @@
-"use client";
+'use client';
 
-import CampaignAllInfluencerHook from "@/src/routes/Admin/Hooks/feedback/CampaignInfluencer-hook";
-import Image from "next/image";
-import { useParams } from "next/navigation";
-import { Influencer } from "@/src/types/Admin-Type/Feedback/influencer-type";
-import useCampaignAnalytics from "@/src/routes/Admin/Hooks/Report/analytics-hook";
-import { useState } from "react";
-import { Skeleton } from "boneyard-js/react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import CustomButton from "@/src/app/component/button";
-import { PDFViewer } from "@react-pdf/renderer";
-import CampaignReport from "@/src/app/component/reporting/CampaignReport";
-import NegotiationAgreedByCampaignHook from "@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook";
-import { AgreedNegotiationResponse } from "@/src/types/Admin-Type/agreed-negotiation-type";
-
+import CampaignAllInfluencerHook from '@/src/routes/Admin/Hooks/feedback/CampaignInfluencer-hook';
+import Image from 'next/image';
+import { useParams } from 'next/navigation';
+import { Influencer } from '@/src/types/Admin-Type/Feedback/influencer-type';
+import useCampaignAnalytics from '@/src/routes/Admin/Hooks/Report/analytics-hook';
+import useCampaignBriefStats from '@/src/routes/Admin/Hooks/Report/campaign-brief-stats-hook';
+import { useState } from 'react';
+import { Skeleton } from 'boneyard-js/react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import CustomButton from '@/src/app/component/button';
+import { PDFViewer } from '@react-pdf/renderer';
+import CampaignReport from '@/src/app/component/reporting/CampaignReport';
+import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
+import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
 
 function formatNumber(n: number | string): string {
-  if (typeof n === "string") return n;
+  if (typeof n === 'string') return n;
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
   return String(n);
 }
 
 function getEngagementLabel(rate: number) {
-  if (rate < 2) return "Low";
-  if (rate < 5) return "Average";
-  return "High";
+  if (rate < 2) return 'Low';
+  if (rate < 5) return 'Average';
+  return 'High';
 }
-
-
 
 export default function InfluencerReportHeader() {
   const { id } = useParams<{ id: string }>();
 
   const { data: influencerData } = CampaignAllInfluencerHook(id);
-  const { data: negotiationData } = NegotiationAgreedByCampaignHook(id)
-  console.log("Negotiation Data", negotiationData)
   const {
-    data: campaignAnalytics,
-    isLoading,
-    isError,
-  } = useCampaignAnalytics(id);
+    data: negotiationData,
+    isLoading: isNegotiationLoading,
+    refetch: refetchNegotiation,
+  } = NegotiationAgreedByCampaignHook(id);
+  const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
 
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
+  const summaryMutation = useCampaignBriefStats();
+
+  const handleViewReport = async () => {
+    try {
+      const tasks: Promise<unknown>[] = [summaryMutation.mutateAsync(id)];
+      if (!negotiationData) tasks.push(refetchNegotiation());
+      await Promise.all(tasks);
+      setReportOpen(true);
+    } catch {
+      setReportOpen(true);
+    }
+  };
+
+  const isReportLoading = summaryMutation.isPending || isNegotiationLoading;
 
   const analytics = campaignAnalytics?.summary;
   const top = campaignAnalytics?.top_performer;
@@ -66,27 +72,38 @@ export default function InfluencerReportHeader() {
               <DialogTitle>Campaign Report</DialogTitle>
             </DialogHeader>
             <div className="h-[calc(98vh-88px)] px-2 pb-2">
-              <PDFViewer style={{ width: "100%", height: "100%" }}>
-                <CampaignReport negotiationData={negotiationData as AgreedNegotiationResponse} />
-              </PDFViewer>
+              {negotiationData ? (
+                <PDFViewer style={{ width: '100%', height: '100%' }}>
+                  <CampaignReport
+                    negotiationData={negotiationData as AgreedNegotiationResponse}
+                    summaryData={summaryMutation.data}
+                  />
+                </PDFViewer>
+              ) : (
+                <div className="flex h-full items-center justify-center text-sm text-white/70">
+                  Loading report data...
+                </div>
+              )}
             </div>
           </DialogContent>
         </Dialog>
 
         {analytics && (
           <div className="space-y-4">
-
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-bold text-white">
                 Campaign Analytics Dashboard
               </h1>
               <span className="text-xs text-white/40">
-                <CustomButton
-                  className="bg-primaryButton hover:bg-primaryHover text-white"
-                  onClick={() => setReportOpen(true)}
-                >
-                  View Report
-                </CustomButton>
+                <div className="flex items-center gap-2">
+                  <CustomButton
+                    className="bg-primaryButton hover:bg-primaryHover text-white"
+                    disabled={isReportLoading}
+                    onClick={handleViewReport}
+                  >
+                    {isReportLoading ? 'Loading Report...' : 'View Report'}
+                  </CustomButton>
+                </div>
               </span>
             </div>
 
@@ -100,10 +117,7 @@ export default function InfluencerReportHeader() {
                 label="Avg Interaction"
                 value={analytics.avg_interaction_per_influencer}
               />
-              <MiniCard
-                label="Engagement %"
-                value={`${analytics.engagement_rate}%`}
-              />
+              <MiniCard label="Engagement %" value={`${analytics.engagement_rate}%`} />
             </div>
 
             {/* TOP PERFORMER */}
@@ -119,8 +133,8 @@ export default function InfluencerReportHeader() {
                       Top Performer: @{top.username}
                     </p>
                     <p className="text-white/40 text-xs">
-                      {top.interaction} interactions • {top.likes} likes •{" "}
-                      {top.comments} comments
+                      {top.interaction} interactions • {top.likes} likes • {top.comments}{' '}
+                      comments
                     </p>
                   </div>
                 </div>
@@ -137,144 +151,116 @@ export default function InfluencerReportHeader() {
           </div>
         )}
 
-
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {influencerData?.influencers?.map(
-            (inf: Influencer, index: number) => {
-              const profile = inf?.data?.profile;
-              const reel = inf?.data?.reel;
+          {influencerData?.influencers?.map((inf: Influencer, index: number) => {
+            const profile = inf?.data?.profile;
+            const reel = inf?.data?.reel;
 
-              if (!profile || !reel) return null;
+            if (!profile || !reel) return null;
 
-              const isPlaying = playingIndex === index;
+            const isPlaying = playingIndex === index;
 
-              const engRateNumber = profile.followers
-                ? ((reel.likes + reel.comments + reel.interaction) /
-                  profile.followers) *
+            const engRateNumber = profile.followers
+              ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) *
                 100
-                : 0;
+              : 0;
 
-              const engRate = profile.followers
-                ? engRateNumber.toFixed(2) + "%"
-                : "N/A";
+            const engRate = profile.followers ? engRateNumber.toFixed(2) + '%' : 'N/A';
 
-              return (
+            return (
+              <div
+                key={`${profile.username}-${reel.url}-${index}`}
+                className="rounded-2xl bg-[#0f0f12] border border-white/10 overflow-hidden flex"
+              >
+                {/* VIDEO */}
                 <div
-                  key={`${profile.username}-${reel.url}-${index}`}
-                  className="rounded-2xl bg-[#0f0f12] border border-white/10 overflow-hidden flex"
+                  className="relative w-[45%] aspect-9/16 bg-black cursor-pointer"
+                  onClick={() => setPlayingIndex(index)}
                 >
-                  {/* VIDEO */}
-                  <div
-                    className="relative w-[45%] aspect-9/16 bg-black cursor-pointer"
-                    onClick={() => setPlayingIndex(index)}
-                  >
-                    {!isPlaying ? (
-                      <>
-                        <Image
-                          src={reel.thumbnail}
-                          alt="thumbnail"
-                          fill
-                          sizes="(max-width: 768px) 100vw, 45vw"
-                          priority={index === 0}
-                          loading={index === 0 ? "eager" : "lazy"}
-                          className="object-cover"
-                        />
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                          <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center text-black font-bold">
-                            ▶
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <video
-                        src={reel.media_url}
-                        controls
-                        autoPlay
-                        className="w-full h-full object-cover"
+                  {!isPlaying ? (
+                    <>
+                      <Image
+                        src={reel.thumbnail}
+                        alt="thumbnail"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 45vw"
+                        priority={index === 0}
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                        className="object-cover"
                       />
-                    )}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                        <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center text-black font-bold">
+                          ▶
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <video
+                      src={reel.media_url}
+                      controls
+                      autoPlay
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+
+                {/* DETAILS */}
+                <div className="flex-1 p-5 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <Image
+                        src={profile.profile_image}
+                        alt={profile.username}
+                        width={45}
+                        height={45}
+                        className="rounded-full"
+                      />
+                      <div>
+                        <p className="text-white font-semibold">
+                          {profile.name || profile.username}
+                        </p>
+                        <p className="text-white/40 text-sm">@{profile.username}</p>
+                      </div>
+                    </div>
+
+                    <p className="text-white/50 text-xs mb-3 line-clamp-2">
+                      {profile.biography}
+                    </p>
+
+                    {/* STATS */}
+                    <div className="grid grid-cols-2 gap-2 mb-3">
+                      <Stat label="Followers" value={formatNumber(profile.followers)} />
+                      <Stat label="Following" value={formatNumber(profile.following)} />
+                      <Stat label="Posts" value={formatNumber(profile.media_count)} />
+                      <Stat label="Likes" value={formatNumber(reel.likes)} />
+                      <Stat label="Comments" value={formatNumber(reel.comments)} />
+                      <Stat label="Interactions" value={formatNumber(reel.interaction)} />
+                      <Stat label="Views" value={formatNumber(reel.views)} />
+                    </div>
+
+                    {/* ENGAGEMENT */}
+                    <div className="text-xs text-white/50">
+                      Engagement:{' '}
+                      <span className="text-white font-semibold">
+                        {engRate} ({getEngagementLabel(engRateNumber)})
+                      </span>
+                    </div>
                   </div>
 
-                  {/* DETAILS */}
-                  <div className="flex-1 p-5 flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center gap-3 mb-3">
-                        <Image
-                          src={profile.profile_image}
-                          alt={profile.username}
-                          width={45}
-                          height={45}
-                          className="rounded-full"
-                        />
-                        <div>
-                          <p className="text-white font-semibold">
-                            {profile.name || profile.username}
-                          </p>
-                          <p className="text-white/40 text-sm">
-                            @{profile.username}
-                          </p>
-                        </div>
-                      </div>
+                  {/* FOOTER */}
+                  <div className="mt-3">
+                    <p className="text-white/40 text-xs italic line-clamp-2 mb-1">
+                      “{reel.caption}”
+                    </p>
 
-                      <p className="text-white/50 text-xs mb-3 line-clamp-2">
-                        {profile.biography}
-                      </p>
-
-                      {/* STATS */}
-                      <div className="grid grid-cols-2 gap-2 mb-3">
-                        <Stat
-                          label="Followers"
-                          value={formatNumber(profile.followers)}
-                        />
-                        <Stat
-                          label="Following"
-                          value={formatNumber(profile.following)}
-                        />
-                        <Stat
-                          label="Posts"
-                          value={formatNumber(profile.media_count)}
-                        />
-                        <Stat label="Likes" value={formatNumber(reel.likes)} />
-                        <Stat
-                          label="Comments"
-                          value={formatNumber(reel.comments)}
-                        />
-                        <Stat
-                          label="Interactions"
-                          value={formatNumber(reel.interaction)}
-                        />
-                        <Stat label="Views" value={formatNumber(reel.views)} />
-                      </div>
-
-                      {/* ENGAGEMENT */}
-                      <div className="text-xs text-white/50">
-                        Engagement:{" "}
-                        <span className="text-white font-semibold">
-                          {engRate} ({getEngagementLabel(engRateNumber)})
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* FOOTER */}
-                    <div className="mt-3">
-                      <p className="text-white/40 text-xs italic line-clamp-2 mb-1">
-                        “{reel.caption}”
-                      </p>
-
-                      <a
-                        href={reel.url}
-                        target="_blank"
-                        className="text-pink-500 text-xs"
-                      >
-                        Open Reel ↗
-                      </a>
-                    </div>
+                    <a href={reel.url} target="_blank" className="text-pink-500 text-xs">
+                      Open Reel ↗
+                    </a>
                   </div>
                 </div>
-              );
-            }
-          )}
+              </div>
+            );
+          })}
         </div>
         {/* <PDFViewer width="100%" height="100%">
             <CampaignReport id={id} />
@@ -283,13 +269,8 @@ export default function InfluencerReportHeader() {
     </Skeleton>
   );
 }
-function MiniCard({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | number;
-}) {
+
+function MiniCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="bg-[#0f0f12] border border-white/10 rounded-xl p-3">
       <p className="text-[10px] text-white/40">{label}</p>
@@ -297,8 +278,6 @@ function MiniCard({
     </div>
   );
 }
-
-
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
