@@ -2,7 +2,13 @@
 
 import { useState } from 'react';
 import type { Dispatch, RefObject, SetStateAction } from 'react';
-import { Clapperboard, FileCheck2, MessageSquare, MessagesSquare, ScrollText } from 'lucide-react';
+import {
+  Clapperboard,
+  FileCheck2,
+  MessageSquare,
+  MessagesSquare,
+  ScrollText,
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 import ChatPanel from '@/src/app/component/content-feedback/chat-panel';
@@ -67,17 +73,18 @@ export default function FeedbackTabsSection({
   return (
     <div className="flex w-full flex-col border-t border-white/10 lg:flex-1 lg:overflow-hidden lg:border-t-0">
       <div className="flex flex-row width-full justify-evenly border-b border-white/10 scrollbar-none">
-        {tabs.map((tab) => (
+        {tabs.map((tab) =>
           (() => {
             const { label, icon: TabIcon } = TAB_META[tab];
             return (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`shrink-0 whitespace-nowrap px-4 py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest transition-colors ${activeTab === tab
-                  ? 'border-b-2 border-primaryButton cursor-pointer bg-white/5 text-white'
-                  : 'text-white/40 hover:text-white/70'
-                  }`}
+                className={`shrink-0 whitespace-nowrap px-4 py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest transition-colors ${
+                  activeTab === tab
+                    ? 'border-b-2 border-primaryButton cursor-pointer bg-white/5 text-white'
+                    : 'text-white/40 hover:text-white/70'
+                }`}
               >
                 <span className="inline-flex items-center gap-1.5">
                   <TabIcon className="size-3.5" />
@@ -85,12 +92,13 @@ export default function FeedbackTabsSection({
                 </span>
               </button>
             );
-          })()
-        ))}
+          })(),
+        )}
       </div>
       <div
-        className={`flex min-h-130 flex-col overflow-hidden lg:min-h-0 lg:flex-1 ${activeTab === 'chat' ? 'flex' : 'hidden'
-          }`}
+        className={`flex min-h-130 flex-col overflow-hidden lg:min-h-0 lg:flex-1 ${
+          activeTab === 'chat' ? 'flex' : 'hidden'
+        }`}
       >
         <ChatPanel
           className="h-full"
@@ -110,7 +118,7 @@ export default function FeedbackTabsSection({
 
       {activeTab === 'revisions' && (
         <div className="min-h-75 flex-1 overflow-y-auto p-3 lg:min-h-0">
-          <RevisionBox />
+          <RevisionBox negotiationId={negotiationId} />
         </div>
       )}
 
@@ -129,10 +137,7 @@ export default function FeedbackTabsSection({
       )}
 
       {activeTab === 'media' && (
-        <FeedbackMediaTab
-          mediaUrls={mediaUrls}
-          onSelectMedia={onSelectMedia}
-        />
+        <FeedbackMediaTab mediaUrls={mediaUrls} onSelectMedia={onSelectMedia} />
       )}
 
       {activeTab === 'guidelines' && <FeedbackGuidelinesTab />}

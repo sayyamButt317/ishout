@@ -11,6 +11,34 @@ export interface StoreInfluencerDemographicsResponse {
   _id: string;
 }
 
+export interface ContentRevisionTimestamp {
+  time?: number;
+  feedback?: string;
+}
+
+export interface ContentRevisionItem {
+  timestamps: ContentRevisionTimestamp[];
+  status?: string;
+  created_at?: string;
+}
+
+export interface ContentRevisionDocument {
+  negotiation_id: string;
+  admin_current_version?: number;
+  contentUrl?: string;
+  current_version?: number;
+  status?: string;
+  created_at?: string;
+  revisions?: ContentRevisionItem[];
+}
+
+export interface ContentRevisionHistoryResponse {
+  success: boolean;
+  negotiation_id: string;
+  count: number;
+  documents: ContentRevisionDocument[];
+}
+
 export interface SelectedCardType {
     id: string;
     campaign_id?: string;
