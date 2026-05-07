@@ -188,7 +188,7 @@ const OnboardingCard = ({
         </div>
         <div className="mt-4 grid grid-cols-3 gap-3">
           {/* iShout */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center flex flex-col items-center justify-center">
             <p className="text-sm text-white/75 whitespace-nowrap">iShout</p>
             <p
               className={`mt-1 text-xs font-normal ${influencer?.admin_approved ? 'text-emerald-400' : 'text-red-400'
@@ -199,7 +199,7 @@ const OnboardingCard = ({
           </div>
 
           {/* Brand */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.05] px-4 py-3 text-center flex flex-col items-center justify-center">
+          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center flex flex-col items-center justify-center">
             <p className="text-sm text-white/75 whitespace-nowrap">Brand</p>
             <p
               className={`mt-1 text-xs font-normal ${influencer?.company_approved ? 'text-emerald-400' : 'text-red-400'
