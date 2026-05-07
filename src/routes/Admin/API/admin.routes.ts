@@ -13,6 +13,7 @@ import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import {
   UpdateCampaignStatusRequestProps,
+  CampaignBriefAndInfluencerStatsResponse,
   UpdateInfluencerStatusRequestProps,
   UpdateInfluencerStatusResponseProps,
 } from '@/src/types/Admin-Type/Campaign-type';
@@ -682,6 +683,15 @@ export const ExtractAllInfluencerDemoGraphics = async (campaign_id: string) => {
 export const CampaignAnalytics = async (campaign_id: string) => {
   const response = await api.get(
     AdminENDPOINT.CAMPAIGNANALTICS(campaign_id)
+  );
+  return response.data;
+};
+
+export const CampaignBriefAndInfluencerStatsApi = async (
+  campaign_id: string,
+): Promise<CampaignBriefAndInfluencerStatsResponse> => {
+  const response = await api.get<CampaignBriefAndInfluencerStatsResponse>(
+    AdminENDPOINT.CAMPAIGN_BRIEF_AND_INFLUENCER_STATS(campaign_id),
   );
   return response.data;
 };
