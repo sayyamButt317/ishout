@@ -10,6 +10,10 @@ type FeedbackDetailFooterProps = {
   canForward: boolean;
   isForwardLoading: boolean;
   onForwardToBrand: () => void;
+  isDemographicsView?: boolean;
+  canSaveDemographics?: boolean;
+  isSavingDemographics?: boolean;
+  onSaveDemographics?: () => void;
 };
 
 export default function FeedbackDetailFooter({
@@ -18,6 +22,10 @@ export default function FeedbackDetailFooter({
   canForward,
   isForwardLoading,
   onForwardToBrand,
+  isDemographicsView = false,
+  canSaveDemographics = false,
+  isSavingDemographics = false,
+  onSaveDemographics,
 }: FeedbackDetailFooterProps) {
   const [open, setOpen] = useState(false);
 
@@ -34,20 +42,33 @@ export default function FeedbackDetailFooter({
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">
-        <InfluencerDetailDialog open={open} onOpenChange={setOpen} />
-        <button
-          onClick={onForwardToBrand}
-          disabled={isForwardLoading || !canForward}
-          className="rounded-lg bg-primaryButton px-3 py-2 text-xs font-bold text-white disabled:opacity-50 lg:px-4 lg:text-sm"
-        >
-          Forward to Brand
-        </button>
-        <button
-          className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-white lg:px-4 lg:text-sm"
-          onClick={() => setOpen(true)}
-        >
-          Influencer Analytics
-        </button>
+        {isDemographicsView ? (
+          <button
+            type="button"
+            onClick={onSaveDemographics}
+            disabled={isSavingDemographics || !canSaveDemographics}
+            className="rounded-lg bg-primaryButton px-3 py-2 text-xs font-bold text-white disabled:opacity-50 lg:px-4 lg:text-sm"
+          >
+            Save Demographics
+          </button>
+        ) : (
+          <>
+            <InfluencerDetailDialog open={open} onOpenChange={setOpen} />
+            <button
+              onClick={onForwardToBrand}
+              disabled={isForwardLoading || !canForward}
+              className="rounded-lg bg-primaryButton px-3 py-2 text-xs font-bold text-white disabled:opacity-50 lg:px-4 lg:text-sm"
+            >
+              Forward to Brand
+            </button>
+            <button
+              className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-white lg:px-4 lg:text-sm"
+              onClick={() => setOpen(true)}
+            >
+              Influencer Analytics
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

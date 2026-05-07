@@ -34,6 +34,10 @@ import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store'
 import type { AdminInfluencerMessageItem } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import useReportStore from '@/src/store/Feedback/report-store';
 import useInfluencerMediaUrlsHook from '@/src/routes/Admin/Hooks/content/media';
+import useStoreInfluencerDemographicsHook from '@/src/routes/Admin/Hooks/feedback/store-influencer-demographics-hook';
+import type { StoreInfluencerDemographicsResponse } from '@/src/types/Admin-Type/Feedback-Type';
+
+type ContentPreviewKind = 'story' | 'post' | 'demographics';
 
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
@@ -51,6 +55,8 @@ export default function ContentFeedbackDetailPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedVideoDuration, setSelectedVideoDuration] = useState<number | null>(null);
   const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
+  const [contentPreviewKind, setContentPreviewKind] =
+    useState<ContentPreviewKind>('post');
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -77,6 +83,7 @@ export default function ContentFeedbackDetailPage() {
   }, [mediaUrlsData]);
 
   const { setcampaignIdForReport } = useReportStore();
+  const reportCampaignId = useReportStore((s) => s.campaign_id);
 
   useEffect(() => {
     if (data?.campaign_id) {
@@ -167,6 +174,8 @@ export default function ContentFeedbackDetailPage() {
   );
 
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
+  const { mutate: saveInfluencerDemographics, isPending: isSavingDemographics } =
+    useStoreInfluencerDemographicsHook();
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
 
@@ -293,6 +302,21 @@ export default function ContentFeedbackDetailPage() {
   }, [influencerChatQuery.data?.messages, selectedPreviewMediaUrl]);
 
   const activeFeedbackId2 = selectedInfluencerMessageContentId ?? '';
+  const effectiveCampaignIdForDemographics = useMemo(() => {
+    const fromStore = (reportCampaignId ?? '').trim();
+    if (fromStore) return fromStore;
+    return (
+      (selectedCard?.campaign_id ?? '').trim() ||
+      campaignIdFromQuery.trim() ||
+      (data?.campaign_id ?? '').trim()
+    );
+  }, [
+    reportCampaignId,
+    selectedCard?.campaign_id,
+    campaignIdFromQuery,
+    data?.campaign_id,
+  ]);
+  const isDemographicsView = contentPreviewKind === 'demographics';
   const durationText =
     AnalyzeURL(selectedPreviewMediaUrl ?? '')?.type === 'video'
       ? formatVideoDuration(selectedVideoDuration)
@@ -300,6 +324,11 @@ export default function ContentFeedbackDetailPage() {
   const resolutionText =
     selectedPreviewMediaType === 'video' ? selectedVideoResolution : 'Image';
   const canForwardToBrand = Boolean(selectedPreviewMediaUrl);
+  const canSaveDemographics = Boolean(
+    selectedPreviewMediaUrl &&
+    selectedInfluencerMessageContentId &&
+    effectiveCampaignIdForDemographics,
+  );
   const isForwardToBrandLoading = isApproving || approveVideoMutation.isPending;
 
   const handleSendMessage = async (textOrFile: string | File) => {
@@ -384,6 +413,34 @@ export default function ContentFeedbackDetailPage() {
     });
   };
 
+  const handleSaveDemographics = () => {
+    const campaign_id = effectiveCampaignIdForDemographics;
+    const content_id = (selectedInfluencerMessageContentId ?? '').trim();
+    const image_url = (selectedPreviewMediaUrl ?? '').trim();
+    if (!campaign_id || !content_id || !image_url) {
+      toast.error(
+        'Campaign, content, and preview media are required. Select media and try again.',
+      );
+      return;
+    }
+    saveInfluencerDemographics(
+      {
+        campaign_id,
+        content_id,
+        image_url,
+        content_type: 'demographics',
+      },
+      {
+        onSuccess: (res: StoreInfluencerDemographicsResponse) => {
+          toast.success(res.message ?? 'Demographic added successfully');
+        },
+        onError: () => {
+          toast.error('Failed to save demographics');
+        },
+      },
+    );
+  };
+
   if (!selectedCard) {
     return (
       <Skeleton name="admin-content-review" loading={isNegotiationLoading}>
@@ -414,6 +471,8 @@ export default function ContentFeedbackDetailPage() {
             title={selectedCard.title}
             campaign={selectedCard.campaign}
             onBack={() => router.back()}
+            contentType={contentPreviewKind}
+            onContentTypeChange={setContentPreviewKind}
           />
 
           {/* Video workspace */}
@@ -443,6 +502,10 @@ export default function ContentFeedbackDetailPage() {
             canForward={canForwardToBrand}
             isForwardLoading={isForwardToBrandLoading}
             onForwardToBrand={handleForwardToBrand}
+            isDemographicsView={isDemographicsView}
+            canSaveDemographics={canSaveDemographics}
+            isSavingDemographics={isSavingDemographics}
+            onSaveDemographics={handleSaveDemographics}
           />
         </div>
 

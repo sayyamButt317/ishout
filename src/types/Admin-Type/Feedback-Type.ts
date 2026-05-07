@@ -18,6 +18,8 @@ export interface ContentRevisionTimestamp {
 
 export interface ContentRevisionItem {
   timestamps: ContentRevisionTimestamp[];
+  status?: string;
+  created_at?: string;
 }
 
 export interface ContentRevisionDocument {
@@ -26,6 +28,7 @@ export interface ContentRevisionDocument {
   contentUrl?: string;
   current_version?: number;
   status?: string;
+  created_at?: string;
   revisions?: ContentRevisionItem[];
 }
 
