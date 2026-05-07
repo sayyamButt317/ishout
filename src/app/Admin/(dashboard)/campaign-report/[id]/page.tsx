@@ -14,6 +14,7 @@ import { PDFViewer } from '@react-pdf/renderer';
 import CampaignReport from '@/src/app/component/reporting/CampaignReport';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
+import DemographicsOcrHook from '@/src/routes/Admin/Mutations/DemoGraphics';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -38,6 +39,7 @@ export default function InfluencerReportHeader() {
     refetch: refetchNegotiation,
   } = NegotiationAgreedByCampaignHook(id);
   const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
+  const { mutate: demographicsOcr, isPending } = DemographicsOcrHook();
 
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
@@ -162,7 +164,7 @@ export default function InfluencerReportHeader() {
 
             const engRateNumber = profile.followers
               ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) *
-                100
+              100
               : 0;
 
             const engRate = profile.followers ? engRateNumber.toFixed(2) + '%' : 'N/A';
@@ -262,9 +264,6 @@ export default function InfluencerReportHeader() {
             );
           })}
         </div>
-        {/* <PDFViewer width="100%" height="100%">
-            <CampaignReport id={id} />
-          </PDFViewer> */}
       </div>
     </Skeleton>
   );

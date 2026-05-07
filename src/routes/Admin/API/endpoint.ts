@@ -111,4 +111,5 @@ export const AdminENDPOINT = {
   ADMIN_STORE_INFLUENCER_DEMOGRAPHICS: `/${ROLE}/store/Influencer-demographics`,
   ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS: (thread_id: string) =>
     `/${ROLE}/whatsapp-admin-influencer/media-urls/${thread_id}`,
+  ADMIN_DEMOGRAPHICS_OCR: `/${ROLE}/demographics-ocr`,
 };
