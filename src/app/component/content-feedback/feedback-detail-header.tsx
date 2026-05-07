@@ -6,12 +6,16 @@ type FeedbackDetailHeaderProps = {
   title: string;
   campaign: string;
   onBack: () => void;
+  contentType: 'story' | 'post' | 'demographics';
+  onContentTypeChange: (value: 'story' | 'post' | 'demographics') => void;
 };
 
 export default function FeedbackDetailHeader({
   title,
   campaign,
   onBack,
+  contentType,
+  onContentTypeChange,
 }: FeedbackDetailHeaderProps) {
   return (
     <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-white/10 px-3 py-2">
@@ -30,10 +34,16 @@ export default function FeedbackDetailHeader({
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <select className="rounded-lg border border-white/10 bg-black px-3 py-2 text-xs font-bold text-white focus:outline-none">
-          <option>Story</option>
-          <option>Post</option>
-          <option>Demographics</option>
+        <select
+          value={contentType}
+          onChange={(e) =>
+            onContentTypeChange(e.target.value as 'story' | 'post' | 'demographics')
+          }
+          className="rounded-lg border border-white/10 bg-black px-3 py-2 text-xs font-bold text-white focus:outline-none"
+        >
+          <option value="story">Story</option>
+          <option value="post">Post</option>
+          <option value="demographics">Demographics</option>
         </select>
         <select className="rounded-lg border border-white/10 bg-black px-3 py-2 text-xs font-bold text-white focus:outline-none">
           <option>Version 1</option>
