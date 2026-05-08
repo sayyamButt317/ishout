@@ -35,6 +35,7 @@ import {
 } from '@/src/types/Compnay/approved-video-type';
 import { SendRevisionPayload } from '@/src/types/Admin-Type/Feedback/revision-type';
 import type {
+  CampaignBriefDeliverablesResponse,
   ContentRevisionHistoryResponse,
   StoreInfluencerDemographicsRequest,
 } from '@/src/types/Admin-Type/Feedback-Type';
@@ -699,6 +700,15 @@ export const CampaignBriefAndInfluencerStatsApi = async (
 export const WhatsAppAdminInfluencerMediaUrlsApi = async (thread_id: string) => {
   const response = await api.get(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS(thread_id)
+  );
+  return response.data;
+};
+
+export const AdminCampaignBriefDeliverablesApi = async (
+  brief_id: string,
+): Promise<CampaignBriefDeliverablesResponse> => {
+  const response = await api.get<CampaignBriefDeliverablesResponse>(
+    AdminENDPOINT.ADMIN_CAMPAIGN_BRIEF_DELIVERABLES(brief_id),
   );
   return response.data;
 };

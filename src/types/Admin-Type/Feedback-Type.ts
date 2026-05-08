@@ -11,6 +11,17 @@ export interface StoreInfluencerDemographicsResponse {
   _id: string;
 }
 
+export interface CampaignBriefDeliverablesContent {
+  title: string;
+  campaign_overview: string[];
+  deliverables_per_influencer: string[];
+  timeline: string[];
+}
+
+export interface CampaignBriefDeliverablesResponse {
+  campaign_brief: CampaignBriefDeliverablesContent;
+}
+
 export interface ContentRevisionTimestamp {
   time?: number;
   feedback?: string;
