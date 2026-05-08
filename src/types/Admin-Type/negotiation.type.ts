@@ -15,6 +15,12 @@ export interface NegotiationAnalysis {
     next_action?: string | null;
 }
 
+export interface CampaignBriefSummary {
+    campaign_name?: string | null;
+    title?: string | null;
+    campaign_logo_url?: string | null;
+}
+
 export interface NegotiationHistory {
     sender_type: "AI" | "USER";
     message: string;
@@ -31,7 +37,7 @@ export interface NegotiationStatsResponse {
     name?: string | null;
     sender_id?: string;
     user_message?: string | null;
-    analysis?: NegotiationAnalysis | {};
+    analysis?: NegotiationAnalysis;
     final_reply?: string | null;
     intent?: string | null;
     last_offered_price?: number | null;
@@ -46,4 +52,9 @@ export interface NegotiationStatsResponse {
     min_price?: number | null;
     negotiation_completed?: boolean;
     campaign_id?: string;
+    campaign_logo_url?: string | null;
+    admin_approved?: string | null;
+    Brand_approved?: string | null;
+    brief_s3_url?: string | null;
+    campaign_brief?: CampaignBriefSummary | null;
 }
