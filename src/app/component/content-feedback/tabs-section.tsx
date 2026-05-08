@@ -36,6 +36,7 @@ type FeedbackTabsSectionProps = {
   mediaUrls: string[];
   negotiationId: string;
   selectedCard: CardType;
+  briefId: string;
 };
 
 const tabs = ['chat', 'revisions', 'brandfeedback', 'media', 'guidelines'] as const;
@@ -67,6 +68,7 @@ export default function FeedbackTabsSection({
   mediaUrls,
   negotiationId,
   selectedCard,
+  briefId,
 }: FeedbackTabsSectionProps) {
   const [activeTab, setActiveTab] = useState<TabType>('chat');
 
@@ -140,7 +142,7 @@ export default function FeedbackTabsSection({
         <FeedbackMediaTab mediaUrls={mediaUrls} onSelectMedia={onSelectMedia} />
       )}
 
-      {activeTab === 'guidelines' && <FeedbackGuidelinesTab />}
+      {activeTab === 'guidelines' && <FeedbackGuidelinesTab briefId={briefId} />}
     </div>
   );
 }

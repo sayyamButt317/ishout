@@ -62,6 +62,7 @@ export default function ContentFeedbackDetailPage() {
 
   const searchParams = useSearchParams();
   const campaignIdFromQuery = searchParams.get('campaign_id') ?? '';
+  const briefIdFromQuery = searchParams.get('brief_id') ?? '';
 
   const { data, isLoading: isNegotiationLoading } = NegotiationAgreedByCampaignHook(
     campaignIdFromQuery,
@@ -75,11 +76,28 @@ export default function ContentFeedbackDetailPage() {
   );
   const mediaUrls = useMemo(() => {
     if (!mediaUrlsData || typeof mediaUrlsData !== 'object') return [];
-    const maybeUrls = (mediaUrlsData as { media_urls?: unknown }).media_urls;
-    if (!Array.isArray(maybeUrls)) return [];
-    return maybeUrls.filter(
-      (url): url is string => typeof url === 'string' && url.length > 0,
-    );
+    const payload = mediaUrlsData as {
+      media_urls?: unknown;
+      media_items?: unknown;
+    };
+
+    const fromLegacyUrls = Array.isArray(payload.media_urls)
+      ? payload.media_urls.filter(
+          (url): url is string => typeof url === 'string' && url.length > 0,
+        )
+      : [];
+
+    const fromMediaItems = Array.isArray(payload.media_items)
+      ? payload.media_items
+          .map((item) =>
+            item && typeof item === 'object' && 'media_url' in item
+              ? (item as { media_url?: unknown }).media_url
+              : null,
+          )
+          .filter((url): url is string => typeof url === 'string' && url.length > 0)
+      : [];
+
+    return Array.from(new Set([...fromLegacyUrls, ...fromMediaItems]));
   }, [mediaUrlsData]);
 
   const { setcampaignIdForReport } = useReportStore();
@@ -330,6 +348,13 @@ export default function ContentFeedbackDetailPage() {
     effectiveCampaignIdForDemographics,
   );
   const isForwardToBrandLoading = isApproving || approveVideoMutation.isPending;
+  const briefIdForGuidelines = useMemo(
+    () =>
+      briefIdFromQuery ||
+      (data as { campaign?: { brief_id?: string } } | undefined)?.campaign?.brief_id ||
+      '',
+    [briefIdFromQuery, data],
+  );
 
   const handleSendMessage = async (textOrFile: string | File) => {
     if (textOrFile instanceof File) {
@@ -531,6 +556,7 @@ export default function ContentFeedbackDetailPage() {
           mediaUrls={mediaUrls}
           negotiationId={negotiationId}
           selectedCard={selectedCard}
+          briefId={briefIdForGuidelines}
         />
       </div>
     </Skeleton>
