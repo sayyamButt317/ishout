@@ -138,3 +138,17 @@ export interface ApprovedCampaignResponse {
   content?: boolean;
   report?: boolean;
 }
+
+export interface CampaignDemographicPreview {
+  image_url: string;
+  content_type: string;
+}
+
+export interface CampaignBriefAndInfluencerStatsResponse {
+  campaign_name: string;
+  campaign_overview: string[];
+  timeline: string[];
+  demographics: CampaignDemographicPreview[];
+  'onBoard influencers': number;
+  influncers_produced__content_count: number;
+}

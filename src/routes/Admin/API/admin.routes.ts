@@ -13,6 +13,7 @@ import { getAuthTokenProvider } from '@/src/provider/auth-provide';
 import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import {
   UpdateCampaignStatusRequestProps,
+  CampaignBriefAndInfluencerStatsResponse,
   UpdateInfluencerStatusRequestProps,
   UpdateInfluencerStatusResponseProps,
 } from '@/src/types/Admin-Type/Campaign-type';
@@ -686,9 +687,23 @@ export const CampaignAnalytics = async (campaign_id: string) => {
   return response.data;
 };
 
+export const CampaignBriefAndInfluencerStatsApi = async (
+  campaign_id: string,
+): Promise<CampaignBriefAndInfluencerStatsResponse> => {
+  const response = await api.get<CampaignBriefAndInfluencerStatsResponse>(
+    AdminENDPOINT.CAMPAIGN_BRIEF_AND_INFLUENCER_STATS(campaign_id),
+  );
+  return response.data;
+};
+
 export const WhatsAppAdminInfluencerMediaUrlsApi = async (thread_id: string) => {
   const response = await api.get(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS(thread_id)
   );
+  return response.data;
+};
+
+export const DemographicsOcrApi = async (url: string[]) => {
+  const response = await api.post(AdminENDPOINT.ADMIN_DEMOGRAPHICS_OCR, { url });
   return response.data;
 };

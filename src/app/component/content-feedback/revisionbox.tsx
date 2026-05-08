@@ -79,7 +79,6 @@ export const RevisionBox = ({
       }),
     );
 
-    // Show latest revision on top
     return items.reverse();
   }, [revisionHistory.data?.documents]);
 
