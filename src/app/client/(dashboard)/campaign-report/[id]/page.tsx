@@ -14,7 +14,6 @@ import { PDFViewer } from '@react-pdf/renderer';
 import CampaignReport from '@/src/app/component/reporting/CampaignReport';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
-import DemographicsOcrHook from '@/src/routes/Admin/Mutations/DemoGraphics';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -39,7 +38,6 @@ export default function InfluencerReportHeader() {
     refetch: refetchNegotiation,
   } = NegotiationAgreedByCampaignHook(id);
   const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
-  const { mutate: demographicsOcr, isPending } = DemographicsOcrHook();
 
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
@@ -93,9 +91,7 @@ export default function InfluencerReportHeader() {
         {analytics && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-white">
-                Campaign Analytics Dashboard
-              </h1>
+              <h1 className="text-2xl font-bold text-white">Campaign Analytics Dashboard</h1>
               <span className="text-xs text-white/40">
                 <div className="flex items-center gap-2">
                   <CustomButton
@@ -109,8 +105,7 @@ export default function InfluencerReportHeader() {
               </span>
             </div>
 
-            {/* STATS */}
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-6">
               <MiniCard label="Influencers" value={analytics.total_influencers} />
               <MiniCard label="Likes" value={analytics.total_likes} />
               <MiniCard label="Comments" value={analytics.total_comments} />
@@ -122,30 +117,23 @@ export default function InfluencerReportHeader() {
               <MiniCard label="Engagement %" value={`${analytics.engagement_rate}%`} />
             </div>
 
-            {/* TOP PERFORMER */}
             {top && (
-              <div className="bg-linear-to-r from-pink-500/10 to-purple-500/10 border border-white/10 rounded-2xl p-4 flex items-center justify-between">
+              <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-linear-to-r from-pink-500/10 to-purple-500/10 p-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-pink-500 flex items-center justify-center text-white font-bold">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-pink-500 font-bold text-white">
                     🏆
                   </div>
 
                   <div>
-                    <p className="text-white font-semibold">
-                      Top Performer: @{top.username}
-                    </p>
-                    <p className="text-white/40 text-xs">
+                    <p className="font-semibold text-white">Top Performer: @{top.username}</p>
+                    <p className="text-xs text-white/40">
                       {top.interaction} interactions • {top.likes} likes • {top.comments}{' '}
                       comments
                     </p>
                   </div>
                 </div>
 
-                <a
-                  href={top.reel_url}
-                  target="_blank"
-                  className="text-pink-400 text-xs font-medium"
-                >
+                <a href={top.reel_url} target="_blank" className="text-xs font-medium text-pink-400">
                   View Reel →
                 </a>
               </div>
@@ -153,7 +141,7 @@ export default function InfluencerReportHeader() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {influencerData?.influencers?.map((inf: Influencer, index: number) => {
             const profile = inf?.data?.profile;
             const reel = inf?.data?.reel;
@@ -163,8 +151,7 @@ export default function InfluencerReportHeader() {
             const isPlaying = playingIndex === index;
 
             const engRateNumber = profile.followers
-              ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) *
-                100
+              ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) * 100
               : 0;
 
             const engRate = profile.followers ? engRateNumber.toFixed(2) + '%' : 'N/A';
@@ -172,11 +159,10 @@ export default function InfluencerReportHeader() {
             return (
               <div
                 key={`${profile.username}-${reel.url}-${index}`}
-                className="rounded-2xl bg-[#0f0f12] border border-white/10 overflow-hidden flex"
+                className="flex overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f12]"
               >
-                {/* VIDEO */}
                 <div
-                  className="relative w-[45%] aspect-9/16 bg-black cursor-pointer"
+                  className="relative aspect-9/16 w-[45%] cursor-pointer bg-black"
                   onClick={() => setPlayingIndex(index)}
                 >
                   {!isPlaying ? (
@@ -191,25 +177,19 @@ export default function InfluencerReportHeader() {
                         className="object-cover"
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                        <div className="w-12 h-12 rounded-full bg-white/80 flex items-center justify-center text-black font-bold">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/80 font-bold text-black">
                           ▶
                         </div>
                       </div>
                     </>
                   ) : (
-                    <video
-                      src={reel.media_url}
-                      controls
-                      autoPlay
-                      className="w-full h-full object-cover"
-                    />
+                    <video src={reel.media_url} controls autoPlay className="h-full w-full object-cover" />
                   )}
                 </div>
 
-                {/* DETAILS */}
-                <div className="flex-1 p-5 flex flex-col justify-between">
+                <div className="flex flex-1 flex-col justify-between p-5">
                   <div>
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="mb-3 flex items-center gap-3">
                       <Image
                         src={profile.profile_image}
                         alt={profile.username}
@@ -218,19 +198,14 @@ export default function InfluencerReportHeader() {
                         className="rounded-full"
                       />
                       <div>
-                        <p className="text-white font-semibold">
-                          {profile.name || profile.username}
-                        </p>
-                        <p className="text-white/40 text-sm">@{profile.username}</p>
+                        <p className="font-semibold text-white">{profile.name || profile.username}</p>
+                        <p className="text-sm text-white/40">@{profile.username}</p>
                       </div>
                     </div>
 
-                    <p className="text-white/50 text-xs mb-3 line-clamp-2">
-                      {profile.biography}
-                    </p>
+                    <p className="mb-3 line-clamp-2 text-xs text-white/50">{profile.biography}</p>
 
-                    {/* STATS */}
-                    <div className="grid grid-cols-2 gap-2 mb-3">
+                    <div className="mb-3 grid grid-cols-2 gap-2">
                       <Stat label="Followers" value={formatNumber(profile.followers)} />
                       <Stat label="Following" value={formatNumber(profile.following)} />
                       <Stat label="Posts" value={formatNumber(profile.media_count)} />
@@ -240,22 +215,18 @@ export default function InfluencerReportHeader() {
                       <Stat label="Views" value={formatNumber(reel.views)} />
                     </div>
 
-                    {/* ENGAGEMENT */}
                     <div className="text-xs text-white/50">
                       Engagement:{' '}
-                      <span className="text-white font-semibold">
+                      <span className="font-semibold text-white">
                         {engRate} ({getEngagementLabel(engRateNumber)})
                       </span>
                     </div>
                   </div>
 
-                  {/* FOOTER */}
                   <div className="mt-3">
-                    <p className="text-white/40 text-xs italic line-clamp-2 mb-1">
-                      “{reel.caption}”
-                    </p>
+                    <p className="mb-1 line-clamp-2 text-xs italic text-white/40">“{reel.caption}”</p>
 
-                    <a href={reel.url} target="_blank" className="text-pink-500 text-xs">
+                    <a href={reel.url} target="_blank" className="text-xs text-pink-500">
                       Open Reel ↗
                     </a>
                   </div>
@@ -271,7 +242,7 @@ export default function InfluencerReportHeader() {
 
 function MiniCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-[#0f0f12] border border-white/10 rounded-xl p-3">
+    <div className="rounded-xl border border-white/10 bg-[#0f0f12] p-3">
       <p className="text-[10px] text-white/40">{label}</p>
       <p className="text-sm font-semibold text-white">{value}</p>
     </div>
@@ -280,9 +251,10 @@ function MiniCard({ label, value }: { label: string; value: string | number }) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-white/5 border border-white/10 rounded-md p-2">
+    <div className="rounded-md border border-white/10 bg-white/5 p-2">
       <p className="text-[10px] text-white/40">{label}</p>
       <p className="text-sm font-semibold text-white">{value}</p>
     </div>
   );
 }
+
