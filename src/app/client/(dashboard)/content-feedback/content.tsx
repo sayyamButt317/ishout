@@ -133,7 +133,7 @@ export default function ContentFeedbackModal({
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-        (isVideoUrl(msg.message) || isImageUrl(msg.message))
+          (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
@@ -205,8 +205,8 @@ export default function ContentFeedbackModal({
   const approvedCopyDraft =
     selectedMediaKey != null
       ? (approvedCopyDraftByUrl[selectedMediaKey] ?? {
-          hashtags: '',
-        })
+        hashtags: '',
+      })
       : { hashtags: '' };
   const setApprovedCopyDraftField = (field: 'hashtags', value: string) => {
     if (!selectedMediaKey) return;
@@ -276,11 +276,10 @@ export default function ContentFeedbackModal({
       onClick={asPage ? undefined : onClose}
     >
       <div
-        className={`flex h-full w-full min-h-0 overflow-hidden bg-(--color-background) ${
-          asPage
-            ? 'max-h-[min(920px,96vh)] rounded-none border-0 shadow-none'
-            : 'max-h-[90vh] max-w-6xl rounded-2xl border border-white/10 shadow-2xl'
-        }`}
+        className={`flex h-full w-full min-h-0 overflow-hidden bg-(--color-background) ${asPage
+          ? 'max-h-[min(920px,96vh)] rounded-none border-0 shadow-none'
+          : 'max-h-[90vh] max-w-6xl rounded-2xl border border-white/10 shadow-2xl'
+          }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex min-h-0 flex-1 flex-col border-b border-white/10 lg:border-r lg:border-b-0">
@@ -298,15 +297,6 @@ export default function ContentFeedbackModal({
                   {selectedCard.campaign} Campaign
                 </p>
               </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <select className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-white focus:border-primaryButton focus:outline-none">
-                <option>Version 1 (Active)</option>
-                <option disabled>Version 2 (Draft)</option>
-              </select>
-              <button className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors">
-                <Maximize2 className="size-5" />
-              </button>
             </div>
           </div>
           <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden px-2 pt-2 lg:flex-row lg:items-stretch">
@@ -356,7 +346,7 @@ export default function ContentFeedbackModal({
                   className="flex items-center justify-center gap-2 rounded-xl border-2 border-white/10 px-4 py-2 text-sm font-bold text-white hover:border-white/20 hover:bg-white/5 transition-colors"
                 >
                   <RefreshCw className="size-4" />
-                  Revision
+                  Request Revision
                 </button>
                 <button
                   type="button"
@@ -389,7 +379,7 @@ export default function ContentFeedbackModal({
                             if (
                               data?.success &&
                               (data.video_approve_brand ?? '').toLowerCase().trim() ===
-                                'approved'
+                              'approved'
                             ) {
                               setBrandApprovedByVideoUrl((prev) => ({
                                 ...prev,

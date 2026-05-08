@@ -6,7 +6,6 @@ import { INFLUENCERS_IMAGES } from "./Data/influencersImages";
 import Image from "next/image";
 
 export type Platform = "instagram" | "youtube" | "tiktok";
-
 export interface InfluencerImage {
   src: string;
   alt: string;
@@ -386,9 +385,8 @@ export default function DomeGallery({
             {items.map((it, i) => (
               <div
                 key={`${it.x},${it.y},${i}`}
-                className={`item ${
-                  (((it.x / 2) | 0) & 1) === 0 ? "item--down" : "item--up"
-                }`}
+                className={`item ${(((it.x / 2) | 0) & 1) === 0 ? "item--down" : "item--up"
+                  }`}
                 data-src={it.src}
                 data-offset-x={it.x}
                 data-offset-y={it.y}
