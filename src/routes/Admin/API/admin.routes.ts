@@ -702,3 +702,8 @@ export const WhatsAppAdminInfluencerMediaUrlsApi = async (thread_id: string) => 
   );
   return response.data;
 };
+
+export const DemographicsOcrApi = async (url: string[]) => {
+  const response = await api.post(AdminENDPOINT.ADMIN_DEMOGRAPHICS_OCR, { url });
+  return response.data;
+};
