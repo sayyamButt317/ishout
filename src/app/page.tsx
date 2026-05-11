@@ -12,7 +12,7 @@ import CalendlyDemo from './component/calendly-demo';
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen w-full bg-black overflow-hidden bg-linear-to-b from-black to-black text-white font-family-poppins">
+    <div className="relative min-h-screen w-full bg-dark-background overflow-hidden text-white font-family-poppins">
       <Header />
       <section className="relative w-full flex flex-col items-center pt-35 pb-20 max-sm:pb-2 md:pt-20 md:pb-30 overflow-hidden">
         <Image

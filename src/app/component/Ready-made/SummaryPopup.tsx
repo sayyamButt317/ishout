@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CustomButton from '../button';
 import Spinner from '../custom-component/spinner';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
@@ -49,7 +49,7 @@ const fieldConfigs: FieldConfig[] = [
       dot: 'bg-blue-400',
       gradient: 'from-blue-500/20 to-cyan-500/20',
       border: 'border-blue-400/30',
-      text: 'text-blue-100',
+      text: 'text-foreground/80 dark:text-blue-100',
       button:
         'bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/30 text-blue-100',
       ring: 'ring-blue-400/50',
@@ -64,7 +64,7 @@ const fieldConfigs: FieldConfig[] = [
       dot: 'bg-purple-400',
       gradient: 'from-purple-500/20 to-pink-500/20',
       border: 'border-purple-400/30',
-      text: 'text-purple-100',
+      text: 'text-foreground/80 dark:text-purple-100',
       button:
         'bg-purple-500/20 hover:bg-purple-500/30 border border-purple-400/30 text-purple-100',
       ring: 'ring-purple-400/50',
@@ -79,7 +79,7 @@ const fieldConfigs: FieldConfig[] = [
       dot: 'bg-amber-400',
       gradient: 'from-amber-500/20 to-orange-500/20',
       border: 'border-amber-400/30',
-      text: 'text-amber-100',
+      text: 'text-foreground/80 dark:text-amber-100',
       button:
         'bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/30 text-amber-100',
       ring: 'ring-amber-400/50',
@@ -94,7 +94,7 @@ const fieldConfigs: FieldConfig[] = [
       dot: 'bg-emerald-400',
       gradient: 'from-emerald-500/20 to-teal-500/20',
       border: 'border-emerald-400/30',
-      text: 'text-emerald-100',
+      text: 'text-foreground/80 dark:text-emerald-100',
       button:
         'bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/30 text-emerald-100',
       ring: 'ring-emerald-400/50',
@@ -110,7 +110,7 @@ const fieldConfigs: FieldConfig[] = [
       dot: 'bg-rose-400',
       gradient: 'from-rose-500/20 to-pink-500/20',
       border: 'border-rose-400/30',
-      text: 'text-rose-100',
+      text: 'text-foreground/80 dark:text-rose-100',
       button:
         'bg-rose-500/20 hover:bg-rose-500/30 border border-rose-400/30 text-rose-100',
       ring: 'ring-rose-400/50',
@@ -135,7 +135,8 @@ const EditableField = ({
   onSelect,
   onRemove,
 }: EditableFieldProps) => {
-  const [open, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const onClose = () => setIsOpen(false);
 
   const selectedItems = config.isArray
     ? Array.isArray(value)
@@ -157,12 +158,12 @@ const EditableField = ({
   };
 
   return (
-    <div className="bg-white/5 rounded-lg p-3 lg:p-4 border border-white/10">
+    <div className="dark:bg-white/5 rounded-lg p-3 lg:p-4 border border-slate-400 dark:border-white/10">
       <div className="flex items-center gap-2 mb-2 lg:mb-3">
         <div className={`h-1.5 w-1.5 lg:h-2 lg:w-2 rounded-full ${config.color.dot}`} />
-        <h4 className="text-xs lg:text-sm font-semibold text-white">{config.label}</h4>
+        <h4 className="text-xs lg:text-sm font-semibold text-foreground dark:text-white">{config.label}</h4>
       </div>
-      <div className="flex flex-wrap gap-1.5 lg:gap-2 min-h-[24px] lg:min-h-[28px] mb-2 lg:mb-3">
+      <div className="flex flex-wrap gap-1.5 lg:gap-2 min-h-6 lg:min-h-7 mb-2 lg:mb-3">
         {selectedItems.length > 0
           ? selectedItems.map((item, i) => (
             <span
@@ -184,17 +185,17 @@ const EditableField = ({
           ))
           : null}
       </div>
-      <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <button
-            className={`w-full flex items-center justify-between h-8 lg:h-10 px-3 lg:px-4 rounded-md text-xs lg:text-sm bg-white/5 border border-white/10 text-white/70 hover:text-white hover:bg-white/10 transition-colors ${config.color.ring} focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900`}
+            className={`w-full flex items-center justify-between h-8 lg:h-10 px-3 lg:px-4 rounded-md text-xs lg:text-sm bg-white/5 border dark:border-b-white/10 border-b-slate-400 text-foreground dark:text-white/70 hover:text-foreground/95hover:bg-white/10 transition-colors ${config.color.ring} focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900`}
           >
             <span className="truncate">{getDisplayText()}</span>
             <ChevronDown className="w-4 h-4 lg:w-5 lg:h-5 shrink-0 ml-2" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          className={`z-100 w-(--radix-dropdown-menu-trigger-width) max-h-[250px] overflow-y-auto bg-slate-800/95 backdrop-blur-sm border-white/10 ${config.color.border}`}
+          className={`z-100 w-(--radix-dropdown-menu-trigger-width) max-h-62.5 overflow-y-auto bg-slate-800/95 backdrop-blur-sm border-white/10 ${config.color.border}`}
           align="start"
           side="bottom"
           sideOffset={4}
@@ -215,7 +216,7 @@ const EditableField = ({
                       onSelect(option);
                     }
                   }}
-                  className={`text-xs lg:text-sm text-white focus:bg-white/10 ${config.color.text}`}
+                  className={`text-xs lg:text-sm text-foreground/95focus:bg-white/10 ${config.color.text}`}
                 >
                   {option}
                 </DropdownMenuCheckboxItem>
@@ -236,7 +237,7 @@ const EditableField = ({
                 <DropdownMenuRadioItem
                   key={option}
                   value={option}
-                  className={`text-xs lg:text-sm text-white focus:bg-white/10 ${config.color.text}`}
+                  className={`text-xs lg:text-sm text-foreground/95 focus:bg-foreground/10 ${config.color.text}`}
                 >
                   {config.displayValue ? config.displayValue(option) : option}
                 </DropdownMenuRadioItem>
@@ -266,7 +267,6 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
   const { company_name } = useAuthStore();
   const { mutateAsync: findInfluencer, isPending } = CreateCampaignHook();
   const { clearImages } = CampaignSBriefStore();
-
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => {
@@ -340,8 +340,8 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 md:p-6 lg:p-8 bg-black/60 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-3xl lg:max-w-5xl xl:max-w-6xl my-8 pb-[300px]">
-        <div className="group rounded-3xl border border-white/20 bg-linear-to-br from-slate-900 via-gray-900 to-zinc-900 shadow-2xl backdrop-blur-sm p-6 md:p-8 lg:p-10">
+      <div className="relative w-full max-w-3xl lg:max-w-5xl xl:max-w-6xl my-8 pb-75">
+        <div className="group rounded-3xl border border-white/20 bg-linear-to-br from-blue-200 to-red-200 dark:from-slate-900 dark:via-gray-900 dark:to-zinc-900 shadow-2xl backdrop-blur-sm p-6 md:p-8 lg:p-10">
           <div className="absolute inset-0 bg-linear-to-br from-slate-500/10 via-transparent to-gray-500/10 opacity-50 rounded-3xl" />
           <div className="absolute -top-4 -right-4 h-24 w-24 lg:h-32 lg:w-32 rounded-full bg-linear-to-br from-slate-400/20 to-gray-400/20 blur-xl" />
           <div className="absolute -bottom-4 -left-4 h-28 w-28 lg:h-36 lg:w-36 rounded-full bg-linear-to-tr from-zinc-400/20 to-slate-400/20 blur-xl" />
@@ -351,25 +351,25 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
               <div className="flex items-center gap-3 lg:gap-4">
                 <div className="relative">
                   <div className="absolute inset-0 bg-linear-to-r from-slate-500 to-gray-600 rounded-full blur-sm opacity-75" />
-                  <div className="relative flex h-12 w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-linear-to-r from-slate-500 to-gray-600 text-white text-xl lg:text-2xl font-bold shadow-lg">
+                  <div className="relative flex h-12 w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-linear-to-r from-slate-500 to-gray-600 text-foreground/95text-xl lg:text-2xl font-bold shadow-lg">
                     📋
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 tracking-tight">
+                  <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-foreground/95mb-1 tracking-tight">
                     Campaign Summary
                   </h3>
-                  <p className="text-slate-100/80 text-xs lg:text-sm leading-tight">
+                  <p className="text-foreground/70 text-xs lg:text-sm leading-tight">
                     Review your campaign settings before launching
                   </p>
                 </div>
               </div>
-              {/* <button
-                onClick={onClose}
-                className="text-white/60 hover:text-white hover:bg-white/10 rounded-full p-2 transition-all duration-200 self-end sm:self-start"
-              >
-                <X size={20} className="lg:w-6 lg:h-6" />
-              </button> */}
+              <button
+  onClick={() => onClose()}
+  className="text-white/60 hover:text-foreground/95 hover:bg-white/10 rounded-full p-2 transition-all duration-200 self-end cursor-pointer sm:self-start"
+>
+  <X size={20} className="lg:w-6 lg:h-6" />
+</button>
             </div>
 
             <div className="flex items-center gap-2 text-xs lg:text-sm mb-6">
@@ -377,7 +377,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                 className={`h-2 w-2 rounded-full ${isFormComplete ? 'bg-primaryButton animate-pulse' : 'bg-amber-400'
                   }`}
               />
-              <span className={`${isFormComplete ? 'text-green-200' : 'text-amber-200'}`}>
+              <span className={`${isFormComplete ? 'text-green-400' : 'text-amber-700 dark:text-amber-400 '}`}>
                 {isFormComplete ? 'Ready to launch' : 'Complete all fields'}
               </span>
             </div>
@@ -399,14 +399,14 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
               <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
                 <CustomButton
                   onClick={() => clearTemplate()}
-                  className="flex-1 bg-slate-600 hover:bg-slate-700 text-white px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 hover:scale-105"
+                  className="flex-1 bg-slate-600 hover:bg-slate-700 text-white px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200"
                 >
                   Clear
                 </CustomButton>
                 <CustomButton
                   onClick={() => handleLaunchCampaign()}
                   disabled={!isFormComplete || isPending}
-                  className={`flex-1 px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 hover:scale-105 ${isFormComplete
+                  className={`flex-1 px-4 py-2.5 lg:py-3 rounded-lg text-sm lg:text-base font-medium transition-all duration-200 ${isFormComplete
                     ? 'bg-primaryButton hover:bg-primaryHover text-white'
                     : 'bg-slate-600 text-slate-400 cursor-not-allowed'
                     }`}
@@ -422,7 +422,7 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                 </CustomButton>
               </div>
               <div className="text-center">
-                <p className="text-xs lg:text-sm text-slate-400">
+                <p className="text-xs lg:text-sm text-foreground/70">
                   {isFormComplete
                     ? '🎉 Your campaign is ready to launch!'
                     : 'Complete all fields above to launch your campaign'}

@@ -10,20 +10,6 @@ type TimestampItem = {
   feedback: string
 }
 
-type FeedbackResponse = {
-  negotiation_id?: string
-  thread_id?: string
-  contentType?: string
-  contentUrl?: string
-  current_version?: number
-  revision?: {
-    version?: number
-    status?: string
-    message_id?: string
-    timestamps?: TimestampItem[]
-  }
-}
-
 const formatSeconds = (seconds: number) => {
   const total = Math.floor(seconds)
   const mins = Math.floor(total / 60)
@@ -48,7 +34,7 @@ export default function InfluencerfeedbackById() {
   return (
     <div className="min-h-screen bg-[#0e0e0e] text-zinc-100">
       <Header />
-      <main className="mx-auto grid max-w-[1600px] grid-cols-1 gap-4 p-4 lg:grid-cols-12 pt-34">
+      <main className="mx-auto grid max-w-400 grid-cols-1 gap-4 p-4 lg:grid-cols-12 pt-34">
         <section className="space-y-4 lg:col-span-8">
           <div className="relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-black shadow-2xl">
             {feedbackData?.contentUrl ? (
@@ -108,7 +94,7 @@ export default function InfluencerfeedbackById() {
                       className="group absolute top-1 h-20 w-4 -translate-x-1/2"
                       style={{ left: `${left}%` }}
                     >
-                      <span className="absolute left-1/2 top-0 h-16 w-[2px] -translate-x-1/2 bg-rose-300 shadow-[0_0_8px_rgba(255,180,171,0.5)]" />
+                      <span className="absolute left-1/2 top-0 h-16 w-0.5 -translate-x-1/2 bg-rose-300 shadow-[0_0_8px_rgba(255,180,171,0.5)]" />
                       <span className="absolute left-1/2 top-0 h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-white bg-rose-300" />
                       <span className="absolute -top-8 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded bg-zinc-700 px-2 py-1 text-[10px] text-white group-hover:block">
                         {formatSeconds(item?.time)}
@@ -170,13 +156,6 @@ export default function InfluencerfeedbackById() {
               ) : (
                 <p className="text-sm text-zinc-500">No feedback added</p>
               )}
-            </div>
-
-            <div className="border-t border-white/10 bg-zinc-950 p-4">
-              <textarea
-                className="h-20 w-full resize-none rounded-lg border border-white/10 bg-zinc-900 p-3 text-sm text-zinc-100 outline-none placeholder:text-zinc-500 focus:border-violet-400"
-                placeholder="Add feedback..."
-              />
             </div>
           </div>
         </aside>
