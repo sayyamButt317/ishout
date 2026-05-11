@@ -7,7 +7,7 @@ import ContentHeader from '@/src/app/component/custom-component/ContentHeader';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
-import { MessageSquare, MoreHorizontal, Search, Video } from 'lucide-react';
+import { MessageSquare, MoreHorizontal, Search } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
@@ -274,6 +274,7 @@ function ContentFeedbackPageContent() {
                             item: card.source,
                             title: card.title,
                             campaign: card.campaign,
+                            briefId: data?.campaign?.brief_id ?? '',
                           };
                           if (typeof window !== 'undefined') {
                             sessionStorage.setItem(

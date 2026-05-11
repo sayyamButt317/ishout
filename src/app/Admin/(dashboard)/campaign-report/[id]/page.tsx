@@ -14,7 +14,8 @@ import { PDFViewer } from '@react-pdf/renderer';
 import CampaignReport from '@/src/app/component/reporting/CampaignReport';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
 import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
-import DemographicsOcrHook from '@/src/routes/Admin/Mutations/DemoGraphics';
+import useInfluencerDemographicsAssets from '@/src/routes/Admin/Hooks/Report/influencer-demographics-assets-hook';
+import DemographicsAssetsDialog from '@/src/app/component/custom-component/DemographicsAssetsDialog';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -39,11 +40,20 @@ export default function InfluencerReportHeader() {
     refetch: refetchNegotiation,
   } = NegotiationAgreedByCampaignHook(id);
   const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
-  const { mutate: demographicsOcr, isPending } = DemographicsOcrHook();
 
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
+  const [demographicsOpen, setDemographicsOpen] = useState(false);
+  const [selectedInfluencerUsername, setSelectedInfluencerUsername] = useState<
+    string | null
+  >(null);
   const summaryMutation = useCampaignBriefStats();
+  const { data: demographicsData, isLoading: isDemographicsLoading } =
+    useInfluencerDemographicsAssets(
+      id,
+      selectedInfluencerUsername ?? undefined,
+      demographicsOpen,
+    );
 
   const handleViewReport = async () => {
     try {
@@ -57,6 +67,8 @@ export default function InfluencerReportHeader() {
   };
 
   const isReportLoading = summaryMutation.isPending || isNegotiationLoading;
+  const demographicsImageUrls =
+    demographicsData?.demographics?.map((item) => item.image_url).filter(Boolean) ?? [];
 
   const analytics = campaignAnalytics?.summary;
   const top = campaignAnalytics?.top_performer;
@@ -92,6 +104,16 @@ export default function InfluencerReportHeader() {
             </div>
           </DialogContent>
         </Dialog>
+        <DemographicsAssetsDialog
+          open={demographicsOpen}
+          onOpenChange={(open) => {
+            setDemographicsOpen(open);
+            if (!open) setSelectedInfluencerUsername(null);
+          }}
+          imageUrls={demographicsImageUrls}
+          isLoading={isDemographicsLoading}
+          username={selectedInfluencerUsername}
+        />
 
         {analytics && (
           <div className="space-y-4">
@@ -167,7 +189,7 @@ export default function InfluencerReportHeader() {
 
             const engRateNumber = profile.followers
               ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) *
-              100
+                100
               : 0;
 
             const engRate = profile.followers ? engRateNumber.toFixed(2) + '%' : 'N/A';
@@ -258,9 +280,25 @@ export default function InfluencerReportHeader() {
                       “{reel.caption}”
                     </p>
 
-                    <a href={reel.url} target="_blank" className="text-pink-500 text-xs">
-                      Open Reel ↗
-                    </a>
+                    <div className="flex items-center gap-3">
+                      <a
+                        href={reel.url}
+                        target="_blank"
+                        className="text-pink-500 text-xs"
+                      >
+                        Open Reel ↗
+                      </a>
+                      <button
+                        type="button"
+                        className="rounded-full border border-pink-500/40 px-2 py-1 text-[11px] text-pink-300 hover:bg-pink-500/10"
+                        onClick={() => {
+                          setSelectedInfluencerUsername(profile.username);
+                          setDemographicsOpen(true);
+                        }}
+                      >
+                        Demographics
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
