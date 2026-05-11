@@ -21,9 +21,7 @@ import { MessageTemplate } from '@/src/types/meta.type';
 import { UpdateUserStatusResponse } from '@/src/types/Admin-Type/usermanagment.type';
 import { RejectandRegenerateInfluencerRequest } from '@/src/types/Admin-Type/reject-influencers.type';
 import { AddInfluencersNumberRequest } from '@/src/types/Admin-Type/review-influencer';
-import {
-  SaveContentFeedbackPayload,
-} from '@/src/types/Admin-Type/Content-type';
+import { SaveContentFeedbackPayload } from '@/src/types/Admin-Type/Content-type';
 import {
   buildAdminInfluencerMessageFormData,
   mapAdminInfluencerMessageError,
@@ -41,6 +39,8 @@ import type {
 } from '@/src/types/Admin-Type/Feedback-Type';
 import { AdminInfluencerMessagesResponse } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-messages-type';
+import type { CompanyNegotiationMediaResponse } from '@/src/types/Compnay/feeedback-content-type';
+import type { InfluencerDemographicsAssetsResponse } from '@/src/types/Admin-Type/Reports-tyes';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -422,7 +422,6 @@ export const NegotiationAgreedByCampaignApi = async (
   return response.data;
 };
 
-
 export const NegotiationChatDetailApi = async (_id: string) => {
   const response = await api.get(AdminENDPOINT.NEGOTIATION_CHAT_DETAIL, {
     params: {
@@ -640,13 +639,13 @@ export const DeleteAdminInfluencerMessagesApi = async (
 };
 
 export const SendRevisionMessage = async (data: SendRevisionPayload) => {
-  const response = await api.post(AdminENDPOINT.SENDREVISIONMESSAGE, data)
-  return response.data
-}
+  const response = await api.post(AdminENDPOINT.SENDREVISIONMESSAGE, data);
+  return response.data;
+};
 
 export const ExtractContentRevisionforInfluencer = async (
   negotiation_id: string,
-  message_id?: string
+  message_id?: string,
 ) => {
   const response = await api.get(
     AdminENDPOINT.CONTENTDETAILSFORINFLUENCER(negotiation_id),
@@ -654,16 +653,16 @@ export const ExtractContentRevisionforInfluencer = async (
       params: {
         message_id: message_id,
       },
-    }
-  )
+    },
+  );
 
-  return response.data
-}
+  return response.data;
+};
 
 export const ExtractDemoGraphics = async (
   campaign_id: string,
   username: string,
-  url: string
+  url: string,
 ) => {
   const response = await api.post(AdminENDPOINT.EXTRACTDEMOGRAPHICS, {
     campaign_id,
@@ -676,14 +675,25 @@ export const ExtractDemoGraphics = async (
 
 export const ExtractAllInfluencerDemoGraphics = async (campaign_id: string) => {
   const response = await api.get(
-    AdminENDPOINT.EXTRACTCAMPAIGNALLINFLUENCERREPORT(campaign_id)
-  )
+    AdminENDPOINT.EXTRACTCAMPAIGNALLINFLUENCERREPORT(campaign_id),
+  );
   return response.data;
-}
+};
 
 export const CampaignAnalytics = async (campaign_id: string) => {
-  const response = await api.get(
-    AdminENDPOINT.CAMPAIGNANALTICS(campaign_id)
+  const response = await api.get(AdminENDPOINT.CAMPAIGNANALTICS(campaign_id));
+  return response.data;
+};
+
+export const CampaignInfluencerAnalyticsDemographicsApi = async (
+  campaign_id: string,
+  instagram_username: string,
+): Promise<InfluencerDemographicsAssetsResponse> => {
+  const response = await api.get<InfluencerDemographicsAssetsResponse>(
+    AdminENDPOINT.CAMPAIGN_INFLUENCER_ANALYTICS_DEMOGRAPHICS(
+      campaign_id,
+      instagram_username,
+    ),
   );
   return response.data;
 };
@@ -699,7 +709,16 @@ export const CampaignBriefAndInfluencerStatsApi = async (
 
 export const WhatsAppAdminInfluencerMediaUrlsApi = async (thread_id: string) => {
   const response = await api.get(
-    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS(thread_id)
+    AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS(thread_id),
+  );
+  return response.data;
+};
+
+export const CompanyWhatsAppAdminCompanyMediaUrlsApi = async (
+  negotiation_id: string,
+): Promise<CompanyNegotiationMediaResponse> => {
+  const response = await api.get<CompanyNegotiationMediaResponse>(
+    AdminENDPOINT.COMPANY_WHATSAPP_ADMIN_COMPANY_MEDIA_URLS(negotiation_id),
   );
   return response.data;
 };
