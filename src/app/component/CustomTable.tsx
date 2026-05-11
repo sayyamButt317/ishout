@@ -107,7 +107,7 @@ export default function TableComponent<
 
             return (
               <div key={rowIndex} className="w-full">
-                <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1A1A1A] p-3 sm:p-5 hover:border-white/20 transition-colors">
+                <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-dark-background p-3 sm:p-5 hover:border-white/20 transition-colors">
                   {(campaigns || statuses) && (
                     <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-white/10 overflow-x-auto">
                       <Stepper
