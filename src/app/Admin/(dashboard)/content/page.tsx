@@ -110,19 +110,19 @@ export default function InfluencersContentPage() {
             >
               View Content
             </Button>,
-            <CustomButton
-              key={`view-brief-${id}`}
-              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
-              disabled={!campaign.brief_id}
-              onClick={() => {
-                if (campaign.brief_id) {
-                  setSelectedBriefId(campaign.brief_id);
-                  setDialogOpen(true);
-                }
-              }}
-            >
-              View Brief
-            </CustomButton>,
+            // <CustomButton
+            //   key={`view-brief-${id}`}
+            //   className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+            //   disabled={!campaign.brief_id}
+            //   onClick={() => {
+            //     if (campaign.brief_id) {
+            //       setSelectedBriefId(campaign.brief_id);
+            //       setDialogOpen(true);
+            //     }
+            //   }}
+            // >
+            //   View Brief
+            // </CustomButton>,
 
           ];
         })}

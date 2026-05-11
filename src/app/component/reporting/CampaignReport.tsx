@@ -44,8 +44,6 @@ export default function CampaignReport(props: CampaignReportProps) {
       <CampaignOverviewSection summaryData={summaryData} />
       <CampaignTimelineSection summaryData={summaryData} />
       <DemographicsSection summaryData={summaryData} />
-      <NegotiationsSection negotiations={negotiationData.negotiations}
-      />
     </Document>
   );
 }
