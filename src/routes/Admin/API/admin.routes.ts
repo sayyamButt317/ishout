@@ -556,6 +556,12 @@ export const WhatsAppAdminCompanyApproveVideoApi = async (
   if (payload.video_approve_brand != null) {
     body.video_approve_brand = payload.video_approve_brand;
   }
+  if (payload.content_type != null) {
+    body.content_type = payload.content_type;
+  }
+  if (payload.version != null) {
+    body.version = payload.version;
+  }
 
   const response = await api.post(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_COMPANY_APPROVE_VIDEO,

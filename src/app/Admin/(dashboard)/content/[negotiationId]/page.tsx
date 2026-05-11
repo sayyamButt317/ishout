@@ -39,6 +39,7 @@ import type { StoreInfluencerDemographicsResponse } from '@/src/types/Admin-Type
 
 type ContentPreviewKind = 'story' | 'post' | 'demographics';
 
+
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
   const params = useParams<{ negotiationId: string }>();
@@ -57,6 +58,7 @@ export default function ContentFeedbackDetailPage() {
   const [selectedVideoResolution, setSelectedVideoResolution] = useState<string>('—');
   const [contentPreviewKind, setContentPreviewKind] =
     useState<ContentPreviewKind>('post');
+  const [contentVersion, setContentVersion] = useState('1');
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -445,6 +447,8 @@ export default function ContentFeedbackDetailPage() {
       video_url: selectedPreviewMediaUrl,
       content_id: selectedInfluencerMessageContentId,
       video_approve_admin: 'approved',
+      content_type: contentPreviewKind === 'demographics' ? 'post' : contentPreviewKind,
+      version: contentVersion,
     });
   };
 
@@ -509,6 +513,8 @@ export default function ContentFeedbackDetailPage() {
             onBack={() => router.back()}
             contentType={contentPreviewKind}
             onContentTypeChange={setContentPreviewKind}
+            version={contentVersion}
+            onVersionChange={setContentVersion}
           />
 
           {/* Video workspace */}

@@ -75,20 +75,20 @@ export default function VideoStudioPage() {
               placeholder="Search templates..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-10 w-full rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+              className="h-10 w-full rounded-lg border border-white/10 bg-white/5 pl-9 pr-4 text-sm text-white placeholder:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
             />
           </div>
         }
       />
       <div className='flex flex-row item-center justify-center '>
-          <ComingSoon
-              enabled={true}
-              title="Video Studio"
-              message="AI-powered video generation is on its way. This feature will be available shortly."
-              badge="Coming Soon"
-            >
-        
-            </ComingSoon>
+        <ComingSoon
+          enabled={true}
+          title="Video Studio"
+          message="AI-powered video generation is on its way. This feature will be available shortly."
+          badge="Coming Soon"
+        >
+
+        </ComingSoon>
       </div>
 
       {/* <div className="mb-8">
