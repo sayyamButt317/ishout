@@ -1,7 +1,5 @@
 'use client';
-
 import { useState } from 'react';
-
 import InfluencerDetailDialog from '@/src/app/component/content-feedback/influencerdetail';
 
 type FeedbackDetailFooterProps = {

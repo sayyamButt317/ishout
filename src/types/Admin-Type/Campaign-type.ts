@@ -140,15 +140,35 @@ export interface ApprovedCampaignResponse {
 }
 
 export interface CampaignDemographicPreview {
+  content_id?: string;
   image_url: string;
   content_type: string;
+}
+
+export interface InfluencerAnalytics {
+  likes?: number | null;
+  comments?: number | null;
+  interaction?: number | null;
+  reel_url?: string | null;
+}
+
+export interface InfluencerSummary {
+  username: string;
+  profile_name?: string | null;
+  followers?: number | null;
+  profile_image?: string | null;
+  analytics?: InfluencerAnalytics;
+  demographics?: CampaignDemographicPreview[];
 }
 
 export interface CampaignBriefAndInfluencerStatsResponse {
   campaign_name: string;
   campaign_overview: string[];
   timeline: string[];
-  demographics: CampaignDemographicPreview[];
-  'onBoard influencers': number;
-  influncers_produced__content_count: number;
+  demographics?: CampaignDemographicPreview[];
+  'onBoard influencers'?: number;
+  onboard_influencers?: number;
+  influncers_produced__content_count?: number;
+  influencers_produced_content?: number;
+  influencers?: InfluencerSummary[];
 }

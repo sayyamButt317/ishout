@@ -2,12 +2,16 @@
 
 import { Page, Text, View } from '@react-pdf/renderer';
 import { styles } from './reporty_style';
+import CampaignOverviewSection from './CampaignOverviewPage';
+import CampaignTimelineSection from './CampaignTimelineSection';
 
 interface CampaignSummarySectionProps {
     summaryData?: {
         campaign_name?: string;
         'onBoard influencers'?: number;
+        onboard_influencers?: number;
         influncers_produced__content_count?: number;
+        influencers_produced_content?: number;
         campaign_overview?: string[];
         timeline?: string[];
     };
@@ -37,7 +41,7 @@ export default function CampaignSummarySection({
                                 OnBoard Influencers
                             </Text>
                             <Text style={styles.summaryValue}>
-                                {summaryData?.['onBoard influencers'] ?? 0}
+                                {summaryData?.onboard_influencers ?? summaryData?.['onBoard influencers'] ?? 0}
                             </Text>
                         </View>
 
@@ -46,7 +50,7 @@ export default function CampaignSummarySection({
                                 Produced Content
                             </Text>
                             <Text style={styles.summaryValue}>
-                                {summaryData?.influncers_produced__content_count ?? 0}
+                                {summaryData?.influencers_produced_content ?? summaryData?.influncers_produced__content_count ?? 0}
                             </Text>
                         </View>
 
@@ -70,6 +74,8 @@ export default function CampaignSummarySection({
                     </View>
                 </View>
             </View>
+            <CampaignOverviewSection summaryData={summaryData} />
+            <CampaignTimelineSection summaryData={summaryData} />
         </Page>
     );
 }

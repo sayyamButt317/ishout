@@ -15,11 +15,10 @@ import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBr
 import Image from 'next/image';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
-import { Skeleton } from 'boneyard-js/react';
 
 export default function CampaignBriefPage() {
   const { user_id } = useAuthStore();
-  const { data, isLoading } = CampaignBriefHook(user_id);
+  const { data } = CampaignBriefHook(user_id);
 
   const deleteBriefMutation = DeleteCampaignBriefHook(user_id);
 
@@ -58,26 +57,25 @@ export default function CampaignBriefPage() {
 
 
   return (
-    <Skeleton name="admin-brief-grid" loading={isLoading}>
-      <div className="min-h-screen bg-neutral-950 text-white">
+    <div className="min-h-screen text-foreground/80 rounded-2xl">
       <PageHeader
         title="Campaign Briefs"
         description="Search, manage and download your AI-generated campaign strategies."
-        icon={<FileText className="size-5" />}
+        icon={<FileText className="size-5 " />}
         actions={
           <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
             <div className="relative w-full sm:w-72">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 " />
               <input
                 placeholder="Search campaigns..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full h-10 bg-white/5 border border-white/10 rounded-lg pl-10 pr-4 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primaryButton"
+                className="w-full h-10 bg-foreground/5 border border-foreground/10 rounded-lg pl-10 pr-4 text-sm text-foreground/80 placeholder:text-foreground/80/40 focus:outline-none focus:ring-2 focus:ring-primaryButton"
               />
             </div>
             <Button
               variant="outline"
-              className="border-white/10 bg-white/5 hover:bg-white/10 text-white h-10"
+              className="border-foreground/90 bg-foreground/5 hover:bg-white/10 text-foreground/80 h-10"
               onClick={() => setSortOrder(sortOrder === 'newest' ? 'oldest' : 'newest')}
             >
               <ArrowUpDown className="w-4 h-4 mr-2" />
@@ -92,7 +90,7 @@ export default function CampaignBriefPage() {
         {filteredBriefs.map((brief) => (
           <Card
             key={brief.id}
-            className="relative bg-linear-to-br from-neutral-900 to-neutral-950 border border-white/10 rounded-3xl hover:border-primaryButton/40 transition-all duration-300"
+            className="relative bg-white dark:bg-foreground/5 border border-slate-200 dark:border-white/10 rounded-3xl hover:border-primaryButton/40 transition-all duration-300"
           >
             {/* Delete Button */}
             <button
@@ -111,7 +109,7 @@ export default function CampaignBriefPage() {
               {/* Logo + Title */}
               <div className="flex items-center gap-3">
                 <div
-                  className="relative w-[72px] h-[72px] shrink-0 cursor-pointer rounded-md border border-white/10 bg-white/5 flex items-center justify-center overflow-hidden hover:border-primaryButton/40 transition"
+                  className="relative w-18 h-18 shrink-0 cursor-pointer rounded-md border border-white/10 bg-white/5 flex items-center justify-center overflow-hidden hover:border-primaryButton/40 transition"
                   onClick={() => setUploadModalOpen(brief.id)}
                 >
                   {brief.response.campaign_logo_url ? (
@@ -122,11 +120,11 @@ export default function CampaignBriefPage() {
                       className="object-contain"
                     />
                   ) : (
-                    <span className="text-white/40 text-sm font-medium">Upload</span>
+                    <span className="text-foreground/80/40 text-sm font-medium">Upload</span>
                   )}
                 </div>
 
-                <h3 className="text-lg font-semibold text-white line-clamp-2">
+                <h3 className="text-lg font-semibold text-foreground/80 line-clamp-2">
                   {brief.response.title}
                 </h3>
               </div>
@@ -146,7 +144,7 @@ export default function CampaignBriefPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="rounded-full border-white/20 hover:border-primaryButton hover:text-white"
+                    className="rounded-full border-white/20 hover:border-primaryButton hover:text-foreground/80"
                     onClick={() => {
                       setSelectedBrief(brief);
                       setOpen(true);
@@ -157,7 +155,7 @@ export default function CampaignBriefPage() {
 
                   <Button
                     size="sm"
-                    className="rounded-full bg-primaryButton hover:opacity-90"
+                    className="rounded-full bg-primaryButton hover:bg-primaryButton/90 text-foreground/80"
                     onClick={() => {
                       setSelectedBrief(brief);
                       setOpen(true);
@@ -232,7 +230,6 @@ export default function CampaignBriefPage() {
           );
         }}
       />
-      </div>
-    </Skeleton>
+    </div>
   );
 }

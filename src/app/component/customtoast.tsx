@@ -5,7 +5,9 @@ export default function CustomToast() {
     <Toaster
       position="bottom-right"
       closeButton
-      expand
+      expand={false}
+      visibleToasts={1}
+      duration={2000}
       toastOptions={{
         unstyled: false,
         classNames: {
@@ -35,8 +37,6 @@ export default function CustomToast() {
 
           cancelButton:
             "!bg-black/20 !text-white !hover:bg-black/30 !rounded-md",
-
-          // 👇 FLOATING CLOSE BUTTON
           closeButton:
             "!absolute !-top-3 !-right-3 !bg-white !text-[#170f49] !rounded-full !w-7 !h-7 !flex !items-center !justify-center !shadow-lg hover:!scale-110 transition-transform z-50",
         },

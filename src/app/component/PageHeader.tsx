@@ -42,7 +42,7 @@ export default function PageHeader({
             <React.Fragment key={i}>
               {i > 0 && (
                 <svg
-                  className="size-3 text-white/20"
+                  className="size-3 text-foreground/20"
                   viewBox="0 0 12 12"
                   fill="none"
                   aria-hidden
@@ -59,12 +59,12 @@ export default function PageHeader({
               {crumb.href ? (
                 <Link
                   href={crumb.href}
-                  className="text-xs font-medium text-white/40 transition-colors hover:text-white/70"
+                  className="text-xs font-medium text-foreground/40 transition-colors hover:text-foreground/70"
                 >
                   {crumb.label}
                 </Link>
               ) : (
-                <span className="text-xs font-medium text-white/50">{crumb.label}</span>
+                <span className="text-xs font-medium text-foreground/50">{crumb.label}</span>
               )}
             </React.Fragment>
           ))}
@@ -73,12 +73,7 @@ export default function PageHeader({
 
       {/* Main header card */}
       <div
-        className="relative overflow-hidden rounded-2xl border border-white/[0.07] px-5 py-5 shadow-[0_1px_0_0_rgba(255,255,255,0.05)_inset,0_8px_32px_-8px_rgba(0,0,0,0.5)]"
-        style={{
-          background:
-            'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%), var(--color-background)',
-        }}
-      >
+        className="relative overflow-hidden rounded-2xl border border-black/8 dark:border-white/8 px-5 py-5 backdrop-blur-md shadow-[0_1px_0_0_rgba(255,255,255,0.6)_inset,0_8px_32px_-8px_rgba(0,0,0,0.08)] dark:shadow-[0_1px_0_0_rgba(255,255,255,0.05)_inset,0_8px_32px_-8px_rgba(0,0,0,0.5)] bg-white/65 dark:bg-white/4">
         {/* Subtle primary glow top-left */}
         <div
           aria-hidden
@@ -101,7 +96,7 @@ export default function PageHeader({
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1
-                  className="truncate text-xl font-semibold tracking-tight text-white md:text-2xl"
+                  className="truncate text-xl font-semibold tracking-tight text-foreground md:text-2xl"
                   style={{ letterSpacing: '-0.02em' }}
                 >
                   {title}
@@ -116,7 +111,7 @@ export default function PageHeader({
               </div>
 
               {description != null && (
-                <div className="mt-1 text-sm leading-relaxed text-white/50">
+                <div className="mt-1 text-sm leading-relaxed text-foreground/50">
                   {description}
                 </div>
               )}

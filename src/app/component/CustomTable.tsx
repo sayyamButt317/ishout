@@ -82,7 +82,7 @@ export default function TableComponent<
 
   if (error) {
     return (
-      <div className="w-full min-h-100 flex items-center justify-center text-white/60">
+      <div className="w-full min-h-100 flex items-center justify-center text-muted-foreground">
         Error: {error.message}
       </div>
     );
@@ -90,7 +90,7 @@ export default function TableComponent<
 
   if (!subheader || subheader.length === 0) {
     return (
-      <div className="w-full min-h-100 flex items-center justify-center text-white/60">
+      <div className="w-full min-h-100 flex items-center justify-center text-muted-foreground">
         No data available
       </div>
     );
@@ -107,7 +107,7 @@ export default function TableComponent<
 
             return (
               <div key={rowIndex} className="w-full">
-                <div className="rounded-xl sm:rounded-2xl border border-white/10 bg-[#1A1A1A] p-3 sm:p-5 hover:border-white/20 transition-colors">
+                <div className="rounded-xl sm:rounded-2xl border border-border bg-card p-3 sm:p-5 hover:border-border/60 transition-colors">
                   {(campaigns || statuses) && (
                     <div className="mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-white/10 overflow-x-auto">
                       <Stepper
@@ -126,7 +126,7 @@ export default function TableComponent<
                   )}
 
                   <div className="sm:hidden mb-3">
-                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-linear-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-muted border border-border flex items-center justify-center relative">
                       <input
                         type="file"
                         accept="image/*"
@@ -196,7 +196,7 @@ export default function TableComponent<
                           }}
                           className="w-full h-full flex items-center justify-center cursor-pointer hover:bg-white/5 transition-colors"
                         >
-                          <span className="text-white/40 text-xl font-semibold">+</span>
+                          <span className="text-foreground/40 text-xl font-semibold">+</span>
                         </button>
                       )}
                     </div>
@@ -204,7 +204,7 @@ export default function TableComponent<
 
                   <div className="flex gap-5">
                     <div className="hidden sm:flex shrink-0 items-center">
-                      <div className="w-20 h-20 rounded-xl overflow-hidden bg-linear-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center relative">
+                      <div className="w-20 h-20 rounded-xl overflow-hidden bg-muted border border-borderflex items-center justify-center relative">
                         <input
                           type="file"
                           accept="image/*"
@@ -280,7 +280,7 @@ export default function TableComponent<
                             }}
                             className="w-full h-full flex items-center justify-center cursor-pointer hover:bg-white/5 transition-colors"
                           >
-                            <span className="text-white/40 text-2xl font-semibold">
+                            <span className="text-foreground/40 text-2xl font-semibold">
                               +
                             </span>
                           </button>
@@ -298,10 +298,10 @@ export default function TableComponent<
                               key={cellIndex}
                               className={`min-w-0 ${shouldSpanTwo ? 'lg:col-span-2' : ''}`}
                             >
-                              <p className="text-[10px] sm:text-xs text-white/60 mb-1 sm:mb-1.5 truncate font-medium">
+                              <p className="text-[10px] sm:text-xs text-muted-foreground mb-1 sm:mb-1.5 truncate font-medium">
                                 {header[cellIndex] || `Field ${cellIndex + 1}`}
                               </p>
-                              <div className="text-xs sm:text-sm text-white font-medium wrap-break-word">
+                              <div className="text-xs sm:text-sm text-foreground font-medium wrap-break-word">
                                 {cell}
                               </div>
                             </div>
@@ -310,7 +310,7 @@ export default function TableComponent<
 
                         {(showTrashIcon || showEyeIcon || showEditIcon) && (
                           <div className="min-w-0">
-                            <p className="text-[10px] sm:text-xs text-white/60 mb-1 sm:mb-1.5 font-medium">
+                            <p className="text-[10px] sm:text-xs text-muted-foreground mb-1 sm:mb-1.5 font-medium">
                               Action
                             </p>
                             <div className="flex items-center gap-2 sm:gap-3">
@@ -349,7 +349,7 @@ export default function TableComponent<
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-0 py-4 mt-6 gap-3 sm:gap-0">
           <div className="flex space-x-2">
             <Button
-              className="cursor-pointer border border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white hover:border-white/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-md px-4 py-2 text-sm font-medium"
+              className="cursor-pointer border border-white/30 bg-transparent text-foreground hover:bg-white/10 hover:text-foreground hover:border-white/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-md px-4 py-2 text-sm font-medium"
               variant="outline"
               onClick={handlePreviousPage}
               disabled={paginationstart <= 1 || isLoading}
@@ -358,7 +358,7 @@ export default function TableComponent<
             </Button>
 
             <Button
-              className="cursor-pointer border border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white hover:border-white/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-md px-4 py-2 text-sm font-medium"
+              className="cursor-pointer border border-white/30 bg-transparent text-foreground hover:bg-white/10 hover:text-foreground hover:border-white/40 disabled:opacity-50 disabled:cursor-not-allowed rounded-md px-4 py-2 text-sm font-medium"
               variant="outline"
               onClick={handleNextPage}
               disabled={paginationstart >= paginationend || isLoading}
@@ -367,7 +367,7 @@ export default function TableComponent<
             </Button>
           </div>
 
-          <div className="text-sm text-white/70 sm:text-right font-medium">
+          <div className="text-sm text-foreground/70 sm:text-right font-medium">
             Page {paginationstart} of {paginationend}
           </div>
         </div>

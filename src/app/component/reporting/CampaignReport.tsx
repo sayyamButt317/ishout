@@ -10,7 +10,6 @@ import CampaignSummarySection from './CampaignSummarySection';
 import CampaignOverviewSection from './CampaignOverviewPage';
 import CampaignTimelineSection from './CampaignTimelineSection';
 import DemographicsSection from './DemographicsSection';
-import NegotiationsSection from './NegotiationsSection';
 
 interface CampaignReportProps {
   negotiationData: AgreedNegotiationResponse;
@@ -44,8 +43,6 @@ export default function CampaignReport(props: CampaignReportProps) {
       <CampaignOverviewSection summaryData={summaryData} />
       <CampaignTimelineSection summaryData={summaryData} />
       <DemographicsSection summaryData={summaryData} />
-      <NegotiationsSection negotiations={negotiationData.negotiations}
-      />
     </Document>
   );
 }

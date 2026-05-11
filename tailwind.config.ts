@@ -69,5 +69,7 @@ const config: Config = {
   },
   plugins: [],
 }
-
+module.exports = {
+  darkMode: 'class',
+}
 export default config

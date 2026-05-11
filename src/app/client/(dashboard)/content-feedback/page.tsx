@@ -198,7 +198,7 @@ function ContentFeedbackPageContent() {
                         `/client/content-feedback/content?${params.toString()}`,
                       );
                     }}
-                    className="cursor-pointer rounded-2xl border border-white/10 bg-[#0F0F0F] p-6 transition-all hover:border-white/20 min-h-[260px] flex flex-col justify-between"
+                    className="cursor-pointer rounded-2xl border border-white/10 bg-[#0F0F0F] p-6 transition-all hover:border-white/20 min-h-65 flex flex-col justify-between"
                   >
                     <div className="flex items-center gap-4 mb-6">
                       <div className="relative w-20 h-20 overflow-hidden rounded-full border border-white/10">
