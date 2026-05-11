@@ -67,6 +67,7 @@ function ContentFeedbackPageContent() {
     thread_id: item.thread_id,
     brand_thread_id: item.brand_thread_id,
     admin_approved: item.admin_approved,
+    Brand_approved: item.Brand_approved,
 
     rights: 'Full Rights',
     status: 'Ready to Post',
@@ -107,12 +108,19 @@ function ContentFeedbackPageContent() {
                     (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
                   )
                 : col.id === 'revision'
-                  ? apiCards.filter(
-                      (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
-                    )
+                  ? apiCards.filter((card) => {
+                      const adminStatus = (card.admin_approved ?? '').toLowerCase();
+                      const brandStatus = (card.Brand_approved ?? '').toLowerCase();
+                      return adminStatus === 'revision' || brandStatus === 'revision';
+                    })
                   : apiCards.filter((card) => {
-                      const status = (card.admin_approved ?? '').toLowerCase();
-                      return status !== 'approved' && status !== 'revision';
+                      const adminStatus = (card.admin_approved ?? '').toLowerCase();
+                      const brandStatus = (card.Brand_approved ?? '').toLowerCase();
+                      return (
+                        adminStatus !== 'approved' &&
+                        adminStatus !== 'revision' &&
+                        brandStatus !== 'revision'
+                      );
                     });
 
             return (
