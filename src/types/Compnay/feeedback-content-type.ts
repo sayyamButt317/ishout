@@ -67,3 +67,15 @@ export interface CardType {
 
   source: NegotiationItem;
 }
+
+export interface CompanyNegotiationMediaItem {
+  media_url: string;
+  media_type: 'image' | 'audio' | 'video' | 'document' | string;
+}
+
+export interface CompanyNegotiationMediaResponse {
+  success: boolean;
+  negotiation_id: string;
+  media_items: CompanyNegotiationMediaItem[];
+  count: number;
+}
