@@ -1,20 +1,24 @@
 'use client';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
-  Pencil, Save, X,
-  BarChart3, Link2, ImageIcon, Users, Megaphone, Film,
+  BarChart3, Users, Megaphone, Film,
   Package, Calendar, BookCheck, ShieldCheck, Info,
-  MousePointerClick, UserSearch, Sparkles,
+  MousePointerClick, UserSearch,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import useUpdateCampaignBrief from '@/src/routes/Company/api/Hooks/useUpdateCampaignBriefHook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import jsPDF from 'jspdf';
-import Image from 'next/image';
 import BriefCard from './BriefCard';
 import EditableList from '@/src/app/component/custom-component/EditableList';
+import {
+  BriefBadge,
+  BriefLogoBlock,
+  BriefActions,
+  ProductImagesSection,
+  ReferenceLinksSection,
+} from './BriefUI';
 
 interface CampaignBriefDialogProps {
   open: boolean;
@@ -31,15 +35,11 @@ export default function CampaignBriefDialog({
 }: CampaignBriefDialogProps) {
   const [editable, setEditable] = useState(false);
   const [localBrief, setLocalBrief] = useState<UpdateCampaignBrief | null>(briefData);
-
   const { mutate: updateBrief, isPending } = useUpdateCampaignBrief();
 
   useEffect(() => {
     if (open && briefData) {
-      const id = setTimeout(() => {
-        setLocalBrief(briefData);
-        setEditable(false);
-      }, 0);
+      const id = setTimeout(() => { setLocalBrief(briefData); setEditable(false); }, 0);
       return () => clearTimeout(id);
     }
   }, [open, briefData]);
@@ -49,21 +49,12 @@ export default function CampaignBriefDialog({
     setLocalBrief({ ...localBrief, [key]: value });
   };
 
-  /**
-   * Load image bytes for jsPDF.
-   */
-  const loadImageForPdf = async (
-    url: string,
-  ): Promise<{
-    dataUrl: string;
-    format: 'JPEG' | 'PNG' | 'WEBP';
-    w: number;
-    h: number;
+  /* ── PDF export (unchanged logic) ── */
+  const loadImageForPdf = async (url: string): Promise<{
+    dataUrl: string; format: 'JPEG' | 'PNG' | 'WEBP'; w: number; h: number;
   } | null> => {
     const trimmed = url.trim();
-    const blobToPdfImage = (
-      blob: Blob,
-    ): Promise<{ dataUrl: string; format: 'JPEG' | 'PNG' | 'WEBP'; w: number; h: number } | null> =>
+    const blobToPdfImage = (blob: Blob): Promise<{ dataUrl: string; format: 'JPEG' | 'PNG' | 'WEBP'; w: number; h: number } | null> =>
       new Promise((resolve) => {
         if (!blob.type.startsWith('image/')) { resolve(null); return; }
         const reader = new FileReader();
@@ -142,10 +133,7 @@ export default function CampaignBriefDialog({
     let y = 20;
     const margin = 15;
     const textWidth = pageWidth - margin * 2;
-
-    const checkPageBreak = (lines: number) => {
-      if (y + lines * 6 > pageHeight - 15) { doc.addPage(); y = 20; }
-    };
+    const checkPageBreak = (lines: number) => { if (y + lines * 6 > pageHeight - 15) { doc.addPage(); y = 20; } };
     const addSection = (title: string, items: string[]) => {
       if (!items?.length) return;
       checkPageBreak(2);
@@ -203,7 +191,6 @@ export default function CampaignBriefDialog({
         y += drawH + 8;
       }
     }
-
     if (localBrief.video_links?.length) {
       doc.addPage(); y = 20;
       doc.setFont('helvetica', 'bold'); doc.setFontSize(16);
@@ -239,65 +226,48 @@ export default function CampaignBriefDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw]! max-w-300! h-[92vh] bg-gradient-to-br from-neutral-900 via-neutral-950 to-black border border-white/10 rounded-3xl overflow-y-auto p-0">
+      {/* Dialog shell — adaptive glass */}
+      <DialogContent className="
+        w-[95vw]! max-w-300! h-[92vh] rounded-3xl overflow-y-auto p-0
+        border border-black/8 dark:border-white/10
+        bg-white/70 dark:bg-neutral-950/90
+        backdrop-blur-xl
+        shadow-[0_8px_48px_-8px_rgba(0,0,0,0.12)] dark:shadow-[0_8px_48px_-8px_rgba(0,0,0,0.7)]
+      ">
 
         {/* ── HEADER ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/10 px-6 md:px-10 pb-8 pt-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-foreground/[0.07] px-6 md:px-10 pb-8 pt-8">
           <div className="space-y-3">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-secondaryButton/20 text-purple-300 text-[10px] font-black uppercase tracking-widest border border-white/[0.06]">
-              <Sparkles className="w-3 h-3" />
-              Campaign Brief
-            </div>
-
-            {/* Logo + title */}
-            <div className="flex items-center gap-4">
-              {localBrief.campaign_logo_url && (
-                <div className="w-14 h-14 relative rounded-xl overflow-hidden bg-white/5 border border-white/10 shrink-0">
-                  <Image src={localBrief.campaign_logo_url} alt="Campaign Logo" fill className="object-contain p-1" priority />
-                </div>
-              )}
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-white/30 mb-0.5">Campaign</p>
-                <p className="text-white/50 text-sm leading-relaxed max-w-2xl">
-                  {localBrief.brand_name_influencer_campaign_brief}
-                </p>
-              </div>
-            </div>
+            <BriefBadge label="Campaign Brief" />
+            <BriefLogoBlock
+              logoUrl={localBrief.campaign_logo_url}
+              label="Campaign"
+            />
+            
+            <p className="text-foreground/50 text-sm leading-relaxed max-w-2xl">
+              {localBrief.brand_name_influencer_campaign_brief}
+            </p>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-            <button
-              onClick={editable ? handleSave : () => setEditable(true)}
-              disabled={isPending}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm text-white transition-all
-                hover:scale-[1.03] active:scale-95 disabled:opacity-50 shadow-lg shadow-primaryButton/20
-                bg-primaryButton hover:bg-primaryHover cursor-pointer"
-            >
-              {editable
-                ? isPending
-                  ? <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />Saving…</>
-                  : <><Save className="w-3.5 h-3.5" />Save</>
-                : <><Pencil className="w-3.5 h-3.5" />Edit</>}
-            </button>
-
-            {editable && (
+          <BriefActions
+            editable={editable}
+            isSaving={isPending}
+            onEdit={() => setEditable(true)}
+            onSave={handleSave}
+            onCancel={() => { setLocalBrief(briefData); setEditable(false); }}
+            extraActions={
               <button
-                onClick={() => { setLocalBrief(briefData); setEditable(false); }}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white transition-all"
+                onClick={handleExportPDF}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm text-foreground transition-all
+                  border border-black/10 dark:border-white/10
+                  bg-white/50 dark:bg-white/5
+                  hover:bg-white/70 dark:hover:bg-white/10
+                  backdrop-blur-sm"
               >
-                <X className="w-3.5 h-3.5" /> Cancel
+                Export PDF
               </button>
-            )}
-
-            <button
-              onClick={handleExportPDF}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 text-sm text-white transition-all"
-            >
-              Export PDF
-            </button>
-          </div>
+            }
+          />
         </div>
 
         {/* ── MAIN GRID ── */}
@@ -305,115 +275,82 @@ export default function CampaignBriefDialog({
 
           <BriefCard icon={<Info className="w-6 h-6" />} title="Campaign Overview" accent="secondary">
             <EditableList items={localBrief.campaign_overview ?? []} editable={editable}
-              placeholder="One item per line…" onChange={(v: string[]) => setArr('campaign_overview', v)} />
+              placeholder="One item per line…" onChange={(v) => setArr('campaign_overview', v)} />
           </BriefCard>
 
           <BriefCard icon={<MousePointerClick className="w-6 h-6" />} title="Campaign Objectives" accent="primary">
             <EditableList items={localBrief.campaign_objectives ?? []} editable={editable}
-              placeholder="One objective per line…" onChange={(v: string[]) => setArr('campaign_objectives', v)} />
+              placeholder="One objective per line…" onChange={(v) => setArr('campaign_objectives', v)} />
           </BriefCard>
 
           <BriefCard icon={<Users className="w-6 h-6" />} title="Target Audience" accent="secondary">
             <EditableList items={localBrief.target_audience ?? []} editable={editable}
-              placeholder="One audience segment per line…" onChange={(v: string[]) => setArr('target_audience', v)} />
+              placeholder="One audience segment per line…" onChange={(v) => setArr('target_audience', v)} />
           </BriefCard>
 
           <BriefCard icon={<UserSearch className="w-6 h-6" />} title="Influencer Profile" accent="primary">
             <EditableList items={localBrief.influencer_profile ?? []} editable={editable}
-              placeholder="One profile trait per line…" onChange={(v: string[]) => setArr('influencer_profile', v)} />
+              placeholder="One profile trait per line…" onChange={(v) => setArr('influencer_profile', v)} />
           </BriefCard>
 
           <BriefCard icon={<Megaphone className="w-6 h-6" />} title="Key Campaign Message" accent="primary">
             <EditableList items={localBrief.key_campaign_message ?? []} editable={editable}
-              placeholder="One message point per line…" onChange={(v: string[]) => setArr('key_campaign_message', v)} />
+              placeholder="One message point per line…" onChange={(v) => setArr('key_campaign_message', v)} />
           </BriefCard>
 
           <BriefCard icon={<Film className="w-6 h-6" />} title="Content Direction" accent="secondary">
             <EditableList items={localBrief.content_direction ?? []} editable={editable}
-              placeholder="One direction point per line…" onChange={(v: string[]) => setArr('content_direction', v)} />
+              placeholder="One direction point per line…" onChange={(v) => setArr('content_direction', v)} />
           </BriefCard>
 
           <BriefCard icon={<Package className="w-6 h-6" />} title="Deliverables" accent="primary">
             <EditableList items={localBrief.deliverables_per_influencer ?? []} editable={editable}
-              placeholder="One deliverable per line…" onChange={(v: string[]) => setArr('deliverables_per_influencer', v)} />
+              placeholder="One deliverable per line…" onChange={(v) => setArr('deliverables_per_influencer', v)} />
           </BriefCard>
 
           <BriefCard icon={<span className="text-2xl font-black leading-none">#</span>} title="Hashtags & Mentions" accent="secondary">
             <EditableList items={localBrief.hashtags_mentions ?? []} editable={editable}
-              placeholder="#hashtag or @mention per line…" onChange={(v: string[]) => setArr('hashtags_mentions', v)} />
+              placeholder="#hashtag or @mention per line…" onChange={(v) => setArr('hashtags_mentions', v)} />
           </BriefCard>
 
           <BriefCard icon={<Calendar className="w-6 h-6" />} title="Timeline" accent="primary">
             <EditableList items={localBrief.timeline ?? []} editable={editable}
-              placeholder="One timeline step per line…" onChange={(v: string[]) => setArr('timeline', v)} />
+              placeholder="One timeline step per line…" onChange={(v) => setArr('timeline', v)} />
           </BriefCard>
 
           <BriefCard icon={<BookCheck className="w-6 h-6" />} title="Approval Process" accent="secondary">
             <EditableList items={localBrief.approval_process ?? []} editable={editable}
-              placeholder="One step per line…" onChange={(v: string[]) => setArr('approval_process', v)} />
+              placeholder="One step per line…" onChange={(v) => setArr('approval_process', v)} />
           </BriefCard>
 
           <BriefCard icon={<BarChart3 className="w-6 h-6" />} title="KPIs & Success Metrics" accent="primary">
             <EditableList items={localBrief.kpis_success_metrics ?? []} editable={editable}
-              placeholder="One KPI per line…" onChange={(v: string[]) => setArr('kpis_success_metrics', v)} />
+              placeholder="One KPI per line…" onChange={(v) => setArr('kpis_success_metrics', v)} />
           </BriefCard>
 
           <BriefCard icon={<ShieldCheck className="w-6 h-6" />} title="Usage Rights" accent="secondary">
             <EditableList items={localBrief.usage_rights ?? []} editable={editable}
-              placeholder="One right per line…" onChange={(v: string[]) => setArr('usage_rights', v)} />
+              placeholder="One right per line…" onChange={(v) => setArr('usage_rights', v)} />
           </BriefCard>
 
-          {/* Do's & Don'ts — full width */}
           <BriefCard icon={<BookCheck className="w-6 h-6" />} title="Do's & Don'ts" accent="primary" colSpan>
             <EditableList items={localBrief.dos_donts ?? []} editable={editable}
               placeholder="One item per line. Prefix with ✓ or ✗ to distinguish…"
-              onChange={(v: string[]) => setArr('dos_donts', v)} />
+              onChange={(v) => setArr('dos_donts', v)} />
           </BriefCard>
 
-          {/* ── Product Images — full width ── */}
-          {localBrief.product_image_urls && localBrief.product_image_urls.length > 0 && (
-            <div className="md:col-span-2 bg-black/40 backdrop-blur-sm rounded-2xl p-6 border border-white/[0.06] border-l-4 border-l-purple-500">
-              <div className="flex items-center gap-2.5 mb-4">
-                <ImageIcon className="w-4 h-4 text-purple-400" />
-                <h4 className="text-xs font-black text-white/80 uppercase tracking-[0.12em]">Campaign Images</h4>
-              </div>
-              <div className="flex flex-wrap gap-4">
-                {localBrief.product_image_urls.map((img: string, index: number) => (
-                  <div key={index} className="relative w-28 h-28 rounded-xl overflow-hidden border border-white/10">
-                    <Image src={img} alt={`product-${index}`} fill className="object-cover" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* ── Reference Links — full width ── */}
-          {localBrief.video_links && localBrief.video_links.length > 0 && (
-            <div className="md:col-span-2 bg-black/40 backdrop-blur-sm rounded-2xl p-6 border border-white/[0.06] border-l-4 border-l-primaryButton">
-              <div className="flex items-center gap-2.5 mb-4">
-                <Link2 className="w-4 h-4 text-primarytext" />
-                <h4 className="text-xs font-black text-white/80 uppercase tracking-[0.12em]">Reference Links</h4>
-              </div>
-              <div className="flex flex-col gap-2">
-                {localBrief.video_links.map((link: string, index: number) => (
-                  <a
-                    key={index}
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm text-primaryButton hover:underline"
-                  >
-                    <Link2 className="w-3.5 h-3.5 shrink-0" />
-                    {link}
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Read-only image + link sections (dialog is view-only for media) */}
+          <ProductImagesSection
+            imageUrls={localBrief.product_image_urls ?? []}
+            colSpan
+          />
+          <ReferenceLinksSection
+            links={localBrief.video_links ?? []}
+            colSpan
+          />
 
         </div>
 
-        {/* bottom padding */}
         <div className="pb-10" />
       </DialogContent>
     </Dialog>

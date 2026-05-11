@@ -30,7 +30,7 @@ export const employeeSidebarLinks: SidebarGroupLink[] = [
       { label: 'Campaign Brief', route: '/client/briefs' },
       { label: 'Review Influencers', route: '/client/influencer-review' },
       { label: 'Onboarded Influencers', route: '/client/onboarding' },
-      { label: 'Content Feedback', route: '/client/influncers-content' },
+      { label: 'Content Feedback', route: '/client/influencers-content' },
       { label: 'Approved Content', route: '/client/approved-contents/all-campaigns' },
       { label: 'Report', route: '/client/campaign-report' },
     ],
@@ -70,6 +70,16 @@ export const adminSidebarLinks: SidebarGroupLink[] = [
       { label: 'Onboarding', route: '/Admin/onboarding' },
       { label: 'Content', route: '/Admin/content' },
       { label: 'Report', route: '/Admin/campaign-report' },
+    ],
+  },
+  {
+    label: 'Campaign Creation',
+    icon: React.createElement(Users, { size: 15 }),
+    iconBg: 'bg-green-500/10',
+    iconColor: 'text-green-400',
+    children: [
+      { label: 'Create Campaign', route: '/Admin/create-campaign' },
+      { label: 'Campaign Brief', route: '/Admin/campaign-briefs' },
     ],
   },
   {

@@ -33,7 +33,7 @@ export default function ClientInfluencersContentPage() {
       <TableComponent
         header={[
           'Campaign Name',
-          'followers',
+          'Followers',
           'Platform',
           'Category',
           'Country',
