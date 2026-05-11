@@ -42,7 +42,7 @@ function NavGroup({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-white/55 transition-all duration-200 hover:bg-white/4 hover:text-white"
+        className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-foreground/55 transition-all duration-200 hover:bg-foreground/4 hover:text-foreground"
       >
         <div className="flex items-center gap-3">
           <div
@@ -69,7 +69,7 @@ function NavGroup({
           open ? 'mt-0.5 max-h-96' : 'max-h-0',
         )}
       >
-        <div className="space-y-0.5 pl-3">
+        <div className="space-y-1 pl-3">
           {group.children
             .filter((child) => !!child?.route)
             .map((child) => {
@@ -80,10 +80,10 @@ function NavGroup({
                   href={child.route}
                   onClick={onLinkClick}
                   className={cn(
-                    'group relative flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-300 ease-out',
+                    'group relative flex items-center gap-3 rounded-2xl px-3 py-2 transition-all duration-300 ease-out',
                     active
-                      ? 'border border-white/10 bg-white/5 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)] backdrop-blur-xl'
-                      : 'border border-transparent text-slate-400 hover:bg-white/5 hover:text-white',
+                      ? 'border border-foreground/10 bg-foreground/5 text-foreground shadow-[0_0_20px_rgba(139,92,246,0.15)] backdrop-blur-xl'
+                      : 'border border-transparent text-slate-400 hover:bg-foreground/5 hover:text-foreground',
                   )}
                 >
                   {active && (
@@ -108,7 +108,7 @@ function SidebarNav({
 }) {
   const pathname = usePathname();
   return (
-    <nav className="flex flex-1 flex-col gap-2 overflow-y-hidden pr-1">
+    <nav className="flex flex-1 flex-col gap-2 overflow-y-auto pr-1">
       {groups.map((group) => {
         const groupHasActive = group.children.some(
           (c) => c.route && (pathname === c.route || pathname.startsWith(c.route)),
@@ -134,11 +134,11 @@ export default function Sidebar({ links }: SidebarProps) {
       {/* Desktop */}
       <aside
         className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-65 flex-col
-        rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10
+        rounded-3xl bg-foreground/5 backdrop-blur-2xl border border-foreground/10
         shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6"
       >
         <a
-          href="https://ishout.ae"
+          href="https://app.ishout.ae"
           rel="noopener noreferrer"
           className="mb-8 flex cursor-pointer items-center justify-center transition-opacity hover:opacity-80"
         >
@@ -157,11 +157,11 @@ export default function Sidebar({ links }: SidebarProps) {
 
         <SidebarNav groups={links} />
 
-        <div className="cursor-pointer border-t border-white/10 pt-6">
+        <div className="pt-6 border-t border-foreground/10 justify-center">
         <ThemeToggle />
           <Button
             variant="ghost"
-            className="w-full justify-start rounded-xl text-red-400 hover:bg-red-500/10"
+            className="w-fit justify-start cursor-pointer rounded-xl text-red-400 hover:bg-red-500/10"
             onClick={() => setIsLogout(true)}
           >
             <LogOut className="mr-2 h-4 w-4" />
@@ -176,7 +176,7 @@ export default function Sidebar({ links }: SidebarProps) {
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <button
-              className="fixed left-4 top-4 z-50 rounded-xl border border-white/10 bg-white/10 p-2 text-white backdrop-blur-xl"
+              className="fixed left-4 top-4 z-50 rounded-xl border border-foreground/10 bg-foreground/10 p-2 text-foreground backdrop-blur-xl"
               aria-label="Open menu"
             >
               <Menu />
@@ -185,7 +185,7 @@ export default function Sidebar({ links }: SidebarProps) {
 
           <SheetContent
             side="left"
-            className="w-65 border-r border-white/10 bg-slate-950 p-6"
+            className="w-65 border-r border-foreground/10 bg-slate-950 p-6"
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
@@ -202,12 +202,12 @@ export default function Sidebar({ links }: SidebarProps) {
                 height={36}
                 unoptimized={true}
               />
-              <h2 className="text-xl font-bold text-white">iShout</h2>
+              <h2 className="text-xl font-bold text-foreground">iShout</h2>
             </a>
 
             <SidebarNav groups={links} onLinkClick={() => setMobileOpen(false)} />
 
-            <div className="border-t border-white/10 pt-6">
+            <div className="border-t border-foreground/10 pt-6">
               <Button
                 variant="ghost"
                 className="w-full justify-start rounded-xl text-red-400 hover:bg-red-500/10"

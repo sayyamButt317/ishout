@@ -21,15 +21,15 @@ import { ConfirmationDialogue } from "@/src/app/component/ConfirmationDialogue";
 import UpdateProfilePictureHook from "@/src/routes/Company/api/Hooks/userProfile/update-profile-picture-hook";
 
 
-const glassCard    = "backdrop-blur-xl bg-[#1c1b1b]/60 border border-white/5 rounded-xl px-8 py-6 w-full";
-const inputBase    = "h-11 rounded-xl border-0 border-b border-white/10 bg-[#0e0e0e] pl-10 text-white placeholder:text-white/30 transition-all focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-[#e8184d]/40 focus-visible:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed";
-const phoneWrapper = "h-11 rounded-xl border-0 border-b border-white/10 bg-[#0e0e0e] text-white transition-all focus-within:border-b-2 focus-within:border-[#e8184d]/40 focus-within:bg-white/[0.06] disabled:opacity-50 flex items-center ";
-const labelBase    = "block text-[10px] uppercase tracking-widest text-white/50 mb-1";
-const sectionTitle = "text-[10px] uppercase tracking-widest font-bold text-white/60 flex items-center gap-2";
+const glassCard    = "bg-foreground/5 border border-white/5 rounded-xl px-6 py-6 w-full";
+const inputBase    = "h-11 rounded-xl border-0 border-b border-white/10 bg-foreground/10 pl-10 text-foreground/95 placeholder:text-foreground/70 transition-all focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-[#e8184d]/40 focus-visible:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed";
+const phoneWrapper = "h-11 rounded-xl border-0 border-b border-white/10 bg-foreground/10 text-foreground/95 transition-all focus-within:border-b-2 focus-within:border-[#e8184d]/40 focus-within:bg-white/[0.06] disabled:opacity-50 flex items-center ";
+const labelBase    = "block text-[10px] uppercase tracking-widest text-foreground/90 mb-1";
+const sectionTitle = "text-[10px] uppercase tracking-widest font-bold text-foreground-95 flex items-center gap-2";
 const primaryBtn   = "h-9 rounded-xl bg-primaryButton hover:bg-primaryHover px-4 text-xs font-bold text-white uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-[0_0_16px_rgba(232,24,77,0.2)]";
 
 const FieldIcon = ({ icon: Icon }: { icon: React.ElementType }) => (
-  <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30" />
+  <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/90" />
 );
 
 
@@ -109,7 +109,7 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
   };
 
   return (
-    <div className="min-h-screen bg-[#131313]">
+    <div className="min-h-screen bg-foreground/1 text-foreground/80 ">
       <PageHeader
         title="Profile Settings"
         description="Manage your brand identity and security"
@@ -123,14 +123,13 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
       />
 
       <div className="mx-auto px-4 py-2 gap-2 flex flex-col">
-        <div className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-150 h-75 bg-primary rounded-full blur-[120px] -z-10" />
 
         {/* ── Avatar ── */}
         <section className={glassCard}>
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className={sectionTitle}><User className="w-3.5 h-3.5" /> Profile Picture</p>
-              <p className="text-white/40 text-xs mt-1">Recommended 512×512px · JPG or PNG</p>
+              <p className="text-foreground/40 text-xs mt-1">Recommended 512×512px · JPG or PNG</p>
             </div>
             {hasAvatarChange && (
               <div className="flex gap-2">
@@ -166,7 +165,7 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
           <div className="flex items-center justify-between mb-6">
             <div>
               <p className={sectionTitle}><User className="w-3.5 h-3.5" /> Personal Info</p>
-              <p className="text-white/40 text-xs mt-1">Your company and contact details</p>
+              <p className="text-foreground/60 text-xs mt-1">Update your company and contact details</p>
             </div>
             {isEditing ? (
               <div className="flex gap-2">
@@ -254,7 +253,7 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
           <div className="flex items-center justify-between mb-6">
             <div>
               <p className={sectionTitle}><Lock className="w-3.5 h-3.5" /> Security Settings</p>
-              <p className="text-white/40 text-xs mt-1">Update your account password</p>
+              <p className="text-foreground/60 text-xs mt-1">Update your account password</p>
             </div>
             {isEditingPassword ? (
               <div className="flex gap-2">

@@ -45,7 +45,7 @@ export const ProfileAvatar = ({
   };
 
   return (
-    <section className="backdrop-blur-xl bg-[#1c1b1b]/60 border border-white/5 rounded-xl px-3 py-4 w-full">
+    <section className="backdrop-blur-xl bg-foreground/5 border border-white/5 rounded-xl px-3 py-4 w-full">
       <div className="flex flex-col sm:flex-row items-center gap-6">
 
         {/* Avatar circle */}
@@ -75,8 +75,8 @@ export const ProfileAvatar = ({
 
         {/* Info + actions */}
         <div className="flex-1 w-full text-center sm:text-left">
-          <p className="text-white font-bold text-base mb-0.5">{name || "Brand Avatar"}</p>
-          <p className="text-white/40 font-extralight mb-4">
+          <p className="text-foreground/95 font-bold text-base mb-0.5">{name || "Brand Avatar"}</p>
+          <p className="text-foreground/70 font-extralight mb-4">
               Click the avatar button to change your picture.
           </p>
 

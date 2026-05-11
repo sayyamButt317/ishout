@@ -5,17 +5,13 @@
 @theme {
   --font-sans: "sora", sans-serif;
 
+  /* ── Semantic tokens (switch with theme) ── */
   --color-background: #00102a;
   --color-foreground: #ffffff;
   --color-sidebar: #ffffff;
   --color-dark-background: black;
-  --color-sidebar-ring: #cbd5e1;
   --color-sidebar-foreground: #00102a;
-  --color-background-gradient: linear-gradient(
-    135deg,
-    #170f49 0%,
-    #b0b0c3 100%
-  );
+  --color-background-gradient: linear-gradient(135deg, #170f49 0%, #b0b0c3 100%);
 
   --color-section-overlays: rgba(255, 255, 255, 0.04);
   --color-highlight-gradient: linear-gradient(135deg, #0c0c22 0%, #1a1a3f 100%);
@@ -87,41 +83,79 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ════════════════════════════════════════════
+   LIGHT THEME  (default / :root)
+   Background  : #f4f6fb  (soft blue-white)
+   Surface     : #ffffff
+   Text        : #0d1b3e  (iShout navy)
+   Border      : rgba(0,16,42,0.10)
+   Primary     : #ff4e7e  (unchanged pink)
+   Secondary   : #170f49  (navy, used as accent)
+════════════════════════════════════════════ */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+
+  /* Page & card surfaces */
+  --background: #f4f6fb;
+  --foreground: #0d1b3e;
+  --card: #ffffff;
+  --card-foreground: #0d1b3e;
+  --popover: #ffffff;
+  --popover-foreground: #0d1b3e;
+
+  /* Brand primaries */
+  --primary: #ff4e7e;
+  --primary-foreground: #ffffff;
+
+  /* Secondary = navy */
+  --secondary: #eef1f8;
+  --secondary-foreground: #170f49;
+
+  /* Muted / subdued */
+  --muted: #eef1f8;
+  --muted-foreground: #5a6a8a;
+
+  /* Accent */
+  --accent: #fde8ef;
+  --accent-foreground: #ff4e7e;
+
+  /* Destructive */
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+
+  /* Borders & inputs */
+  --border: rgba(0, 16, 42, 0.10);
+  --input: rgba(0, 16, 42, 0.08);
+  --ring: #ff4e7e;
+
+  /* Charts */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Sidebar — light navy */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0d1b3e;
+  --sidebar-primary: #ff4e7e;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fde8ef;
+  --sidebar-accent-foreground: #ff4e7e;
+  --sidebar-border: rgba(0, 16, 42, 0.08);
+  --sidebar-ring: #ff4e7e;
+
+  /* App-level semantic overrides for light */
+  --color-background: #f4f6fb;
+  --color-foreground: #0d1b3e;
+  --color-dark-background: #ffffff;
+  --color-section-overlays: rgba(0, 16, 42, 0.04);
+  --color-highlight-gradient: linear-gradient(135deg, #eef1f8 0%, #f4f6fb 100%);
 }
 
+/* ════════════════════════════════════════════
+   DARK THEME  (.dark class on <html>)
+   Preserves your existing dark palette exactly.
+════════════════════════════════════════════ */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -154,6 +188,13 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* App-level semantic overrides for dark */
+  --color-background: #00102a;
+  --color-foreground: #ffffff;
+  --color-dark-background: black;
+  --color-section-overlays: rgba(255, 255, 255, 0.04);
+  --color-highlight-gradient: linear-gradient(135deg, #0c0c22 0%, #1a1a3f 100%);
 }
 
 @layer base {
@@ -165,10 +206,14 @@
     overscroll-behavior: none;
   }
 }
+
 html {
   scroll-behavior: smooth;
 }
 
+/* ════════════════════════════════════════════
+   PHONE INPUT — signup
+════════════════════════════════════════════ */
 .signup-phone-input {
   display: flex;
   align-items: center;
@@ -186,7 +231,6 @@ html {
   min-height: 44px;
 }
 
-/* --- FLAG BOX --- */
 .signup-phone-input .PhoneInputCountry {
   display: flex;
   align-items: center;
@@ -201,23 +245,21 @@ html {
   border-color: #cbd5e1;
 }
 
-/* Remove default select styling */
 .signup-phone-input .PhoneInputCountrySelect {
-  background-color: #0a0a1a;
+  background-color: var(--color-background);
   border: none;
   outline: none;
   font-size: 13px;
   cursor: pointer;
-  color: white;
+  color: var(--color-foreground);
   max-width: 100%;
 }
 
 .signup-phone-input .PhoneInputCountrySelect option {
-  background-color: #0a0a1a;
-  color: white;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
-/* Flag size */
 .signup-phone-input .PhoneInputCountryIcon {
   width: 20px;
   height: 14px;
@@ -225,20 +267,23 @@ html {
   overflow: hidden;
 }
 
-/* Phone number input */
 .signup-phone-input .PhoneInputInput {
   flex: 1;
   border: none;
   outline: none;
   background: transparent;
   font-size: 14px;
-  color: white; /* WHITE TEXT */
+  color: var(--color-foreground);
   min-width: 0;
 }
+
 .signup-phone-input .PhoneInputInput::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: color-mix(in srgb, var(--color-foreground) 50%, transparent);
 }
 
+/* ════════════════════════════════════════════
+   PHONE INPUT — profile
+════════════════════════════════════════════ */
 .profile-phone-input {
   display: flex;
   align-items: center;
@@ -246,15 +291,15 @@ html {
   height: 44px;
   padding: 0 12px;
   border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background-color: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid var(--border) !important;
+  background-color: var(--input) !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .profile-phone-input:focus-within {
   border-color: var(--color-primaryButton) !important;
   box-shadow: 0 0 0 2px rgba(255, 78, 126, 0.2);
-  background-color: rgba(255, 255, 255, 0.06) !important;
+  background-color: color-mix(in srgb, var(--color-primaryButton) 6%, transparent) !important;
 }
 
 .profile-phone-input:disabled {
@@ -267,30 +312,30 @@ html {
   align-items: center;
   margin-right: 8px;
   padding: 4px 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   border-radius: 6px;
   background: transparent !important;
   transition: border-color 0.2s ease;
 }
 
 .profile-phone-input:not(:disabled) .PhoneInputCountry:hover {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: color-mix(in srgb, var(--color-foreground) 30%, transparent);
 }
 
 .profile-phone-input .PhoneInputCountrySelect {
   background-color: var(--color-background);
-  color-scheme: dark;
+  color-scheme: light dark;
   border: none;
   outline: none;
   font-size: 13px;
   cursor: pointer;
-  color: rgb(212, 212, 212);
+  color: var(--color-foreground);
   padding: 2px 4px;
 }
 
 .profile-phone-input .PhoneInputCountrySelect option {
   background-color: var(--color-background);
-  color: rgb(212, 212, 212);
+  color: var(--color-foreground);
 }
 
 .profile-phone-input:disabled .PhoneInputCountrySelect {
@@ -310,19 +355,22 @@ html {
   outline: none;
   background: transparent !important;
   font-size: 14px;
-  color: white;
+  color: var(--color-foreground);
   min-width: 0;
   padding-left: 8px;
 }
 
 .profile-phone-input .PhoneInputInput::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: color-mix(in srgb, var(--color-foreground) 40%, transparent);
 }
 
 .profile-phone-input:disabled .PhoneInputInput {
   cursor: not-allowed;
 }
 
+/* ════════════════════════════════════════════
+   PHONE INPUT — admin
+════════════════════════════════════════════ */
 .admin-phone-input {
   display: flex;
   align-items: center;
@@ -330,8 +378,8 @@ html {
   height: 44px;
   padding: 0 12px;
   border-radius: 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: oklch(1 0 0 / 4.5%);
+  border: 1px solid var(--border);
+  background-color: var(--input);
   transition: all 0.2s ease;
 }
 
@@ -345,25 +393,25 @@ html {
   align-items: center;
   margin-right: 8px;
   padding: 4px 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border);
   border-radius: 6px;
   background: transparent;
 }
 
 .admin-phone-input .PhoneInputCountrySelect {
-  background-color: #0d0d1e;
-  color-scheme: dark;
+  background-color: var(--color-background);
+  color-scheme: light dark;
   border: none;
   outline: none;
   font-size: 13px;
   cursor: pointer;
-  color: rgb(212, 212, 212);
+  color: var(--color-foreground);
   padding: 2px 4px;
 }
 
 .admin-phone-input .PhoneInputCountrySelect option {
-  background-color: #0d0d1e;
-  color: rgb(212, 212, 212);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
 }
 
 .admin-phone-input .PhoneInputCountryIcon {
@@ -379,12 +427,11 @@ html {
   outline: none;
   background: transparent;
   font-size: 14px;
-  color: white;
+  color: var(--color-foreground);
   min-width: 0;
   padding-left: 8px;
 }
 
 .admin-phone-input .PhoneInputInput::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: color-mix(in srgb, var(--color-foreground) 40%, transparent);
 }
-

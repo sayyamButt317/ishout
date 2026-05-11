@@ -141,7 +141,7 @@ export default function Stepper({
     : getStatusSteps(currentStatus ?? '', steps);
 
   return (
-    <div className="flex items-center justify-between min-w-[280px] sm:max-w-2xl">
+    <div className="flex items-center justify-between min-w-70 sm:max-w-2xl">
       {statusSteps.map((step, stepIndex) => {
         const clickable = isStepClickable?.(step, stepIndex) ?? false;
 
@@ -161,8 +161,8 @@ export default function Stepper({
               <div
                 className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${
                   step.isActive
-                    ? 'bg-[#FF3B8D] text-white'
-                    : 'bg-white/10 text-white/40 border border-white/20'
+                    ? 'bg-[#FF3B8D] text-foreground'
+                    : 'bg-foreground/10 text-foreground/40 border border-foreground/20'
                 } ${clickable ? 'hover:bg-[#FF3B8D]/80' : ''}`}
               >
                 {step.isActive && stepIndex > 0 ? (
@@ -172,9 +172,9 @@ export default function Stepper({
                 )}
               </div>
               <span
-                className={`text-[8px] sm:text-[10px] mt-1 whitespace-nowrap ${
-                  step.isActive ? 'text-white/80' : 'text-white/40'
-                } ${clickable ? 'hover:text-white' : ''}`}
+                className={`text-[8px] sm:text-[10px] mt-1 foregroundspace-nowrap ${
+                  step.isActive ? 'text-foreground/80' : 'text-foreground/40'
+                } ${clickable ? 'hover:text-foreground' : ''}`}
               >
                 {step.label}
               </span>
@@ -182,7 +182,7 @@ export default function Stepper({
             {stepIndex < statusSteps.length - 1 && (
               <div
                 className={`w-6 sm:w-40 h-0.5 mx-1 sm:mx-2 ${
-                  step.isActive ? 'bg-[#FF3B8D]' : 'bg-white/20'
+                  step.isActive ? 'bg-[#FF3B8D]' : 'bg-foreground/20'
                 }`}
               />
             )}

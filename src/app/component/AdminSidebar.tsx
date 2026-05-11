@@ -35,18 +35,18 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
             <button
               onClick={() => toggle(group.label)}
               className={cn(
-                'w-full group relative flex items-center gap-3 py-4 rounded-2xl transition-all duration-300 ease-out',
+                'w-full group relative flex items-center gap-3 py-2 rounded-2xl transition-all duration-300 ease-out',
                 isGroupActive && !isOpen
-                  ? 'bg-white/5 border border-white/10 text-white'
-                  : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent',
+                  ? 'bg-foreground/5 border border-foreground/10 text-foreground'
+                  : 'text-slate-400 hover:text-foreground hover:bg-foreground/5 border border-transparent',
               )}
             >
               <div
                 className={cn(
                   'flex h-9 w-9 items-center justify-center rounded-2xl transition-all duration-300 shrink-0',
                   isGroupActive && !isOpen
-                    ? 'bg-linear-to-br from-indigo-500/20 to-purple-500/20 text-white'
-                    : cn('text-slate-400 group-hover:bg-white/10', group.iconBg),
+                    ? 'bg-linear-to-br from-indigo-500/20 to-purple-500/20 text-foreground'
+                    : cn('text-slate-400 group-hover:bg-foreground/10', group.iconBg),
                 )}
               >
                 <span className={group.iconColor}>{group.icon}</span>
@@ -79,16 +79,16 @@ function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
                       href={child.route}
                       onClick={onNavigate}
                       className={cn(
-                        'flex items-center gap-2.5 pl-2 pr-3 py-2 rounded-xl text-md transition-all duration-200',
+                        'flex items-center gap-2.5 pl-4 py-2 rounded-xl text-md transition-all duration-200',
                         isActive
                           ? 'text-violet-400 bg-violet-500/10'
-                          : 'text-slate-500 hover:text-white hover:bg-white/5',
+                          : 'text-slate-500 hover:text-foreground hover:bg-foreground/5',
                       )}
                     >
                       <span
                         className={cn(
                           'w-2 h-2 rounded-full shrink-0',
-                          isActive ? 'bg-violet-400' : 'bg-white/20',
+                          isActive ? 'bg-violet-400' : 'bg-foreground/20',
                         )}
                       />
                       <span className="flex-1">{child.label}</span>
@@ -136,17 +136,16 @@ export default function AdminSidebar() {
       <NavGroups onNavigate={onNavigate} />
 
       {/* Logout */}
-      <div className="pt-6 border-t border-white/10 cursor-pointer justify-center">
+      <div className="pt-6 border-t border-foreground/10 justify-center">
       <ThemeToggle />
         <Button
           variant="ghost"
-          className="w-fit  text-red-400 hover:bg-red-500/10 rounded-xl"
+          className="w-fit text-red-400 hover:bg-red-500/10 cursor-pointer rounded-xl"
           onClick={() => {
             onNavigate?.();
             setIsLogout(true);
           }}
         >
-          
           <LogOut className="w-6 h-6 mr-12" />
           Logout
         </Button>
@@ -157,7 +156,7 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Desktop */}
-      <aside className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-70 flex-col rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
+      <aside className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-70 flex-col rounded-3xl bg-foreground/5 backdrop-blur-2xl border border-foreground/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
         {sidebarContent()}
       </aside>
 
@@ -168,7 +167,7 @@ export default function AdminSidebar() {
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetTrigger asChild>
             <button
-              className="fixed top-4 left-4 z-50 text-white bg-white/10 backdrop-blur-xl p-2 rounded-xl border border-white/10"
+              className="fixed top-4 left-4 z-50 text-foreground bg-foreground/10 backdrop-blur-xl p-2 rounded-xl border border-foreground/10"
               aria-label="Open menu"
             >
               <Menu />
@@ -177,7 +176,7 @@ export default function AdminSidebar() {
 
           <SheetContent
             side="left"
-            className="w-65 p-6 bg-slate-950 border-r border-white/10"
+            className="w-65 p-6 bg-slate-950 border-r border-foreground/10"
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>

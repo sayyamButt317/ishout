@@ -15,7 +15,7 @@ const StatusBadge = ({ status, className = "" }: StatusBadgeProps) => {
       case "rejected":
         return "capitalize bg-white/10 text-red-400 border border-red-400/20";
       case "pending":
-        return "capitalize bg-white/10 text-white/80 border border-white/20";
+        return "capitalize bg-slate-400 dark:bg-white/10 text-white/80 border border-white/20";
       case "approved":
         return "capitalize bg-white/10 text-green-400 border border-green-400/20";
       case "processing":

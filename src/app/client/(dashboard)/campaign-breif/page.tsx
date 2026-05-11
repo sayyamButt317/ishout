@@ -97,35 +97,35 @@ const CampaignBreifPage = () => {
   }, [reset]);
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-[#0B0F19] via-[#0F172A] to-black flex flex-col">
+    <div className="min-h-screen bg-linear-to-b from-blue-50 via-foreground/5 to-purple-50 dark:from-[#0B0F19] dark:via-[#0F172A] dark:to-black flex flex-col">
 
       {/* ── Hero Section ── */}
       <div className="flex-1 flex items-center justify-center ">
         <div className="w-full max-w-5xl flex flex-col items-center text-center gap-2">
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primarytext/30 bg-primarytext/5 text-white text-xs font-bold tracking-wider uppercase">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primarytext/30 bg-primarytext/5 text-primaryButton dark:text-white text-xs font-bold tracking-wider uppercase">
             <Sparkles size={26} className="fill-primarytext" />
             AI-Powered Campaign Engine
           </div>
 
           {/* Headline */}
           <div className="space-y-4">
-            <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-tight text-[#f8f5fd] max-w-4xl mx-auto">
+            <h2 className="text-5xl md:text-6xl font-black tracking-tight leading-tight text-foreground/95 max-w-4xl mx-auto">
               Generate a Complete{' '}
               <span className="text-transparent bg-clip-text bg-linear-to-r italic from-primaryButton to-primaryHover">
                 Campaign Brief   {' '}
               </span>{' '}
               in Seconds
             </h2>
-            <p className="text-[#acaab1] text-lg italic opacity-80">
+            <p className="text-foreground/60 text-lg italic opacity-80">
               Describe your campaign below to get started.
             </p>
           </div>
 
           {/* Input card */}
-          <div className="w-full bg-[#131318] rounded-2xl p-1 border border-white/0.06 shadow-2xl shadow-black/40">
-            <div className="bg-[#13131a] rounded-2xl p-6 space-y-4 text-left">
+          <div className="w-full bg-foreground/10 dark:bg-[#131318] rounded-2xl p-1 border border-white/0.06 shadow-2xl shadow-black/40">
+            <div className="bg-foreground/5 rounded-2xl p-6 space-y-4 text-left dark:bg-[#13131a]">
 
               <textarea
                 placeholder="e.g., A summer launch for our sustainable activewear brand featuring gen-z yoga influencers in urban settings..."
@@ -133,11 +133,11 @@ const CampaignBreifPage = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 rows={5}
-                className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-sm text-[#f8f5fd] placeholder:text-[#acaab1]/30 resize-none"
+                className="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-sm text-foreground/95 placeholder:text-foreground/70 resize-none"
               />
 
               <div className="flex items-center justify-between pt-4 border-t border-white/0.05">
-                <div className="flex items-center gap-2 text-#acaab1/40 text-xs">
+                <div className="flex items-center gap-2 text-foreground/80 text-xs">
                   <span className='text-sm'>Press ⏎ Enter to generate</span>
                 </div>
 
@@ -164,7 +164,7 @@ const CampaignBreifPage = () => {
           </div>
 
           {/* Helper text */}
-          <p className="text-sm text-[#acaab1]/40 max-w-xl mx-auto leading-relaxed">
+          <p className="text-sm text-foreground/45 max-w-xl mx-auto leading-relaxed">
             The more details you provide (budget, region, audience, deliverables), the more
             accurate and actionable your AI campaign strategy becomes.
           </p>
@@ -180,12 +180,12 @@ const CampaignBreifPage = () => {
 
       {/* ── Footer ── */}
       <footer className="flex justify-center py-8">
-        <div className="inline-flex items-center gap-3 px-6 py-3 bg-[#19191f] rounded-2xl border border-white/0.06">
+        <div className="inline-flex items-center gap-3 px-6 py-3 bg-foreground/10 rounded-2xl border border-white/0.06">
           <div className="w-6 h-6 rounded-md bg-linear-to-br from-primaryButton to-primaryHover flex items-center justify-center">
             <Sparkles className="w-3 h-3 text-black fill-black" />
           </div>
-          <span className="text-xs font-bold tracking-tight text-[#acaab1]">
-            Powered by <span className="text-[#f8f5fd]">iShout AI</span>
+          <span className="text-xs font-bold tracking-tight text-foreground/80">
+            Powered by <span className="text-foreground/95">iShout AI</span>
           </span>
         </div>
       </footer>
