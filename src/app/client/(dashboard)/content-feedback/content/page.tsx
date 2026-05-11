@@ -43,6 +43,7 @@ function ContentFeedbackContentPageInner() {
       item,
       title: `${item.name ?? 'Unknown'} - ${item.thread_id ?? ''}`,
       campaign: item.campaign_brief?.title ?? 'Campaign',
+      briefId: data?.campaign?.brief_id ?? '',
     };
   }, [data?.negotiations, data?.negotiation_controls, negotiationIdFromQuery]);
 

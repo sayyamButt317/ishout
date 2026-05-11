@@ -19,6 +19,8 @@ import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compn
 import type { CompanyAdminMessageItem } from '@/src/types/Compnay/company-admin-messages-type';
 import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/feedback-dialogue';
 import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
+import BrandFeedbackGuidelinesTab from '@/src/app/component/content-feedback-client/brand-feedback-guidelines-tab';
+import BrandFeedbackMediaTab from '@/src/app/component/content-feedback-client/brand-feedback-media-tab';
 import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
 import type { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
 import { extractTimelineMarkersFromMessages } from '@/src/utils/content-feedback-chat';
@@ -27,6 +29,8 @@ export type SelectedContentFeedbackCard = {
   item: NegotiationItem;
   title: string;
   campaign: string;
+  /** Campaign brief id from list page (`data?.campaign?.brief_id`) for guidelines API */
+  briefId?: string;
 };
 
 type ContentFeedbackModalProps = {
@@ -96,16 +100,12 @@ export default function ContentFeedbackModal({
   const campaignId = selectedCard?.item.campaign_id;
   const isBrandAlreadyApproved =
     (selectedCard?.item.Brand_approved ?? '').toLowerCase() === 'approved';
-  const guidelineText = useMemo(() => {
-    const brief = (selectedCard?.item as { campaign_brief?: unknown })?.campaign_brief as
-      | { brand_name_influencer_campaign_brief?: string; title?: string }
-      | undefined;
-    return (
-      brief?.brand_name_influencer_campaign_brief ||
-      brief?.title ||
-      'No guidelines available for this campaign.'
-    );
-  }, [selectedCard?.item]);
+  const guidelinesBriefId = useMemo(() => {
+    if (selectedCard?.briefId) return selectedCard.briefId;
+    const item = (selectedCard?.item ?? {}) as Record<string, unknown>;
+    const campaignBrief = (item.campaign_brief ?? {}) as Record<string, unknown>;
+    return String(item.brief_id ?? campaignBrief.brief_id ?? campaignBrief._id ?? '');
+  }, [selectedCard?.briefId, selectedCard?.item]);
 
   const {
     data: chatData,
@@ -146,7 +146,7 @@ export default function ContentFeedbackModal({
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-          (isVideoUrl(msg.message) || isImageUrl(msg.message))
+        (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
@@ -225,8 +225,8 @@ export default function ContentFeedbackModal({
   const approvedCopyDraft =
     selectedMediaKey != null
       ? (approvedCopyDraftByUrl[selectedMediaKey] ?? {
-        hashtags: '',
-      })
+          hashtags: '',
+        })
       : { hashtags: '' };
   const setApprovedCopyDraftField = (field: 'hashtags', value: string) => {
     if (!selectedMediaKey) return;
@@ -300,7 +300,7 @@ export default function ContentFeedbackModal({
           asPage
             ? 'max-h-[min(920px,96vh)] rounded-none border-0 shadow-none'
             : 'max-h-[90vh] max-w-7xl rounded-2xl border border-white/10 shadow-2xl'
-          }`}
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex min-h-0 flex-1 flex-col border-b border-white/10 bg-[#0f1014] lg:border-r lg:border-b-0">
@@ -400,7 +400,7 @@ export default function ContentFeedbackModal({
                             if (
                               data?.success &&
                               (data.video_approve_brand ?? '').toLowerCase().trim() ===
-                              'approved'
+                                'approved'
                             ) {
                               setBrandApprovedByVideoUrl((prev) => ({
                                 ...prev,
@@ -457,7 +457,12 @@ export default function ContentFeedbackModal({
                 type="button"
                 onClick={() =>
                   setActiveTab(
-                    key as 'chat' | 'revisions' | 'brandfeedback' | 'media' | 'guidelines',
+                    key as
+                      | 'chat'
+                      | 'revisions'
+                      | 'brandfeedback'
+                      | 'media'
+                      | 'guidelines',
                   )
                 }
                 className={`rounded-lg px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition ${
@@ -549,44 +554,19 @@ ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-prim
           )}
 
           {activeTab === 'media' && (
-            <div className="flex-1 space-y-2 overflow-y-auto p-4">
-              {mediaUrls.length === 0 ? (
-                <p className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white/55">
-                  No media found in this conversation.
-                </p>
-              ) : (
-                mediaUrls.map((url, index) => {
-                  const isVideo = isVideoUrl(url);
-                  return (
-                    <button
-                      key={`${url}-${index}`}
-                      type="button"
-                      onClick={() => {
-                        setSelectedPreviewMediaUrl(normalizeMediaUrlKey(url));
-                        setSelectedPreviewMediaType(isVideo ? 'video' : 'image');
-                        setIsPlaying(false);
-                      }}
-                      className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-left text-xs text-white/80 transition hover:border-violet-400/40 hover:bg-violet-500/10"
-                    >
-                      <p className="font-semibold text-white">{isVideo ? 'Video' : 'Image'}</p>
-                      <p className="mt-1 truncate text-white/60">{url}</p>
-                    </button>
-                  );
-                })
-              )}
-            </div>
+            <BrandFeedbackMediaTab
+              negotiationId={negotiationId}
+              onSelectMedia={(url, type) => {
+                setSelectedPreviewMediaUrl(url);
+                setSelectedPreviewMediaType(type);
+                setIsPlaying(false);
+              }}
+            />
           )}
 
           {activeTab === 'guidelines' && (
-            <div className="flex-1 overflow-y-auto p-4">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-                <h5 className="text-xs font-bold uppercase tracking-wide text-white/50">
-                  Campaign Guidelines
-                </h5>
-                <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-white/80">
-                  {guidelineText}
-                </p>
-              </div>
+            <div className="flex-1 overflow-y-auto p-2">
+              <BrandFeedbackGuidelinesTab briefId={guidelinesBriefId} />
             </div>
           )}
         </div>

@@ -104,6 +104,10 @@ export const AdminENDPOINT = {
   EXTRACTCAMPAIGNALLINFLUENCERREPORT: (campaign_id: string) =>
     `/${ROLE}/campaign-influncersReport?campaign_id=${campaign_id}`,
   CAMPAIGNANALTICS: (campaign_id: string) => `/${ROLE}/campaign-analytics/${campaign_id}`,
+  CAMPAIGN_INFLUENCER_ANALYTICS_DEMOGRAPHICS: (
+    campaign_id: string,
+    instagram_username: string,
+  ) => `/${ROLE}/campaign-influencer-analytics/${campaign_id}/${instagram_username}`,
   CAMPAIGN_BRIEF_AND_INFLUENCER_STATS: (campaign_id: string) =>
     `/${ROLE}/campaign-brief-and-influencer-stats/${campaign_id}`,
 
@@ -114,4 +118,6 @@ export const AdminENDPOINT = {
   ADMIN_CAMPAIGN_BRIEF_DELIVERABLES: (brief_id: string) =>
     `/${ROLE}/campaign-brief-deliverables/${brief_id}`,
   ADMIN_DEMOGRAPHICS_OCR: `/${ROLE}/demographics-ocr`,
+  COMPANY_WHATSAPP_ADMIN_COMPANY_MEDIA_URLS: (negotiation_id: string) =>
+    `/company/whatsapp-admin-company/media-urls/${negotiation_id}`,
 };
