@@ -83,18 +83,18 @@ export default function ContentFeedbackDetailPage() {
 
     const fromLegacyUrls = Array.isArray(payload.media_urls)
       ? payload.media_urls.filter(
-          (url): url is string => typeof url === 'string' && url.length > 0,
-        )
+        (url): url is string => typeof url === 'string' && url.length > 0,
+      )
       : [];
 
     const fromMediaItems = Array.isArray(payload.media_items)
       ? payload.media_items
-          .map((item) =>
-            item && typeof item === 'object' && 'media_url' in item
-              ? (item as { media_url?: unknown }).media_url
-              : null,
-          )
-          .filter((url): url is string => typeof url === 'string' && url.length > 0)
+        .map((item) =>
+          item && typeof item === 'object' && 'media_url' in item
+            ? (item as { media_url?: unknown }).media_url
+            : null,
+        )
+        .filter((url): url is string => typeof url === 'string' && url.length > 0)
       : [];
 
     return Array.from(new Set([...fromLegacyUrls, ...fromMediaItems]));
@@ -146,6 +146,16 @@ export default function ContentFeedbackDetailPage() {
     if (!negotiationIdParam) return null;
     return apiCards.find((c) => c.id === negotiationIdParam) ?? null;
   }, [apiCards, negotiationIdParam]);
+
+  const selectedInfluencerUsername = useMemo(() => {
+    if (!negotiationIdParam || !data?.negotiations) return '';
+    const neg = data.negotiations.find(
+      (n: { _id: string; influencer?: { username?: string } }) =>
+        n._id === negotiationIdParam,
+    );
+    return (neg as { influencer?: { username?: string } } | undefined)
+      ?.influencer?.username ?? '';
+  }, [negotiationIdParam, data?.negotiations]);
 
   const backToList = () => {
     const campaignId = campaignIdFromQuery || selectedCard?.campaign_id || '';
@@ -454,6 +464,7 @@ export default function ContentFeedbackDetailPage() {
         content_id,
         image_url,
         content_type: 'demographics',
+        username: selectedInfluencerUsername ?? '',
       },
       {
         onSuccess: (res: StoreInfluencerDemographicsResponse) => {
