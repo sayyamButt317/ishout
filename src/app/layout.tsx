@@ -9,6 +9,7 @@ import QueryProvider from "@/src/context/QueryProvider";
 import CustomToast from "./component/customtoast";
 import ErrorBoundary from "@/src/errors/ErrorBoundary";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ThemeProvider } from "../provider/ThemeProvider";
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -44,11 +45,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
+           <ThemeProvider>
           <CustomToast />
           <Analytics />
           <SpeedInsights />
           <ErrorBoundary>{children}</ErrorBoundary>
           <ReactQueryDevtools initialIsOpen={false} />
+           </ThemeProvider>
         </QueryProvider>
       </body>
     </html>

@@ -10,6 +10,7 @@ import { useState } from 'react';
 import LogoutDialogue from './logoutdialogue';
 import Image from 'next/image';
 import { adminSidebarLinks } from '@/src/constant/sidebaritems';
+import { ThemeToggle } from './ThemeToggle';
 
 
 function NavGroups({ onNavigate }: { onNavigate?: () => void }) {
@@ -135,15 +136,17 @@ export default function AdminSidebar() {
       <NavGroups onNavigate={onNavigate} />
 
       {/* Logout */}
-      <div className="pt-6 border-t border-white/10 cursor-pointer ">
+      <div className="pt-6 border-t border-white/10 cursor-pointer justify-center">
+      <ThemeToggle />
         <Button
           variant="ghost"
-          className="w-full justify-start text-red-400 hover:bg-red-500/10 rounded-xl"
+          className="w-fit  text-red-400 hover:bg-red-500/10 rounded-xl"
           onClick={() => {
             onNavigate?.();
             setIsLogout(true);
           }}
         >
+          
           <LogOut className="w-6 h-6 mr-12" />
           Logout
         </Button>
@@ -154,7 +157,7 @@ export default function AdminSidebar() {
   return (
     <>
       {/* Desktop */}
-      <aside className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-[280px] flex-col rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
+      <aside className="hidden md:flex fixed top-6 left-6 h-[calc(100vh-3rem)] w-70 flex-col rounded-3xl bg-white/5 backdrop-blur-2xl border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.4)] p-6">
         {sidebarContent()}
       </aside>
 
@@ -174,7 +177,7 @@ export default function AdminSidebar() {
 
           <SheetContent
             side="left"
-            className="w-[260px] p-6 bg-slate-950 border-r border-white/10"
+            className="w-65 p-6 bg-slate-950 border-r border-white/10"
             onCloseAutoFocus={(e) => e.preventDefault()}
           >
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>

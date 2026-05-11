@@ -10,6 +10,7 @@ import {
   getAuthTokenProvider,
   getRoleProvider,
 } from '@/src/provider/auth-provide';
+import { ThemeToggle } from './ThemeToggle';
 
 const Header = () => {
   const router = useRouter();
@@ -61,7 +62,7 @@ const Header = () => {
 
         {/* Mobile Hamburger */}
         <div className="flex flex-row gap-2 pt-2 ">
-
+          <ThemeToggle />
             {!token ? (
               <>
                 <CustomButton asChild className="w-fit  max-sm:w-fit bg-secondaryButton text-white sm:text-sm">

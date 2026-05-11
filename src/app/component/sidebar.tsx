@@ -10,6 +10,7 @@ import { useCallback, useState } from 'react';
 import LogoutDialogue from './logoutdialogue';
 import Image from 'next/image';
 import type { SidebarGroupLink } from '@/src/constant/sidebaritems';
+import { ThemeToggle } from './ThemeToggle';
 
 export interface SidebarProps {
   links: SidebarGroupLink[];
@@ -157,6 +158,7 @@ export default function Sidebar({ links }: SidebarProps) {
         <SidebarNav groups={links} />
 
         <div className="cursor-pointer border-t border-white/10 pt-6">
+        <ThemeToggle />
           <Button
             variant="ghost"
             className="w-full justify-start rounded-xl text-red-400 hover:bg-red-500/10"

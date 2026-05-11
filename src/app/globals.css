@@ -7,6 +7,10 @@
 
   --color-background: #00102a;
   --color-foreground: #ffffff;
+  --color-sidebar: #ffffff;
+  --color-dark-background: black;
+  --color-sidebar-ring: #cbd5e1;
+  --color-sidebar-foreground: #00102a;
   --color-background-gradient: linear-gradient(
     135deg,
     #170f49 0%,
