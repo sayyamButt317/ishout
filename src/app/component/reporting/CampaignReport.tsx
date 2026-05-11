@@ -10,7 +10,6 @@ import CampaignSummarySection from './CampaignSummarySection';
 import CampaignOverviewSection from './CampaignOverviewPage';
 import CampaignTimelineSection from './CampaignTimelineSection';
 import DemographicsSection from './DemographicsSection';
-import NegotiationsSection from './NegotiationsSection';
 
 interface CampaignReportProps {
   negotiationData: AgreedNegotiationResponse;

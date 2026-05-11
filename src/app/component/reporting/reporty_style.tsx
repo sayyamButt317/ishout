@@ -196,75 +196,9 @@ export const styles = StyleSheet.create({
         marginTop: 8,
     },
     image: {
-        width: 300,
-        height: 300,
+        width: 400,
+        height: 400,
         marginVertical: 15,
         marginHorizontal: 100,
-    },
-
-    influencerRow: {
-        flexDirection: 'row',
-        marginBottom: 16,
-    },
-    influencerProfileCol: {
-        width: 180,
-        alignItems: 'center',
-        paddingRight: 14,
-        borderRight: '1px solid #DDEAE8',
-    },
-    influencerAvatar: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        marginBottom: 8,
-        border: '2px solid #1AA69A',
-    },
-    influencerName: {
-        fontSize: 11,
-        fontWeight: 'bold',
-        color: '#0B4956',
-        marginBottom: 2,
-        textAlign: 'center',
-    },
-    influencerHandle: {
-        fontSize: 9,
-        color: '#1AA69A',
-        marginBottom: 2,
-        textAlign: 'center',
-    },
-    influencerFollowers: {
-        fontSize: 9,
-        color: '#5C7C84',
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    statRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
-        paddingHorizontal: 6,
-        marginBottom: 4,
-    },
-    statLabel: {
-        fontSize: 9,
-        color: '#5C7C84',
-    },
-    statValue: {
-        fontSize: 9,
-        fontWeight: 'bold',
-        color: '#0B4956',
-    },
-    influencerImagesCol: {
-        flex: 1,
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        paddingLeft: 14,
-        gap: 8,
-    },
-    influencerDemoThumb: {
-        width: 220,
-        height: 300,
-        borderRadius: 6,
-        border: '1px solid #DDEAE8',
     },
 });

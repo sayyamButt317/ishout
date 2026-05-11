@@ -35,57 +35,57 @@ function InfluencerDemoPage({ inf }: { inf: InfluencerSummary }) {
                         Demographics & Analytics — @{inf.username}
                     </Text>
 
-                    <View style={styles.influencerRow}>
-                        <View style={styles.influencerProfileCol}>
+                    <View style={styles}>
+                        <View style={styles.summaryGrid}>
                             {profileSrc ? (
                                 // eslint-disable-next-line jsx-a11y/alt-text
                                 <Image
                                     src={profileSrc}
-                                    style={styles.influencerAvatar}
+                                    style={styles.image}
                                     cache={false}
                                 />
                             ) : (
                                 <View
                                     style={[
-                                        styles.influencerAvatar,
+                                        styles.image,
                                         { backgroundColor: '#DDEAE8' },
                                     ]}
                                 />
                             )}
 
                             {inf.profile_name && (
-                                <Text style={styles.influencerName}>
+                                <Text style={styles.text}>
                                     {inf.profile_name}
                                 </Text>
                             )}
-                            <Text style={styles.influencerHandle}>
+                            <Text style={styles.text}>
                                 @{inf.username}
                             </Text>
-                            <Text style={styles.influencerFollowers}>
+                            <Text style={styles.text}>
                                 {formatCount(inf.followers)} Followers
                             </Text>
 
-                            <View style={styles.statRow}>
-                                <Text style={styles.statLabel}>Likes</Text>
-                                <Text style={styles.statValue}>
+                            <View style={styles.summaryGrid}>
+                                <Text style={styles.text}>Likes</Text>
+                                <Text style={styles.text}>
                                     {formatCount(analytics?.likes)}
                                 </Text>
                             </View>
-                            <View style={styles.statRow}>
-                                <Text style={styles.statLabel}>Comments</Text>
-                                <Text style={styles.statValue}>
+                            <View style={styles.summaryGrid}>
+                                <Text style={styles.text}>Comments</Text>
+                                <Text style={styles.text}>
                                     {formatCount(analytics?.comments)}
                                 </Text>
                             </View>
-                            <View style={styles.statRow}>
-                                <Text style={styles.statLabel}>Interactions</Text>
-                                <Text style={styles.statValue}>
+                            <View style={styles.summaryGrid}>
+                                <Text style={styles.text}>Interactions</Text>
+                                <Text style={styles.text}>
                                     {formatCount(analytics?.interaction)}
                                 </Text>
                             </View>
                         </View>
 
-                        <View style={styles.influencerImagesCol}>
+                        <View style={styles.demoGrid}>
                             {demos.map((d, i) => {
                                 const src = pdfProxyImageSrc(d.image_url);
                                 if (!src) return null;
@@ -94,7 +94,7 @@ function InfluencerDemoPage({ inf }: { inf: InfluencerSummary }) {
                                     <Image
                                         key={i}
                                         src={src}
-                                        style={styles.influencerDemoThumb}
+                                        style={styles.demoThumb}
                                         cache={false}
                                     />
                                 );
