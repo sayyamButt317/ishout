@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import NotificationBell from '@/src/app/component/NotificationBell';
 
 export type PageHeaderProps = {
   title: string;
@@ -22,10 +23,7 @@ const badgeVariants = {
     'bg-[var(--color-deleteButton)]/10 text-[var(--color-deleteButton)] border border-[var(--color-deleteButton)]/20',
 };
 
-/**
- * iShout Dashboard PageHeader
- * AI SaaS style — uses app theme: primary #ff4e7e, section overlays, Sora font.
- */
+
 export default function PageHeader({
   title,
   description,
@@ -94,7 +92,7 @@ export default function PageHeader({
             {icon != null && (
               <div
                 aria-hidden
-                className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[var(--color-primaryButton)]/20 bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)]"
+                className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-(--color-primaryButton)/20 bg-(--color-primaryButton)/10 text-(--color-primaryButton)"
               >
                 {icon}
               </div>
@@ -126,11 +124,10 @@ export default function PageHeader({
           </div>
 
           {/* Right: action slots */}
-          {actions != null && (
-            <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:gap-2.5 lg:w-auto">
-              {actions}
-            </div>
-          )}
+          <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:gap-2.5 lg:w-auto">
+            <NotificationBell />
+            {actions}
+          </div>
         </div>
       </div>
     </header>

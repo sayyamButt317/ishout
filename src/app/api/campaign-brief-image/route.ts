@@ -1,25 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-/** Hostnames allowed for brief PDF image proxy (avoid open SSRF). */
-const ALLOWED_IMAGE_HOSTS = new Set([
-  'ishout.s3.us-east-2.amazonaws.com',
-  'ishout.s3.amazonaws.com',
-]);
+import { PDF_PROXY_ALLOWED_IMAGE_HOSTS } from '@/src/constants/pdf-proxy-allowed-hosts';
 
 function isAllowedImageUrl(raw: string): boolean {
   try {
     const u = new URL(raw);
     if (u.protocol !== 'https:' && u.protocol !== 'http:') return false;
-    return ALLOWED_IMAGE_HOSTS.has(u.hostname);
+    return PDF_PROXY_ALLOWED_IMAGE_HOSTS.has(u.hostname);
   } catch {
     return false;
   }
 }
 
-/**
- * Proxies campaign product images for client-side PDF generation.
- * Browser fetch() to S3 is blocked by CORS; server fetch has no such limit.
- */
 export async function GET(request: NextRequest) {
   const raw = request.nextUrl.searchParams.get('url');
   if (!raw?.trim()) {

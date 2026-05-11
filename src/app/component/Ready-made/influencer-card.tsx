@@ -247,7 +247,7 @@ const InfluencerCard = ({
       </div>
 
       {actionSuccess === 'approved' && (
-        <div className="mb-4 px-2 flex items-center justify-between gap-2 bg-white rounded-lg p-2 shadow-2xl">
+        <div className="mb-4 px-2 flex items-center justify-between gap-2 bg-[#1C1C1C] border border-white/10 text-white rounded-lg p-2 shadow-2xl">
           <div className="flex items-center gap-2">
             <div className=" rounded-full p-1">
               <CircleCheck className="h-5 w-5 text-green-400" />
@@ -313,14 +313,14 @@ const InfluencerCard = ({
         )} */}
 
       {influencer?.admin_approved === true && influencer?.pricing !== undefined && (
-        <div className="bg-white rounded-lg p-4 mb-4 shadow-2xl">
+        <div className="bg-[#1C1C1C] border border-white/10 text-white rounded-lg p-4 mb-4 shadow-2xl">
           <div className="text-center">
-            <div className="text-xl font-bold text-black mb-1">
-              <span className="text-secondaryButton text-lg font-bold">
+            <div className="text-xl font-bold text-white mb-1">
+              <span className="text-white text-lg font-bold">
                 ${influencer?.pricing?.toFixed(2)}
               </span>
             </div>
-            <div className="text-xs text-black font-medium">Influencer Pricing</div>
+            <div className="text-xs text-white font-medium">Influencer Pricing</div>
           </div>
         </div>
       )}
@@ -381,7 +381,7 @@ const InfluencerCard = ({
             setShowPriceInputs(false);
             setMinAmount('');
           }}
-          className="w-full mt-2 border text-black text-sm font-medium py-2 rounded-lg transition-colors"
+          className="w-full mt-2 border bg-transparent text-white text-sm font-medium py-2 rounded-lg transition-colors"
         >
           Cancel
         </CustomButton>

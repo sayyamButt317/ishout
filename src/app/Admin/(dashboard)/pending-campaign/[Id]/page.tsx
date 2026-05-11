@@ -102,7 +102,7 @@ export default function PendingCampaignByIdPage() {
               <span className="font-bold">{generatedInfluencers?.length}</span>
             </h1>
             {/* <h1 className="text-sm font-normal text-slate-300 whitespace-nowrap w-full sm:w-auto text-center sm:text-left">
-              Approved Infleucers {}
+              Approved Infleucers { }
             </h1> */}
             {/* Export Button */}
             {ApprovedInfluencersStore.getState().approvedInfluencers.length >
