@@ -6,6 +6,8 @@ export type WhatsAppAdminCompanyApproveVideoPayload = {
   content_id?: string;
   video_approve_admin?: string;
   video_approve_brand?: string;
+  content_type?: string;
+  version?: string;
 };
 
 export type WhatsAppAdminCompanyApproveVideoResponse = {

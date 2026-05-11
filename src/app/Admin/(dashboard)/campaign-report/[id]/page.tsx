@@ -69,7 +69,10 @@ export default function InfluencerReportHeader() {
     <Skeleton name="admin-campaign-analytics" loading={isLoading}>
       <div className="space-y-6">
         <Dialog open={reportOpen} onOpenChange={setReportOpen}>
-          <DialogContent className="h-[98vh] w-[98vw] max-w-[98vw] overflow-hidden rounded-none p-0 sm:max-w-[98vw]">
+          <DialogContent
+            className="h-[98vh] w-[98vw] max-w-[98vw] overflow-hidden rounded-none p-0 sm:max-w-[98vw]"
+            aria-describedby={undefined}
+          >
             <DialogHeader className="px-6 pt-6">
               <DialogTitle>Campaign Report</DialogTitle>
             </DialogHeader>
@@ -164,7 +167,7 @@ export default function InfluencerReportHeader() {
 
             const engRateNumber = profile.followers
               ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) *
-                100
+              100
               : 0;
 
             const engRate = profile.followers ? engRateNumber.toFixed(2) + '%' : 'N/A';

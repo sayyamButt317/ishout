@@ -9,6 +9,8 @@ type FeedbackDetailHeaderProps = {
   onBack: () => void;
   contentType: 'story' | 'post' | 'demographics';
   onContentTypeChange: (value: 'story' | 'post' | 'demographics') => void;
+  version: string;
+  onVersionChange: (value: string) => void;
 };
 
 export default function FeedbackDetailHeader({
@@ -17,6 +19,8 @@ export default function FeedbackDetailHeader({
   onBack,
   contentType,
   onContentTypeChange,
+  version,
+  onVersionChange,
 }: FeedbackDetailHeaderProps) {
 
 
@@ -62,9 +66,13 @@ export default function FeedbackDetailHeader({
         </div>
 
         <div className="relative ">
-          <select className={selectClassName}>
-            <option className="bg-black text-white">Version 1</option>
-            <option className="bg-black text-white">Version 2</option>
+          <select
+            value={version}
+            onChange={(e) => onVersionChange(e.target.value)}
+            className={selectClassName}
+          >
+            <option className="bg-black text-white" value="1">Version 1</option>
+            <option className="bg-black text-white" value="2">Version 2</option>
           </select>
           <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 size-4 -translate-y-1/2 text-white/55" />
         </div>

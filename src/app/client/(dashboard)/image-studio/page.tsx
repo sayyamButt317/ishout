@@ -62,9 +62,9 @@ export default function ImageStudioPage() {
   const router = useRouter();
 
   return (
-    
+
     <div className="font-sans">
-      
+
       <PageHeader
         title="Image Studio"
         description="AI-powered image generation with industry templates"
@@ -79,47 +79,46 @@ export default function ImageStudioPage() {
               onChange={(e) => setSearch(e.target.value)}
               className="h-11 w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
             />
-            
+
           </div>
         }
       />
-      
-<div className='flex flex-row item-center justify-center '>
-  <ComingSoon
-      enabled={true}
-      title="Image Studio"
-      message="AI-powered image generation is on its way. This feature will be available shortly."
-      badge="Coming Soon"
-    >
 
-    </ComingSoon>
-    </div>
+      {/* <div className='flex flex-row item-center justify-center '>
+        <ComingSoon
+          enabled={true}
+          title="Image Studio"
+          message="AI-powered image generation is on its way. This feature will be available shortly."
+          badge="Coming Soon"
+        >
+
+        </ComingSoon>
+      </div> */}
       {/* Theme filters */}
-      {/* <section className="mb-10 flex gap-3 overflow-x-auto pb-2">
+      <section className="mb-10 flex gap-3 overflow-x-auto pb-2">
         {THEMES.map((t) => (
           <button
             key={t.id}
             onClick={() => setActiveTheme(t.id)}
-            className={`flex shrink-0 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all ${
-              activeTheme === t.id || (t.active && activeTheme === 'all')
-                ? 'bg-[var(--color-primaryButton)] text-white shadow-lg'
-                : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
-            }`}
+            className={`flex shrink-0 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all ${activeTheme === t.id || (t.active && activeTheme === 'all')
+              ? 'bg-(--color-primaryButton) text-white shadow-lg'
+              : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+              }`}
           >
             <t.icon className="size-4" />
             {t.label}
           </button>
         ))}
-      </section> 
+      </section>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-         Sidebar */}
-        {/* <aside className="space-y-8">
+        Sidebar
+        <aside className="space-y-8">
           <div>
             <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-white/60">
               Style & Settings
             </h3>
-            <div className="rounded-xl border border-white/10 bg-white/[0.04] p-4 space-y-6">
+            <div className="rounded-xl border border-white/10 bg-white/4 p-4 space-y-6">
               <div>
                 <p className="mb-3 text-xs font-medium text-white/50">ASPECT RATIO</p>
                 <div className="grid grid-cols-3 gap-2">
@@ -127,16 +126,14 @@ export default function ImageStudioPage() {
                     <button
                       key={r}
                       onClick={() => setRatio(r)}
-                      className={`flex aspect-square flex-col items-center justify-center rounded-lg border transition-colors ${
-                        ratio === r
-                          ? 'border-[var(--color-primaryButton)] bg-[var(--color-primaryButton)]/10 text-[var(--color-primaryButton)]'
-                          : 'border-white/10 text-white/40 hover:border-white/20'
-                      }`}
+                      className={`flex aspect-square flex-col items-center justify-center rounded-lg border transition-colors ${ratio === r
+                        ? 'border-(--color-primaryButton) bg-(--color-primaryButton)/10 text-(--color-primaryButton)'
+                        : 'border-white/10 text-white/40 hover:border-white/20'
+                        }`}
                     >
                       <div
-                        className={`mb-1 border-2 ${
-                          ratio === r ? 'border-[var(--color-primaryButton)]' : 'border-white/40'
-                        } ${r === '1:1' ? 'size-4' : r === '16:9' ? 'h-4 w-6' : 'h-5 w-3'}`}
+                        className={`mb-1 border-2 ${ratio === r ? 'border-(--color-primaryButton)' : 'border-white/40'
+                          } ${r === '1:1' ? 'size-4' : r === '16:9' ? 'h-4 w-6' : 'h-5 w-3'}`}
                       />
                       <span className="text-[10px] font-bold">{r}</span>
                     </button>
@@ -150,15 +147,14 @@ export default function ImageStudioPage() {
                     <button
                       key={s.id}
                       onClick={() => setArtStyle(s.id)}
-                      className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors ${
-                        artStyle === s.id
-                          ? 'border-[var(--color-primaryButton)]/30 bg-[var(--color-primaryButton)]/20 text-white'
-                          : 'border-white/10 text-white/50 hover:border-white/20 hover:text-white/80'
-                      }`}
+                      className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors ${artStyle === s.id
+                        ? 'border-(--color-primaryButton)/30 bg-(--color-primaryButton)/20 text-white'
+                        : 'border-white/10 text-white/50 hover:border-white/20 hover:text-white/80'
+                        }`}
                     >
                       {s.label}
                       {artStyle === s.id && (
-                        <Check className="size-4 text-[var(--color-primaryButton)]" />
+                        <Check className="size-4 text-(--color-primaryButton)" />
                       )}
                     </button>
                   ))}
@@ -171,7 +167,7 @@ export default function ImageStudioPage() {
               <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">
                 Recent
               </h3>
-              <button className="text-[10px] font-bold text-[var(--color-primaryButton)] hover:underline">
+              <button className="text-[10px] font-bold text-(--color-primaryButton) hover:underline">
                 View All
               </button>
             </div>
@@ -187,14 +183,14 @@ export default function ImageStudioPage() {
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                     sizes="160px"
-                  /> 
+                  /> */}
                 </div>
               ))}
             </div>
           </div>
-        </aside> */}
+        </aside>
 
-        {/* Main grid 
+        Main grid
         <div className="lg:col-span-3">
           <div className="mb-6 flex items-center justify-between">
             <div>
@@ -214,7 +210,7 @@ export default function ImageStudioPage() {
             {TEMPLATES.map((tpl) => (
               <div
                 key={tpl.id}
-                className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-all duration-300 hover:border-[var(--color-primaryButton)]/40"
+                className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] transition-all duration-300 hover:border-(--color-primaryButton)/40"
               >
                 <div className="relative aspect-[4/5] overflow-hidden">
                   <Image
@@ -224,10 +220,10 @@ export default function ImageStudioPage() {
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                     sizes="(max-width: 768px) 100vw, 50vw, 33vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60" />
                   {tpl.hot && (
-                    <div className="absolute top-4 right-4 rounded-lg border border-[var(--color-primaryButton)]/30 bg-[var(--color-primaryButton)]/20 px-2 py-1 backdrop-blur-md">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--color-primaryButton)]">
+                    <div className="absolute top-4 right-4 rounded-lg border border-(--color-primaryButton)/30 bg-(--color-primaryButton)/20 px-2 py-1 backdrop-blur-md">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-(--color-primaryButton)">
                         Hot
                       </span>
                     </div>
@@ -240,12 +236,11 @@ export default function ImageStudioPage() {
                   </div>
                   <button
                     onClick={() => router.push(`/image-studio/style`)}
-                    className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all ${
-                      tpl.primary
-                        ? 'bg-[var(--color-primaryButton)] text-white hover:opacity-90'
-                        : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
-                    }`}
-                
+                    className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all ${tpl.primary
+                      ? 'bg-(--color-primaryButton) text-white hover:opacity-90'
+                      : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                      }`}
+
                   >
                     <Zap className="size-4" />
                     Use Template
@@ -262,15 +257,14 @@ export default function ImageStudioPage() {
         </div>
       </div>
 
-      Live feed carousel 
+      Live feed carousel
       <div
-        className={`fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-black/80 py-4 px-6 backdrop-blur-md transition-transform duration-500 ${
-          carouselOpen ? 'translate-y-0' : 'translate-y-full hover:translate-y-0'
-        }`}
+        className={`fixed bottom-0 left-0 right-0 z-40 border-t border-white/10 bg-black/80 py-4 px-6 backdrop-blur-md transition-transform duration-500 ${carouselOpen ? 'translate-y-0' : 'translate-y-full hover:translate-y-0'
+          }`}
       >
         <div className="mx-auto flex max-w-7xl items-center gap-6 overflow-x-auto">
           <div className="flex min-w-[80px] flex-col">
-            <span className="mb-1 text-[10px] font-bold uppercase text-[var(--color-primaryButton)]">
+            <span className="mb-1 text-[10px] font-bold uppercase text-(--color-primaryButton)">
               Live Feed
             </span>
             <span className="text-[8px] text-white/40">Recent Creations</span>
@@ -281,20 +275,20 @@ export default function ImageStudioPage() {
               'https://lh3.googleusercontent.com/aida-public/AB6AXuD7vBRNV5g_zDjyOagiVx8FFKzGs-9TvJ5LC-f61vYxzLIwEJYU9Y6doOnRvyeYa6-aJTa7GF9BE_Jr-C5CqXE66G8gInFg2-3UBZ0oZNq4oB-tlgI4k40RaCsWHxWib1q5Yw8m5mTohtQfVJ5Q-ciPREdTXt5fej2B6Noj5WNnqERD4aK5Ub643T1cDVnJXFmA-IhC97y83ZszHJnivR1QkVwQspDdzIkhNuoDD9-ePxIy_8iSaVOp3HWqPRNjCVfAukHq2SZa1yY',
               'https://lh3.googleusercontent.com/aida-public/AB6AXuAgGUCk2IBjns1PEGnYmXllFvIcQYND9LapCaAZL_nTK3SV1WHXdKgD7b3-cV_3iBCK4GhjOqPqwAFRBu7vPfp1U16Ep7gO-SbX7YEDbHeNWN6mevHlC9v8EiKoPzQgYkVk_pP1BOIQVQNHXAP8NC6sc_GcSU-dIXbcdz6KFF4mK9E4K87HZNvplu_s8pT3CbntYQ_AqvWAa1hRb2qQs2niTvwQpX5QXgskf6VOzzYbMhY1j04rk0hjfI9myvnSMkV9HElz6rpUDPM',
             ].map((src, i) => (
-              <div key={i} className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg ring-1 ring-[var(--color-primaryButton)]/20">
+              <div key={i} className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg ring-1 ring-(--color-primaryButton)/20">
                 <Image src={src} alt="Recent generation" fill className="object-cover" sizes="48px" />
               </div>
             ))}
           </div>
           <button
             onClick={() => setCarouselOpen(!carouselOpen)}
-            className="ml-auto flex items-center gap-1 text-xs font-bold text-[var(--color-primaryButton)]"
+            className="ml-auto flex items-center gap-1 text-xs font-bold text-(--color-primaryButton)"
           >
             {carouselOpen ? 'Collapse' : 'Expand'} Carousel
             <ChevronUp className={`size-4 transition-transform ${carouselOpen ? 'rotate-180' : ''}`} />
           </button>
         </div>
-      </div>*/}
+      </div>
     </div>
   );
 }
