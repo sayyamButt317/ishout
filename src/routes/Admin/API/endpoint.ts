@@ -111,7 +111,6 @@ export const AdminENDPOINT = {
   CAMPAIGN_BRIEF_AND_INFLUENCER_STATS: (campaign_id: string) =>
     `/${ROLE}/campaign-brief-and-influencer-stats/${campaign_id}`,
 
-  /** POST JSON — store influencer demographics row */
   ADMIN_STORE_INFLUENCER_DEMOGRAPHICS: `/${ROLE}/store/Influencer-demographics`,
   ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS: (thread_id: string) =>
     `/${ROLE}/whatsapp-admin-influencer/media-urls/${thread_id}`,
@@ -120,8 +119,7 @@ export const AdminENDPOINT = {
   ADMIN_DEMOGRAPHICS_OCR: `/${ROLE}/demographics-ocr`,
   COMPANY_WHATSAPP_ADMIN_COMPANY_MEDIA_URLS: (negotiation_id: string) =>
     `/company/whatsapp-admin-company/media-urls/${negotiation_id}`,
-  ADMIN_READY_FOR_POSTING: (campaign_id: string) =>
-    `/${ROLE}/ready-for-posting/${campaign_id}`,
+  ADMIN_READY_FOR_POSTING: `/${ROLE}/ready-for-posting`,
   ADMIN_GENERATE_CAMPAIGN: `/${ROLE}/generate-campaign`,
   ADMIN_GENERATE_BRIEF: `/${ROLE}/generate-brief`,
   ADMIN_CREATE_CAMPAIGN_BRIEF: `/${ROLE}/campaign-brief`,
