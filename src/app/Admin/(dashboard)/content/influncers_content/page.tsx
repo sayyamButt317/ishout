@@ -15,7 +15,7 @@ import { Trash2 } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import useDeleteAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/delete-admin-influencer-messages-hook';
 import { CircleDashed, CircleCheck, RefreshCcw, CircleCheckBig } from 'lucide-react';
-import { Skeleton } from 'boneyard-js/react';
+import { KanbanSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 const COLUMNS = [
 
@@ -81,9 +81,10 @@ function ContentFeedbackPageContent() {
       }
     : null;
 
+  if (isLoading) return <KanbanSkeleton />;
+
   return (
-    <Skeleton name="admin-content-kanban" loading={isLoading}>
-      <div className="font-sans">
+    <div className="font-sans">
         <ContentHeader
           title={data?.campaign_brief?.title ?? ''}
           logo={data?.campaign_logo_url ?? ''}
@@ -292,8 +293,7 @@ function ContentFeedbackPageContent() {
             }
           }}
         />
-      </div>
-    </Skeleton>
+    </div>
   );
 }
 

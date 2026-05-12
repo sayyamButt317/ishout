@@ -14,7 +14,7 @@ import axios from "axios";
 import { RefreshCcw, Send, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import CustomButton from "@/src/app/component/button";
-import { Skeleton } from "boneyard-js/react";
+import { ChatInboxSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function InstagramInbox() {
   const [activeConversationId, setActiveConversationId] = useState<string>();
@@ -94,9 +94,10 @@ export default function InstagramInbox() {
     }
   };
 
+  if (isLoading) return <ChatInboxSkeleton />;
+
   return (
-    <Skeleton name="admin-instagram-inbox" loading={isLoading}>
-      <div className="flex h-screen bg-gray-900 text-white">
+    <div className="flex h-screen bg-gray-900 text-white">
         {/* LEFT SIDEBAR */}
         <aside className="w-1/3 border-r border-gray-700">
           <header className="p-4 flex items-center gap-3 border-b border-gray-700">
@@ -194,7 +195,6 @@ export default function InstagramInbox() {
             </>
           )}
         </main>
-      </div>
-    </Skeleton>
+    </div>
   );
 }

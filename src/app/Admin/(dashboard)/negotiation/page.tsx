@@ -20,7 +20,7 @@ import { NegotiationStatsResponse } from '@/src/types/Admin-Type/negotiation.typ
 import { useWhatsAppChatStore } from '@/src/store/Campaign/chat.store';
 import DeleteNegotiationHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-delete-hook';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
-import { Skeleton } from 'boneyard-js/react';
+import { NegotiationListSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 import Link from 'next/link';
 
 export default function NegotiationPage() {
@@ -75,8 +75,10 @@ export default function NegotiationPage() {
     return { dot: 'bg-violet-400', text: 'text-violet-300' };
   };
 
+  if (isLoading) return <NegotiationListSkeleton />;
+
   return (
-    <Skeleton name="admin-negotiation-table" loading={isLoading}>
+    <>
       <PageHeader
         title="Negotiations"
         description={`Showing ${filteredSessions.length} of ${data?.total ?? 0} user sessions`}
@@ -383,6 +385,6 @@ export default function NegotiationPage() {
           }
         }}
       />
-    </Skeleton>
+    </>
   );
 }

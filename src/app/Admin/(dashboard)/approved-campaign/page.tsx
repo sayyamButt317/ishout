@@ -17,7 +17,7 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import { Trash } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
-import { Skeleton } from 'boneyard-js/react';
+import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 const ApprovedCampaignPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,8 +47,10 @@ const ApprovedCampaignPage = () => {
   }, [briefData]);
 
   const router = useRouter();
+  if (isLoading) return <TablePageSkeleton columns={10} />;
+
   return (
-    <Skeleton name="admin-campaign-table" loading={isLoading}>
+    <>
       <PageHeader
         title="Approved Campaigns"
         description={`Showing ${campaigns.length} of ${totalCount} approved campaigns`}
@@ -172,7 +174,7 @@ const ApprovedCampaignPage = () => {
           setAdminBrief(updatedBrief);
         }}
       />
-    </Skeleton>
+    </>
   );
 };
 

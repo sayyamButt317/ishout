@@ -8,7 +8,7 @@ import { ArrowLeft, ChevronRight, Download, UserCheck, UserX, Users } from 'luci
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import CustomButton from '@/src/app/component/button';
-import { Skeleton } from 'boneyard-js/react';
+import { CampaignDetailSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function CampaignByIdPage() {
   const { Id } = useParams<{ Id: string }>();
@@ -20,9 +20,10 @@ export default function CampaignByIdPage() {
   const campaignTitle = (data as { name?: string } | undefined)?.name ?? 'Campaign';
   const totalCount = approvedCount + rejectedCount;
 
+  if (isLoading) return <CampaignDetailSkeleton />;
+
   return (
-    <Skeleton name="admin-influencer-grid" loading={isLoading}>
-      <div className="font-sans">
+    <div className="font-sans">
         <header
           className="mb-10 relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays shadow-[0_1px_0_0_rgba(255,255,255,0.04)_inset,0_24px_48px_-24px_rgba(0,0,0,0.4)]"
           role="banner"
@@ -169,7 +170,6 @@ export default function CampaignByIdPage() {
             No rejected influencers found
           </div>
         )}
-      </div>
-    </Skeleton>
+    </div>
   );
 }

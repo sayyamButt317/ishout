@@ -1,6 +1,10 @@
 'use client';
 import { useState } from 'react';
 import InfluencerDetailDialog from '@/src/app/component/content-feedback/influencerdetail';
+import CustomButton from '../button';
+import { useRouter } from 'next/navigation';
+import { ReadyForPostingHook } from '@/src/routes/Admin/Mutations/DemoGraphics';
+import useReportStore from '@/src/store/Report/report-store';
 
 type FeedbackDetailFooterProps = {
   durationText: string;
@@ -26,7 +30,12 @@ export default function FeedbackDetailFooter({
   onSaveDemographics,
 }: FeedbackDetailFooterProps) {
   const [open, setOpen] = useState(false);
+  const { campaign_id } = useReportStore();
 
+  const readyForPostingMutation = ReadyForPostingHook();
+  const handleReadyForPosting = () => {
+    readyForPostingMutation.mutate(campaign_id);
+  };
   return (
     <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-t border-white/10 bg-black/20 px-3 py-2">
       <div className="flex gap-4 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
@@ -52,19 +61,26 @@ export default function FeedbackDetailFooter({
         ) : (
           <>
             <InfluencerDetailDialog open={open} onOpenChange={setOpen} />
-            <button
+            <CustomButton
               onClick={onForwardToBrand}
               disabled={isForwardLoading || !canForward}
-              className="rounded-lg bg-primaryButton px-3 py-2 text-xs font-bold text-white disabled:opacity-50 lg:px-4 lg:text-sm"
+              className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-white lg:px-4 lg:text-sm hover:bg-primaryButton"
             >
               Forward to Brand
-            </button>
-            <button
-              className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-white lg:px-4 lg:text-sm"
+            </CustomButton>
+            <CustomButton
+              className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-white lg:px-4 lg:text-sm hover:bg-primaryButton"
               onClick={() => setOpen(true)}
             >
               Influencer Analytics
-            </button>
+            </CustomButton>
+            <CustomButton
+              onClick={() => handleReadyForPosting()}
+              disabled={false}
+              className="rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-bold text-white lg:px-4 lg:text-sm hover:bg-primaryButton"
+            >
+              Ready for Posting
+            </CustomButton>
           </>
         )}
       </div>

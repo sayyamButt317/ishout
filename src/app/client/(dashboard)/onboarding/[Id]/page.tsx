@@ -10,7 +10,7 @@ import { useParams, useRouter } from 'next/navigation';
 import CustomButton from '@/src/app/component/button';
 import ChooseOptionDialog from '@/src/app/component/custom-component/choseoptionDialogue';
 import InfluencerCard from '@/src/app/component/Ready-made/influencer_card';
-import { Skeleton } from 'boneyard-js/react';
+import { CardGridSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function ClientOnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
@@ -52,10 +52,11 @@ export default function ClientOnboardingInfluencerByCampaignId() {
     setDialogOpen(true);
   }, []);
 
+  if (isLoading) return <CardGridSkeleton cards={8} />;
+
   return (
     <>
-      <Skeleton name="influencer-card" loading={isLoading}>
-        <PageHeader
+      <PageHeader
           title="Onboarded Influencers"
           description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}
           icon={<UserPlus className="size-5" />}
@@ -110,7 +111,6 @@ export default function ClientOnboardingInfluencerByCampaignId() {
           onClose={() => setDialogOpen(false)}
           influencer={selectedInfluencer}
         />
-      </Skeleton>
     </>
   );
 }

@@ -6,7 +6,7 @@ import CustomButton from "@/src/app/component/button";
 import { useRouter } from "next/navigation";
 import ApprovedCampaignByIdHook from "@/src/routes/Admin/Hooks/Campaign/approvedCampaignById-hook";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/Campaign/campaignById-hook";
-import { Skeleton } from "boneyard-js/react";
+import { CardGridSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function ApprovedInfluencerById() {
   const { Id } = useParams<{ Id: string }>();
@@ -15,9 +15,10 @@ export default function ApprovedInfluencerById() {
   const { data: campaignData } = CampaignByIdHook(Id ?? "");
   const router = useRouter();
 
+  if (isLoading) return <CardGridSkeleton cards={6} />;
+
   return (
-    <Skeleton name="admin-influencer-grid" loading={isLoading}>
-      <section className="min-h-screen space-y-4">
+    <section className="min-h-screen space-y-4">
         <div className="relative rounded-xl border border-white/20 backdrop-blur">
           <div className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="hidden sm:block absolute -top-24 -left-20 h-72 w-72 rounded-full bg-emerald-200/20 blur-3xl" />
@@ -100,7 +101,6 @@ export default function ApprovedInfluencerById() {
             </CustomButton>
           </div>
         )}
-      </section>
-    </Skeleton>
+    </section>
   );
 }
