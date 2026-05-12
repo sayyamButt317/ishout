@@ -15,7 +15,7 @@ import { Trash2 } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import useDeleteAdminInfluencerMessagesHook from '@/src/routes/Admin/Hooks/feedback/delete-admin-influencer-messages-hook';
 import { CircleDashed, CircleCheck, RefreshCcw, CircleCheckBig } from 'lucide-react';
-import { Skeleton } from 'boneyard-js/react';
+import { KanbanSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 const COLUMNS = [
 
@@ -68,6 +68,7 @@ function ContentFeedbackPageContent() {
     thread_id: item.thread_id,
     brand_thread_id: item.brand_thread_id,
     admin_approved: item.admin_approved,
+    Brand_approved: item.Brand_approved,
 
     rights: 'Full Rights',
     status: 'Ready to Post',
@@ -80,9 +81,10 @@ function ContentFeedbackPageContent() {
       }
     : null;
 
+  if (isLoading) return <KanbanSkeleton />;
+
   return (
-    <Skeleton name="admin-content-kanban" loading={isLoading}>
-      <div className="font-sans">
+    <div className="font-sans">
         <ContentHeader
           title={data?.campaign_brief?.title ?? ''}
           logo={data?.campaign_logo_url ?? ''}
@@ -108,12 +110,19 @@ function ContentFeedbackPageContent() {
                     (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
                   )
                 : col.id === 'revision'
-                  ? apiCards.filter(
-                      (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
-                    )
+                  ? apiCards.filter((card) => {
+                      const adminStatus = (card.admin_approved ?? '').toLowerCase();
+                      const brandStatus = (card.Brand_approved ?? '').toLowerCase();
+                      return adminStatus === 'revision' || brandStatus === 'revision';
+                    })
                   : apiCards.filter((card) => {
-                      const status = (card.admin_approved ?? '').toLowerCase();
-                      return status !== 'approved' && status !== 'revision';
+                      const adminStatus = (card.admin_approved ?? '').toLowerCase();
+                      const brandStatus = (card.Brand_approved ?? '').toLowerCase();
+                      return (
+                        adminStatus !== 'approved' &&
+                        adminStatus !== 'revision' &&
+                        brandStatus !== 'revision'
+                      );
                     });
 
             return (
@@ -284,8 +293,7 @@ function ContentFeedbackPageContent() {
             }
           }}
         />
-      </div>
-    </Skeleton>
+    </div>
   );
 }
 

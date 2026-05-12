@@ -111,9 +111,9 @@ export default function ContentFeedbackBrandSidebar({
             }
           }}
           disabled={saveContentFeedbackMutation.isPending}
-          className="mt-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="mt-2 rounded-xl bg-(--color-primaryButton) px-4 cursor-pointer py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {saveContentFeedbackMutation.isPending ? 'Saving...' : 'Save Brand Feedback'}
+          {saveContentFeedbackMutation.isPending ? 'Saving...' : 'Add Feedback'}
         </button>
       </div>
       <div className="rounded-xl border border-white/10 bg-white/5 p-4">

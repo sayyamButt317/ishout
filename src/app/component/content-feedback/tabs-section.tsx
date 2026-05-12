@@ -25,6 +25,7 @@ type FeedbackTabsSectionProps = {
   messages: ChatMessage[] | undefined;
   isChatLoading: boolean;
   brandThreadId: string;
+  threadId?: string;
   sendEnabled: boolean;
   onSendMessage: (textOrFile: string | File) => Promise<void>;
   onSeekToTime: (time: number) => void;
@@ -57,6 +58,7 @@ export default function FeedbackTabsSection({
   messages,
   isChatLoading,
   brandThreadId,
+  threadId,
   sendEnabled,
   onSendMessage,
   onSeekToTime,
@@ -120,7 +122,7 @@ export default function FeedbackTabsSection({
 
       {activeTab === 'revisions' && (
         <div className="min-h-75 flex-1 overflow-y-auto p-3 lg:min-h-0">
-          <RevisionBox negotiationId={negotiationId} />
+          <RevisionBox negotiationId={negotiationId} threadId={threadId} />
         </div>
       )}
 

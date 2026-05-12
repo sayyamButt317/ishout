@@ -7,7 +7,7 @@ import { Influencer } from '@/src/types/Admin-Type/Feedback/influencer-type';
 import useCampaignAnalytics from '@/src/routes/Admin/Hooks/Report/analytics-hook';
 import useCampaignBriefStats from '@/src/routes/Admin/Hooks/Report/campaign-brief-stats-hook';
 import { useState } from 'react';
-import { Skeleton } from 'boneyard-js/react';
+import { AnalyticsDashboardSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import CustomButton from '@/src/app/component/button';
 import { PDFViewer } from '@react-pdf/renderer';
@@ -77,9 +77,10 @@ export default function InfluencerReportHeader() {
     return <div className="text-red-500">Failed to load analytics</div>;
   }
 
+  if (isLoading) return <AnalyticsDashboardSkeleton />;
+
   return (
-    <Skeleton name="admin-campaign-analytics" loading={isLoading}>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <Dialog open={reportOpen} onOpenChange={setReportOpen}>
           <DialogContent
             className="h-[98vh] w-[98vw] max-w-[98vw] overflow-hidden rounded-none p-0 sm:max-w-[98vw]"
@@ -305,8 +306,7 @@ export default function InfluencerReportHeader() {
             );
           })}
         </div>
-      </div>
-    </Skeleton>
+    </div>
   );
 }
 

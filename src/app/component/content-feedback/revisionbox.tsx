@@ -19,6 +19,7 @@ interface TimestampItem {
 type RevisionBoxProps = {
   reviewSide?: 'admin' | 'brand';
   negotiationId?: string;
+  threadId?: string;
 };
 
 const getApiErrorMessage = (error: unknown): string => {
@@ -49,13 +50,25 @@ const formatRevisionDate = (value?: string) => {
 export const RevisionBox = ({
   reviewSide = 'admin',
   negotiationId,
+  threadId: threadIdProp,
 }: RevisionBoxProps) => {
   const sendinfo = SendRevisionHook();
   const revisionHistory = useContentRevisionHistoryHook();
   const { mutate: loadRevisionHistory } = revisionHistory;
 
-  const { buildPayload, removeTimestamp, timestamps, reset, negotiation_id, thread_id } =
-    useRevisionMessageStore();
+  const {
+    buildPayload,
+    removeTimestamp,
+    timestamps,
+    reset,
+    negotiation_id,
+    thread_id,
+    message_id,
+    contentType,
+    contentUrl,
+    current_version,
+    status,
+  } = useRevisionMessageStore();
 
   useEffect(() => {
     const id = (negotiationId ?? '').trim();
@@ -94,28 +107,54 @@ export const RevisionBox = ({
   );
 
   const sendRevisionTimeandMessage = () => {
-    const payload = buildPayload();
-    if (!payload) {
-      if (!timestamps.length) {
-        toast.error('Add at least one timestamp before requesting a revision.');
-        return;
-      }
-      if (!negotiation_id?.trim() || !thread_id?.trim()) {
-        toast.error(
-          'Missing negotiation/thread id. Select content first, then try again.',
-        );
-        return;
-      }
+    const effectiveNegotiationId = negotiation_id?.trim() || negotiationId?.trim() || '';
+    const effectiveThreadId = thread_id?.trim() || threadIdProp?.trim() || '';
+
+    if (!timestamps.length) {
+      toast.error('Add at least one timestamp before requesting a revision.');
+      return;
+    }
+    if (!effectiveNegotiationId || !effectiveThreadId) {
+      toast.error(
+        'Missing negotiation/thread id. Select content first, then try again.',
+      );
+      return;
+    }
+
+    const hasInvalidTimestamp = timestamps.some(
+      (t) => !t.feedback?.trim() || typeof t.time !== 'number' || t.time < 0,
+    );
+    if (hasInvalidTimestamp) {
       toast.error('Invalid revision data. Please re-check the timestamps and feedback.');
       return;
     }
 
+    const storePayload = buildPayload();
+    const finalPayload = storePayload
+      ? {
+          ...storePayload,
+          negotiation_id: storePayload.negotiation_id || effectiveNegotiationId,
+          thread_id: storePayload.thread_id || effectiveThreadId,
+        }
+      : {
+          negotiation_id: effectiveNegotiationId,
+          thread_id: effectiveThreadId,
+          message_id: message_id || '',
+          contentType,
+          contentUrl,
+          current_version,
+          status,
+          revisions: [
+            { version: current_version, timestamps, status: 'OPEN' as const },
+          ],
+        };
+
     sendinfo.mutate(
-      { ...payload, review_side: reviewSide },
+      { ...finalPayload, review_side: reviewSide },
       {
         onSuccess: () => {
           reset();
-          const id = (negotiationId ?? payload.negotiation_id ?? '').trim();
+          const id = (negotiationId ?? finalPayload.negotiation_id ?? '').trim();
           if (id) {
             loadRevisionHistory(id);
           }

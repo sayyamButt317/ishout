@@ -6,25 +6,26 @@ import {
   PenSquare, PlusCircle, CheckCircle, Sparkles, Rocket,
 } from "lucide-react";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 const TIME_SLOTS = [
-  { time: "09:00 AM", label: "Morning Rush",       hour: 9    },
-  { time: "11:30 AM", label: "Lunch Break",         hour: 11.5 },
-  { time: "08:00 PM", label: "Peak · Recommended",  hour: 20, hot: true },
-  { time: "09:45 PM", label: "Late Night",           hour: 21.75 },
+  { time: "09:00 AM", label: "Morning Rush", hour: 9 },
+  { time: "11:30 AM", label: "Lunch Break", hour: 11.5 },
+  { time: "08:00 PM", label: "Peak · Recommended", hour: 20, hot: true },
+  { time: "09:45 PM", label: "Late Night", hour: 21.75 },
 ];
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function buildCalendar(year: number, month: number) {
-  const firstDay   = new Date(year, month, 1).getDay();
+  const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const prevDays   = new Date(year, month, 0).getDate();
+  const prevDays = new Date(year, month, 0).getDate();
   const cells: { day: number; muted?: boolean }[] = [];
 
   for (let i = firstDay - 1; i >= 0; i--) cells.push({ day: prevDays - i, muted: true });
@@ -43,25 +44,25 @@ function slotAvailable(year: number, month: number, day: number, hour: number) {
 
 export default function CampaignSchedulePage() {
   const today = useMemo(() => new Date(), []);
-
-  const [viewYear,  setViewYear]  = useState(today.getFullYear());
+  const { Id } = useParams<{ Id: string }>();
+  const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
-  const [selectedDay,  setSelectedDay]  = useState<number | null>(null);
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [caption,   setCaption]   = useState("");
-  const [hashtags,  setHashtags]  = useState("");
+  const [caption, setCaption] = useState("");
+  const [hashtags, setHashtags] = useState("");
   const [confirmed, setConfirmed] = useState(false);
 
   const cells = useMemo(() => buildCalendar(viewYear, viewMonth), [viewYear, viewMonth]);
 
-  const isToday  = (d: number) => d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
-  const isPast   = (d: number) => new Date(viewYear, viewMonth, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const isAtMin  = viewYear === today.getFullYear() && viewMonth === today.getMonth();
+  const isToday = (d: number) => d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+  const isPast = (d: number) => new Date(viewYear, viewMonth, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const isAtMin = viewYear === today.getFullYear() && viewMonth === today.getMonth();
 
   const goMonth = (dir: 1 | -1) => {
     setViewMonth(m => {
       const next = m + dir;
-      if (next < 0)  { setViewYear(y => y - 1); return 11; }
+      if (next < 0) { setViewYear(y => y - 1); return 11; }
       if (next > 11) { setViewYear(y => y + 1); return 0; }
       return next;
     });
@@ -137,16 +138,16 @@ export default function CampaignSchedulePage() {
                 <div className="grid grid-cols-7 gap-1 text-center text-sm">
                   {cells.map(({ day, muted }, i) => {
                     if (muted) return <div key={i} className="py-2 text-white/10 text-xs">{day}</div>;
-                    const past  = isPast(day);
+                    const past = isPast(day);
                     const today = isToday(day);
-                    const sel   = selectedDay === day;
+                    const sel = selectedDay === day;
                     return (
                       <button key={i} disabled={past} onClick={() => { setSelectedDay(day); setSelectedTime(null); }}
                         className={`py-2 rounded-xl transition-all font-medium text-sm
                           ${past ? "text-white/15 cursor-not-allowed"
-                            : sel  ? "bg-[#ff4e7e] text-white font-black shadow-[0_0_12px_rgba(255,78,126,0.4)]"
-                            : today ? "ring-1 ring-[#ff4e7e]/50 text-[#ff4e7e] hover:bg-[#ff4e7e]/10"
-                            : "text-white hover:bg-white/10"}`}>
+                            : sel ? "bg-[#ff4e7e] text-white font-black shadow-[0_0_12px_rgba(255,78,126,0.4)]"
+                              : today ? "ring-1 ring-[#ff4e7e]/50 text-[#ff4e7e] hover:bg-[#ff4e7e]/10"
+                                : "text-white hover:bg-white/10"}`}>
                         {day}
                       </button>
                     );
@@ -248,9 +249,9 @@ export default function CampaignSchedulePage() {
               <div className="flex-1 space-y-5 w-full">
                 <div className="space-y-1">
                   {([
-                    { label: "Publish Date",   value: summaryDate },
-                    { label: "Schedule Time",  value: selectedTime ?? "—" },
-                    { label: "Campaign",       value: "Midnight Cyber-Pulse", pink: true },
+                    { label: "Publish Date", value: summaryDate },
+                    { label: "Schedule Time", value: selectedTime ?? "—" },
+                    { label: "Campaign", value: "Midnight Cyber-Pulse", pink: true },
                   ] as { label: string; value: string; pink?: boolean }[]).map(({ label, value, pink }, i, arr) => (
                     <div key={i} className={`flex justify-between items-center py-3 ${i < arr.length - 1 ? "border-b border-white/5" : ""}`}>
                       <span className="text-white/40 text-sm">{label}</span>
@@ -269,7 +270,7 @@ export default function CampaignSchedulePage() {
                   {!canSchedule
                     ? (!selectedDay ? "← Pick a date to continue"
                       : !selectedTime ? "← Pick a time slot"
-                      : "← Add a caption to continue")
+                        : "← Add a caption to continue")
                     : "By scheduling, you agree to the Campaign Fulfillment Terms."}
                 </p>
               </div>

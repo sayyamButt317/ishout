@@ -13,7 +13,7 @@ import ChooseOptionDialog from '@/src/app/component/custom-component/choseoption
 import OnboardingCard from '@/src/app/component/Ready-made/onboarding-card';
 import SendNegotiationHook from '@/src/routes/Admin/Hooks/Whatsapp/sendNegotiation-hook';
 import NegotiationStatsHook from '@/src/routes/Admin/Hooks/Whatsapp/NegotiationStats-hook';
-import { Skeleton } from 'boneyard-js/react';
+import { CardGridSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function OnboardingInfluencerByCampaignId() {
   const { Id } = useParams<{ Id: string }>();
@@ -81,10 +81,11 @@ export default function OnboardingInfluencerByCampaignId() {
     [sendNegotiationMutation],
   );
 
+  if (isLoading) return <CardGridSkeleton cards={8} />;
+
   return (
     <>
-      <Skeleton name="admin-influencer-grid" loading={isLoading}>
-        <PageHeader
+      <PageHeader
           title="Onboarded Influencers"
           description={`Showing ${data?.influencers?.length ?? 0} of ${data?.total ?? 0} influencers`}
           icon={<UserPlus className="size-5" />}
@@ -143,7 +144,6 @@ export default function OnboardingInfluencerByCampaignId() {
           onClose={() => setDialogOpen(false)}
           influencer={selectedInfluencer}
         />
-      </Skeleton>
     </>
   );
 }

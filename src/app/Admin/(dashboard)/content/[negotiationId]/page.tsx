@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { MessageSquare } from 'lucide-react';
-import { Skeleton } from 'boneyard-js/react';
+import { ContentDetailSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 import PageHeader from '@/src/app/component/PageHeader';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
@@ -481,31 +481,30 @@ export default function ContentFeedbackDetailPage() {
     );
   };
 
+  if (isNegotiationLoading) return <ContentDetailSkeleton />;
+
   if (!selectedCard) {
     return (
-      <Skeleton name="admin-content-review" loading={isNegotiationLoading}>
-        <div className="font-sans p-4">
-          <PageHeader
-            title="Content Review & Feedback Pipeline"
-            description="Select a negotiation to review"
-            icon={<MessageSquare className="size-5" />}
-            actions={
-              <button
-                onClick={backToList}
-                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white hover:bg-white/10"
-              >
-                Back
-              </button>
-            }
-          />
-        </div>
-      </Skeleton>
+      <div className="font-sans p-4">
+        <PageHeader
+          title="Content Review & Feedback Pipeline"
+          description="Select a negotiation to review"
+          icon={<MessageSquare className="size-5" />}
+          actions={
+            <button
+              onClick={backToList}
+              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white hover:bg-white/10"
+            >
+              Back
+            </button>
+          }
+        />
+      </div>
     );
   }
 
   return (
-    <Skeleton name="admin-content-review" loading={isNegotiationLoading}>
-      <div className="flex w-full flex-col font-sans overflow-y-auto lg:h-[calc(100vh-24px)] lg:flex-row lg:overflow-hidden">
+    <div className="flex w-full flex-col font-sans overflow-y-auto lg:h-[calc(100vh-24px)] lg:flex-row lg:overflow-hidden">
         <div className="flex w-full flex-col lg:flex-1 lg:overflow-hidden lg:border-r lg:border-white/10">
           <FeedbackDetailHeader
             title={selectedCard.title}
@@ -558,6 +557,7 @@ export default function ContentFeedbackDetailPage() {
           messages={chatData?.messages}
           isChatLoading={chatLoading}
           brandThreadId={brandThreadId}
+          threadId={threadId}
           sendEnabled={sendEnabled}
           onSendMessage={handleSendMessage}
           onSeekToTime={handleSeekPreviewToTime}
@@ -575,7 +575,6 @@ export default function ContentFeedbackDetailPage() {
           selectedCard={selectedCard}
           briefId={briefIdForGuidelines}
         />
-      </div>
-    </Skeleton>
+    </div>
   );
 }

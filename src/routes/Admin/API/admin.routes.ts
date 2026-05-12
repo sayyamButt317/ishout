@@ -742,3 +742,8 @@ export const DemographicsOcrApi = async (url: string[]) => {
   const response = await api.post(AdminENDPOINT.ADMIN_DEMOGRAPHICS_OCR, { url });
   return response.data;
 };
+
+export const ReadyForPostingApi = async (campaign_id: string) => {
+  const response = await api.post(AdminENDPOINT.ADMIN_READY_FOR_POSTING(campaign_id));
+  return response.data;
+};
