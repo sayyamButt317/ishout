@@ -112,16 +112,16 @@ export default function CampaignSchedulePage() {
   const handleSchedule = useCallback(() => {
     if (!canSchedule) return;
 
-    submitPostingDetails({
-      campaign_id: Id ?? "",
-      campaign_name: data?.campaign_brief?.title ?? "",
-      logo_url: data?.campaign_logo_url ?? "",
-      posting_date: date,
-      posting_time: time,
-      caption,
-      hashtag: hashtags,
-      tag_users: tagpartners,
-    });
+submitPostingDetails({
+  campaign_id: Id ?? "",
+  campaign_name: data?.campaign_brief?.title ?? "",
+  logo_url: data?.campaign_logo_url ?? "",
+  posting_date: date,
+  posting_time: time,
+  caption,
+  hashtag: hashtags,
+  tag_users: tagpartners,
+});
   }, [canSchedule, submitPostingDetails, Id, data, date, time, caption, hashtags, tagpartners]);
 
   return (
