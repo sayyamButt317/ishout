@@ -122,7 +122,11 @@ export const AdminENDPOINT = {
     `/company/whatsapp-admin-company/media-urls/${negotiation_id}`,
   ADMIN_READY_FOR_POSTING: (campaign_id: string) =>
     `/${ROLE}/ready-for-posting/${campaign_id}`,
-  ADMIN_GENERATE_CAMAPIGN_POSTING: `/${ROLE}/generate-campaign `,
+  /** POST — admin create campaign / generate influencers. */
+  ADMIN_GENERATE_CAMPAIGN: `/${ROLE}/generate-campaign`,
   ADMIN_GENERATE_BRIEF: `/${ROLE}/generate-brief`,
-  ADMIN_ALLCOMPANY_NAME: `/${ROLE}/all-company-name`,
+  /** POST — admin AI campaign brief (body: { user_input } only). */
+  ADMIN_CREATE_CAMPAIGN_BRIEF: `/${ROLE}/campaign-brief`,
+  /** GET — list of company names for admin campaign summary / assignment. */
+  ADMIN_ALL_COMPANIES_NAMES: `/${ROLE}/all-companies-names`,
 };
