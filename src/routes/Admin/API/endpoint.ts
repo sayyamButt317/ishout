@@ -120,9 +120,12 @@ export const AdminENDPOINT = {
   ADMIN_DEMOGRAPHICS_OCR: `/${ROLE}/demographics-ocr`,
   COMPANY_WHATSAPP_ADMIN_COMPANY_MEDIA_URLS: (negotiation_id: string) =>
     `/company/whatsapp-admin-company/media-urls/${negotiation_id}`,
-  ADMIN_READY_FOR_POSTING: `/${ROLE}/ready-for-posting`,
-  ADMIN_GENERATE_CAMAPIGN_POSTING: `/${ROLE}/generate-campaign `,
+  ADMIN_READY_FOR_POSTING: (campaign_id: string) =>
+    `/${ROLE}/ready-for-posting/${campaign_id}`,
+  ADMIN_GENERATE_CAMPAIGN: `/${ROLE}/generate-campaign`,
   ADMIN_GENERATE_BRIEF: `/${ROLE}/generate-brief`,
+  ADMIN_CREATE_CAMPAIGN_BRIEF: `/${ROLE}/campaign-brief`,
+  ADMIN_ALL_COMPANIES_NAMES: `/${ROLE}/all-companies-names`,
   ADMIN_ALLCOMPANY_NAME: `/${ROLE}/all-company-name`,
   ADMIN_POSTING_DETAILS: `/${ROLE}/posting/get-details`,
 };
