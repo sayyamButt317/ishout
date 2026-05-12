@@ -14,6 +14,7 @@ interface PostingProps {
     tagpartners: string[];
     url: string;
     contentType: string;
+    postingDate: Date;
 
     setDateForPosting: (value: string) => void;
     setTimeForPosting: (value: string) => void;
@@ -23,6 +24,7 @@ interface PostingProps {
     setTagsForPosting: (value: string[]) => void;
     setUrlForPosting: (value: string) => void;
     setContentTypeForPosting: (value: string) => void;
+    setPostingDateForPosting: (value: Date) => void;
     reset: () => void;
 }
 
@@ -41,6 +43,7 @@ const usePostingStore = create<PostingProps>()(
                 tagpartners: [],
                 url: "",
                 contentType: "",
+                postingDate: new Date(),
 
                 setDateForPosting: (value) => set({ date: value }),
                 setTimeForPosting: (value) => set({ time: value }),
@@ -50,6 +53,7 @@ const usePostingStore = create<PostingProps>()(
                 setTagpartnersForPosting: (value) => set({ tagpartners: value }),
                 setUrlForPosting: (value) => set({ url: value }),
                 setContentTypeForPosting: (value) => set({ contentType: value }),
+                setPostingDateForPosting: (value) => set({ postingDate: value }),
                 reset: () => set({ date: "", time: "", caption: "", hashtags: [], tags: [], tagpartners: [], url: "", contentType: "" }),
             }),
             {

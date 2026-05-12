@@ -48,6 +48,7 @@ import type {
   AdminCreateCampaignApiResponse,
   AdminCreateCampaignRequest,
 } from '@/src/types/Admin-Type/create-campaign-type';
+import { InfluencerPostingDetailsRequest } from '@/src/types/Posting/posting-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -789,5 +790,17 @@ export const AdminCreateCampaignApi = async (
     AdminENDPOINT.ADMIN_GENERATE_CAMPAIGN,
     payload,
   );
+  return response.data;
+};
+
+
+export const InfluencerPostingDetailsApi = async (
+  payload: InfluencerPostingDetailsRequest
+) => {
+  const response = await api.post(
+    AdminENDPOINT.INFLUENCER_POSTING_DETAILS,
+    payload
+  );
+
   return response.data;
 };

@@ -125,5 +125,6 @@ export const AdminENDPOINT = {
   ADMIN_CREATE_CAMPAIGN_BRIEF: `/${ROLE}/campaign-brief`,
   ADMIN_ALL_COMPANIES_NAMES: `/${ROLE}/all-companies-names`,
   ADMIN_ALLCOMPANY_NAME: `/${ROLE}/all-company-name`,
+  INFLUENCER_POSTING_DETAILS: `/${ROLE}/posting-details`,
   ADMIN_POSTING_DETAILS: `/${ROLE}/posting/get-details`,
 };
