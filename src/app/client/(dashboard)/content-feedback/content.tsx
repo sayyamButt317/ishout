@@ -30,7 +30,6 @@ export type SelectedContentFeedbackCard = {
   item: NegotiationItem;
   title: string;
   campaign: string;
-  /** Campaign brief id from list page (`data?.campaign?.brief_id`) for guidelines API */
   briefId?: string;
 };
 

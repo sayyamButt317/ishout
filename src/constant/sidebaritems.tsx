@@ -70,6 +70,7 @@ export const adminSidebarLinks: SidebarGroupLink[] = [
       { label: 'Onboarding', route: '/Admin/onboarding' },
       { label: 'Content', route: '/Admin/content' },
       { label: 'Report', route: '/Admin/campaign-report' },
+      { label: 'Posting Details', route: '/Admin/posting-details' },
     ],
   },
   {

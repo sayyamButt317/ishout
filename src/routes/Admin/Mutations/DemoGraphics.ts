@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { DemographicsOcrApi, ReadyForPostingApi } from "../API/admin.routes";
+import { DemographicsOcrApi, PostingDetailsApi, ReadyForPostingApi } from "../API/admin.routes";
 
 export default function DemographicsOcrHook() {
     const queryClient = useQueryClient();
@@ -22,7 +22,8 @@ export default function DemographicsOcrHook() {
 export function ReadyForPostingHook() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (campaign_id: string) => ReadyForPostingApi(campaign_id),
+        mutationFn: ({ campaign_id, content_url, thread_id }: { campaign_id: string; content_url: string; thread_id: string }) =>
+            ReadyForPostingApi(campaign_id, content_url, thread_id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["ready-for-posting"] });
         },
@@ -32,5 +33,14 @@ export function ReadyForPostingHook() {
                 description: axiosError.response?.data?.detail as string
             });
         },
+    })
+}
+
+export function PostingDetailsHook() {
+    return useQuery({
+        queryKey: ['posting-details'],
+        queryFn: () => PostingDetailsApi(),
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
     })
 }
