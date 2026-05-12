@@ -6,9 +6,6 @@ import CampaignBriefTimelinePage from '@/src/app/component/reporting/CampaignBri
 import CampaignContentStrategyPage from '@/src/app/component/reporting/CampaignContentStrategyPage';
 import { styles } from './reporty_style';
 import CampaignCoverPage from './CampaignCoverPage';
-import CampaignSummarySection from './CampaignSummarySection';
-import CampaignOverviewSection from './CampaignOverviewPage';
-import CampaignTimelineSection from './CampaignTimelineSection';
 import DemographicsSection from './DemographicsSection';
 
 interface CampaignReportProps {
@@ -35,13 +32,10 @@ export default function CampaignReport(props: CampaignReportProps) {
         campaign_brief={negotiationData.campaign_brief}
       />
       <CampaignContentStrategyPage negotiationData={negotiationData} />
-      <CampaignBriefTimelinePage negotiationData={negotiationData} />
-      <CampaignSummarySection
+      <CampaignBriefTimelinePage
+        negotiationData={negotiationData}
         summaryData={summaryData}
-        campaign_brief={negotiationData.campaign_brief}
       />
-      <CampaignOverviewSection summaryData={summaryData} />
-      <CampaignTimelineSection summaryData={summaryData} />
       <DemographicsSection summaryData={summaryData} />
     </Document>
   );
