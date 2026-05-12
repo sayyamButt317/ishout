@@ -505,76 +505,78 @@ export default function ContentFeedbackDetailPage() {
 
   return (
     <div className="flex w-full flex-col font-sans overflow-y-auto lg:h-[calc(100vh-24px)] lg:flex-row lg:overflow-hidden">
-        <div className="flex w-full flex-col lg:flex-1 lg:overflow-hidden lg:border-r lg:border-white/10">
-          <FeedbackDetailHeader
-            title={selectedCard.title}
-            campaign={selectedCard.campaign}
-            onBack={() => router.back()}
-            contentType={contentPreviewKind}
-            onContentTypeChange={setContentPreviewKind}
-            version={contentVersion}
-            onVersionChange={setContentVersion}
-          />
+      <div className="flex w-full flex-col lg:flex-1 lg:overflow-hidden lg:border-r lg:border-white/10">
+        <FeedbackDetailHeader
+          title={selectedCard.title}
+          campaign={selectedCard.campaign}
+          onBack={() => router.back()}
+          contentType={contentPreviewKind}
+          onContentTypeChange={setContentPreviewKind}
+          version={contentVersion}
+          onVersionChange={setContentVersion}
+        />
 
-          {/* Video workspace */}
-          <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
-            <div className="aspect-9/16 w-full lg:aspect-auto lg:flex lg:flex-1">
-              <VideoFeedbackWorkspace
-                videoRef={videoRef}
-                selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-                selectedPreviewMediaType={selectedPreviewMediaType}
-                isPlaying={isPlaying}
-                setIsPlaying={setIsPlaying}
-                setSelectedVideoDuration={setSelectedVideoDuration}
-                setSelectedVideoResolution={setSelectedVideoResolution}
-                duration={selectedVideoDuration}
-                markers={timelineMarkers}
-                sendEnabled={sendEnabled}
-                contentUrl={selectedPreviewMediaUrl}
-                onSubmitTimedFeedback={handleTimedFeedbackSubmit}
-                onMarkerSeek={handleSeekPreviewToTime}
-              />
-            </div>
+        {/* Video workspace */}
+        <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
+          <div className="aspect-9/16 w-full lg:aspect-auto lg:flex lg:flex-1">
+            <VideoFeedbackWorkspace
+              videoRef={videoRef}
+              selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+              selectedPreviewMediaType={selectedPreviewMediaType}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+              setSelectedVideoDuration={setSelectedVideoDuration}
+              setSelectedVideoResolution={setSelectedVideoResolution}
+              duration={selectedVideoDuration}
+              markers={timelineMarkers}
+              sendEnabled={sendEnabled}
+              contentUrl={selectedPreviewMediaUrl}
+              onSubmitTimedFeedback={handleTimedFeedbackSubmit}
+              onMarkerSeek={handleSeekPreviewToTime}
+            />
           </div>
-
-          <FeedbackDetailFooter
-            durationText={durationText}
-            resolutionText={resolutionText}
-            canForward={canForwardToBrand}
-            isForwardLoading={isForwardToBrandLoading}
-            onForwardToBrand={handleForwardToBrand}
-            isDemographicsView={isDemographicsView}
-            canSaveDemographics={canSaveDemographics}
-            isSavingDemographics={isSavingDemographics}
-            onSaveDemographics={handleSaveDemographics}
-          />
         </div>
 
-        <FeedbackTabsSection
-          videoRef={videoRef}
-          chatMode={chatMode}
-          setChatMode={setChatMode}
-          messages={chatData?.messages}
-          isChatLoading={chatLoading}
-          brandThreadId={brandThreadId}
+        <FeedbackDetailFooter
+          durationText={durationText}
+          resolutionText={resolutionText}
+          canForward={canForwardToBrand}
+          isForwardLoading={isForwardToBrandLoading}
+          onForwardToBrand={handleForwardToBrand}
+          isDemographicsView={isDemographicsView}
+          canSaveDemographics={canSaveDemographics}
+          isSavingDemographics={isSavingDemographics}
+          onSaveDemographics={handleSaveDemographics}
+          contentUrl={selectedPreviewMediaUrl}
           threadId={threadId}
-          sendEnabled={sendEnabled}
-          onSendMessage={handleSendMessage}
-          onSeekToTime={handleSeekPreviewToTime}
-          onSelectMedia={(url, type) => {
-            setSelectedPreviewMediaUrl(url);
-            setSelectedPreviewMediaType(type);
-            setIsPlaying(false);
-          }}
-          activeFeedbackId={activeFeedbackId2}
-          selectedContentFeedback={selectedContentFeedback}
-          setSelectedContentFeedback={setSelectedContentFeedback}
-          selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-          mediaUrls={mediaUrls}
-          negotiationId={negotiationId}
-          selectedCard={selectedCard}
-          briefId={briefIdForGuidelines}
         />
+      </div>
+
+      <FeedbackTabsSection
+        videoRef={videoRef}
+        chatMode={chatMode}
+        setChatMode={setChatMode}
+        messages={chatData?.messages}
+        isChatLoading={chatLoading}
+        brandThreadId={brandThreadId}
+        threadId={threadId}
+        sendEnabled={sendEnabled}
+        onSendMessage={handleSendMessage}
+        onSeekToTime={handleSeekPreviewToTime}
+        onSelectMedia={(url, type) => {
+          setSelectedPreviewMediaUrl(url);
+          setSelectedPreviewMediaType(type);
+          setIsPlaying(false);
+        }}
+        activeFeedbackId={activeFeedbackId2}
+        selectedContentFeedback={selectedContentFeedback}
+        setSelectedContentFeedback={setSelectedContentFeedback}
+        selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+        mediaUrls={mediaUrls}
+        negotiationId={negotiationId}
+        selectedCard={selectedCard}
+        briefId={briefIdForGuidelines}
+      />
     </div>
   );
 }

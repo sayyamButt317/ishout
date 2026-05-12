@@ -31,6 +31,16 @@ function isDataUrl(src: string) {
   return src.startsWith('data:');
 }
 
+function isValidMediaUrl(value: string) {
+  if (!value) return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 function isPdfUrl(value: string) {
   return /^https?:\/\/.+\.pdf(?:[?#].*)?$/i.test(value.trim());
 }
@@ -62,7 +72,7 @@ export default function ChatMessageContent({
           onClick={() => onSeekToTime?.(msg.timestamp!)}
           className="block w-full cursor-pointer rounded-lg text-left outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-(--color-primaryButton)"
         >
-          {msg.snapshot ? (
+          {msg.snapshot && (isValidMediaUrl(msg.snapshot) || isDataUrl(msg.snapshot)) ? (
             <div className="relative w-full max-w-[320px]">
               <Image
                 src={msg.snapshot}
@@ -94,7 +104,7 @@ export default function ChatMessageContent({
     );
   }
 
-  if (msg?.snapshot) {
+  if (msg?.snapshot && (isValidMediaUrl(msg.snapshot) || isDataUrl(msg.snapshot))) {
     return (
       <div className="relative w-fit max-w-full">
         <button
@@ -125,8 +135,11 @@ export default function ChatMessageContent({
     );
   }
 
-  const mediaUrl = msg?.mediaUrl || msg?.text || '';
-  const analyzed = AnalyzeURL(mediaUrl);
+  const rawMediaUrl = msg?.mediaUrl || msg?.text || '';
+  const mediaUrl = rawMediaUrl.trim();
+  const analyzed = isValidMediaUrl(mediaUrl)
+    ? AnalyzeURL(mediaUrl)
+    : { isVideoUrl: false, isImageUrl: false, isAudioUrl: false };
 
   if (isPdfUrl(mediaUrl)) {
     return (

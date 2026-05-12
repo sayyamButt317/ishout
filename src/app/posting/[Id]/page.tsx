@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useMemo } from "react";
 import {
   ChevronRight, ChevronLeft, FileText, Clock,
@@ -7,8 +6,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-
-// ── Constants ─────────────────────────────────────────────────────────────────
 
 const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -19,8 +16,6 @@ const TIME_SLOTS = [
   { time: "08:00 PM", label: "Peak · Recommended", hour: 20, hot: true },
   { time: "09:45 PM", label: "Late Night", hour: 21.75 },
 ];
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function buildCalendar(year: number, month: number) {
   const firstDay = new Date(year, month, 1).getDay();
@@ -39,8 +34,6 @@ function slotAvailable(year: number, month: number, day: number, hour: number) {
   const slot = new Date(year, month, day, Math.floor(hour), (hour % 1) * 60);
   return slot > new Date();
 }
-
-// ── Component ─────────────────────────────────────────────────────────────────
 
 export default function CampaignSchedulePage() {
   const today = useMemo(() => new Date(), []);
@@ -96,11 +89,6 @@ export default function CampaignSchedulePage() {
           <p className="text-white/40 max-w-2xl mx-auto text-sm leading-relaxed">
             Drive viral hype for the next-gen wearable tech launch. Maximize day-one pre-order conversions through immersive visual storytelling.
           </p>
-          <div className="mt-8 flex justify-center">
-            <button className="flex items-center gap-2 px-6 py-2.5 rounded-full border border-[#ff4e7e]/30 bg-[#ff4e7e]/5 text-[#ff4e7e] text-sm font-bold hover:bg-[#ff4e7e] hover:text-white transition-all">
-              <FileText size={14} /> View Campaign Brief
-            </button>
-          </div>
         </section>
 
         {/* ── Main Card ── */}

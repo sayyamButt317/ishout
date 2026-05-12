@@ -20,11 +20,25 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoP
   },
   ref,
 ) {
+
+  function isValidMediaUrl(value: string) {
+    if (!value) return false;
+    try {
+      const url = new URL(value);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+  function isDataUrl(value: string) {
+    return value.startsWith('data:');
+  }
+
   return (
     <div className="flex min-h-[min(560px,68vh)] w-full flex-1 flex-col overflow-hidden rounded-lg border border-white/10 bg-slate-800">
       <div className="relative flex min-h-[min(480px,56vh)] flex-1 items-center justify-center overflow-hidden bg-black">
         {selectedPreviewMediaUrl ? (
-          selectedPreviewMediaType === 'image' ? (
+          isDataUrl(selectedPreviewMediaUrl) || (isValidMediaUrl(selectedPreviewMediaUrl) && selectedPreviewMediaType === 'image') ? (
             <Image
               src={selectedPreviewMediaUrl}
               alt="Selected chat image"
@@ -32,7 +46,7 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoP
               className="object-contain"
               sizes="(max-width: 1280px) 100vw, 600px"
             />
-          ) : (
+          ) : isValidMediaUrl(selectedPreviewMediaUrl) ? (
             <>
               <video
                 ref={ref}
@@ -93,6 +107,10 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoP
                 </button>
               )}
             </>
+          ) : (
+            <div className="flex min-h-[min(480px,56vh)] w-full items-center justify-center text-sm text-white/50">
+              No media available
+            </div>
           )
         ) : (
           <div className="flex min-h-[min(480px,56vh)] w-full items-center justify-center text-sm text-white/50">

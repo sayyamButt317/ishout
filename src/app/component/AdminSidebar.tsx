@@ -113,13 +113,6 @@ export default function AdminSidebar() {
   const sidebarContent = (onNavigate?: () => void) => (
     <>
       <a href="https://app.ishout.ae" target="_blank" rel="noopener noreferrer" className="mb-8 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
-        {/* Logo */}
-
-        {/* href="https://ishout.ae"
-        rel="noopener noreferrer"
-        
-         /</>> */}
-
         <div className="relative">
           <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
           <Image
@@ -137,7 +130,7 @@ export default function AdminSidebar() {
 
       {/* Logout */}
       <div className="pt-6 border-t border-foreground/10 justify-center">
-      <ThemeToggle />
+        <ThemeToggle />
         <Button
           variant="ghost"
           className="w-fit text-red-400 hover:bg-red-500/10 cursor-pointer rounded-xl"
