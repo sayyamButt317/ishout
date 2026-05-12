@@ -41,6 +41,13 @@ import { AdminInfluencerMessagesResponse } from '@/src/types/Admin-Type/Feedback
 import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-messages-type';
 import type { CompanyNegotiationMediaResponse } from '@/src/types/Compnay/feeedback-content-type';
 import type { InfluencerDemographicsAssetsResponse } from '@/src/types/Admin-Type/Reports-tyes';
+import type {
+  AdminAllCompaniesNamesResponse,
+  AdminCampaignBriefApiResponse,
+  AdminCampaignBriefRequest,
+  AdminCreateCampaignApiResponse,
+  AdminCreateCampaignRequest,
+} from '@/src/types/Admin-Type/create-campaign-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -745,5 +752,32 @@ export const DemographicsOcrApi = async (url: string[]) => {
 
 export const ReadyForPostingApi = async (campaign_id: string) => {
   const response = await api.post(AdminENDPOINT.ADMIN_READY_FOR_POSTING(campaign_id));
+  return response.data;
+};
+
+export const AdminCreateCampaignBriefApi = async (
+  payload: AdminCampaignBriefRequest,
+): Promise<AdminCampaignBriefApiResponse> => {
+  const response = await api.post<AdminCampaignBriefApiResponse>(
+    AdminENDPOINT.ADMIN_CREATE_CAMPAIGN_BRIEF,
+    payload,
+  );
+  return response.data;
+};
+
+export const AdminAllCompaniesNamesApi = async (): Promise<AdminAllCompaniesNamesResponse> => {
+  const response = await api.get<AdminAllCompaniesNamesResponse>(
+    AdminENDPOINT.ADMIN_ALL_COMPANIES_NAMES,
+  );
+  return response.data;
+};
+
+export const AdminCreateCampaignApi = async (
+  payload: AdminCreateCampaignRequest,
+): Promise<AdminCreateCampaignApiResponse> => {
+  const response = await api.post<AdminCreateCampaignApiResponse>(
+    AdminENDPOINT.ADMIN_GENERATE_CAMPAIGN,
+    payload,
+  );
   return response.data;
 };
