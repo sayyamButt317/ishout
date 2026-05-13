@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { DemographicsOcrApi, InfluencerPostingDetailsApi, PostingDetailsApi, ReadyForPostingApi } from "../API/admin.routes";
 import { InfluencerPostingDetailsRequest } from "@/src/types/Posting/posting-type";
+import usePostingStore from "@/src/store/Report/posting-store";
 
 export default function DemographicsOcrHook() {
     const queryClient = useQueryClient();
@@ -47,10 +48,12 @@ export function PostingDetailsHook() {
 }
 
 export function InfluencerPostingDetailsHook() {
+    const { reset } = usePostingStore();
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: (payload: InfluencerPostingDetailsRequest) => InfluencerPostingDetailsApi(payload),
         onSuccess: () => {
+            reset();
             queryClient.invalidateQueries({ queryKey: ['influencer-posting-details'] });
         },
         onError: (error) => {

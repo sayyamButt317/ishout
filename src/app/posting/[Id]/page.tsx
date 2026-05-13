@@ -53,7 +53,6 @@ export default function CampaignSchedulePage() {
     caption, setCaptionForPosting,
     hashtags, setHashtagsForPosting,
     tagpartners, setTagpartnersForPosting,
-    reset,
   } = usePostingStore();
 
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -122,8 +121,8 @@ export default function CampaignSchedulePage() {
       hashtag: hashtags,
       tag_users: tagpartners,
     });
-    reset();
-  }, [canSchedule, submitPostingDetails, Id, data?.campaign_brief?.title, data?.campaign_logo_url, date, time, caption, hashtags, tagpartners, reset]);
+
+  }, [canSchedule, submitPostingDetails, Id, data?.campaign_brief?.title, data?.campaign_logo_url, date, time, caption, hashtags, tagpartners]);
 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
