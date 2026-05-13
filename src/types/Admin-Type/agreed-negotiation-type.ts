@@ -37,6 +37,7 @@ export interface AgreedNegotiation {
   admin_approved?: string | null;
   campaign_brief?: CampaignBrief;
   influencer?: Influencer;
+  negotiation_controls?: string;
 }
 
 export interface CampaignMeta {

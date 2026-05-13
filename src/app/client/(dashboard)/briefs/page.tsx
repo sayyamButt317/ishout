@@ -15,10 +15,11 @@ import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBr
 import Image from 'next/image';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
+import { ClientBriefsListSkeleton } from '@/src/app/component/skeletons/client-skeletons';
 
 export default function CampaignBriefPage() {
   const { user_id } = useAuthStore();
-  const { data } = CampaignBriefHook(user_id);
+  const { data, isPending } = CampaignBriefHook(user_id);
 
   const deleteBriefMutation = DeleteCampaignBriefHook(user_id);
 
@@ -55,6 +56,7 @@ export default function CampaignBriefPage() {
       });
   }, [briefs, sortOrder, search]);
 
+  if (isPending) return <ClientBriefsListSkeleton items={6} />;
 
   return (
     <div className="min-h-screen text-foreground/80 rounded-2xl">

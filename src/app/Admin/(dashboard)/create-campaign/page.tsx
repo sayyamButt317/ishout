@@ -130,8 +130,7 @@ const CampaignBreifPage = () => {
               in Seconds
             </h2>
             <p className="text-foreground/60 text-lg italic opacity-80">
-              Describe the campaign below. The brief is saved on the server with an admin
-              flow (no company account required).
+              Describe the campaign below.
             </p>
           </div>
 
@@ -139,12 +138,6 @@ const CampaignBreifPage = () => {
           <div className="w-full bg-foreground/10 dark:bg-[#131318] rounded-2xl p-1 border border-white/0.06 shadow-2xl shadow-black/40">
             <div className="bg-foreground/5 rounded-2xl p-6 space-y-4 text-left dark:bg-[#13131a]">
               <div className="space-y-2">
-                <label
-                  htmlFor="admin-campaign-input"
-                  className="text-xs font-semibold uppercase tracking-wide text-foreground/60"
-                >
-                  Campaign description
-                </label>
                 <textarea
                   id="admin-campaign-input"
                   placeholder="e.g., A summer launch for our sustainable activewear brand featuring gen-z yoga influencers in urban settings..."

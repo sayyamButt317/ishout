@@ -15,11 +15,13 @@ import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign
 import { Trash } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
+import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function AllCampaign() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = CompanyCampaignHook(currentPage);
   const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
+
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [adminBrief, setAdminBrief] = useState<UpdateCampaignBrief | null>(null);
@@ -34,6 +36,7 @@ export default function AllCampaign() {
     }
   }, [briefData]);
 
+  if (isLoading) return <TablePageSkeleton columns={10} />;
   return (
     <>
       <PageHeader
@@ -124,7 +127,6 @@ export default function AllCampaign() {
         onPageChange={(page: number) => {
           setCurrentPage(page);
         }}
-        isLoading={isLoading}
       />
       <CampaignBriefDialog
         open={dialogOpen}

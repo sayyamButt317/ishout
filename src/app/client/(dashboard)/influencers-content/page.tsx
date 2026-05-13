@@ -10,14 +10,18 @@ import PageHeader from '@/src/app/component/PageHeader';
 import { LayoutGrid } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function ClientInfluencersContentPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = CompanyCampaignHook(currentPage);
+  const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
   const router = useRouter();
 
   const rowKey = (campaign: CompanyCampaignResponse) =>
     campaign.campaign_id ?? campaign._id ?? '';
+
+  if (isLoading) return <TablePageSkeleton columns={9} />;
 
   return (
     <>
@@ -42,10 +46,11 @@ export default function ClientInfluencersContentPage() {
           'Created At',
           'View Feedback',
         ]}
-        imageUrls={data?.campaigns?.map(
+        campaigns={campaigns}
+        imageUrls={campaigns.map(
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
         )}
-        subheader={data?.campaigns?.map((campaign: CompanyCampaignResponse) => {
+        subheader={campaigns.map((campaign: CompanyCampaignResponse) => {
           const id = rowKey(campaign);
           return [
             <div key={`name-${id}`} className="truncate">
@@ -91,7 +96,6 @@ export default function ClientInfluencersContentPage() {
         onPageChange={(page: number) => {
           setCurrentPage(page);
         }}
-        isLoading={isLoading}
       />
     </>
   );

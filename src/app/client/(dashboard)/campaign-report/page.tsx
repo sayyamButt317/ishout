@@ -10,6 +10,7 @@ import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { LayoutList, Filter, Search, ArrowUpDown } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { TablePageWithFiltersSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: 'all' },
@@ -91,6 +92,8 @@ export default function ClientCampaignReportPage() {
 
     return result;
   }, [campaigns, searchQuery, sortConfig, statusFilter]);
+
+  if (isLoading) return <TablePageWithFiltersSkeleton columns={9} />;
 
   return (
     <>
@@ -233,7 +236,6 @@ export default function ClientCampaignReportPage() {
         onPageChange={(page: number) => {
           setCurrentPage(page);
         }}
-        isLoading={isLoading}
       />
     </>
   );

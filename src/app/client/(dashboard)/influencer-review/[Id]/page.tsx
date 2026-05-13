@@ -16,6 +16,7 @@ import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influenc
 import UpdateInfluencerStatusCompanyHook from '@/src/routes/Company/api/Hooks/update-influencerstatus.hook';
 import ReviewPendingInfluencersHook from '@/src/routes/Company/api/Hooks/reveiw-pending.hook';
 import { useParams } from 'next/navigation';
+import { CardGridSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function InfluencerReviewPage() {
   const { user_id } = useAuthStore();
@@ -25,6 +26,8 @@ export default function InfluencerReviewPage() {
 
   const { mutate: updateInfluencerStatus, isPending: isUpdatingInfluencerStatus } =
     UpdateInfluencerStatusCompanyHook();
+
+  if (isLoading) return <CardGridSkeleton cards={6} />;
 
   const InfluencerCard = ({ influencer }: { influencer: ReviewInfluencerResponse }) => (
     <div className="group relative w-full rounded-[28px] border border-white/10 bg-[#0f0f10] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] overflow-hidden">
@@ -175,20 +178,14 @@ export default function InfluencerReviewPage() {
         icon={<UserCheck className="size-5" />}
       />
 
-      {isLoading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {data?.influencers?.map((influencer: ReviewInfluencerResponse) => (
-            <InfluencerCard key={influencer._id} influencer={influencer} />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {data?.influencers?.map((influencer: ReviewInfluencerResponse) => (
+          <InfluencerCard key={influencer._id} influencer={influencer} />
+        ))}
+      </div>
 
       {/* Pagination controls */}
-      {!isLoading && data && (
+      {data && (
         <div className="flex justify-center items-center space-x-4 pt-6">
           <Button
             onClick={() => {
