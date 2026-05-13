@@ -35,31 +35,45 @@ export function CampaignSummaryMetricsOnly({
 
       <View style={styles.summaryGrid} wrap>
         <View style={styles.summaryCard}>
-          <Text style={styles.summaryLabel}>OnBoard Influencers</Text>
-          <Text style={styles.summaryValue}>
-            {summaryData?.onboard_influencers ?? summaryData?.['onBoard influencers'] ?? 0}
-          </Text>
+          <View style={styles.summaryStatCardTop} />
+          <View style={styles.summaryStatCardBody}>
+            <Text style={styles.summaryValue}>
+              {summaryData?.onboard_influencers ??
+                summaryData?.['onBoard influencers'] ??
+                0}
+            </Text>
+            <Text style={styles.summaryLabel}>OnBoard Influencers</Text>
+          </View>
         </View>
 
         <View style={styles.summaryCard}>
-          <Text style={styles.summaryLabel}>Produced Content</Text>
-          <Text style={styles.summaryValue}>
-            {summaryData?.influencers_produced_content ??
-              summaryData?.influncers_produced__content_count ??
-              0}
-          </Text>
+          <View style={styles.summaryStatCardTop} />
+          <View style={styles.summaryStatCardBody}>
+            <Text style={styles.summaryValue}>
+              {summaryData?.influencers_produced_content ??
+                summaryData?.influncers_produced__content_count ??
+                0}
+            </Text>
+            <Text style={styles.summaryLabel}>Produced Content</Text>
+          </View>
         </View>
 
         <View style={styles.summaryCard}>
-          <Text style={styles.summaryLabel}>Overview Items</Text>
-          <Text style={styles.summaryValue}>
-            {summaryData?.campaign_overview?.length ?? 0}
-          </Text>
+          <View style={styles.summaryStatCardTop} />
+          <View style={styles.summaryStatCardBody}>
+            <Text style={styles.summaryValue}>
+              {summaryData?.campaign_overview?.length ?? 0}
+            </Text>
+            <Text style={styles.summaryLabel}>Overview Items</Text>
+          </View>
         </View>
 
         <View style={styles.summaryCard}>
-          <Text style={styles.summaryLabel}>Timeline Items</Text>
-          <Text style={styles.summaryValue}>{summaryData?.timeline?.length ?? 0}</Text>
+          <View style={styles.summaryStatCardTop} />
+          <View style={styles.summaryStatCardBody}>
+            <Text style={styles.summaryValue}>{summaryData?.timeline?.length ?? 0}</Text>
+            <Text style={styles.summaryLabel}>Timeline Items</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -74,7 +88,10 @@ export default function CampaignSummarySection({
   return (
     <Page size="A4" orientation="landscape" style={styles.page} wrap>
       <View style={[styles.fullWidth, styles.content]} wrap>
-        <CampaignSummaryMetricsOnly summaryData={summaryData} campaign_brief={campaign_brief} />
+        <CampaignSummaryMetricsOnly
+          summaryData={summaryData}
+          campaign_brief={campaign_brief}
+        />
       </View>
     </Page>
   );
