@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import UpdateInfluencerStatusHook from "@/src/routes/Admin/Hooks/Influencers/updateinfluencerstatus-hook";
 import { UpdateInfluencerStatusRequestProps } from "@/src/types/Admin-Type/Campaign-type";
-import { Download, Loader2Icon } from "lucide-react";
+import { Download, Loader2Icon, Plus } from "lucide-react";
 import ExportToExcel from "@/src/app/component/custom-component/exportToExcel";
 import { ApprovedInfluencersStore } from "@/src/store/Campaign/influencers.store";
 import UpdateCampaignStatusHook from "@/src/routes/Admin/Hooks/Campaign/updateCamapignStatus-hook";
@@ -15,9 +15,12 @@ import useAuthStore from "@/src/store/AuthStore/authStore";
 import GeneratedInfluencersByIdHook from "@/src/routes/Admin/Hooks/Influencers/generated-influencers-hook";
 import GenerateMoreInfluencersHook from "@/src/routes/Admin/Hooks/Influencers/generatemore-influencers-hook";
 import CampaignByIdHook from "@/src/routes/Admin/Hooks/Campaign/campaignById-hook";
+import { useState } from "react";
+import InfluencerDetailDialog from "@/src/app/component/pending-campaign/influencerdialog";
 // import { useRejectedInfluencersStore } from "@/src/store/Campaign/reject-influencer.store";
 
 export default function PendingCampaignByIdPage() {
+  const [addInfluencerOpen, setAddInfluencerOpen] = useState(false);
   const { company_user_id } = useAuthStore();
   const { clearTemplate } = useReadyMadeTemplateStore();
   const { clearApprovedInfluencers } = ApprovedInfluencersStore.getState();
@@ -101,6 +104,13 @@ export default function PendingCampaignByIdPage() {
               Generated Influencers:{" "}
               <span className="font-bold">{generatedInfluencers?.length}</span>
             </h1>
+            <CustomButton
+              className="w-full sm:w-auto bg-primaryButton hover:bg-primaryHover text-white font-medium px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2 justify-center border border-primary-500/30"
+              onClick={() => setAddInfluencerOpen(true)}
+            >
+              <Plus className="h-4 w-4" />
+              Add Influencers
+            </CustomButton>
             {/* <h1 className="text-sm font-normal text-slate-300 whitespace-nowrap w-full sm:w-auto text-center sm:text-left">
               Approved Infleucers { }
             </h1> */}
@@ -170,6 +180,12 @@ export default function PendingCampaignByIdPage() {
           Back to Dashboard
         </CustomButton>
       </div>
+
+      <InfluencerDetailDialog
+        open={addInfluencerOpen}
+        onOpenChange={setAddInfluencerOpen}
+        campaign_id={Id ?? ""}
+      />
     </div>
   );
 }

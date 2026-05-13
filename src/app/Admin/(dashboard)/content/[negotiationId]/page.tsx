@@ -21,7 +21,7 @@ import {
   ChatMessage,
   NegotiationResponse,
 } from '@/src/types/Admin-Type/Content-type';
-import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/feedback-dialogue';
+import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/revisiontimeline';
 import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
 import {
   extractTimelineMarkersFromMessages,
@@ -36,6 +36,9 @@ import useReportStore from '@/src/store/Report/report-store';
 import useInfluencerMediaUrlsHook from '@/src/routes/Admin/Hooks/content/media';
 import useStoreInfluencerDemographicsHook from '@/src/routes/Admin/Hooks/feedback/store-influencer-demographics-hook';
 import type { StoreInfluencerDemographicsResponse } from '@/src/types/Admin-Type/Feedback-Type';
+import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
+import { RevisionMessage } from '@/src/app/component/content-feedback/revision-message';
+import RevisionTimelineandVideoPlayer from '@/src/app/component/content-feedback/revisiontimeline';
 
 type ContentPreviewKind = 'story' | 'post' | 'demographics';
 
@@ -519,7 +522,7 @@ export default function ContentFeedbackDetailPage() {
         {/* Video workspace */}
         <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
           <div className="aspect-9/16 w-full lg:aspect-auto lg:flex lg:flex-1">
-            <VideoFeedbackWorkspace
+            <RevisionTimelineandVideoPlayer
               videoRef={videoRef}
               selectedPreviewMediaUrl={selectedPreviewMediaUrl}
               selectedPreviewMediaType={selectedPreviewMediaType}
@@ -536,6 +539,11 @@ export default function ContentFeedbackDetailPage() {
             />
           </div>
         </div>
+        <RevisionMessage
+          reviewSide="admin"
+          negotiationId={negotiationId}
+          threadId={threadId}
+        />
 
         <FeedbackDetailFooter
           durationText={durationText}

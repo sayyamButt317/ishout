@@ -1,5 +1,4 @@
 "use client";
-
 import {
     Dialog,
     DialogContent,
@@ -28,8 +27,8 @@ import Image from "next/image";
 import useReportStore from "@/src/store/Report/report-store";
 import { Profile, Reel } from "@/src/types/Admin-Type/Feedback/influencer-type";
 import {
-    ExtractSchema,
-    FormValues,
+    ReelExtractSchema,
+    ReelFormValues,
 } from "@/src/validators/influencerdetails-validator";
 
 interface DialogProps {
@@ -48,15 +47,15 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
     const [reportData, setReportData] = useState<ReportData | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const form = useForm<FormValues>({
-        resolver: zodResolver(ExtractSchema),
+    const form = useForm<ReelFormValues>({
+        resolver: zodResolver(ReelExtractSchema),
         defaultValues: {
             username: "",
             url: "",
         },
     });
 
-    const onSubmit = (data: FormValues) => {
+    const onSubmit = (data: ReelFormValues) => {
         if (!campaign_id) {
             toast.error("Campaign ID missing");
             return;
@@ -68,16 +67,6 @@ const InfluencerDetailDialog = ({ open, onOpenChange }: DialogProps) => {
                 username: data.username,
                 url: data.url,
             },
-            {
-                onSuccess: (res) => {
-                    setReportData(res);
-                    setLoading(false);
-                },
-                onError: () => {
-                    toast.error("Failed to fetch data");
-                    setLoading(false);
-                },
-            }
         );
     };
 

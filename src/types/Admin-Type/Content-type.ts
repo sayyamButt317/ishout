@@ -70,7 +70,6 @@ export interface SaveContentFeedbackPayload {
   content_url?: string | null;
   snapshot?: string | null;
   Brand_approved?: string | null;
-  /** Video timecode for timed feedback; optional for plain textarea saves. */
   timestamp?: number;
   admin_approved?: string | null;
 }

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { PostingDetailsApi } from "../API/admin.routes";
+import { AddInfluencerByUrlApi, PostingDetailsApi } from "../API/admin.routes";
 
 
 export function PostingDetailsHook() {
@@ -10,3 +10,4 @@ export function PostingDetailsHook() {
         refetchOnReconnect: false,
     })
 }
+

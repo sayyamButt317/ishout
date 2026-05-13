@@ -2,7 +2,8 @@
 import { Suspense, useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
-import ContentFeedbackModal, { SelectedContentFeedbackCard } from '../content';
+import ContentFeedbackModal from '../content';
+import { SelectedContentFeedbackCard } from '@/src/types/Admin-Type/Feedback/content-card-type';
 import type {
   NegotiationItem,
   NegotiationResponse,

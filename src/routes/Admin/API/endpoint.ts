@@ -129,4 +129,5 @@ export const AdminENDPOINT = {
   ADMIN_ALLCOMPANY_NAME: `/${ROLE}/all-company-name`,
   INFLUENCER_POSTING_DETAILS: `/${ROLE}/posting-details`,
   ADMIN_POSTING_DETAILS: `/${ROLE}/posting/get-details`,
+  ADMIN_ADD_INFLUENCER_BY_URL: `/${ROLE}/extract-information-by-username`,
 };

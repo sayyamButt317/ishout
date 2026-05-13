@@ -83,3 +83,23 @@ export function extractTimelineMarkersFromMessages(
   }
   return out;
 }
+
+export function normalizeMediaUrlKey(url: string): string {
+  return url.trim();
+}
+
+export function isVideoUrl(value: string) {
+  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
+}
+
+export function isImageUrl(value: string) {
+  return /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
+}
+
+export function formatVideoDuration(seconds: number | null) {
+  if (!seconds || Number.isNaN(seconds)) return '--:--';
+  const total = Math.max(0, Math.floor(seconds));
+  const mins = Math.floor(total / 60);
+  const secs = total % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}

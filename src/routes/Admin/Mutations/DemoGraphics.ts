@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
-import { DemographicsOcrApi, InfluencerPostingDetailsApi, PostingDetailsApi, ReadyForPostingApi } from "../API/admin.routes";
+import { AddInfluencerByUrlApi, DemographicsOcrApi, InfluencerPostingDetailsApi, PostingDetailsApi, ReadyForPostingApi } from "../API/admin.routes";
 import { InfluencerPostingDetailsRequest } from "@/src/types/Posting/posting-type";
 import usePostingStore from "@/src/store/Report/posting-store";
 
@@ -64,4 +64,32 @@ export function InfluencerPostingDetailsHook() {
         },
 
     })
+}
+
+export function AddInfluencerByUrlHook() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({
+            campaign_id,
+            username,
+        }: {
+            campaign_id: string;
+            username: string;
+        }) => AddInfluencerByUrlApi(campaign_id, username),
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['add-influencer-by-url'],
+            });
+        },
+
+        onError: (error) => {
+            const axiosError = error as AxiosError<{ detail: string }>;
+
+            toast.error('Failed to add influencer by url', {
+                description: axiosError.response?.data?.detail as string,
+            });
+        },
+    });
 }
