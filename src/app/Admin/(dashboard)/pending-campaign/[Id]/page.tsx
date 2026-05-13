@@ -183,8 +183,9 @@ export default function PendingCampaignByIdPage() {
 
       <InfluencerDetailDialog
         open={addInfluencerOpen}
-        campaignId={Id ?? ""}
-        onOpenChange={setAddInfluencerOpen} />
+        onOpenChange={setAddInfluencerOpen}
+        campaign_id={Id ?? ""}
+      />
     </div>
   );
 }
