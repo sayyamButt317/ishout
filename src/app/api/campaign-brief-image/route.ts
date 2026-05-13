@@ -1,5 +1,9 @@
+import { readFile } from 'fs/promises';
+import path from 'path';
 import { NextRequest, NextResponse } from 'next/server';
 import { PDF_PROXY_ALLOWED_IMAGE_HOSTS } from '@/src/constants/pdf-proxy-allowed-hosts';
+
+const ASSETS = path.join(process.cwd(), 'public', 'assets');
 
 function isAllowedImageUrl(raw: string): boolean {
   try {
@@ -11,7 +15,31 @@ function isAllowedImageUrl(raw: string): boolean {
   }
 }
 
+async function thankYouLogoPng(): Promise<Buffer | null> {
+  try {
+    return await readFile(path.join(ASSETS, 'iShout-gif-black-background.png'));
+  } catch {
+    /* optional */
+  }
+  try {
+    const svg = await readFile(path.join(ASSETS, 'logo.svg'), 'utf8');
+    const m = svg.match(/href="(data:image\/png;base64,[^"]+)"/);
+    const b64 = m?.[1]?.split(',')[1];
+    return b64 ? Buffer.from(b64, 'base64') : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(request: NextRequest) {
+  if (request.nextUrl.searchParams.get('asset') === 'thank-you-logo') {
+    const buf = await thankYouLogoPng();
+    if (!buf) return NextResponse.json({ error: 'Logo unavailable' }, { status: 404 });
+    return new NextResponse(new Uint8Array(buf), {
+      headers: { 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=86400' },
+    });
+  }
+
   const raw = request.nextUrl.searchParams.get('url');
   if (!raw?.trim()) {
     return NextResponse.json({ error: 'Missing url' }, { status: 400 });
@@ -42,7 +70,6 @@ export async function GET(request: NextRequest) {
 
     const buf = await upstream.arrayBuffer();
     return new NextResponse(buf, {
-      status: 200,
       headers: {
         'Content-Type': contentType,
         'Cache-Control': 'public, max-age=3600, s-maxage=3600',

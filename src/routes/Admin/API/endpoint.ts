@@ -110,6 +110,8 @@ export const AdminENDPOINT = {
   ) => `/${ROLE}/campaign-influencer-analytics/${campaign_id}/${instagram_username}`,
   CAMPAIGN_BRIEF_AND_INFLUENCER_STATS: (campaign_id: string) =>
     `/${ROLE}/campaign-brief-and-influencer-stats/${campaign_id}`,
+  OVERALL_CAMPAIGN_OUTCOMES: (campaign_id: string) =>
+    `/${ROLE}/overall-campaign-outcomes/${campaign_id}`,
 
   ADMIN_STORE_INFLUENCER_DEMOGRAPHICS: `/${ROLE}/store/Influencer-demographics`,
   ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS: (thread_id: string) =>

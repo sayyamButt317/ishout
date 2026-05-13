@@ -40,7 +40,10 @@ import type {
 import { AdminInfluencerMessagesResponse } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-messages-type';
 import type { CompanyNegotiationMediaResponse } from '@/src/types/Compnay/feeedback-content-type';
-import type { InfluencerDemographicsAssetsResponse } from '@/src/types/Admin-Type/Reports-tyes';
+import type {
+  InfluencerDemographicsAssetsResponse,
+  OverallCampaignOutcomesResponse,
+} from '@/src/types/Admin-Type/Reports-tyes';
 import type {
   AdminAllCompaniesNamesResponse,
   AdminCampaignBriefApiResponse,
@@ -717,6 +720,15 @@ export const CampaignBriefAndInfluencerStatsApi = async (
 ): Promise<CampaignBriefAndInfluencerStatsResponse> => {
   const response = await api.get<CampaignBriefAndInfluencerStatsResponse>(
     AdminENDPOINT.CAMPAIGN_BRIEF_AND_INFLUENCER_STATS(campaign_id),
+  );
+  return response.data;
+};
+
+export const OverallCampaignOutcomesApi = async (
+  campaign_id: string,
+): Promise<OverallCampaignOutcomesResponse> => {
+  const response = await api.get<OverallCampaignOutcomesResponse>(
+    AdminENDPOINT.OVERALL_CAMPAIGN_OUTCOMES(campaign_id),
   );
   return response.data;
 };
