@@ -17,47 +17,14 @@ import type { NegotiationItem } from '@/src/types/Compnay/feeedback-content-type
 import type { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
 import type { CompanyAdminMessageItem } from '@/src/types/Compnay/company-admin-messages-type';
-import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/feedback-dialogue';
+import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/revisiontimeline';
 import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
 import BrandFeedbackGuidelinesTab from '@/src/app/component/content-feedback-client/brand-feedback-guidelines-tab';
 import BrandFeedbackMediaTab from '@/src/app/component/content-feedback-client/brand-feedback-media-tab';
 import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
 import type { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
-import { extractTimelineMarkersFromMessages } from '@/src/utils/content-feedback-chat';
-import SendRevisionHook from '@/src/routes/Admin/Hooks/feedback/send-revision-hook';
-
-export type SelectedContentFeedbackCard = {
-  item: NegotiationItem;
-  title: string;
-  campaign: string;
-  briefId?: string;
-};
-
-type ContentFeedbackModalProps = {
-  selectedCard: SelectedContentFeedbackCard | null;
-  onClose: () => void;
-  asPage?: boolean;
-};
-
-function normalizeMediaUrlKey(url: string): string {
-  return url.trim();
-}
-
-function isVideoUrl(value: string) {
-  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(value);
-}
-
-function isImageUrl(value: string) {
-  return /\.(jpg|jpeg|png|gif|webp|bmp)(\?.*)?$/i.test(value);
-}
-
-function formatVideoDuration(seconds: number | null) {
-  if (!seconds || Number.isNaN(seconds)) return '--:--';
-  const total = Math.max(0, Math.floor(seconds));
-  const mins = Math.floor(total / 60);
-  const secs = total % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
+import { extractTimelineMarkersFromMessages, formatVideoDuration, isImageUrl, isVideoUrl, normalizeMediaUrlKey } from '@/src/utils/content-feedback-chat';
+import { ContentFeedbackModalProps } from '@/src/types/Admin-Type/Feedback/content-card-type';
 
 export default function ContentFeedbackModal({
   selectedCard,
@@ -119,7 +86,7 @@ export default function ContentFeedbackModal({
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
   const updateApprovedContentMutation = useUpdateApprovedContent();
   const saveContentFeedbackMutation = useSaveContentFeedbackHook();
-  const sendRevisionMutation = SendRevisionHook();
+
 
   const { setFeedbackId } = useFeedbackIdMap('brand-content-feedback-id-map');
   const { setAll } = useRevisionMessageStore();
@@ -165,13 +132,6 @@ export default function ContentFeedbackModal({
     const messages = chatData?.messages ?? [];
     return extractTimelineMarkersFromMessages(messages, selectedPreviewMediaUrl);
   }, [chatData?.messages, selectedPreviewMediaUrl]);
-  const mediaUrls = useMemo(() => {
-    const messages = chatData?.messages ?? [];
-    const urls = messages
-      .map((msg: ChatMessage) => (typeof msg.message === 'string' ? msg.message : null))
-      .filter((url): url is string => !!url && (isVideoUrl(url) || isImageUrl(url)));
-    return Array.from(new Set(urls));
-  }, [chatData?.messages]);
 
   useEffect(() => {
     setFeedback('');

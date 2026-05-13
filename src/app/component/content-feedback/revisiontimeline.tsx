@@ -17,10 +17,11 @@ import {
 import { formatVideoDuration } from '@/src/utils/video-duration';
 import { VideoFeedbackWorkspaceProps } from '@/src/types/Admin-Type/Content-type';
 import { captureVideoFrameDataUrl } from '@/src/utils/content-feedback-chat';
-import { RevisionBox } from './revisionbox';
-import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
 
-export default function VideoFeedbackWorkspace({
+import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
+import { RevisionMessage } from './revision-message';
+
+export default function RevisionTimelineandVideoPlayer({
   videoRef,
   selectedPreviewMediaUrl,
   selectedPreviewMediaType,
@@ -226,6 +227,7 @@ export default function VideoFeedbackWorkspace({
         />
 
       )}
+
 
       <Dialog open={composerOpen} onOpenChange={setComposerOpen}>
         <DialogContent className="max-w-md border-white/10 bg-(--color-background) text-white sm:max-w-md">
