@@ -19,17 +19,14 @@ export default function ApprovedInfluencerById() {
 
   return (
     <section className="min-h-screen space-y-4">
-        <div className="relative rounded-xl border border-white/20 backdrop-blur">
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="hidden sm:block absolute -top-24 -left-20 h-72 w-72 rounded-full bg-emerald-200/20 blur-3xl" />
-            <div className="hidden sm:block absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-sky-200/20 blur-3xl" />
-          </div>
-          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
-            <div className="text-center">
-              <h1 className="italic text-2xl md:text-4xl font-semibold text-white tracking-tight">
+        <div className="relative rounded-xl border-3 border-slate-600 dark:border-white/30 backdrop-blur">
+            <div className="hidden sm:block absolute -top-24 -left-20 h-72 w-72 rounded-full bg-emerald-200/20 blur-xl" />
+            <div className="hidden sm:block absolute -bottom-24 -right-20 h-72 w-72 rounded-full bg-sky-200/20 blur-xl" />
+            <div className="text-center justify-center">
+              <h1 className="italic text-2xl md:text-4xl font-semibold text-black relative max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10 dark:text-white tracking-tight">
                 Approved Influencers for {campaignData?.name}
               </h1>
-              <div className="text-white flex flex-col gap-2 mt-4 items-start">
+              <div className="text-black dark:text-white flex flex-col gap-2 relative max-w-6xl sm:px-2 sm:py-2 pb-2 mx-auto">
                 <p className="text-sm">
                   <span className="font-bold">{campaignData?.company_name}</span>{" "}
                   has requested{" "}
@@ -51,12 +48,12 @@ export default function ApprovedInfluencerById() {
                 </p>
               </div>
             </div>
-          </div>
+          
         </div>
 
         {isError && (
           <div className="flex justify-center items-center min-h-50">
-            <div className="text-center text-slate-200 border border-dashed border-white/30 rounded-xl p-10">
+            <div className="text-center text-slate-900 dark:text-slate-200 border-slate-600 dark:border-white/30 rounded-xl p-10">
               Error loading approved influencers.
             </div>
           </div>
