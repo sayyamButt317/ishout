@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { RefreshCcw, UserCheck } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import CustomButton from '@/src/app/component/button';
+import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function RevieInfluencer() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,6 +23,9 @@ export default function RevieInfluencer() {
   );
   const campaigns = (data?.campaigns ?? []) as CompanyCampaignResponse[];
   const router = useRouter();
+
+  if (isLoading) return <TablePageSkeleton columns={10} />;
+
   return (
     <>
       <PageHeader
@@ -105,7 +109,6 @@ export default function RevieInfluencer() {
         onPageChange={(page: number) => {
           setCurrentPage(page);
         }}
-        isLoading={isLoading}
       />
     </>
   );
