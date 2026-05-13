@@ -62,6 +62,31 @@ function AnalyticsStatRow({ label, value }: { label: string; value: string }) {
   );
 }
 
+function DemographicsPhoneFrame({ src }: { src: string }) {
+  return (
+    <View style={styles.demoPhoneWrap}>
+      <View style={styles.demoPhoneBezel}>
+        <View style={styles.demoPhoneEarpiece} />
+        <View style={styles.demoPhoneScreenShell}>
+          <View style={styles.demoPhoneStatusBar}>
+            <Text style={styles.demoPhoneStatusChevron}>‹</Text>
+            <Text style={styles.demoPhoneStatusTitle}>Reel insights</Text>
+            <Text style={styles.demoPhoneStatusMore}>···</Text>
+          </View>
+          <View style={styles.demoPhoneProgressBar} />
+          <View style={styles.demoPhoneScreen}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            <Image src={src} style={styles.demoGalleryImageInPhone} cache={false} />
+          </View>
+          <View style={styles.demoPhoneHomeRow}>
+            <View style={styles.demoPhoneHomeBar} />
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+}
+
 /** First page: title, avatar (proxied URL), Analytics block. Further pages: demographics images, 3 per page, centered. */
 function InfluencerPages({ inf }: { inf: InfluencerSummary }) {
   const profileSrc = pdfProxyImageSrc(inf.profile_image);
@@ -155,13 +180,9 @@ function InfluencerPages({ inf }: { inf: InfluencerSummary }) {
                     const src = pdfProxyImageSrc(d.image_url);
                     if (!src) return null;
                     return (
-                      // eslint-disable-next-line jsx-a11y/alt-text
-                      <Image
-                        key={d.content_id ?? i}
-                        src={src}
-                        style={styles.demoGalleryImage}
-                        cache={false}
-                      />
+                      <View key={d.content_id ?? i}>
+                        <DemographicsPhoneFrame src={src} />
+                      </View>
                     );
                   })}
                 </View>
@@ -236,13 +257,9 @@ export default function DemographicsSection({ summaryData }: DemographicsSection
                     const src = pdfProxyImageSrc(item.image_url);
                     if (!src) return null;
                     return (
-                      // eslint-disable-next-line jsx-a11y/alt-text
-                      <Image
-                        key={item.content_id ?? i}
-                        src={src}
-                        style={styles.demoGalleryImage}
-                        cache={false}
-                      />
+                      <View key={item.content_id ?? i}>
+                        <DemographicsPhoneFrame src={src} />
+                      </View>
                     );
                   })}
                 </View>

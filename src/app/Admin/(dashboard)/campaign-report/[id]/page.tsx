@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { Influencer } from '@/src/types/Admin-Type/Feedback/influencer-type';
 import useCampaignAnalytics from '@/src/routes/Admin/Hooks/Report/analytics-hook';
 import useCampaignBriefStats from '@/src/routes/Admin/Hooks/Report/campaign-brief-stats-hook';
+import useOverallCampaignOutcomes from '@/src/routes/Admin/Hooks/Report/overall-campaign-outcomes-hook';
 import { useCallback, useMemo, useState } from 'react';
 import { AnalyticsDashboardSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -70,6 +71,8 @@ export default function InfluencerReportHeader() {
     string | null
   >(null);
   const summaryMutation = useCampaignBriefStats();
+  const { data: overallOutcomes, refetch: refetchOverallOutcomes } =
+    useOverallCampaignOutcomes(id);
   const { data: demographicsData, isLoading: isDemographicsLoading } =
     useInfluencerDemographicsAssets(
       id,
@@ -79,7 +82,10 @@ export default function InfluencerReportHeader() {
 
   const handleViewReport = async () => {
     try {
-      const tasks: Promise<unknown>[] = [summaryMutation.mutateAsync(id)];
+      const tasks: Promise<unknown>[] = [
+        summaryMutation.mutateAsync(id),
+        refetchOverallOutcomes(),
+      ];
       if (!negotiationData) tasks.push(refetchNegotiation());
       await Promise.all(tasks);
       setReportPdfKey((k) => k + 1);
@@ -123,6 +129,7 @@ export default function InfluencerReportHeader() {
                 <CampaignReport
                   negotiationData={negotiationData as AgreedNegotiationResponse}
                   summaryData={summaryMutation.data}
+                  overallOutcomes={overallOutcomes}
                 />
               </PDFViewer>
             ) : (
