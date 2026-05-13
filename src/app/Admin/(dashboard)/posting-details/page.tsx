@@ -244,9 +244,6 @@ export default function PostingDetailsPage() {
                                                             <p className="truncate text-sm font-bold text-foreground">
                                                                 {detail.campaign_name ?? '—'}
                                                             </p>
-                                                            <p className="mt-0.5 truncate font-mono text-[11px] text-foreground/40">
-                                                                {detail.campaign_id}
-                                                            </p>
                                                         </div>
                                                     </div>
                                                 </td>

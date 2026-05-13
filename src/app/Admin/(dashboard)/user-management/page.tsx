@@ -275,7 +275,6 @@ export default function UserManagementPage() {
                         {/* User */}
                         <td className="px-8 py-4">
                           <div className="flex items-center gap-3">
-                            {/* ✅ Fixed: Image now has required width/height props */}
                             <div className={`w-10 h-10 rounded-full ${avatarColor(user.user_id)} flex items-center justify-center text-foreground text-sm font-bold shrink-0 overflow-hidden`}>
                               {user.logo_url
                                 ? <Image src={user.logo_url} alt={user.contact_person} width={40} height={40} className="w-10 h-10 rounded-full object-cover" unoptimized />
@@ -303,8 +302,8 @@ export default function UserManagementPage() {
                         {/* Role */}
                         <td className="px-6 py-4 text-center">
                           <span className={`inline-flex px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${user.role === 'admin'
-                              ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
-                              : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                            ? 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
+                            : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
                             }`}>
                             {user.role === 'admin' ? 'Admin' : 'Company'}
                           </span>
