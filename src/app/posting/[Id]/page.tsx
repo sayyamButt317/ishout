@@ -6,7 +6,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { toast } from "sonner";
 import NegotiationAgreedByCampaignHook from "@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook";
 import { InfluencerPostingDetailsHook } from "@/src/routes/Admin/Mutations/DemoGraphics";
 import usePostingStore from "@/src/store/Report/posting-store";
@@ -45,7 +44,7 @@ export default function CampaignSchedulePage() {
   const { Id } = useParams<{ Id: string }>();
   const { data } = NegotiationAgreedByCampaignHook(Id ?? "");
   const { mutate: submitPostingDetails, isPending } = InfluencerPostingDetailsHook();
-  console.log("Logo url", data?.campaign_logo_url);
+
 
   const {
     postingDate, setPostingDateForPosting,
@@ -54,6 +53,7 @@ export default function CampaignSchedulePage() {
     caption, setCaptionForPosting,
     hashtags, setHashtagsForPosting,
     tagpartners, setTagpartnersForPosting,
+    reset,
   } = usePostingStore();
 
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
@@ -112,17 +112,18 @@ export default function CampaignSchedulePage() {
   const handleSchedule = useCallback(() => {
     if (!canSchedule) return;
 
-submitPostingDetails({
-  campaign_id: Id ?? "",
-  campaign_name: data?.campaign_brief?.title ?? "",
-  logo_url: data?.campaign_logo_url ?? "",
-  posting_date: date,
-  posting_time: time,
-  caption,
-  hashtag: hashtags,
-  tag_users: tagpartners,
-});
-  }, [canSchedule, submitPostingDetails, Id, data, date, time, caption, hashtags, tagpartners]);
+    submitPostingDetails({
+      campaign_id: Id ?? "",
+      campaign_name: data?.campaign_brief?.title ?? "",
+      logo_url: data?.campaign_logo_url ?? "",
+      posting_date: date,
+      posting_time: time,
+      caption,
+      hashtag: hashtags,
+      tag_users: tagpartners,
+    });
+    reset();
+  }, [canSchedule, submitPostingDetails, Id, data?.campaign_brief?.title, data?.campaign_logo_url, date, time, caption, hashtags, tagpartners, reset]);
 
   return (
     <div className="min-h-screen bg-black text-white font-sans">
