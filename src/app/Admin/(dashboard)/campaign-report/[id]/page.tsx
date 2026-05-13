@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation';
 import { Influencer } from '@/src/types/Admin-Type/Feedback/influencer-type';
 import useCampaignAnalytics from '@/src/routes/Admin/Hooks/Report/analytics-hook';
 import useCampaignBriefStats from '@/src/routes/Admin/Hooks/Report/campaign-brief-stats-hook';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { AnalyticsDashboardSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import CustomButton from '@/src/app/component/button';
@@ -16,7 +16,8 @@ import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/n
 import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import useInfluencerDemographicsAssets from '@/src/routes/Admin/Hooks/Report/influencer-demographics-assets-hook';
 import DemographicsAssetsDialog from '@/src/app/component/custom-component/DemographicsAssetsDialog';
-import { Play, ExternalLink, Trophy } from 'lucide-react';
+import { Play, ExternalLink, Trophy, RefreshCcw } from 'lucide-react';
+import DemographicsOcrHook from '@/src/routes/Admin/Mutations/DemoGraphics';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -56,12 +57,13 @@ export default function InfluencerReportHeader() {
     data: negotiationData,
     isLoading: isNegotiationLoading,
     refetch: refetchNegotiation,
+    isRefetching: isNegotiationRefetching,
   } = NegotiationAgreedByCampaignHook(id);
   const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
 
+
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
-  /** Bumps when opening the report so PDFViewer remounts and never shows a stale document. */
   const [reportPdfKey, setReportPdfKey] = useState(0);
   const [demographicsOpen, setDemographicsOpen] = useState(false);
   const [selectedInfluencerUsername, setSelectedInfluencerUsername] = useState<
@@ -89,8 +91,11 @@ export default function InfluencerReportHeader() {
   };
 
   const isReportLoading = summaryMutation.isPending || isNegotiationLoading;
-  const demographicsImageUrls =
-    demographicsData?.demographics?.map((item) => item.image_url).filter(Boolean) ?? [];
+  const demographicsImageUrls = useMemo(
+    () =>
+      demographicsData?.demographics?.map((item) => item.image_url).filter(Boolean) ?? [],
+    [demographicsData?.demographics],
+  );
 
   const analytics = campaignAnalytics?.summary;
   const top = campaignAnalytics?.top_performer;
@@ -103,6 +108,7 @@ export default function InfluencerReportHeader() {
 
   return (
     <div className="space-y-6">
+      <RefreshCcw className={`size-4 ${isNegotiationRefetching ? 'animate-spin' : ''}`} />
       <Dialog open={reportOpen} onOpenChange={setReportOpen}>
         <DialogContent
           className="h-[98vh] w-[98vw] max-w-[98vw] overflow-hidden rounded-none p-0 sm:max-w-[98vw]"
@@ -317,7 +323,7 @@ export default function InfluencerReportHeader() {
                     <Stat label="Likes" value={formatNumber(reel.likes)} />
                     <Stat label="Comments" value={formatNumber(reel.comments)} />
                     <Stat label="Interactions" value={formatNumber(reel.interaction)} />
-                    <Stat label="Views" value={formatNumber(reel.views)} />
+                    {/* <Stat label="Views" value={formatNumber(reel.views)} /> */}
                   </div>
 
                   {/* ENGAGEMENT */}
@@ -357,7 +363,7 @@ export default function InfluencerReportHeader() {
                         setDemographicsOpen(true);
                       }}
                     >
-                      Demographics
+                      View Demographics
                     </CustomButton>
                   </div>
                 </div>
