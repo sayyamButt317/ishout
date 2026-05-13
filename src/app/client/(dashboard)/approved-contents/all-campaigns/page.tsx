@@ -9,6 +9,7 @@ import { LayoutGrid } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
+import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 export default function ClientInfluencersContentPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +19,8 @@ export default function ClientInfluencersContentPage() {
 
   const rowKey = (campaign: CompanyCampaignResponse) =>
     campaign.campaign_id ?? campaign._id ?? '';
+
+  if (isLoading) return <TablePageSkeleton columns={9} />;
 
   return (
     <>
@@ -92,7 +95,6 @@ export default function ClientInfluencersContentPage() {
         onPageChange={(page: number) => {
           setCurrentPage(page);
         }}
-        isLoading={isLoading}
       />
     </>
   );

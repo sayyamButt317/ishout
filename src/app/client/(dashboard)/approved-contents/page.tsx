@@ -8,6 +8,7 @@ import ApprovedContentCard from '@/src/app/component/approved-content/approved-c
 import ApprovedContentsMutation from '@/src/routes/Company/api/Hooks/approved-contents.hook';
 import { CheckCircle, LayoutGrid, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ApprovedContentGridSkeleton } from '@/src/app/component/skeletons/client-skeletons';
 
 function ApprovedContentsPageContent() {
   const searchParams = useSearchParams();
@@ -26,6 +27,8 @@ function ApprovedContentsPageContent() {
   }, [campaignId, mutate, reset]);
 
   const isLoading = isPending;
+
+  if (campaignId && isLoading) return <ApprovedContentGridSkeleton cards={6} />;
 
   const description = !campaignId
     ? 'Select a campaign from All Campaigns to view approved content.'
@@ -58,13 +61,6 @@ function ApprovedContentsPageContent() {
               All campaigns
             </Link>
           </Button>
-        </div>
-      )}
-
-      {campaignId && isLoading && (
-        <div className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#0f0f10] py-16 text-white/60">
-          <Loader2 className="size-6 animate-spin" />
-          <span>Loading approved content…</span>
         </div>
       )}
 

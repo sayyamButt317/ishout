@@ -19,6 +19,7 @@ import MobileCountrySelect from "@/src/app/component/custom-component/MobileCoun
 import { ProfileAvatar } from "@/src/app/component/custom-component/ProfileAvatar";
 import { ConfirmationDialogue } from "@/src/app/component/ConfirmationDialogue";
 import UpdateProfilePictureHook from "@/src/routes/Company/api/Hooks/userProfile/update-profile-picture-hook";
+import { ClientProfileSkeleton } from "@/src/app/component/skeletons/client-skeletons";
 
 
 const glassCard    = "bg-foreground/5 border border-white/5 rounded-xl px-6 py-6 w-full";
@@ -45,7 +46,7 @@ export default function CompanyProfilePage() {
   const hasAvatarChange                           = pendingAvatarFile !== null || avatarRemoved;
 
   const { user_id }                               = useAuthStore();
-  const { data, refetch, isRefetching }           = CompanyProfileDetailsHook(user_id);
+  const { data, refetch, isRefetching, isPending: isProfilePending } = CompanyProfileDetailsHook(user_id);
   const { mutate: updateProfile, isPending }      = CompanyUpdateProfileHook(user_id);
   const { mutate: changePassword, isPending: isChangingPassword } = ProfileChangePasswordHook(user_id);
 const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfilePictureHook(user_id);
@@ -107,6 +108,8 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
     form.reset();
     setIsEditing(false);
   };
+
+  if (isProfilePending) return <ClientProfileSkeleton />;
 
   return (
     <div className="min-h-screen bg-foreground/1 text-foreground/80 ">
