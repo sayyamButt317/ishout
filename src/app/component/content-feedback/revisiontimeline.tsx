@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Image from 'next/image';
 import { MessageSquarePlus } from 'lucide-react';
 import { Button } from '@/components/ui/button';

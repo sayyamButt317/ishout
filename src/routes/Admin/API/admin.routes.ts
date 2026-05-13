@@ -816,3 +816,14 @@ export const InfluencerPostingDetailsApi = async (
 
   return response.data;
 };
+
+export const AddInfluencerByUrlApi = async (
+  campaign_id: string,
+  username: string
+) => {
+  const response = await api.post(AdminENDPOINT.ADMIN_ADD_INFLUENCER_BY_URL, {
+    campaign_id,
+    username,
+  });
+  return response.data;
+};
