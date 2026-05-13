@@ -137,7 +137,7 @@ const InfluencerCard = ({
 
   return (
     <Card
-      className="group relative w-full max-w-5xl mx-auto rounded-xl border bg-[#131313] backdrop-blur-sm text-white p-4 shadow-lg hover:shadow-xl transition-shadow overflow-hidden
+      className="group relative w-full max-w-5xl mx-auto rounded-xl border border-slate-600 dark:border-white/30 dark:bg-[#131313] backdrop-blur-sm text-black dark:text-white p-4 shadow-lg hover:shadow-xl transition-shadow overflow-hidden
 "
     >
       {/* STATUS BADGE */}
@@ -167,7 +167,7 @@ const InfluencerCard = ({
           className="h-20 w-20 rounded-full object-cover p-1 bg-gray-100"
         />
         <div>
-          <h3 className="text-md font-medium text-white">
+          <h3 className="text-md font-medium text-black dark:text-white">
             <span
               className="text-xs font-semibold hover:text-blue-600 hover:underline cursor-pointer truncate"
               onClick={() =>
@@ -212,42 +212,42 @@ const InfluencerCard = ({
       {/*  PROFILE AND SEND MESSAGE BUTTONS */}
       <div className="items-center justify-center text-center mb-4 flex flex-row w-full gap-2">
         <CustomButton
-          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-white text-white rounded-full transition-colors cursor-pointer shadow-2xl"
+          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-white text-black dark:text-white rounded-full transition-colors cursor-pointer shadow-2xl"
           onClick={() => {
             handleMessage(influencer?.platform as PlatformType, influencer?.username);
           }}
         >
-          <span className="text-sm font-poppins text-white">Send Message</span>
+          <span className="text-sm font-poppins text-black dark:text-white">Send Message</span>
         </CustomButton>
         <CustomButton
           onClick={() => {
             handleViewProfile();
           }}
-          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-white text-white rounded-full transition-colors cursor-pointer shadow-2xl"
+          className="mt-2 flex items-center justify-center text-sm bg-transparent border border-white text-black dark:text-white rounded-full transition-colors cursor-pointer shadow-2xl"
         >
-          <span className="text-md font-regular text-white">View Profile</span>
+          <span className="text-md font-regular text-black dark:text-white">View Profile</span>
         </CustomButton>
       </div>
 
       {/* STATS */}
-      <div className="mt-5 grid grid-cols-2 text-center bg-[#1C1C1C] rounded-xl p-3">
+      <div className="mt-5 grid grid-cols-2 text-center bg-white/20 dark:bg-[#1C1C1C] rounded-xl p-3">
         <div>
-          <p className="text-xs text-white">Followers</p>
-          <p className="italic text-lg font-bold text-white">
+          <p className="text-xs text-black dark:text-white">Followers</p>
+          <p className="italic text-lg font-bold text-black dark:text-white">
             {formatFollowers(influencer?.followers || 0)}
           </p>
         </div>
 
         <div>
-          <p className="text-xs text-white">Engagement</p>
-          <p className="italic text-lg font-bold text-white">
+          <p className="text-xs text-black dark:text-white">Engagement</p>
+          <p className="italic text-lg font-bold text-black dark:text-white">
             {engagementPercentage(influencer?.engagementRate)}%
           </p>
         </div>
       </div>
 
       {actionSuccess === 'approved' && (
-        <div className="mb-4 px-2 flex items-center justify-between gap-2 bg-[#1C1C1C] border border-white/10 text-white rounded-lg p-2 shadow-2xl">
+        <div className="mb-4 px-2 flex items-center justify-between gap-2 bg-white/20 dark:bg-[#1C1C1C] border border-white/10 text-black dark:text-white rounded-lg p-2 shadow-2xl">
           <div className="flex items-center gap-2">
             <div className=" rounded-full p-1">
               <CircleCheck className="h-5 w-5 text-green-400" />
@@ -264,7 +264,7 @@ const InfluencerCard = ({
             <div className="rounded-full p-1">
               <XCircle className="h-5 w-5 text-red-400  " />
             </div>
-            <p className="text-sm text-white font-semibold">Status:</p>
+            <p className="text-sm text-black dark:text-white font-semibold">Status:</p>
           </div>
           <StatusBadge status="reject" />
         </div>
@@ -274,18 +274,18 @@ const InfluencerCard = ({
       {showPriceInputs && actionSuccess === null && (
         <div className="bg-[#131313] rounded-lg p-4 mb-4 shadow-2xl border border-gray-700">
           <div className="flex items-center gap-2 mb-3">
-            <DollarSign className="h-4 w-4 text-white" />
-            <h4 className="text-sm font-semibold text-white">Set Pricing</h4>
+            <DollarSign className="h-4 w-4 text-black dark:text-white" />
+            <h4 className="text-sm font-semibold text-black dark:text-white">Set Pricing</h4>
           </div>
           <div className="grid grid-cols-1S gap-3">
             <div>
-              <label className="text-xs text-white mb-1.5 block">Amount (USD)</label>
+              <label className="text-xs text-black dark:text-white mb-1.5 block">Amount (USD)</label>
               <Input
                 type="number"
                 placeholder="0.00"
                 value={minAmount}
                 onChange={(e) => setMinAmount(e.target.value)}
-                className="bg-[#131313]  text-white placeholder:text-white focus:border-amber-500"
+                className="bg-[#131313]  text-black dark:text-white placeholder:text-white focus:border-amber-500"
                 min="0"
               />
             </div>
@@ -313,14 +313,14 @@ const InfluencerCard = ({
         )} */}
 
       {influencer?.admin_approved === true && influencer?.pricing !== undefined && (
-        <div className="bg-[#1C1C1C] border border-white/10 text-white rounded-lg p-4 mb-4 shadow-2xl">
+        <div className="bg-white/20 dark:bg-[#1C1C1C] border border-white/10 text-black dark:text-white rounded-lg p-4 mb-4 shadow-2xl">
           <div className="text-center">
-            <div className="text-xl font-bold text-white mb-1">
-              <span className="text-white text-lg font-bold">
+            <div className="text-xl font-bold text-black dark:text-white mb-1">
+              <span className="text-black dark:text-white text-lg font-bold">
                 ${influencer?.pricing?.toFixed(2)}
               </span>
             </div>
-            <div className="text-xs text-white font-medium">Influencer Pricing</div>
+            <div className="text-xs text-black dark:text-white font-medium">Influencer Pricing</div>
           </div>
         </div>
       )}
@@ -330,11 +330,11 @@ const InfluencerCard = ({
           {showAccept && (
             <CustomButton
               onClick={() => handleStatusChange('approved')}
-              className="w-full sm:w-auto bg-secondaryButton border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className="w-full sm:w-auto bg-secondaryButton border text-black dark:text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
               disabled={actionLoading !== null || influencer?.admin_approved === true}
             >
               {actionLoading === 'approved' ? (
-                <Loader2 className="animate-spin text-white" />
+                <Loader2 className="animate-spin text-black dark:text-white" />
               ) : showPriceInputs ? (
                 'Confirm'
               ) : (
@@ -348,11 +348,11 @@ const InfluencerCard = ({
                 setShowPriceInputs(false);
                 handleStatusChange('rejected');
               }}
-              className="w-full sm:w-auto bg-primaryButton hover:bg-black/20 border text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
+              className="w-full sm:w-auto bg-primaryButton hover:bg-black/20 border text-black dark:text-white text-sm font-medium py-2.5 rounded-lg transition-colors"
               disabled={actionLoading !== null}
             >
               {actionLoading === 'rejected' ? (
-                <Loader2 className="animate-spin text-white" />
+                <Loader2 className="animate-spin text-black dark:text-white" />
               ) : (
                 'Reject Influencer'
               )}
@@ -381,7 +381,7 @@ const InfluencerCard = ({
             setShowPriceInputs(false);
             setMinAmount('');
           }}
-          className="w-full mt-2 border bg-transparent text-white text-sm font-medium py-2 rounded-lg transition-colors"
+          className="w-full mt-2 border bg-transparent text-black dark:text-white text-sm font-medium py-2 rounded-lg transition-colors"
         >
           Cancel
         </CustomButton>
