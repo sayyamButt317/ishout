@@ -36,7 +36,7 @@ const stats = [
 
 export default function AboutPage() {
   return (
-    <div className="relative min-h-screen w-full bg-black overflow-hidden text-white font-family-poppins" style={{ background: 'linear-gradient(180deg, #000000 0%, #000000 30%, #060d1f 55%)' }}>
+    <div className="relative min-h-screen w-full bg-white dark:bg-black/90 overflow-hidden text-white font-family-poppins" >
       <Header />
 
       {/* ─── Hero Banner ─── */}
@@ -49,7 +49,7 @@ export default function AboutPage() {
           loading="lazy"
           width={800}
           height={800}
-          className="absolute left-0 top-0 h-full w-auto object-contain pointer-events-none opacity-50"
+          className="absolute left-0 top-20 h-full w-auto object-contain pointer-events-none opacity-50 "
         />
         <Image
           src="https://ik.imagekit.io/dtdxnyskk/rightVector.svg"
@@ -58,7 +58,7 @@ export default function AboutPage() {
           loading="lazy"
           width={800}
           height={800}
-          className="absolute right-0 top-0 h-full w-auto object-contain pointer-events-none opacity-50"
+          className="absolute right-0 top-20 h-full w-auto object-contain pointer-events-none opacity-50"
         />
 
         <div className="relative z-10 flex flex-col items-center text-center max-w-4xl px-6 gap-6">
@@ -105,7 +105,7 @@ export default function AboutPage() {
 
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-12 md:gap-20">
           {/* Left: Network graphic placeholder */}
-          <div className="flex-1 flex justify-center items-center">
+          <div className="flex-1 flex justify-center items-center border-2 border-[#1e3a6e]/50 rounded-2xl p-10 sm:pb-20">
             {/* Central hub node diagram mirroring screenshot */}
             <div className="relative w-72 h-72 md:w-96 md:h-96">
               {/* center node */}

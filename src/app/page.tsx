@@ -12,7 +12,7 @@ import CalendlyDemo from './component/calendly-demo';
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen w-full bg-dark-background overflow-hidden text-white font-family-poppins">
+    <div className="relative min-h-screen w-full bg-dark-background overflow-hidden text-red font-family-poppins">
       <Header />
       <section className="relative w-full flex flex-col items-center pt-35 pb-20 max-sm:pb-2 md:pt-20 md:pb-30 overflow-hidden">
         <Image
@@ -21,8 +21,8 @@ export default function LandingPage() {
           unoptimized={true}
           loading="lazy"
           width={800}
-          height={800}
-          className="absolute left-0 top-20 h-full w-auto object-contain pointer-events-none opacity-70"
+          height={600}
+          className="absolute left-0 top-50 h-full w-auto object-contain pointer-events-none opacity-30 dark:opacity-70"
         />
         <Image
           src="https://ik.imagekit.io/dtdxnyskk/rightVector.svg"
@@ -30,19 +30,19 @@ export default function LandingPage() {
           unoptimized={true}
           loading="lazy"
           width={800}
-          height={800}
-          className="absolute right-0 top-20 h-full w-auto object-contain pointer-events-none opacity-70"
+          height={600}
+          className="absolute right-0 top-50 h-full w-auto object-contain pointer-events-none opacity-30 dark:opacity-70"
         />
         {/* heading section */}
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between max-w-7xl w-full px-6 md:px-10 pt-10 pb-20 md:pb-28 gap-12  md:mt-0">
           <div className="flex-1 flex flex-col justify-center items-start text-left space-y-4">
-            <h1 className="text-6xl font-extralight text-transparent bg-clip-text bg-linear-to-r from-gray-500  to-white italic" >
+            <h1 className="text-6xl font-extralight text-transparent bg-clip-text bg-linear-to-r from-gray-500 to-black dark:to-white italic" >
               Activate at Scale, 1,000 <br/> collaborations
             </h1>
-            <h2 className="text-2xl sm:text-4xl md:text-4xl italic font-extrabold tracking-[2] text-transparent bg-clip-text bg-linear-to-r from-gray-300 via-white to-slate-300">
+            <h2 className="text-2xl sm:text-4xl md:text-4xl italic font-extrabold tracking-[2] text-transparent bg-clip-text bg-linear-to-r from-gray-500 dark:from-gray-300 via-black dark:via-white to-slate-500 dark:to-slate-300">
               One AI-powered platform.
             </h2>
-            <p className="text-xs font-thin sm:text-lg text-slate-100 md:text-sm italic ">
+            <p className="text-xs font-thin sm:text-lg text-slate-600 dark:text-slate-100 md:text-sm italic ">
               Where brands build influence with data, speed, and precision.
             </p>
             <CalendlyDemo>

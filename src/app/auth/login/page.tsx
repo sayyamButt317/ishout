@@ -59,7 +59,7 @@ export default function Login() {
           <div className="p-10 space-y-8">
 
             {/* Logo */}
-            <Link href="/" className="flex justify-center">
+            <Link href="https://app.ishout.ae/" className="flex justify-center">
               <div className="flex items-center gap-2">
                 <Image
                   src="/assets/iShout-gif-black-background.gif"
