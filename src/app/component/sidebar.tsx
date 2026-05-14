@@ -144,14 +144,16 @@ export default function Sidebar({ links }: SidebarProps) {
         >
           <div className="relative">
             <div className="absolute inset-0 rounded-full bg-indigo-500/30 blur-xl" />
-            <Image
-              src="/assets/iShout-gif-black-background.gif"
-              alt="logo"
-              width={50}
-              height={50}
+            <Link href="https://app.ishout.ae/">
+              <Image
+                src="/assets/iShout-gif-black-background.gif"
+                alt="logo"
+                width={50}
+                height={50}
               className="relative z-10"
               unoptimized={true}
             />
+            </Link>
           </div>
         </a>
 

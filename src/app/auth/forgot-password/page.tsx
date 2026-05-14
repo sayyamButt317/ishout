@@ -24,7 +24,7 @@ export default function ForgetPassword() {
       <div className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-2xl p-10 space-y-8">
 
         {/* Logo */}
-        <Link href="/" className="flex justify-center">
+        <Link href="https://app.ishout.ae/" className="flex justify-center">
           <div className="flex items-center gap-4">
             <Image
               src="/assets/iShout-gif-black-background.gif"
