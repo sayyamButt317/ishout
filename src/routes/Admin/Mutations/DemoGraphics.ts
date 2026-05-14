@@ -25,8 +25,17 @@ export default function DemographicsOcrHook() {
 export function ReadyForPostingHook() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ campaign_id, content_url, thread_id }: { campaign_id: string; content_url: string; thread_id: string }) =>
-            ReadyForPostingApi(campaign_id, content_url, thread_id),
+        mutationFn: ({
+            campaign_id,
+            content_url,
+            thread_id,
+            negotiation_id,
+        }: {
+            campaign_id: string;
+            content_url: string;
+            thread_id: string;
+            negotiation_id: string;
+        }) => ReadyForPostingApi(campaign_id, content_url, thread_id, negotiation_id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["ready-for-posting"] });
         },

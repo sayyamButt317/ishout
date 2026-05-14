@@ -1,18 +1,15 @@
 export const CompanyENDPOINT = {
   CAMPAIGN_BREIF: `/company/campaign-brief`,
-  GET_CAMPAIGN_BRIEF: (user_id: string) =>
-    `/company/campaign-brief/${user_id}`,
+  GET_CAMPAIGN_BRIEF: (user_id: string) => `/company/campaign-brief/${user_id}`,
   UPDATE_CAMPAIGN_BRIEF: (brief_id: string) =>
     `/company/update-campaign-brief/${brief_id}`,
 
-  DELETE_CAMPAIGN_BRIEF: (brief_id: string) =>
-    `/company/campaign-brief/${brief_id}`,
+  DELETE_CAMPAIGN_BRIEF: (brief_id: string) => `/company/campaign-brief/${brief_id}`,
 
   GET_CAMPAIGN_BRIEF_DETAIL: (brief_id: string) =>
     `/company/campaign-brief/detail/${brief_id}`,
 
-  UPLOAD_CAMPAIGN_LOGO: (brief_id: string) =>
-    `/company/update-brief-logo/${brief_id}`,
+  UPLOAD_CAMPAIGN_LOGO: (brief_id: string) => `/company/update-brief-logo/${brief_id}`,
 
   CAMPAIGN: `/company/campaigns`,
   CREATE_CAMPAIGN: `/company/campaigns`,
@@ -28,11 +25,14 @@ export const CompanyENDPOINT = {
   APPROVED_CONTENT: '/company/approved-content',
   APPROVED_CONTENT_UPDATE: (approved_content_id: string) =>
     `/company/approved-content/${approved_content_id}`,
+  COMPANY_POSTING_GET_DETAILS: (campaign_id: string) =>
+    `/company/posting/get-details/${campaign_id}`,
   FORGOT_PASSWORD: `/auth/forgot-password`,
   VERIFY_OTP: `/auth/verify-otp`,
   CHANGE_PASSWORD: (user_id: string) => `/company/change-password/${user_id}`,
   RESET_PASSWORD: `/company/reset-password`,
 
-  UPLOADCAMPAIGNIMAGE: (brief_id: string) => `/company/uploadCampaign-productImage/${brief_id}`,
+  UPLOADCAMPAIGNIMAGE: (brief_id: string) =>
+    `/company/uploadCampaign-productImage/${brief_id}`,
   UPLOADPROFILEPICTURE: (user_id: string) => `/company/${user_id}/upload-logo`,
 };

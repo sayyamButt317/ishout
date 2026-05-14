@@ -24,6 +24,7 @@ import {
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { ApprovedContentsResponse } from '@/src/types/Compnay/approved-content-type';
 import type { UpdateApprovedContentPayload } from '@/src/types/Compnay/approved-video-type';
+import type { CompanyPostingDetailsApiResponse } from '@/src/app/client/posting-details-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -135,9 +136,21 @@ export const CompanyCampaign = async (page: number = 1) => {
 export const getApprovedContentsApi = async (
   campaign_id: string,
 ): Promise<ApprovedContentsResponse> => {
-  const response = await api.get<ApprovedContentsResponse>(CompanyENDPOINT.APPROVED_CONTENT, {
-    params: { campaign_id },
-  });
+  const response = await api.get<ApprovedContentsResponse>(
+    CompanyENDPOINT.APPROVED_CONTENT,
+    {
+      params: { campaign_id },
+    },
+  );
+  return response.data;
+};
+
+export const CompanyPostingDetailsApi = async (
+  campaign_id: string,
+): Promise<CompanyPostingDetailsApiResponse> => {
+  const response = await api.get<CompanyPostingDetailsApiResponse>(
+    CompanyENDPOINT.COMPANY_POSTING_GET_DETAILS(campaign_id),
+  );
   return response.data;
 };
 
@@ -246,15 +259,12 @@ export const CompanyProfileChangePasswordApi = async (
   return response.data;
 };
 
-export const UploadImageToCampaign = async (
-  brief_id: string,
-  files: File[]
-) => {
-  const formData = new FormData()
+export const UploadImageToCampaign = async (brief_id: string, files: File[]) => {
+  const formData = new FormData();
 
-  files.forEach(file => {
-    formData.append("files", file)
-  })
+  files.forEach((file) => {
+    formData.append('files', file);
+  });
 
   const response = await api.post(
     CompanyENDPOINT.UPLOADCAMPAIGNIMAGE(brief_id),
@@ -264,26 +274,23 @@ export const UploadImageToCampaign = async (
         'Content-Type': 'multipart/form-data',
       },
     },
-  )
+  );
 
-  return response.data
-}
+  return response.data;
+};
 
-export const UploadProfilePictureFunction = async (
-  user_id: string,
-  file: File
-) => {
+export const UploadProfilePictureFunction = async (user_id: string, file: File) => {
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append('file', file);
 
   const response = await api.patch(
     CompanyENDPOINT.UPLOADPROFILEPICTURE(user_id),
     formData,
     {
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
-    }
+    },
   );
 
   return response.data;

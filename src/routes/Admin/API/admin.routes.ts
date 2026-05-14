@@ -766,9 +766,15 @@ export const DemographicsOcrApi = async (image_url: string[]) => {
 export const ReadyForPostingApi = async (
   campaign_id: string,
   content_url: string,
-  thread_id: string
+  thread_id: string,
+  negotiation_id: string,
 ) => {
-  const response = await api.post(AdminENDPOINT.ADMIN_READY_FOR_POSTING, { campaign_id, content_url, thread_id });
+  const response = await api.post(AdminENDPOINT.ADMIN_READY_FOR_POSTING, {
+    campaign_id,
+    content_url,
+    thread_id,
+    negotiation_id,
+  });
 
   return response.data;
 };
