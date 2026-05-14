@@ -20,6 +20,14 @@ const StatusBadge = ({ status, className = "" }: StatusBadgeProps) => {
         return "capitalize bg-white/10 text-green-400 border border-green-400/20";
       case "processing":
         return "capitalize bg-white/10 text-yellow-400 border border-yellow-400/20";
+      case "report":
+        return "capitalize bg-white/10 text-blue-400 border border-blue-400/20";
+      case "no report yet":
+        return "capitalize bg-white/10 text-gray-400 border border-gray-400/20";
+      case "true":
+        return "capitalize bg-green-400 text-white border border-green-400/20";
+      case "false":
+        return "capitalize bg-red-400 text-white border border-red-400/20";
       default:
         return "capitalize bg-white/10 text-white/80 border border-white/20";
     }
