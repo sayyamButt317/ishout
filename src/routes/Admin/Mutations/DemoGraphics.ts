@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { AddInfluencerByUrlApi, DemographicsOcrApi, InfluencerPostingDetailsApi, PostingDetailsApi, ReadyForPostingApi } from "../API/admin.routes";
 import { InfluencerPostingDetailsRequest } from "@/src/types/Posting/posting-type";
 import usePostingStore from "@/src/store/Report/posting-store";
+import useAddInfluencerStore from "@/src/store/Influencer/AddInfluencer.store";
 
 export default function DemographicsOcrHook() {
     const queryClient = useQueryClient();
@@ -68,7 +69,7 @@ export function InfluencerPostingDetailsHook() {
 
 export function AddInfluencerByUrlHook() {
     const queryClient = useQueryClient();
-
+    const { setAddInfluencerResponse } = useAddInfluencerStore();
     return useMutation({
         mutationFn: ({
             campaign_id,
@@ -78,7 +79,9 @@ export function AddInfluencerByUrlHook() {
             username: string;
         }) => AddInfluencerByUrlApi(campaign_id, username),
 
-        onSuccess: () => {
+        onSuccess: (response) => {
+            toast.success('Influencer added successfully');
+            setAddInfluencerResponse(response);
             queryClient.invalidateQueries({
                 queryKey: ['add-influencer-by-url'],
             });
