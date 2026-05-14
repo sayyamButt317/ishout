@@ -557,6 +557,7 @@ export default function ContentFeedbackDetailPage() {
           onSaveDemographics={handleSaveDemographics}
           contentUrl={selectedPreviewMediaUrl}
           threadId={threadId}
+          negotiationId={negotiationId}
         />
       </div>
 

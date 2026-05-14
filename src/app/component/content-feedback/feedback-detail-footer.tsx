@@ -21,6 +21,7 @@ type FeedbackDetailFooterProps = {
   onSaveDemographics?: () => void;
   contentUrl?: string | null;
   threadId?: string | null;
+  negotiationId?: string | null;
 };
 
 export default function FeedbackDetailFooter({
@@ -35,6 +36,7 @@ export default function FeedbackDetailFooter({
   onSaveDemographics,
   contentUrl,
   threadId,
+  negotiationId,
 }: FeedbackDetailFooterProps) {
   const [open, setOpen] = useState(false);
 
@@ -54,7 +56,16 @@ export default function FeedbackDetailFooter({
       toast.error('Thread ID not found. Select content first.');
       return;
     }
-    readyForPostingMutation.mutate({ campaign_id, content_url: contentUrl, thread_id: threadId });
+    if (!negotiationId?.trim()) {
+      toast.error('Negotiation ID not found');
+      return;
+    }
+    readyForPostingMutation.mutate({
+      campaign_id,
+      content_url: contentUrl,
+      thread_id: threadId,
+      negotiation_id: negotiationId.trim(),
+    });
   };
 
   return (
