@@ -32,6 +32,7 @@ export const employeeSidebarLinks: SidebarGroupLink[] = [
       { label: 'Onboarded Influencers', route: '/client/onboarding' },
       { label: 'Content Feedback', route: '/client/influencers-content' },
       { label: 'Approved Content', route: '/client/approved-contents/all-campaigns' },
+      { label: 'Posting Details', route: '/client/posting-details' },
       { label: 'Report', route: '/client/campaign-report' },
     ],
   },
