@@ -10,7 +10,7 @@ const VerticalConnector = () => (
 
 function DesktopStep({ number, title, description, image }: (typeof CAMPAIGNSTEPS)[0]) {
   return (
-    <div className="relative grid items-center gap-8 md:grid-cols-2 rounded-3xl ">
+    <div className="relative grid items-center gap-8 md:grid-cols-2 rounded-3xl text-white ">
       <div className="relative flex items-start gap-5">
         <span className="-ml-4 block text-[60pt] leading-none font-extralight text-[#224085]">{number}</span>
         <div className="absolute top-7.5 left-9 z-10 flex items-center justify-center">
@@ -32,7 +32,7 @@ function DesktopStep({ number, title, description, image }: (typeof CAMPAIGNSTEP
 function MobileStep({ title, description, image }: (typeof CAMPAIGNSTEPS)[0]) {
   return (
     <div className="relative">
-      <div className="rounded-3xl border-2 dark:border-slate-800 bg-[#000006] p-4 ">
+      <div className="rounded-3xl border-2 border-slate-800 bg-[#000006] p-4 ">
         <div className="mb-2 flex items-start gap-4 secondry-text">
           <div className="mt-2 h-2 w-2 shrink-0 rounded-full bg-rose-200" />
           <h3 className="text-xl font-bold text-white italic">{title}</h3>
@@ -53,7 +53,7 @@ export default function HowItWorks({ id }: { id: string }) {
       <div className="container mx-auto max-md:px-2 md:px-28 md:pb-23.75">
         <div className="text-center">
           <h1 id={id} className="italic text-3xl sm:text-4xl md:text-5xl text-center font-extrabold">How It Works</h1>
-          <p className="italic text-xs font-thin sm:text-sm text-center text-Secondary-text font-sans my-4">Smarter Campaigns, Powered by AI</p>
+          <p className="italic text-xs font-thin sm:text-sm text-center text-white font-sans my-4">Smarter Campaigns, Powered by AI</p>
         </div>
 
         <div className="relative">
@@ -79,8 +79,8 @@ export default function HowItWorks({ id }: { id: string }) {
               <div className="relative z-10">
                 <div className="absolute inset-0 rounded-full bg-foreground/30 opacity-20 blur-2xl" />
                 <div className="mt-6  rounded-[22px] inline-block relative z-10">
-                  <div className="p-2 border border-gray-400 dark:border-white/20 rounded-[20px] inline-block">
-                    <CustomButton className="bg-linear-to-b dark:from-white dark:to-[#f8fafc] dark:hover:from-gray-50 dark:hover:to-[#f1f5f9] text-white dark:text-black text-xl font-black italic tracking-tight rounded-[14px] h-14 px-14 border-b-2 border-gray-200 cursor-pointer transition-all duration-150 active:scale-95 active:border-b-0">
+                  <div className="p-2 border border-white/20 rounded-[20px] inline-block">
+                    <CustomButton className="bg-linear-to-b from-white to-[#f8fafc] hover:from-gray-50 hover:to-[#f1f5f9] text-black text-xl font-black italic tracking-tight rounded-[14px] h-14 px-14 border-b-2 border-gray-200 cursor-pointer transition-all duration-150 active:scale-95 active:border-b-0">
                       Launch Your Campaign
                     </CustomButton>
                   </div>

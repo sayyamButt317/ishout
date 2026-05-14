@@ -10,7 +10,6 @@ import {
   getAuthTokenProvider,
   getRoleProvider,
 } from '@/src/provider/auth-provide';
-import { ThemeToggle } from './ThemeToggle';
 
 const Header = () => {
   const router = useRouter();
