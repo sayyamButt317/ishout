@@ -16,6 +16,8 @@ import { Trash } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 import OnboardingCampaignHook from '@/src/routes/Admin/Hooks/Campaign/onboardingCampaign-hook';
+import StatusBadge from '@/src/app/component/custom-component/statusbadge';
+import CountButton from '@/src/app/component/custom-component/countbutton';
 
 export default function InfluencersContentPage() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,7 +72,8 @@ export default function InfluencersContentPage() {
       />
 
       <TableComponent<CompanyCampaignResponse>
-        header={['Company Name', 'Campaign Name', 'Platform', 'Delete', ' ', ' ', ' ']}
+        header={[
+          'Company Name', 'Campaign Name', 'Platform', 'Category', 'Followers', 'Country', 'Requested', 'Content', 'Negotiation', 'Report', 'Delete', ' ', ' ', ' ']}
         imageUrls={campaigns.map(
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
         )}
@@ -85,6 +88,13 @@ export default function InfluencersContentPage() {
             campaign.company_name,
             campaign.name,
             <PlatformBadge key={`platform-${id}`} platform={campaign?.platform} />,
+            campaign.category,
+            campaign.followers,
+            campaign.country,
+            <CountButton key={`count-${id}`} count={campaign.limit} />,
+            campaign.content == true ? <StatusBadge key={`content-status-${id}`} status="True" /> : <StatusBadge key={`content-status-${id}`} status="Not Content" />,
+            campaign.negotiation == true ? <StatusBadge key={`negotiation-status-${id}`} status="True" /> : <StatusBadge key={`negotiation-status-${id}`} status="Not Negotiation" />,
+            campaign.report == true ? <StatusBadge key={`report-status-${id}`} status="True" /> : <StatusBadge key={`report-status-${id}`} status="No Report Yet" />,
             <Button
               key={`delete-${id}`}
               variant="ghost"
@@ -100,18 +110,6 @@ export default function InfluencersContentPage() {
             >
               <Trash className="text-red-300 cursor-pointer size-5" />
             </Button>,
-            <Button
-              key={`view-${id}`}
-              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-              onClick={() => {
-                router.push(
-                  `/Admin/content/influncers_content?campaign_id=${campaign.campaign_id ?? campaign._id
-                  }`,
-                );
-              }}
-            >
-              View Content
-            </Button>,
             // <CustomButton
             //   key={`view-brief-${id}`}
             //   className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
@@ -125,6 +123,18 @@ export default function InfluencersContentPage() {
             // >
             //   View Brief
             // </CustomButton>,
+            <Button
+              key={`view-${id}`}
+              className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+              onClick={() => {
+                router.push(
+                  `/Admin/content/influncers_content?campaign_id=${campaign.campaign_id ?? campaign._id
+                  }`,
+                );
+              }}
+            >
+              View Content
+            </Button>,
 
           ];
         })}

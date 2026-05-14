@@ -16,8 +16,9 @@ import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/n
 import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import useInfluencerDemographicsAssets from '@/src/routes/Admin/Hooks/Report/influencer-demographics-assets-hook';
 import DemographicsAssetsDialog from '@/src/app/component/custom-component/DemographicsAssetsDialog';
-import { Play, ExternalLink, Trophy, RefreshCcw } from 'lucide-react';
+import { Play, ExternalLink, Trophy, BarChart3 } from 'lucide-react';
 import useOverallCampaignOutcomes from '@/src/routes/Admin/Hooks/Report/overall-campaign-outcomes-hook';
+import Link from 'next/link';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -52,12 +53,12 @@ function engagementTone(rate: number): { bar: string; label: string } {
 export default function InfluencerReportHeader() {
   const { id } = useParams<{ id: string }>();
 
-  const { data: influencerData } = CampaignAllInfluencerHook(id);
+  const { data: influencerData, isLoading: isInfluencersLoading } =
+    CampaignAllInfluencerHook(id ?? '');
   const {
     data: negotiationData,
     isLoading: isNegotiationLoading,
     refetch: refetchNegotiation,
-    isRefetching: isNegotiationRefetching,
   } = NegotiationAgreedByCampaignHook(id);
   const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
 
@@ -105,15 +106,61 @@ export default function InfluencerReportHeader() {
   const analytics = campaignAnalytics?.summary;
   const top = campaignAnalytics?.top_performer;
 
+  const renderableInfluencerCount = useMemo(() => {
+    const list = influencerData?.influencers ?? [];
+    return list.filter((inf: Influencer) => inf?.data?.profile && inf?.data?.reel).length;
+  }, [influencerData?.influencers]);
+
+  const isInitialLoading = isLoading || isInfluencersLoading;
+  const showEmptyState =
+    !isInitialLoading &&
+    renderableInfluencerCount === 0 &&
+    (!analytics || analytics.total_influencers < 1);
+
   if (isError) {
     return <div className="text-red-500">Failed to load analytics</div>;
   }
 
-  if (isLoading) return <AnalyticsDashboardSkeleton />;
+  if (isInitialLoading) return <AnalyticsDashboardSkeleton />;
+
+  if (showEmptyState) {
+    return (
+      <div className="mx-auto flex min-h-[50vh] max-w-lg flex-col items-center justify-center gap-6 rounded-3xl border border-border bg-card/90 px-6 py-14 text-center shadow-sm sm:px-10 dark:border-white/10 dark:bg-linear-to-b dark:from-white/3 dark:to-transparent dark:shadow-none">
+        <div
+          className="flex h-16 w-16 items-center justify-center rounded-2xl border border-border bg-muted/60 dark:border-white/10 dark:bg-white/5"
+          aria-hidden
+        >
+          <BarChart3 className="h-8 w-8 text-muted-foreground dark:text-white/45" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold tracking-tight text-foreground dark:text-white">
+            No influencer content to report yet
+          </h2>
+          <p className="text-sm leading-relaxed text-muted-foreground dark:text-white/50">
+            Once influencers submit approved content for this campaign, you will see
+            demographics, engagement metrics, and downloadable reports on this page.
+          </p>
+        </div>
+        <div className="flex w-full max-w-sm flex-col gap-2 sm:flex-row sm:justify-center">
+          <Link
+            href="/Admin/content"
+            className="inline-flex h-10 items-center justify-center rounded-xl bg-primaryButton px-4 text-sm font-semibold text-white shadow-md shadow-primaryButton/20 transition hover:bg-primaryHover"
+          >
+            Go to content
+          </Link>
+          <Link
+            href="/Admin/campaign-report"
+            className="inline-flex h-10 items-center justify-center rounded-xl border border-border bg-muted/50 px-4 text-sm font-semibold text-foreground transition hover:bg-muted dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
+          >
+            All campaigns
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <RefreshCcw className={`size-4 ${isNegotiationRefetching ? 'animate-spin' : ''}`} />
       <Dialog open={reportOpen} onOpenChange={setReportOpen}>
         <DialogContent
           className="h-[98vh] w-[98vw] max-w-[98vw] overflow-hidden rounded-none p-0 sm:max-w-[98vw]"
