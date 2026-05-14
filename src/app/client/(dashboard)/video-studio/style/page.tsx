@@ -42,9 +42,9 @@ export default function VideoTemplateStyle() {
       {/* Footer */}
       <footer className="flex items-center justify-between border-t border-white/10 px-6 py-2">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 rounded border border-[var(--color-primaryButton)]/20 bg-[var(--color-primaryButton)]/10 px-2 py-1">
-            <span className="size-1.5 rounded-full bg-[var(--color-primaryButton)]" />
-            <span className="text-[10px] font-bold uppercase text-[var(--color-primaryButton)]">
+          <div className="flex items-center gap-2 rounded border border-primaryButton/20 bg-primaryButton/10 px-2 py-1">
+            <span className="size-1.5 rounded-full bg-primaryButton" />
+            <span className="text-[10px] font-bold uppercase text-primaryButton">
               Engine Active
             </span>
           </div>
@@ -62,7 +62,7 @@ export default function VideoTemplateStyle() {
           <div className="h-4 w-px bg-white/10" />
           <div className="flex items-center gap-1">
             <span className="text-[10px] font-bold uppercase text-white/50">Credits:</span>
-            <span className="text-[10px] font-bold text-[var(--color-primaryButton)]">128</span>
+            <span className="text-[10px] font-bold text-primaryButton">128</span>
           </div>
         </div>
       </footer>

@@ -10,19 +10,19 @@ interface PostingProps {
     time: string;
     caption: string;
     hashtags: string[];
-    tags: string[];
     tagpartners: string[];
     url: string;
     contentType: string;
+    postingDate: Date;
 
     setDateForPosting: (value: string) => void;
     setTimeForPosting: (value: string) => void;
     setCaptionForPosting: (value: string) => void;
     setHashtagsForPosting: (value: string[]) => void;
     setTagpartnersForPosting: (value: string[]) => void;
-    setTagsForPosting: (value: string[]) => void;
     setUrlForPosting: (value: string) => void;
     setContentTypeForPosting: (value: string) => void;
+    setPostingDateForPosting: (value: Date) => void;
     reset: () => void;
 }
 
@@ -37,20 +37,20 @@ const usePostingStore = create<PostingProps>()(
                 time: "",
                 caption: "",
                 hashtags: [],
-                tags: [],
                 tagpartners: [],
                 url: "",
                 contentType: "",
+                postingDate: new Date(),
 
                 setDateForPosting: (value) => set({ date: value }),
                 setTimeForPosting: (value) => set({ time: value }),
                 setCaptionForPosting: (value) => set({ caption: value }),
                 setHashtagsForPosting: (value) => set({ hashtags: value }),
-                setTagsForPosting: (value) => set({ tags: value }),
                 setTagpartnersForPosting: (value) => set({ tagpartners: value }),
                 setUrlForPosting: (value) => set({ url: value }),
                 setContentTypeForPosting: (value) => set({ contentType: value }),
-                reset: () => set({ date: "", time: "", caption: "", hashtags: [], tags: [], tagpartners: [], url: "", contentType: "" }),
+                setPostingDateForPosting: (value) => set({ postingDate: value }),
+                reset: () => set({ date: "", postingDate: new Date(), time: "", caption: "", hashtags: [], tagpartners: [], url: "", contentType: "" }),
             }),
             {
                 name: "Posting-store",

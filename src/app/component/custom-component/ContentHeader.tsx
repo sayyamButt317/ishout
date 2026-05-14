@@ -5,8 +5,8 @@ import { WhatsAppShareButton } from '@/src/app/component/custom-component/whatsa
 interface ContentHeaderProps {
   title: string;
   logo?: string;
-  description: string;
-  category: string;
+  description?: string;
+  category?: string;
   endInDays?: number;
   deliverables?: string[];
   timeline?: string[];
@@ -52,9 +52,9 @@ const ContentHeader = ({
           </div>
 
           {/* WHATSAPP ICON */}
-          <WhatsAppShareButton
+          {/* <WhatsAppShareButton
             key={brandThreadId}
-            userId={brandThreadId} />
+            userId={brandThreadId} /> */}
         </div>
 
         <div className="flex-1 space-y-6">

@@ -40,7 +40,10 @@ import type {
 import { AdminInfluencerMessagesResponse } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-messages-type';
 import type { CompanyNegotiationMediaResponse } from '@/src/types/Compnay/feeedback-content-type';
-import type { InfluencerDemographicsAssetsResponse } from '@/src/types/Admin-Type/Reports-tyes';
+import type {
+  InfluencerDemographicsAssetsResponse,
+  OverallCampaignOutcomesResponse,
+} from '@/src/types/Admin-Type/Reports-tyes';
 import type {
   AdminAllCompaniesNamesResponse,
   AdminCampaignBriefApiResponse,
@@ -48,6 +51,7 @@ import type {
   AdminCreateCampaignApiResponse,
   AdminCreateCampaignRequest,
 } from '@/src/types/Admin-Type/create-campaign-type';
+import { InfluencerPostingDetailsRequest } from '@/src/types/Posting/posting-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -720,6 +724,15 @@ export const CampaignBriefAndInfluencerStatsApi = async (
   return response.data;
 };
 
+export const OverallCampaignOutcomesApi = async (
+  campaign_id: string,
+): Promise<OverallCampaignOutcomesResponse> => {
+  const response = await api.get<OverallCampaignOutcomesResponse>(
+    AdminENDPOINT.OVERALL_CAMPAIGN_OUTCOMES(campaign_id),
+  );
+  return response.data;
+};
+
 export const WhatsAppAdminInfluencerMediaUrlsApi = async (thread_id: string) => {
   const response = await api.get(
     AdminENDPOINT.ADMIN_WHATSAPP_ADMIN_INFLUENCER_MEDIA_URLS(thread_id),
@@ -745,8 +758,8 @@ export const AdminCampaignBriefDeliverablesApi = async (
   return response.data;
 };
 
-export const DemographicsOcrApi = async (url: string[]) => {
-  const response = await api.post(AdminENDPOINT.ADMIN_DEMOGRAPHICS_OCR, { url });
+export const DemographicsOcrApi = async (image_url: string[]) => {
+  const response = await api.post(AdminENDPOINT.ADMIN_DEMOGRAPHICS_OCR, { image_url });
   return response.data;
 };
 
@@ -789,5 +802,17 @@ export const AdminCreateCampaignApi = async (
     AdminENDPOINT.ADMIN_GENERATE_CAMPAIGN,
     payload,
   );
+  return response.data;
+};
+
+
+export const InfluencerPostingDetailsApi = async (
+  payload: InfluencerPostingDetailsRequest
+) => {
+  const response = await api.post(
+    AdminENDPOINT.INFLUENCER_POSTING_DETAILS,
+    payload
+  );
+
   return response.data;
 };

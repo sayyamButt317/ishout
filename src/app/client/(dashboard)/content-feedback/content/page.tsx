@@ -7,6 +7,7 @@ import type {
   NegotiationItem,
   NegotiationResponse,
 } from '@/src/types/Compnay/feeedback-content-type';
+import { ContentDetailSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 function ContentFeedbackContentPageInner() {
   const router = useRouter();
@@ -15,6 +16,11 @@ function ContentFeedbackContentPageInner() {
   const negotiationIdFromQuery = searchParams.get('negotiation_id') ?? '';
   const [selectedCardFromStorage, setSelectedCardFromStorage] =
     useState<SelectedContentFeedbackCard | null>(null);
+
+  const { data, isPending } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
+    data?: NegotiationResponse;
+    isPending: boolean;
+  };
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -30,9 +36,6 @@ function ContentFeedbackContentPageInner() {
     }
   }, [negotiationIdFromQuery]);
 
-  const { data } = NegotiationAgreedByCampaignHook(campaignIdFromQuery) as {
-    data?: NegotiationResponse;
-  };
   const selectedCardFromApi = useMemo<SelectedContentFeedbackCard | null>(() => {
     const negotiationItems = data?.negotiations ?? data?.negotiation_controls ?? [];
     const item = (negotiationItems as unknown as NegotiationItem[]).find((entry: NegotiationItem) => {
@@ -45,9 +48,11 @@ function ContentFeedbackContentPageInner() {
       campaign: item.campaign_brief?.title ?? 'Campaign',
       briefId: data?.campaign?.brief_id ?? '',
     };
-  }, [data?.negotiations, data?.negotiation_controls, negotiationIdFromQuery]);
+  }, [data?.negotiations, data?.negotiation_controls, negotiationIdFromQuery, data?.campaign?.brief_id]);
 
   const selectedCard = selectedCardFromStorage ?? selectedCardFromApi;
+
+  if (campaignIdFromQuery && isPending) return <ContentDetailSkeleton />;
 
   if (!selectedCard) {
     return (
@@ -75,7 +80,7 @@ function ContentFeedbackContentPageInner() {
 
 export default function ContentFeedbackContentPage() {
   return (
-    <Suspense fallback={<div className="p-4 text-white/60">Loading content...</div>}>
+    <Suspense fallback={<ContentDetailSkeleton />}>
       <ContentFeedbackContentPageInner />
     </Suspense>
   );
