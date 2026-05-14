@@ -27,6 +27,7 @@ const MobileHeader = () => {
     <aside>
       <div className="w-2xl mx-auto flex items-center justify-between">
         <div className="flex flex-row gap-2">
+          <Link href="https://app.ishout.ae/">
           <Image
             src="/assets/iShout-gif-black-background.gif"
             alt="logo"
@@ -37,6 +38,7 @@ const MobileHeader = () => {
             priority
             unoptimized={true}
           />
+          </Link>
         </div>
         <div
           className="lg:flex items-center gap-8 sm:gap-2 text-md font-thin"

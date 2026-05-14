@@ -27,12 +27,12 @@ export default function VideoCarousel({
   return (
     <div id={id} className="relative w-full overflow-hidden">
       {heading && (
-        <h1 className="italic text-center text-3xl font-thin text-neutral-300 mb-12">
+        <h1 className="italic text-center text-3xl font-thin text-neutral-800 dark:text-neutral-300 mb-12">
           {heading}
         </h1>
       )}
-      <div className="hidden md:block pointer-events-none absolute left-0 top-0 h-full w-120 bg-linear-to-r from-black via-black/80 to-transparent z-20" />
-      <div className="hidden md:block pointer-events-none absolute right-0 top-0 h-full w-120 bg-linear-to-l from-black via-black/80 to-transparent z-20" />
+      <div className="hidden md:block pointer-events-none absolute left-0 top-0 h-full w-120 bg-linear-to-r from-white via-white/80 to-transparent dark:from-black dark:via-black/80 dark:to-transparent z-20" />
+      <div className="hidden md:block pointer-events-none absolute right-0 top-0 h-full w-120 bg-linear-to-l from-white via-white/80 to-transparent dark:from-black dark:via-black/80 dark:to-transparent z-20" />
       <div
         ref={carouselRef}
         className="flex justify-center overflow-x-auto scroll-smooth snap-x snap-mandatory gap-10 px-16 pb-20 [scrollbar-width:none]"
@@ -54,10 +54,10 @@ export default function VideoCarousel({
             whileHover={{ scale: 1.06 }}
           >
             <div
-              className="relative flex 
-              h-88 w-56 
+              className="relative flex
+              h-88 w-56
               md:h-82  md:w-48
-              overflow-hidden rounded-3xl 
+              overflow-hidden rounded-3xl
               bg-neutral-900 shadow-xl"
             >
               <video
