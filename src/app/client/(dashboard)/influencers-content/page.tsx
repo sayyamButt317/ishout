@@ -7,7 +7,7 @@ import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
-import { LayoutGrid } from 'lucide-react';
+import { MessageSquareMore } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
@@ -32,7 +32,7 @@ export default function ClientInfluencersContentPage() {
             ? `Showing ${data.campaigns.length} of ${data.total} campaigns`
             : 'Your campaigns across all statuses'
         }
-        icon={<LayoutGrid className="size-5" />}
+        icon={<MessageSquareMore className="size-5" />}
       />
       <TableComponent
         header={[

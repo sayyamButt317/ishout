@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
 import ApprovedContentCard from '@/src/app/component/approved-content/approved-content-card';
 import ApprovedContentsMutation from '@/src/routes/Company/api/Hooks/approved-contents.hook';
-import { CheckCircle, LayoutGrid, Loader2 } from 'lucide-react';
+import { CheckCircle, Folder, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ApprovedContentGridSkeleton } from '@/src/app/component/skeletons/client-skeletons';
 
@@ -57,7 +57,7 @@ function ApprovedContentsPageContent() {
               href="/client/approved-contents/all-campaigns"
               className="inline-flex items-center gap-2"
             >
-              <LayoutGrid className="size-4" />
+              <Folder className="size-4" />
               All campaigns
             </Link>
           </Button>

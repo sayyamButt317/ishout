@@ -112,14 +112,14 @@ export default function AdminSidebar() {
 
   const sidebarContent = (onNavigate?: () => void) => (
     <>
-      <a href="https://app.ishout.ae" target="_blank" rel="noopener noreferrer" className="mb-8 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
+      <a href="https://app.ishout.ae" target="_blank" rel="noopener noreferrer" className="mb-2 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
         <div className="relative">
           <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full" />
           <Image
             src="/assets/iShout-gif-black-background.gif"
             alt="logo"
-            width={80}
-            height={80}
+            width={60}
+            height={60}
             className="relative z-10"
             unoptimized={true}
           />

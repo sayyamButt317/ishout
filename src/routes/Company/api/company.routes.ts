@@ -24,7 +24,7 @@ import {
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { ApprovedContentsResponse } from '@/src/types/Compnay/approved-content-type';
 import type { UpdateApprovedContentPayload } from '@/src/types/Compnay/approved-video-type';
-import type { CompanyPostingDetailsApiResponse } from '@/src/app/client/posting-details-type';
+import type { CompanyPostingDetailsApiResponse } from '@/src/types/Posting/posting-details-type';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,

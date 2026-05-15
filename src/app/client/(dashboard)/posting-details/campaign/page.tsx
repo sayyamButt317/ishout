@@ -8,7 +8,7 @@ import { RefreshCcw, ClipboardList, Search, Loader2, LayoutGrid } from 'lucide-r
 import PageHeader from '@/src/app/component/PageHeader';
 import { CompanyPostingDetailsHook } from '@/src/routes/Company/api/Hooks/company-posting-details.hook';
 import { Button } from '@/components/ui/button';
-import type { CompanyPostingDetailsListData, PostingDetail } from '@/src/app/client/posting-details-type';
+import type { CompanyPostingDetailsListData, PostingDetail } from '@/src/types/Posting/posting-details-type';
 
 function SkeletonRow() {
   return (
