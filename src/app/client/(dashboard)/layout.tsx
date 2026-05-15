@@ -13,7 +13,7 @@ export default function ClientDashboardLayout({
       <div className="min-h-screen flex">
         <Sidebar links={employeeSidebarLinks} />
         <div className="flex-1 flex flex-col md:ml-70">
-          <main className="flex-1 px-4 py-4 overflow-y-hidden mt-14 md:mt-0">
+          <main className="flex-1 px-8 py-4 overflow-y-hidden mt-14 md:mt-0">
             {children}
           </main>
         </div>

@@ -3,7 +3,7 @@ import { CompanyPostingDetailsApi } from '../company.routes';
 import type {
   CompanyPostingDetailsApiResponse,
   CompanyPostingDetailsListData,
-} from '@/src/app/client/posting-details-type';
+} from '@/src/types/Posting/posting-details-type';
 
 function toListData(data: CompanyPostingDetailsApiResponse): CompanyPostingDetailsListData {
   const pd = data.posting_details;

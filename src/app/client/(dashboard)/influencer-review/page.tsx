@@ -8,7 +8,7 @@ import useAuthStore from '@/src/store/AuthStore/authStore';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { RefreshCcw, UserCheck } from 'lucide-react';
+import { RefreshCcw, UserRoundSearch } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import CustomButton from '@/src/app/component/button';
 import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
@@ -31,7 +31,7 @@ export default function RevieInfluencer() {
       <PageHeader
         title="Review Onboarded Influencers"
         description="Campaigns with onboarded influencers that need to be reviewed"
-        icon={<UserCheck className="size-5" />}
+        icon={<UserRoundSearch className="size-5" />}
         actions={
           <Button
             variant="ghost"

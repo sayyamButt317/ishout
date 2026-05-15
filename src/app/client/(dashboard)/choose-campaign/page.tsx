@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Star, ArrowRight } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -25,7 +25,7 @@ function Header() {
       <PageHeader
         title="Choose how you want to create your Campaign"
         description="Whether you need AI-powered creative direction or direct engagement via WhatsApp, we've got you covered."
-        icon={<Sparkles className="size-5" />}
+        icon={<Star className="size-5" />}
       />
 
       <div className="text-center">
@@ -66,7 +66,7 @@ function CampaignCard({ option }: { option: CampaignOption }) {
       />
       {/* Card */}
       <div
-        className={` bg-black/40 backdrop-blur-xl border border-gray-500/30 ${a.border} rounded-3xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1.5 ${a.cardGlow} flex flex-col gap-x-30 gap-y-6 sm:p md:flex-row`}
+        className={` bg-black/40 backdrop-blur-xl border border-gray-500/30 ${a.border} rounded-3xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1.5 ${a.cardGlow} flex flex-col gap-x-30 gap-y-6 p-4 md:flex-row`}
       >
         {/* Content */}
         <div className="flex-1 md:px-6 md:py-4 md:pl-10 flex flex-col justify-center">
@@ -114,7 +114,7 @@ function CampaignCard({ option }: { option: CampaignOption }) {
 
 function Footer() {
   return (
-    <div className="mt-2 text-center">
+    <div className="mt-2 text-center italic">
       <p className="text-sm text-foreground/40 font-extralight">
         Not sure which one to choose?{' '}
         <a
