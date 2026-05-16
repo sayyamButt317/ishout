@@ -12,7 +12,7 @@ export default function CustomToast() {
         unstyled: false,
         classNames: {
           toast:
-            "!relative !rounded-2xl !px-5 !py-4 !text-white !shadow-2xl !border-0 backdrop-blur-xl",
+            "!relative !rounded-2xl !px-5 !py-4 !text-white !shadow-2xl !border-0 !bg-gradient-to-br !from-slate-900/90 !to-slate-800/90",
 
           success:
             "!bg-gradient-to-br !from-emerald-500/90 !to-emerald-700/90 !shadow-[0_8px_30px_rgba(16,185,129,0.35)]",
