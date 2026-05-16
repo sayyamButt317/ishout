@@ -117,15 +117,6 @@ const ApprovedCampaignPage = () => {
             <Trash className="size-5 text-red-300" />
           </Button>,
           <Button
-            key={`view-${campaign._id}`}
-            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
-            onClick={() => {
-              router.push(`/Admin/approved-campaign/${campaign?._id}`);
-            }}
-          >
-            View Influencers
-          </Button>,
-          <Button
             key={`brief-${campaign._id}`}
             className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
             disabled={!campaign.brief_id}
@@ -138,6 +129,16 @@ const ApprovedCampaignPage = () => {
           >
             View Brief
           </Button>,
+          <Button
+            key={`view-${campaign._id}`}
+            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3 cursor-pointer"
+            onClick={() => {
+              router.push(`/Admin/approved-campaign/${campaign?._id}`);
+            }}
+          >
+            View Influencers
+          </Button>,
+
         ])}
         paginationstart={data?.page ?? currentPage}
         paginationend={totalPages}
