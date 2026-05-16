@@ -1,6 +1,6 @@
 'use client';
 import CampaignBriefResult from '@/src/app/component/custom-component/CampaignBriefResult';
-import CampaignBreifHook from '@/src/routes/Company/api/Hooks/CampaignBreif-hook';
+import CampaignBreifHook from '@/src/routes/Company/Hooks/CampaignBreif-hook';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import { Loader2, Sparkles, WandSparkles } from 'lucide-react';
 import { useCallback, useState, useRef } from 'react';

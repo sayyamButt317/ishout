@@ -11,7 +11,6 @@ import CustomButton from '../component/button';
 import LogoFooter from '../component/logo-footer';
 import { chaosCards, contextFeatures, reviewCards } from '@/src/constant/Data/feedback';
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
 const workflowSteps = [
   {
     num: '01', color: 'text-[#ff4e7e]', border: 'border-[#ff4e7e]', title: 'Submit Content', reverse: false,

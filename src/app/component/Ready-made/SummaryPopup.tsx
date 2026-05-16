@@ -4,7 +4,7 @@ import Spinner from '../custom-component/spinner';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 import { X, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
-import CreateCampaignHook from '@/src/routes/Company/api/Hooks/create-campaign.hook';
+import CreateCampaignHook from '@/src/routes/Company/Hooks/create-campaign.hook';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import {
   DropdownMenu,
@@ -365,11 +365,11 @@ const SummaryPopup = ({ onClose }: SummaryPopupProps) => {
                 </div>
               </div>
               <button
-  onClick={() => onClose()}
-  className="text-white/60 hover:text-foreground/95 hover:bg-white/10 rounded-full p-2 transition-all duration-200 self-end cursor-pointer sm:self-start"
->
-  <X size={20} className="lg:w-6 lg:h-6" />
-</button>
+                onClick={() => onClose()}
+                className="text-white/60 hover:text-foreground/95 hover:bg-white/10 rounded-full p-2 transition-all duration-200 self-end cursor-pointer sm:self-start"
+              >
+                <X size={20} className="lg:w-6 lg:h-6" />
+              </button>
             </div>
 
             <div className="flex items-center gap-2 text-xs lg:text-sm mb-6">

@@ -7,7 +7,7 @@ import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import AllUsersHook from '@/src/routes/Admin/Hooks/users/allusers-hook';
 import DeleteUserHook from '@/src/routes/Admin/Hooks/users/delete-user-hook';
 import UpdateUserStatusHook from '@/src/routes/Admin/Hooks/users/update-userstatus-hook';
-import CompanyUpdateProfileHook from '@/src/routes/Company/api/Hooks/update-profile.hook';
+import CompanyUpdateProfileHook from '@/src/routes/Company/Hooks/update-profile.hook';
 import AddUserHook from '@/src/hooks/add-user-hook';
 import { UserManagementResponse } from '@/src/types/Admin-Type/usermanagment.type';
 import {
@@ -177,8 +177,7 @@ export default function UserManagementPage() {
       : setEditUser(p => p ? { ...p, phone: removePlusPrefix(v) } : null);
 
   return (
-    <>
-      {/* ── HEADER ── */}
+    <div className="mt-5">
       <PageHeader
         title="User Management"
         description={`${filtered.length} of ${data?.total ?? 0} users`}
@@ -200,7 +199,7 @@ export default function UserManagementPage() {
         }
       />
 
-      <div className="sm:px-8 pb-12 space-y-2">
+      <div className=" pb-12 space-y-2">
 
         {/* ── STATS ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -492,6 +491,6 @@ export default function UserManagementPage() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }

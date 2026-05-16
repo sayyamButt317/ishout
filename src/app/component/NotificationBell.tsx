@@ -34,7 +34,7 @@ export default function NotificationBell() {
       <SheetTrigger asChild>
         <button
           type="button"
-          className="relative flex size-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+          className="relative flex size-9 items-center justify-center rounded-xl border border-slate-300 text-slate-700 dark:border-white/10 dark:bg-white/5  dark:text-white/70 transition-colors dark:hover:bg-white/10 dark:hover:text-white cursor-pointer"
           aria-label="Open notifications"
         >
           <Bell className="size-4" />

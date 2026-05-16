@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
 import ApprovedContentCard from '@/src/app/component/approved-content/approved-content-card';
-import ApprovedContentsMutation from '@/src/routes/Company/api/Hooks/approved-contents.hook';
+import ApprovedContentsMutation from '@/src/routes/Company/Hooks/approved-contents.hook';
 import { CheckCircle, Folder, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ApprovedContentGridSkeleton } from '@/src/app/component/skeletons/client-skeletons';

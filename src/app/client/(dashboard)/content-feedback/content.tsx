@@ -9,7 +9,7 @@ import useAdminNegotiationApprovalStatus from '@/src/routes/Admin/Hooks/Whatsapp
 import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
 import useBrandContentFeedbackReadHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-brand-read-hook';
 import useWhatsAppAdminCompanyApproveVideo from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-approve-video-hook';
-import useUpdateApprovedContent from '@/src/routes/Company/api/Hooks/use-update-approved-content.hook';
+import useUpdateApprovedContent from '@/src/routes/Company/Hooks/use-update-approved-content.hook';
 import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-map';
 import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages-list';
 import ContentFeedbackBrandSidebar from '@/src/app/component/content-feedback-client/content-feedback-brand-sidebar';

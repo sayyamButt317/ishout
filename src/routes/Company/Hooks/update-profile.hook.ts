@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CompanyUpdateProfileApi } from "../company.routes";
+import { CompanyUpdateProfileApi } from "../api/company.routes";
 import { UpdateProfileResponseProps } from "@/src/types/Compnay/profile-type";
 import { toast } from "sonner";
 import { AxiosError } from "axios";

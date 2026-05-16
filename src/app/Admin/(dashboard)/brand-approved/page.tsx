@@ -10,7 +10,7 @@ import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import CountButton from '@/src/app/component/custom-component/countbutton';
 import { useRouter } from 'next/navigation';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
-import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import CampaignBriefDetailHook from '@/src/routes/Company/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
@@ -49,7 +49,7 @@ export default function OnboardingCampaignPage() {
   if (isLoading) return <TablePageSkeleton columns={10} />;
 
   return (
-    <>
+    <div className="mt-5">
       <PageHeader
         title="Brand Approved Influencer"
         description={`Showing ${campaigns.length} of ${totalCount} brand approved campaigns`}
@@ -180,6 +180,6 @@ export default function OnboardingCampaignPage() {
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
       />
-    </>
+    </div>
   );
 }

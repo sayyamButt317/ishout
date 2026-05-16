@@ -1,9 +1,9 @@
 'use client'
-
 import { useParams, useSearchParams } from 'next/navigation'
-import useInfluencerContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/contentdetail-influencer-hook'
+
 import Header from '../../component/header'
 import { TimerIcon } from 'lucide-react'
+import { useInfluencerContentFeedbackHook } from '@/src/routes/Influencer/hooks/influencer-queries'
 
 type TimestampItem = {
   time: number

@@ -7,12 +7,12 @@ import {
   BookCheck, ShieldCheck, Info, MousePointerClick, UserSearch,
 } from 'lucide-react';
 import { useState } from 'react';
-import useUpdateCampaignBrief from '@/src/routes/Company/api/Hooks/useUpdateCampaignBriefHook';
+import useUpdateCampaignBrief from '@/src/routes/Company/Hooks/useUpdateCampaignBriefHook';
 import { toast } from 'sonner';
 import Image from 'next/image';
 import BriefCard from './BriefCard';
 import { EditableText } from './EditableTextInput';
-import UploadCampaignImageHook from '@/src/routes/Company/api/Hooks/UploadCampaignImage-hook';
+import UploadCampaignImageHook from '@/src/routes/Company/Hooks/UploadCampaignImage-hook';
 import Button from '../button';
 import { CampaignSBriefStore } from '@/src/store/Campaign/brief.store';
 import {

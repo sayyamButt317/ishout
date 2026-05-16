@@ -13,8 +13,8 @@ import {
   UsernameLink,
 } from '@/src/helper/followersformat';
 import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influencer';
-import UpdateInfluencerStatusCompanyHook from '@/src/routes/Company/api/Hooks/update-influencerstatus.hook';
-import ReviewPendingInfluencersHook from '@/src/routes/Company/api/Hooks/reveiw-pending.hook';
+import UpdateInfluencerStatusCompanyHook from '@/src/routes/Company/Hooks/update-influencerstatus.hook';
+import ReviewPendingInfluencersHook from '@/src/routes/Company/Hooks/reveiw-pending.hook';
 import { useParams } from 'next/navigation';
 import { CardGridSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 

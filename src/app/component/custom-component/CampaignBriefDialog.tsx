@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
-import useUpdateCampaignBrief from '@/src/routes/Company/api/Hooks/useUpdateCampaignBriefHook';
+import useUpdateCampaignBrief from '@/src/routes/Company/Hooks/useUpdateCampaignBriefHook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import jsPDF from 'jspdf';
 import BriefCard from './BriefCard';
@@ -243,7 +243,7 @@ export default function CampaignBriefDialog({
               logoUrl={localBrief.campaign_logo_url}
               label="Campaign"
             />
-            
+
             <p className="text-foreground/50 text-sm leading-relaxed max-w-2xl">
               {localBrief.brand_name_influencer_campaign_brief}
             </p>

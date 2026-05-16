@@ -1,24 +1,34 @@
 "use client";
-import { useState, useMemo, useCallback } from "react";
+
+import { useState, useMemo, useCallback, useEffect, type ComponentType, type ReactNode } from "react";
 import {
-  ChevronRight, ChevronLeft, Clock,
-  PenSquare, PlusCircle, CheckCircle, Rocket,
+  ChevronRight,
+  ChevronLeft,
+  PenSquare,
+  PlusCircle,
+  CheckCircle,
+  Rocket,
+  CalendarDays,
+  Hash,
+  AtSign,
 } from "lucide-react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import NegotiationAgreedByCampaignHook from "@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook";
-import { InfluencerPostingDetailsHook } from "@/src/routes/Admin/Mutations/DemoGraphics";
 import usePostingStore from "@/src/store/Report/posting-store";
-import ContentHeader from "../../component/custom-component/ContentHeader";
+import { InfluencerPostingDetailsHook } from "@/src/routes/Influencer/hooks/influencer-mutation";
 
-const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const DAYS = ["S", "M", "T", "W", "T", "F", "S"];
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
 
 const TIME_SLOTS = [
-  { time: "09:00 AM", label: "Morning Rush", hour: 9 },
-  { time: "11:30 AM", label: "Lunch Break", hour: 11.5 },
-  { time: "08:00 PM", label: "Peak · Recommended", hour: 20, hot: true },
-  { time: "09:45 PM", label: "Late Night", hour: 21.75 },
+  { time: "09:00 AM", label: "Morning", hour: 9 },
+  { time: "11:30 AM", label: "Midday", hour: 11.5 },
+  { time: "08:00 PM", label: "Peak", hour: 20, hot: true },
+  { time: "09:45 PM", label: "Night", hour: 21.75 },
 ];
 
 function buildCalendar(year: number, month: number) {
@@ -39,286 +49,481 @@ function slotAvailable(year: number, month: number, day: number, hour: number) {
   return slot > new Date();
 }
 
+function SectionTitle({
+  icon: Icon,
+  children,
+}: {
+  icon: ComponentType<{ size?: number; className?: string }>;
+  children: ReactNode;
+}) {
+  return (
+    <h2 className="flex items-center gap-2 text-sm font-semibold text-white">
+      <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-primaryButton/10 text-primaryButton">
+        <Icon size={14} />
+      </span>
+      {children}
+    </h2>
+  );
+}
+
 export default function CampaignSchedulePage() {
   const today = useMemo(() => new Date(), []);
   const { Id } = useParams<{ Id: string }>();
-  const { data } = NegotiationAgreedByCampaignHook(Id ?? "");
-  const { mutate: submitPostingDetails, isPending } = InfluencerPostingDetailsHook();
-
+  const { data, isLoading } = NegotiationAgreedByCampaignHook(Id ?? "");
+  const { mutate: submitPostingDetails, isPending, isSuccess } =
+    InfluencerPostingDetailsHook();
 
   const {
-    postingDate, setPostingDateForPosting,
-    date, setDateForPosting,
-    time, setTimeForPosting,
-    caption, setCaptionForPosting,
-    hashtags, setHashtagsForPosting,
-    tagpartners, setTagpartnersForPosting,
+    postingDate,
+    setPostingDateForPosting,
+    date,
+    setDateForPosting,
+    time,
+    setTimeForPosting,
+    caption,
+    setCaptionForPosting,
+    hashtags,
+    setHashtagsForPosting,
+    tagpartners,
+    setTagpartnersForPosting,
   } = usePostingStore();
 
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
   const [hashtagText, setHashtagText] = useState(hashtags.join(" "));
   const [tagText, setTagText] = useState(tagpartners.join(", "));
 
   const calendarDate = postingDate ? new Date(postingDate) : new Date();
   const viewYear = calendarDate.getFullYear();
   const viewMonth = calendarDate.getMonth();
-
   const cells = useMemo(() => buildCalendar(viewYear, viewMonth), [viewYear, viewMonth]);
 
-  const isToday = (d: number) => d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
-  const isPast = (d: number) => new Date(viewYear, viewMonth, d) < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const logoUrl = data?.campaign_logo_url?.trim() ?? "";
+  const campaignTitle = data?.campaign_brief?.title ?? "Campaign";
+  const deliverables = data?.campaign_brief?.deliverables_per_influencer ?? [];
+  const timeline = data?.campaign_brief?.timeline ?? [];
+  const platforms = data?.campaign?.platform ?? [];
+
+  const isToday = (d: number) =>
+    d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+  const isPast = (d: number) =>
+    new Date(viewYear, viewMonth, d) <
+    new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const isAtMin = viewYear === today.getFullYear() && viewMonth === today.getMonth();
 
   const goMonth = (dir: 1 | -1) => {
-    const next = new Date(viewYear, viewMonth + dir, 1);
-    setPostingDateForPosting(next);
+    setPostingDateForPosting(new Date(viewYear, viewMonth + dir, 1));
   };
 
-  const handleDaySelect = useCallback((day: number) => {
-    setSelectedDay(day);
-    setTimeForPosting("");
-    const formatted = new Date(viewYear, viewMonth, day).toLocaleDateString("en-US");
-    setDateForPosting(formatted);
-  }, [viewYear, viewMonth, setDateForPosting, setTimeForPosting]);
+  const handleDaySelect = useCallback(
+    (day: number) => {
+      setSelectedDay(day);
+      setTimeForPosting("");
+      setDateForPosting(new Date(viewYear, viewMonth, day).toLocaleDateString("en-US"));
+    },
+    [viewYear, viewMonth, setDateForPosting, setTimeForPosting],
+  );
 
-  const handleTimeSelect = useCallback((t: string) => {
-    setTimeForPosting(t);
-  }, [setTimeForPosting]);
+  const handleHashtagChange = useCallback(
+    (text: string) => {
+      setHashtagText(text);
+      setHashtagsForPosting(text.split(/[\s,]+/).filter(Boolean));
+    },
+    [setHashtagsForPosting],
+  );
 
-  const handleHashtagChange = useCallback((text: string) => {
-    setHashtagText(text);
-    const parsed = text.split(/[\s,]+/).filter(Boolean);
-    setHashtagsForPosting(parsed);
-  }, [setHashtagsForPosting]);
-
-  const handleTagChange = useCallback((text: string) => {
-    setTagText(text);
-    const parsed = text.split(",").map(s => s.trim()).filter(Boolean);
-    setTagpartnersForPosting(parsed);
-  }, [setTagpartnersForPosting]);
+  const handleTagChange = useCallback(
+    (text: string) => {
+      setTagText(text);
+      setTagpartnersForPosting(text.split(",").map((s) => s.trim()).filter(Boolean));
+    },
+    [setTagpartnersForPosting],
+  );
 
   const availableSlots = selectedDay
-    ? TIME_SLOTS.filter(s => slotAvailable(viewYear, viewMonth, selectedDay, s.hour))
+    ? TIME_SLOTS.filter((s) => slotAvailable(viewYear, viewMonth, selectedDay, s.hour))
     : [];
 
   const summaryDate = selectedDay
-    ? new Date(viewYear, viewMonth, selectedDay).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+    ? new Date(viewYear, viewMonth, selectedDay).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
     : "—";
 
   const canSchedule = !!selectedDay && !!time && caption.trim().length > 0;
 
+  const hint = !selectedDay
+    ? "Select a date"
+    : !time
+      ? "Select a time"
+      : !caption.trim()
+        ? "Add a caption"
+        : null;
+
   const handleSchedule = useCallback(() => {
     if (!canSchedule) return;
-
     submitPostingDetails({
       campaign_id: Id ?? "",
-      campaign_name: data?.campaign_brief?.title ?? "",
-      logo_url: data?.campaign_logo_url ?? "",
+      campaign_name: campaignTitle,
+      logo_url: logoUrl,
       posting_date: date,
       posting_time: time,
       caption,
       hashtag: hashtags,
       tag_users: tagpartners,
     });
+  }, [
+    canSchedule,
+    submitPostingDetails,
+    Id,
+    campaignTitle,
+    logoUrl,
+    date,
+    time,
+    caption,
+    hashtags,
+    tagpartners,
+  ]);
 
-  }, [canSchedule, submitPostingDetails, Id, data?.campaign_brief?.title, data?.campaign_logo_url, date, time, caption, hashtags, tagpartners]);
+  useEffect(() => {
+    if (isSuccess) window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [isSuccess]);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans">
-      <main className="mx-auto pt-12 pb-24 px-4 md:px-6">
-        <ContentHeader
-          title={data?.campaign_brief?.title ?? ""}
-          logo={data?.campaign_logo_url ?? ""}
-          deliverables={data?.campaign_brief?.deliverables_per_influencer}
-          timeline={data?.campaign_brief?.timeline}
-          platform={data?.campaign?.platform}
-          brandThreadId={data?.campaign?.brand_thread_id}
-        />
+    <div className="min-h-screen bg-[#0a0a0a] text-white">
+      {/* Top bar */}
+      <header className="sticky top-0 z-40 border-b border-white/6 bg-[#0a0a0a]/90 backdrop-blur-md">
+        <div className="mx-auto flex h-12 max-w-lg items-center justify-between px-4 sm:max-w-2xl">
+          <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/25">
+            iShout
+          </span>
+          <span className="text-[11px] text-white/40">Schedule post</span>
+        </div>
+      </header>
 
-        {/* ── Main Card ── */}
-        <div className="rounded-3xl overflow-hidden border border-white/8 bg-white/3">
-
-          {/* ── Section 1: Schedule ── */}
-          <div className="p-6 md:p-10 border-b border-white/5">
-            <h2 className="text-xl font-bold mb-8 flex items-center gap-3">
-              <span className="bg-[#ff4e7e]/10 p-2 rounded-lg text-[#ff4e7e]"><Clock size={18} /></span>
-              Select Posting Time
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-              {/* Calendar */}
-              <div className="bg-white/4 p-5 rounded-2xl border border-white/5">
-                <div className="flex items-center justify-between mb-5">
-                  <span className="font-bold text-sm">{MONTHS[viewMonth]} {viewYear}</span>
-                  <div className="flex gap-1">
-                    <button onClick={() => goMonth(-1)} disabled={isAtMin}
-                      className="p-1.5 text-white/30 hover:text-white hover:bg-white/5 rounded-full transition-all disabled:opacity-20 disabled:cursor-not-allowed">
-                      <ChevronLeft size={16} />
-                    </button>
-                    <button onClick={() => goMonth(1)}
-                      className="p-1.5 text-white/30 hover:text-white hover:bg-white/5 rounded-full transition-all">
-                      <ChevronRight size={16} />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-7 gap-1 text-center text-[9px] text-white/30 mb-3 font-black tracking-widest">
-                  {DAYS.map(d => <div key={d}>{d}</div>)}
-                </div>
-
-                <div className="grid grid-cols-7 gap-1 text-center text-sm">
-                  {cells.map(({ day, muted }, i) => {
-                    if (muted) return <div key={i} className="py-2 text-white/10 text-xs">{day}</div>;
-                    const past = isPast(day);
-                    const isTodayCell = isToday(day);
-                    const sel = selectedDay === day;
-                    return (
-                      <button key={i} disabled={past} onClick={() => handleDaySelect(day)}
-                        className={`py-2 rounded-xl transition-all font-medium text-sm
-                          ${past ? "text-white/15 cursor-not-allowed"
-                            : sel ? "bg-[#ff4e7e] text-white font-black shadow-[0_0_12px_rgba(255,78,126,0.4)]"
-                              : isTodayCell ? "ring-1 ring-[#ff4e7e]/50 text-[#ff4e7e] hover:bg-[#ff4e7e]/10"
-                                : "text-white hover:bg-white/10"}`}>
-                        {day}
-                      </button>
-                    );
-                  })}
-                </div>
+      <main className="mx-auto max-w-lg px-4 pb-28 pt-5 sm:max-w-2xl sm:px-6 sm:pt-6">
+        {/* Campaign summary */}
+        <section className="mb-5 rounded-2xl border border-white/8 bg-[#111] p-4">
+          {isLoading ? (
+            <div className="flex gap-3 animate-pulse">
+              <div className="h-14 w-14 shrink-0 rounded-xl bg-white/5" />
+              <div className="flex-1 space-y-2 py-1">
+                <div className="h-4 w-3/4 rounded bg-white/5" />
+                <div className="h-3 w-1/2 rounded bg-white/5" />
               </div>
-
-              {/* Time Slots */}
-              <div className="flex flex-col">
-                <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-4">
-                  {selectedDay ? `Slots — ${MONTHS[viewMonth]} ${selectedDay}` : "Select a day first"}
-                </p>
-
-                {!selectedDay ? (
-                  <div className="flex-1 flex items-center justify-center rounded-2xl border border-dashed border-white/10 min-h-40">
-                    <p className="text-white/20 text-xs text-center leading-relaxed">Pick a date on the<br />calendar to see slots</p>
-                  </div>
-                ) : availableSlots.length === 0 ? (
-                  <div className="flex-1 flex items-center justify-center rounded-2xl border border-dashed border-white/10 min-h-40">
-                    <p className="text-white/20 text-xs text-center leading-relaxed">No more slots<br />available today</p>
-                  </div>
+            </div>
+          ) : (
+            <div className="flex gap-3">
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                {logoUrl ? (
+                  <Image
+                    src={logoUrl}
+                    alt={campaignTitle}
+                    fill
+                    sizes="56px"
+                    className="object-cover"
+                    priority
+                  />
                 ) : (
-                  <div className="grid gap-3">
-                    {availableSlots.map(({ time: slotTime, label, hot }) => {
-                      const active = time === slotTime;
-                      return (
-                        <button key={slotTime} onClick={() => handleTimeSelect(slotTime)}
-                          className={`py-3 px-5 rounded-xl text-sm transition-all border flex justify-between items-center
-                            ${active
-                              ? "bg-[#ff4e7e]/10 text-[#ff4e7e] border-[#ff4e7e]/30 font-bold"
-                              : "bg-white/4 text-white/40 border-white/5 hover:bg-white/10 hover:text-white"}`}>
-                          <span>{slotTime}</span>
-                          <span className={`text-[10px] ${active ? "text-[#ff4e7e]" : "text-white/20"} ${hot ? "font-bold" : ""}`}>{label}</span>
-                        </button>
-                      );
-                    })}
+                  <div className="flex h-full w-full items-center justify-center text-[10px] text-white/20">
+                    Logo
+                  </div>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <h1 className="truncate text-base font-semibold leading-snug text-white">
+                  {campaignTitle}
+                </h1>
+                {platforms.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {platforms.map((p) => (
+                      <span
+                        key={p}
+                        className="rounded-md bg-white/5 px-2 py-0.5 text-[10px] font-medium text-white/50"
+                      >
+                        {p}
+                      </span>
+                    ))}
                   </div>
                 )}
               </div>
             </div>
+          )}
+
+          {(deliverables.length > 0 || timeline.length > 0) && !isLoading && (
+            <div className="mt-3 grid grid-cols-1 gap-2 border-t border-white/6 pt-3 sm:grid-cols-2">
+              {deliverables.length > 0 && (
+                <div className="rounded-lg bg-white/3 p-2.5">
+                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-white/35">
+                    Deliverables
+                  </p>
+                  <ul className="space-y-0.5 text-[11px] leading-relaxed text-white/55">
+                    {deliverables.slice(0, 3).map((item, i) => (
+                      <li key={i} className="line-clamp-2">
+                        · {item}
+                      </li>
+                    ))}
+                    {deliverables.length > 3 && (
+                      <li className="text-white/30">+{deliverables.length - 3} more</li>
+                    )}
+                  </ul>
+                </div>
+              )}
+              {timeline.length > 0 && (
+                <div className="rounded-lg bg-white/3 p-2.5">
+                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-white/35">
+                    Timeline
+                  </p>
+                  <ul className="space-y-0.5 text-[11px] leading-relaxed text-white/55">
+                    {timeline.slice(0, 3).map((item, i) => (
+                      <li key={i} className="line-clamp-2">
+                        · {item}
+                      </li>
+                    ))}
+                    {timeline.length > 3 && (
+                      <li className="text-white/30">+{timeline.length - 3} more</li>
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* Schedule */}
+        <section className="mb-4 rounded-2xl border border-white/8 bg-[#111] p-4">
+          <SectionTitle icon={CalendarDays}>Date & time</SectionTitle>
+
+          <div className="mt-3 space-y-4">
+            {/* Calendar */}
+            <div className="rounded-xl border border-white/6 bg-black/30 p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <span className="text-xs font-semibold text-white/80">
+                  {MONTHS[viewMonth]} {viewYear}
+                </span>
+                <div className="flex gap-0.5">
+                  <button
+                    type="button"
+                    onClick={() => goMonth(-1)}
+                    disabled={isAtMin}
+                    aria-label="Previous month"
+                    className="flex h-7 w-7 items-center justify-center rounded-lg text-white/40 transition hover:bg-white/5 hover:text-white disabled:opacity-25"
+                  >
+                    <ChevronLeft size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => goMonth(1)}
+                    aria-label="Next month"
+                    className="flex h-7 w-7 items-center justify-center rounded-lg text-white/40 transition hover:bg-white/5 hover:text-white"
+                  >
+                    <ChevronRight size={15} />
+                  </button>
+                </div>
+              </div>
+
+              <div className="mb-1 grid grid-cols-7 gap-0.5 text-center text-[9px] font-semibold text-white/25">
+                {DAYS.map((d, i) => (
+                  <div key={`${d}-${i}`}>{d}</div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-7 gap-0.5">
+                {cells.map(({ day, muted }, i) => {
+                  if (muted) {
+                    return (
+                      <div key={i} className="flex h-8 items-center justify-center text-[10px] text-white/10">
+                        {day}
+                      </div>
+                    );
+                  }
+                  const past = isPast(day);
+                  const todayCell = isToday(day);
+                  const sel = selectedDay === day;
+                  return (
+                    <button
+                      key={i}
+                      type="button"
+                      disabled={past}
+                      onClick={() => handleDaySelect(day)}
+                      className={`flex h-8 items-center justify-center rounded-lg text-xs font-medium transition
+                        ${past ? "cursor-not-allowed text-white/15" : ""}
+                        ${sel ? "bg-primaryButton text-white shadow-sm shadow-primaryButton/30" : ""}
+                        ${!sel && !past && todayCell ? "ring-1 ring-primaryButton/40 text-primaryButton" : ""}
+                        ${!sel && !past && !todayCell ? "text-white/70 hover:bg-white/8" : ""}`}
+                    >
+                      {day}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Time slots */}
+            <div>
+              <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-white/35">
+                {selectedDay ? `Time · ${MONTHS[viewMonth].slice(0, 3)} ${selectedDay}` : "Pick a date first"}
+              </p>
+
+              {!selectedDay ? (
+                <div className="flex min-h-[72px] items-center justify-center rounded-xl border border-dashed border-white/10 bg-black/20 px-4">
+                  <p className="text-center text-[11px] text-white/25">
+                    Select a date above to see available slots
+                  </p>
+                </div>
+              ) : availableSlots.length === 0 ? (
+                <div className="flex min-h-[72px] items-center justify-center rounded-xl border border-dashed border-white/10 bg-black/20 px-4">
+                  <p className="text-center text-[11px] text-white/25">No slots left for this day</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {availableSlots.map(({ time: slotTime, label, hot }) => {
+                    const active = time === slotTime;
+                    return (
+                      <button
+                        key={slotTime}
+                        type="button"
+                        onClick={() => setTimeForPosting(slotTime)}
+                        className={`relative rounded-xl border px-2 py-2.5 text-left transition
+                          ${active
+                            ? "border-primaryButton/40 bg-primaryButton/10 text-primaryButton"
+                            : "border-white/6 bg-black/20 text-white/60 hover:border-white/15 hover:text-white"}`}
+                      >
+                        {hot && !active && (
+                          <span className="absolute -top-1.5 right-1.5 rounded bg-primaryButton/90 px-1 py-px text-[8px] font-bold uppercase text-white">
+                            Best
+                          </span>
+                        )}
+                        <span className="block text-xs font-semibold">{slotTime}</span>
+                        <span className="mt-0.5 block text-[9px] opacity-60">{label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
+        </section>
 
-          {/* ── Section 2: Content Prep ── */}
-          <div className="p-6 md:p-10 bg-black/20">
-            <h2 className="text-xl font-bold mb-8 flex items-center gap-3">
-              <span className="bg-[#ff4e7e]/10 p-2 rounded-lg text-[#ff4e7e]"><PenSquare size={18} /></span>
-              Content Preparation
-            </h2>
+        {/* Content */}
+        <section className="mb-4 rounded-2xl border border-white/8 bg-[#111] p-4">
+          <SectionTitle icon={PenSquare}>Post content</SectionTitle>
 
-            <div className="space-y-6">
+          <div className="mt-3 space-y-3">
+            <div>
+              <div className="mb-1.5 flex items-center justify-between">
+                <label className="text-[10px] font-medium uppercase tracking-wider text-white/35">
+                  Caption
+                </label>
+                <span className="text-[10px] text-white/25">{caption.length}/2,200</span>
+              </div>
+              <textarea
+                rows={3}
+                value={caption}
+                maxLength={2200}
+                onChange={(e) => setCaptionForPosting(e.target.value)}
+                placeholder="Write your post caption…"
+                className="w-full resize-none rounded-xl border border-white/8 bg-black/30 px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-primaryButton/50"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
-                <div className="flex justify-between items-end mb-3">
-                  <label className="text-[10px] font-black text-white/30 uppercase tracking-widest">Post Caption</label>
-                  <span className="text-[10px] text-white/20">{caption.length} / 2,200</span>
-                </div>
-                <textarea rows={5} value={caption} maxLength={2200}
-                  onChange={e => setCaptionForPosting(e.target.value)}
-                  placeholder="Enter your cinematic hook here..."
-                  className="w-full bg-black/30 border border-white/10 rounded-2xl p-5 text-white text-sm placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#ff4e7e] transition-all resize-none" />
+                <label className="mb-1.5 flex items-center gap-1 text-[10px] font-medium uppercase tracking-wider text-white/35">
+                  <Hash size={10} /> Hashtags
+                </label>
+                <input
+                  type="text"
+                  value={hashtagText}
+                  onChange={(e) => handleHashtagChange(e.target.value)}
+                  placeholder="#brand #launch"
+                  className="w-full rounded-xl border border-white/8 bg-black/30 px-3 py-2.5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-primaryButton/50"
+                />
               </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-[10px] font-black text-white/30 uppercase tracking-widest mb-3">Hashtags</label>
-                  <input type="text" value={hashtagText}
-                    onChange={e => handleHashtagChange(e.target.value)}
-                    placeholder="#cyberpulse #launch #tech"
-                    className="w-full bg-black/30 border border-white/10 rounded-2xl px-5 py-4 text-white text-sm placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#ff4e7e] transition-all" />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-white/30 uppercase tracking-widest mb-3">Tagged Partners</label>
-                  <div className="flex items-center gap-2 bg-black/30 border border-white/10 rounded-2xl px-5 py-3.5 transition-all focus-within:ring-2 focus-within:ring-[#ff4e7e]">
-                    <PlusCircle size={18} className="text-white/20 shrink-0" />
-                    <input type="text" value={tagText}
-                      onChange={e => handleTagChange(e.target.value)}
-                      placeholder="@partner1, @partner2"
-                      className="flex-1 bg-transparent text-white text-sm placeholder:text-white/20 focus:outline-none" />
-                  </div>
+              <div>
+                <label className="mb-1.5 flex items-center gap-1 text-[10px] font-medium uppercase tracking-wider text-white/35">
+                  <AtSign size={10} /> Tags
+                </label>
+                <div className="flex items-center gap-2 rounded-xl border border-white/8 bg-black/30 px-3 py-2.5 focus-within:ring-2 focus-within:ring-primaryButton/50">
+                  <PlusCircle size={14} className="shrink-0 text-white/25" />
+                  <input
+                    type="text"
+                    value={tagText}
+                    onChange={(e) => handleTagChange(e.target.value)}
+                    placeholder="@partner1, @partner2"
+                    className="min-w-0 flex-1 bg-transparent text-sm text-white placeholder:text-white/20 focus:outline-none"
+                  />
                 </div>
               </div>
             </div>
           </div>
+        </section>
 
-          <div className="p-6 md:p-10 bg-[#ff4e7e]/5 border-t border-[#ff4e7e]/10">
-            <div className="flex flex-col md:flex-row items-center gap-8">
-
-              {/* Preview */}
-              <div className="w-full md:w-1/3 aspect-square rounded-2xl overflow-hidden relative border border-white/10 shrink-0">
-                <Image src={data?.campaign_logo_url ?? ""} alt="Preview" fill className="object-cover" />
-                <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-4 left-4">
-                  <span className="bg-[#ff4e7e] px-2 py-0.5 rounded text-[9px] font-black uppercase text-white tracking-tight">Preview</span>
-                </div>
+        {/* Summary + desktop CTA */}
+        <section className="hidden rounded-2xl border border-primaryButton/15 bg-primaryButton/[0.04] p-4 sm:block">
+          <div className="mb-3 flex gap-3">
+            {logoUrl && (
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border border-white/10">
+                <Image src={logoUrl} alt="" fill sizes="64px" className="object-cover" />
               </div>
-
-              <div className="flex-1 space-y-5 w-full">
-                <div className="space-y-1">
-                  {([
-                    { label: "Publish Date", value: summaryDate },
-                    { label: "Schedule Time", value: time || "—" },
-                    { label: "Campaign", value: data?.campaign_brief?.title ?? "—", pink: true },
-                  ] as { label: string; value: string; pink?: boolean }[]).map(({ label, value, pink }, i, arr) => (
-                    <div key={label} className={`flex justify-between items-center py-3 ${i < arr.length - 1 ? "border-b border-white/5" : ""}`}>
-                      <span className="text-white/40 text-sm">{label}</span>
-                      <span className={`font-bold text-sm ${pink ? "text-[#ff4e7e]" : value === "—" ? "text-white/20" : "text-white"}`}>{value}</span>
-                    </div>
-                  ))}
+            )}
+            <div className="flex-1 space-y-1.5 text-sm">
+              {[
+                { label: "Date", value: summaryDate },
+                { label: "Time", value: time || "—" },
+              ].map(({ label, value }) => (
+                <div key={label} className="flex justify-between gap-2 border-b border-white/[0.05] pb-1.5 last:border-0">
+                  <span className="text-white/40">{label}</span>
+                  <span className={`font-medium ${value === "—" ? "text-white/20" : "text-white"}`}>
+                    {value}
+                  </span>
                 </div>
-
-                <button onClick={handleSchedule} disabled={!canSchedule || isPending}
-                  className="w-full bg-[#ff4e7e] hover:bg-primaryHover disabled:opacity-30 disabled:cursor-not-allowed text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all active:scale-[0.98] shadow-[0_0_20px_rgba(255,78,126,0.3)] flex items-center justify-center gap-2">
-                  <Rocket size={15} /> {isPending ? "Scheduling..." : "Schedule Post"}
-                </button>
-
-                <p className="text-[10px] text-center leading-relaxed px-4 text-white/20">
-                  {!canSchedule
-                    ? (!selectedDay ? "← Pick a date to continue"
-                      : !time ? "← Pick a time slot"
-                        : "← Add a caption to continue")
-                    : "By scheduling, you agree to the Campaign Fulfillment Terms."}
-                </p>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
 
+          <button
+            type="button"
+            onClick={handleSchedule}
+            disabled={!canSchedule || isPending}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-primaryButton py-3 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-primaryHover disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Rocket size={14} />
+            {isPending ? "Scheduling…" : "Schedule post"}
+          </button>
+          {hint && (
+            <p className="mt-2 text-center text-[10px] text-white/30">{hint}</p>
+          )}
+        </section>
       </main>
 
-      {/* Footer */}
-      <footer className="py-10 border-t border-white/5 text-center">
-        <span className="text-xl font-extrabold tracking-tighter uppercase text-white/10">iShout</span>
-      </footer>
+      {/* Mobile sticky CTA */}
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-white/[0.08] bg-[#0a0a0a]/95 px-4 py-3 backdrop-blur-md sm:hidden">
+        <div className="mb-2 flex items-center justify-between text-[11px]">
+          <span className="text-white/40">{summaryDate}</span>
+          <span className={`font-medium ${time ? "text-primaryButton" : "text-white/25"}`}>
+            {time || "No time"}
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={handleSchedule}
+          disabled={!canSchedule || isPending}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primaryButton py-3.5 text-xs font-bold uppercase tracking-wider text-white transition active:scale-[0.98] disabled:opacity-40"
+        >
+          <Rocket size={14} />
+          {isPending ? "Scheduling…" : hint ?? "Schedule post"}
+        </button>
+      </div>
 
-      {/* Snackbar */}
-      <div className={`fixed bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap flex items-center gap-3 bg-black/80 border border-[#ff4e7e]/30 px-8 py-4 rounded-full backdrop-blur-xl transition-all duration-500 z-50
-        ${confirmed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"}`}>
-        <CheckCircle size={18} className="text-[#ff4e7e]" />
-        <span className="text-sm text-white font-bold">Post scheduled successfully!</span>
+      {/* Success toast */}
+      <div
+        className={`fixed bottom-24 left-1/2 z-[60] flex max-w-[calc(100%-2rem)] -translate-x-1/2 items-center gap-2 rounded-full border border-primaryButton/30 bg-[#111]/95 px-4 py-3 shadow-xl backdrop-blur-md transition-all duration-500 sm:bottom-8
+          ${isSuccess ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"}`}
+      >
+        <CheckCircle size={16} className="shrink-0 text-primaryButton" />
+        <span className="text-xs font-semibold text-white">Post scheduled successfully</span>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { CompanyVerifyOtpApi } from "../company.routes";
+import { CompanyVerifyOtpApi } from "../api/company.routes";
 import { VerifyOtpResponseProps } from "@/src/types/Compnay/password-type";
 import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";
 import { useRouter } from "next/navigation";

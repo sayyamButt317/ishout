@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { CompanyCampaignBreifApi } from "../company.routes";
+import { CompanyCampaignBreifApi } from "../api/company.routes";
 
 export default function CampaignBreifHook() {
     return useMutation({

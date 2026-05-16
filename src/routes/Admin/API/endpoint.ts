@@ -97,8 +97,7 @@ export const AdminENDPOINT = {
   ADMIN_CONTENT_FEEDBACK_ADMIN_READ: `/${ROLE}/content-feedback/admin`,
   ADMIN_CONTENT_FEEDBACK_BRAND_READ: `/${ROLE}/content-feedback/brand`,
   SENDREVISIONMESSAGE: `/${ROLE}/send-revision`,
-  CONTENTDETAILSFORINFLUENCER: (negotiation_id: string) =>
-    `/${ROLE}/feedback/${negotiation_id}`,
+
 
   EXTRACTDEMOGRAPHICS: `/${ROLE}/extract-report`,
   EXTRACTCAMPAIGNALLINFLUENCERREPORT: (campaign_id: string) =>
@@ -127,7 +126,6 @@ export const AdminENDPOINT = {
   ADMIN_CREATE_CAMPAIGN_BRIEF: `/${ROLE}/campaign-brief`,
   ADMIN_ALL_COMPANIES_NAMES: `/${ROLE}/all-companies-names`,
   ADMIN_ALLCOMPANY_NAME: `/${ROLE}/all-company-name`,
-  INFLUENCER_POSTING_DETAILS: `/${ROLE}/posting-details`,
   ADMIN_POSTING_DETAILS: `/${ROLE}/posting/get-details`,
   ADMIN_ADD_INFLUENCER_BY_URL: `/${ROLE}/extract-information-by-username`,
 };

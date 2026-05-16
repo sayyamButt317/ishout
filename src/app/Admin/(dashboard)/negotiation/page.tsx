@@ -78,7 +78,7 @@ export default function NegotiationPage() {
   if (isLoading) return <NegotiationListSkeleton />;
 
   return (
-    <>
+    <div className="mt-5">
       <PageHeader
         title="Negotiations"
         description={`Showing ${filteredSessions.length} of ${data?.total ?? 0} user sessions`}
@@ -385,6 +385,6 @@ export default function NegotiationPage() {
           }
         }}
       />
-    </>
+    </div>
   );
 }

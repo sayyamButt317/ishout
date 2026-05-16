@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { uploadCampaignLogoApi } from '../company.routes';
+import { uploadCampaignLogoApi } from '../api/company.routes';
 
 export default function UploadCampaignLogoHook() {
   return useMutation({

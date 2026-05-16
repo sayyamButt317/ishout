@@ -2,7 +2,7 @@
 
 import type { Dispatch, SetStateAction } from 'react';
 import useSaveContentFeedbackHook from '@/src/routes/Admin/Hooks/feedback/content-feedback-write-hook';
-import useUpdateApprovedContent from '@/src/routes/Company/api/Hooks/use-update-approved-content.hook';
+import useUpdateApprovedContent from '@/src/routes/Company/Hooks/use-update-approved-content.hook';
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
 
 function parseHashtagsInputToArray(text: string): string[] {

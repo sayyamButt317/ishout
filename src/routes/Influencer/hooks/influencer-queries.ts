@@ -1,7 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { ExtractContentRevisionforInfluencer } from '../../API/admin.routes';
+import { ExtractContentRevisionforInfluencer } from '../api/influencer.routes';
 
-export default function useInfluencerContentFeedbackHook(
+
+
+export function useInfluencerContentFeedbackHook(
     negotiation_id: string,
     message_id?: string
 ) {

@@ -3,7 +3,7 @@ import { ChangePasswordRequestProps, ChangePasswordResponseProps } from "@/src/t
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { CompanyChangePasswordApi } from "../company.routes";
+import { CompanyChangePasswordApi } from "../api/company.routes";
 import { useRouter } from "next/navigation";
 
 export default function ChangePasswordHook() {

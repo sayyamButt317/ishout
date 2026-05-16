@@ -2,7 +2,7 @@ import { ProfileChangePasswordRequestProps, ChangePasswordResponseProps } from "
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { CompanyProfileChangePasswordApi } from "../company.routes";
+import { CompanyProfileChangePasswordApi } from "../api/company.routes";
 
 export default function ProfileChangePasswordHook(user_id: string) {
     const queryClient = useQueryClient();

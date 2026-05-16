@@ -1,5 +1,5 @@
 import { GetCampaignBriefResponse } from "@/src/types/Compnay/campaign-brief.types";
-import { getCampaignBrief,deleteCampaignBrief } from "../company.routes";
+import { getCampaignBrief, deleteCampaignBrief } from "../api/company.routes";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner"
 
@@ -14,7 +14,6 @@ export default function CampaignBriefHook(user_id: string) {
 
 export function DeleteCampaignBriefHook(user_id: string) {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (brief_id: string) => deleteCampaignBrief(brief_id),
 

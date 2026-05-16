@@ -12,7 +12,7 @@ import PageHeader from '@/src/app/component/PageHeader';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
-import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import CampaignBriefDetailHook from '@/src/routes/Company/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import { Trash } from 'lucide-react';
@@ -50,7 +50,7 @@ const ApprovedCampaignPage = () => {
   if (isLoading) return <TablePageSkeleton columns={10} />;
 
   return (
-    <>
+    <div className="mt-5">
       <PageHeader
         title="Approved Campaigns"
         description={`Showing ${campaigns.length} of ${totalCount} approved campaigns`}
@@ -175,7 +175,7 @@ const ApprovedCampaignPage = () => {
           setAdminBrief(updatedBrief);
         }}
       />
-    </>
+    </div>
   );
 };
 

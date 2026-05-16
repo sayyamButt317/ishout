@@ -1,11 +1,11 @@
 'use client';
+
 import { useCallback, useState } from 'react';
 import OnboardingHook from '@/src/routes/Admin/Hooks/Campaign/onboarding-hook';
 import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influencer';
 import { ArrowLeft, RefreshCcw, UserPlus } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { Button } from '@/components/ui/button';
-import { PlatformType } from '@/src/types/readymadeinfluencers-type';
 import { useParams, useRouter } from 'next/navigation';
 import CustomButton from '@/src/app/component/button';
 import ChooseOptionDialog from '@/src/app/component/custom-component/choseoptionDialogue';
@@ -30,28 +30,6 @@ export default function ClientOnboardingInfluencerByCampaignId() {
     max_price: number;
   } | null>(null);
 
-  const handleMessage = useCallback((platform: PlatformType, username: string) => {
-    if (platform === 'instagram') {
-      window.open(`https://ig.me/m/${username}`, '_blank');
-    } else if (platform === 'tiktok') {
-      window.open(`https://www.tiktok.com/@${username}`, '_blank');
-    }
-  }, []);
-
-  const handleEdit = useCallback((influencer: ReviewInfluencerResponse) => {
-    setSelectedInfluencer({
-      _id: influencer._id,
-      username: influencer.username,
-      platform: influencer.platform,
-      picture: influencer.picture,
-      influencer_id: influencer.influencer_id,
-      phone_number: influencer.phone_number || '',
-      min_price: influencer.min_price || 0,
-      max_price: influencer.max_price || 0,
-    });
-    setDialogOpen(true);
-  }, []);
-
   if (isLoading) return <CardGridSkeleton cards={8} />;
 
   return (
@@ -73,7 +51,7 @@ export default function ClientOnboardingInfluencerByCampaignId() {
                 <RefreshCcw className={`size-4 ${isRefetching ? 'animate-spin' : ''}`} />
               </Button>
               <CustomButton
-                className="sm:w-auto bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-[160px]"
+                className="sm:w-auto p-2 bg-secondaryButton hover:bg-secondaryHover text-white cursor-pointer max-w-40"
                 onClick={() => router.replace('/client/onboarding')}
               >
                 <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -84,23 +62,22 @@ export default function ClientOnboardingInfluencerByCampaignId() {
         />
 
         {data?.influencers?.length ? (
-          <div className="mt-6 flex w-full flex-row flex-wrap gap-4 rounded-2xl border border-white/10 bg-black/10 p-6 backdrop-blur-lg">
+          <div className="mt-6 flex w-full flex-row flex-wrap gap-4 rounded-2xl bg-slate-50 dark:bg-black/10 p-1">
             {data?.influencers?.map((influencer: ReviewInfluencerResponse) => {
               return (
                 <InfluencerCard
                   key={influencer._id}
                   influencer={influencer}
-                  onEdit={handleEdit}
-                  onMessage={handleMessage}
                 />
               );
             })}
           </div>
         ) : (
           !isLoading && (
-            <div className="flex min-h-[200px] items-center justify-center">
+            <div className="flex min-h-50 items-center justify-center">
               <div className="rounded-xl border border-dashed border-white/30 p-10 text-center text-slate-200">
-                No onboarded influencers found
+                <h2 className="text-lg font-semibold">No influencers found</h2>
+                <p className="mt-2 text-sm text-slate-400">There are no onboarded influencers for this campaign yet.</p>
               </div>
             </div>
           )

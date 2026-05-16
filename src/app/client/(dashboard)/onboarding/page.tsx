@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import TableComponent from '@/src/app/component/CustomTable';
-import CompanyApprovedCampaignHook from '@/src/routes/Company/api/Hooks/comanyapprovedCampaign.hook';
+import CompanyApprovedCampaignHook from '@/src/routes/Company/Hooks/comanyapprovedCampaign.hook';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { useRouter } from 'next/navigation';
@@ -48,7 +48,7 @@ export default function OnboardingInfluencerPage() {
       <TableComponent<CompanyCampaignResponse>
         header={[
           'Campaign Name',
-          'followers',
+          'Followers',
           'Platform',
           'Category',
           'Country',
@@ -56,7 +56,7 @@ export default function OnboardingInfluencerPage() {
           'Unapproved',
           'Status',
           'Approved At',
-          'View Influncers',
+          'View Influencers',
         ]}
         statuses={campaigns.map((campaign) => campaign.status)}
         campaignIds={campaigns.map((campaign) => campaign._id ?? campaign.campaign_id)}
@@ -79,13 +79,13 @@ export default function OnboardingInfluencerPage() {
           </div>,
           <div
             key={`requested-${campaign?._id}`}
-            className="truncate text-center text-xs sm:text-sm"
+            className="truncate text-left text-xs sm:text-sm"
           >
             {campaign?.limit}
           </div>,
           <div
             key={`approved-${campaign?._id}`}
-            className="truncate text-center text-xs sm:text-sm"
+            className="truncate text-left text-xs sm:text-sm"
           >
             {campaign?.pending_influencers_count}
           </div>,

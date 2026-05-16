@@ -2,7 +2,7 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Loader2, KeyRound } from 'lucide-react';
-import VerifyOtpHook from '@/src/routes/Company/api/Hooks/VerifyOtp.hook';
+import VerifyOtpHook from '@/src/routes/Company/Hooks/VerifyOtp.hook';
 import { useForgotPasswordStore } from '@/src/store/User/forgot-password.store';
 import Image from 'next/image';
 

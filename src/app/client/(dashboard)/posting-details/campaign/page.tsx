@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { RefreshCcw, ClipboardList, Search, Loader2, LayoutGrid } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
-import { CompanyPostingDetailsHook } from '@/src/routes/Company/api/Hooks/company-posting-details.hook';
+import { CompanyPostingDetailsHook } from '@/src/routes/Company/Hooks/company-posting-details.hook';
 import { Button } from '@/components/ui/button';
 import type { CompanyPostingDetailsListData, PostingDetail } from '@/src/types/Posting/posting-details-type';
 

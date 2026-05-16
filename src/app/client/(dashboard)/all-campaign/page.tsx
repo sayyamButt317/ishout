@@ -2,14 +2,14 @@
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import TableComponent from '@/src/app/component/CustomTable';
-import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.hook';
+import CompanyCampaignHook from '@/src/routes/Company/Hooks/companyCampaign.hook';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { useEffect, useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { LayoutGrid } from 'lucide-react';
 import CustomButton from '@/src/app/component/button';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
-import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import CampaignBriefDetailHook from '@/src/routes/Company/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import { Trash } from 'lucide-react';

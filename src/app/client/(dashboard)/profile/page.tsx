@@ -7,27 +7,27 @@ import { Building2, Loader2, Mail, RefreshCcw, User, Eye, EyeOff, Lock } from "l
 import PageHeader from "@/src/app/component/PageHeader";
 import PhoneInput from "react-phone-number-input";
 import { CompanyProfileFormSchema, CompanyProfileFormValidator } from "@/src/validators/Company/profileschema-validation";
-import CompanyProfileDetailsHook from "@/src/routes/Company/api/Hooks/get-profile.hook";
+import CompanyProfileDetailsHook from "@/src/routes/Company/Hooks/get-profile.hook";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import CompanyUpdateProfileHook from "@/src/routes/Company/api/Hooks/update-profile.hook";
+import CompanyUpdateProfileHook from "@/src/routes/Company/Hooks/update-profile.hook";
 import { normalizePhoneNumberForDisplay, removePlusPrefix } from "@/src/utils/phone.utils";
 import { ChangePasswordFormSchema, ChangePasswordFormValidator } from "@/src/validators/Company/change-password-validation";
-import ProfileChangePasswordHook from "@/src/routes/Company/api/Hooks/profile-change-password.hook";
+import ProfileChangePasswordHook from "@/src/routes/Company/Hooks/profile-change-password.hook";
 import MobileCountrySelect from "@/src/app/component/custom-component/MobileCountrySelect";
 import { ProfileAvatar } from "@/src/app/component/custom-component/ProfileAvatar";
 import { ConfirmationDialogue } from "@/src/app/component/ConfirmationDialogue";
-import UpdateProfilePictureHook from "@/src/routes/Company/api/Hooks/userProfile/update-profile-picture-hook";
+import UpdateProfilePictureHook from "@/src/routes/Company/Hooks/userProfile/update-profile-picture-hook";
 import { ClientProfileSkeleton } from "@/src/app/component/skeletons/client-skeletons";
 
 
-const glassCard    = "bg-foreground/5 border border-white/5 rounded-xl px-6 py-6 w-full";
-const inputBase    = "h-11 rounded-xl border-0 border-b border-white/10 bg-foreground/10 pl-10 text-foreground/95 placeholder:text-foreground/70 transition-all focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-[#e8184d]/40 focus-visible:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed";
+const glassCard = "bg-foreground/5 border border-white/5 rounded-xl px-6 py-6 w-full";
+const inputBase = "h-11 rounded-xl border-0 border-b border-white/10 bg-foreground/10 pl-10 text-foreground/95 placeholder:text-foreground/70 transition-all focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-[#e8184d]/40 focus-visible:bg-white/[0.06] disabled:opacity-50 disabled:cursor-not-allowed";
 const phoneWrapper = "h-11 rounded-xl border-0 border-b border-white/10 bg-foreground/10 text-foreground/95 transition-all focus-within:border-b-2 focus-within:border-[#e8184d]/40 focus-within:bg-white/[0.06] disabled:opacity-50 flex items-center ";
-const labelBase    = "block text-[10px] uppercase tracking-widest text-foreground/90 mb-1";
+const labelBase = "block text-[10px] uppercase tracking-widest text-foreground/90 mb-1";
 const sectionTitle = "text-[10px] uppercase tracking-widest font-bold text-foreground-95 flex items-center gap-2";
-const primaryBtn   = "h-9 rounded-xl bg-primaryButton hover:bg-primaryHover px-4 text-xs font-bold text-white uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-[0_0_16px_rgba(232,24,77,0.2)]";
+const primaryBtn = "h-9 rounded-xl bg-primaryButton hover:bg-primaryHover px-4 text-xs font-bold text-white uppercase tracking-widest transition-all active:scale-95 disabled:opacity-50 cursor-pointer shadow-[0_0_16px_rgba(232,24,77,0.2)]";
 
 const FieldIcon = ({ icon: Icon }: { icon: React.ElementType }) => (
   <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/90" />
@@ -35,21 +35,21 @@ const FieldIcon = ({ icon: Icon }: { icon: React.ElementType }) => (
 
 
 export default function CompanyProfilePage() {
-  const [isEditing, setIsEditing]                 = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [showOldPw, setShowOldPw]                 = useState(false);
-  const [showNewPw, setShowNewPw]                 = useState(false);
+  const [showOldPw, setShowOldPw] = useState(false);
+  const [showNewPw, setShowNewPw] = useState(false);
 
   const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null);
-  const [avatarRemoved, setAvatarRemoved]         = useState(false);
-  const hasAvatarChange                           = pendingAvatarFile !== null || avatarRemoved;
+  const [avatarRemoved, setAvatarRemoved] = useState(false);
+  const hasAvatarChange = pendingAvatarFile !== null || avatarRemoved;
 
-  const { user_id }                               = useAuthStore();
+  const { user_id } = useAuthStore();
   const { data, refetch, isRefetching, isPending: isProfilePending } = CompanyProfileDetailsHook(user_id);
-  const { mutate: updateProfile, isPending }      = CompanyUpdateProfileHook(user_id);
+  const { mutate: updateProfile, isPending } = CompanyUpdateProfileHook(user_id);
   const { mutate: changePassword, isPending: isChangingPassword } = ProfileChangePasswordHook(user_id);
-const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfilePictureHook(user_id);
+  const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfilePictureHook(user_id);
 
   const form = useForm<CompanyProfileFormValidator>({
     resolver: zodResolver(CompanyProfileFormSchema),
@@ -64,10 +64,10 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
 
   useEffect(() => {
     if (data?.user) form.reset({
-      company_name:   data.user.company_name   ?? "",
+      company_name: data.user.company_name ?? "",
       contact_person: data.user.contact_person ?? "",
-      phone:          data.user.phone          ?? "",
-      email:          data.user.email          ?? "",
+      phone: data.user.phone ?? "",
+      email: data.user.email ?? "",
     });
   }, [data, form]);
 
@@ -89,18 +89,20 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
   const handleSaveAvatar = () => {
     const formData = new FormData();
     if (pendingAvatarFile)
-       formData.append("logo", pendingAvatarFile);
+      formData.append("logo", pendingAvatarFile);
     else if (avatarRemoved)
       formData.append("remove_logo", "true");
-    uploadProfileImage({ 
-      user_id, 
-      file: pendingAvatarFile! },
+    uploadProfileImage({
+      user_id,
+      file: pendingAvatarFile!
+    },
       {
-      onSuccess: () => { 
-        setPendingAvatarFile(null); 
-        setAvatarRemoved(false);
-         refetch(); },
-    });
+        onSuccess: () => {
+          setPendingAvatarFile(null);
+          setAvatarRemoved(false);
+          refetch();
+        },
+      });
   };
 
   const handleCancelProfile = () => {
@@ -141,10 +143,10 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
                   Cancel
                 </Button>
                 <Button
-                 type="button"
-                 className={primaryBtn}
-                 onClick={handleSaveAvatar}>
-                {imageuploading ? <Loader2 className="size-4 animate-spin" /> : "Save Picture"}
+                  type="button"
+                  className={primaryBtn}
+                  onClick={handleSaveAvatar}>
+                  {imageuploading ? <Loader2 className="size-4 animate-spin" /> : "Save Picture"}
                 </Button>
               </div>
             )}
@@ -155,10 +157,10 @@ const { mutate: uploadProfileImage, isPending: imageuploading } = UpdateProfileP
             userId={user_id ?? ""}
             logoUrl={data?.user?.profile_url ?? ""}
             pendingFile={pendingAvatarFile}
-            onFileChange={(file) => { 
-              setPendingAvatarFile(file); 
+            onFileChange={(file) => {
+              setPendingAvatarFile(file);
               setAvatarRemoved(false);
-             }}
+            }}
             onRemove={() => { setAvatarRemoved(true); setPendingAvatarFile(null); }}
           />
         </section>
