@@ -122,17 +122,6 @@ export default function OnboardingCampaignPage() {
             <Trash className="size-5 text-red-300 cursor-pointer" />
           </Button>,
           <CustomButton
-            key={campaign._id || campaign.campaign_id}
-            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
-            onClick={() => {
-              router.push(
-                `/Admin/brand-approved/${campaign._id || campaign.campaign_id}`,
-              );
-            }}
-          >
-            View Influencers
-          </CustomButton>,
-          <CustomButton
             key={`brief-${campaign._id || campaign.campaign_id}`}
             className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
             disabled={!campaign.brief_id}
@@ -145,6 +134,18 @@ export default function OnboardingCampaignPage() {
           >
             View Brief
           </CustomButton>,
+          <CustomButton
+            key={campaign._id || campaign.campaign_id}
+            className="bg-primaryButton hover:bg-primaryHover text-white whitespace-nowrap text-xs px-3"
+            onClick={() => {
+              router.push(
+                `/Admin/brand-approved/${campaign._id || campaign.campaign_id}`,
+              );
+            }}
+          >
+            View Influencers
+          </CustomButton>,
+
         ])}
         paginationstart={data?.page ?? currentPage}
         paginationend={totalPages}
