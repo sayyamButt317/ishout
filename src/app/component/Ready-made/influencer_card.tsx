@@ -2,9 +2,8 @@
 
 import Image from 'next/image';
 import { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
 import { MapPin } from 'lucide-react';
-import { SiInstagram, SiTiktok, SiYoutube, SiWhatsapp } from 'react-icons/si';
+import { SiInstagram, SiTiktok, SiYoutube } from 'react-icons/si';
 import CustomButton from '../button';
 import { Card } from '@/components/ui/card';
 import { PlatformType } from '@/src/types/readymadeinfluencers-type';
@@ -13,8 +12,8 @@ import { ReviewInfluencerResponse } from '@/src/types/Admin-Type/review-influenc
 
 interface InfluencerCardProps {
   influencer: ReviewInfluencerResponse;
-  onEdit: (influencer: ReviewInfluencerResponse) => void;
-  onMessage: (platform: PlatformType, username: string) => void;
+  onEdit?: (influencer: ReviewInfluencerResponse) => void;
+  onMessage?: (platform: PlatformType, username: string) => void;
   sendNegotiation?: (influencer: ReviewInfluencerResponse) => void;
   negotiationId?: string;
   lastOfferedPrice?: number | null;
@@ -23,13 +22,8 @@ interface InfluencerCardProps {
 
 export default function InfluencerCard({
   influencer,
-  onEdit,
-  onMessage,
-  sendNegotiation,
-  negotiationId,
   negotiationStatus,
 }: InfluencerCardProps) {
-  const router = useRouter();
 
   const displayName = influencer?.username?.replace('@', '') || 'No name available';
   const handleViewProfile = useCallback(() => {
@@ -45,14 +39,15 @@ export default function InfluencerCard({
       window.open(`https://www.youtube.com/@${influencer?.username}`, '_blank');
       return;
     }
-  }, [influencer]);
+  },
+  [influencer]);
 
   return (
-    <Card className="group relative w-full max-w-md rounded-2xl border border-white/10 bg-[#0f0f10] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] overflow-hidden">
+    <Card className="group relative w-full max-w-md rounded-2xl border border-foreground/30 bg-white dark:bg-[#0f0f10] text-foreground/95 overflow-hidden">
       <div className="relative p-4">
         {/* Top Row */}
         <div className="flex items-start justify-between gap-3">
-          {/* <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white/60">
+          {/* <span className="inline-flex items-center gap-2 rounded-full border border-foreground/30 bg-white/5 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-foreground/95/60">
             <span className="size-1.5 rounded-full bg-emerald-400" />
             TOP CREATOR
           </span> */}
@@ -63,7 +58,7 @@ export default function InfluencerCard({
                 type="button"
                 variant="ghost"
                 onClick={handleViewNegotiation}
-                className="h-8 rounded-full border border-[#ED3E75] bg-[#ED3E75] text-white hover:bg-[#d73669] font-normal text-xs flex items-center gap-1.5"
+                className="h-8 rounded-full border border-[#ED3E75] bg-[#ED3E75] text-foreground/95 hover:bg-[#d73669] font-normal text-xs flex items-center gap-1.5"
               >
                 <SiWhatsapp className="text-base" /> View
               </Button>
@@ -73,7 +68,7 @@ export default function InfluencerCard({
                 type="button"
                 variant="ghost"
                 onClick={() => onEdit(influencer)}
-                className="h-8 rounded-full border border-white/40 bg-white/[0.02] text-white/90 hover:bg-white/[0.06] font-normal text-xs cursor-pointer"
+                className="h-8 rounded-full border border-white/40 bg-white/[0.02] text-foreground/95/90 hover:bg-white/[0.06] font-normal text-xs cursor-pointer"
               >
                 Edit
               </Button>
@@ -82,27 +77,33 @@ export default function InfluencerCard({
         </div>
 
         {/* Image + Basic Info */}
-        <div className="relative mt-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
-          <div className="relative aspect-[4/3]">
+        <div className="relative mt-3 overflow-hidden rounded-2xl border border-foreground/30 bg-white/4">
+          <div className="relative aspect-4/3">
             <Image
               src={influencer?.picture}
               alt={influencer?.username}
               fill
-              className="object-cover"
+              className="object-cover cursor-pointer hover:scale-105 transition-transform duration-300"
+              onClick={handleViewProfile}
             />
           </div>
         </div>
 
         <div className="mt-4 flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h3 className="text-base font-semibold text-white truncate">{displayName}</h3>
-            <p className="mt-1 text-xs text-white/60 truncate">
+           <div
+           onClick={handleViewProfile}
+           > <h3 className="text-base font-semibold text-foreground/95 italic cursor-pointer struncate">
+              {displayName}
+              </h3>
+              </div>
+            <p className="mt-1 text-xs text-foreground/95/60 truncate">
               {influencer?.bio || influencer?.country || influencer?.platform}
             </p>
-            <div className="mt-2 flex items-center gap-2 text-xs text-white/60 min-w-0">
+            <div className="mt-2 flex items-center gap-2 text-xs text-foreground/95/60 min-w-0">
               <MapPin className="h-4 w-4 shrink-0" />
               <span className="truncate">{influencer?.country}</span>
-              <span className="text-white/25">|</span>
+              <span className="text-foreground/95/25">|</span>
               {influencer?.platform === 'instagram' ? (
                 <span className="inline-flex items-center gap-1">
                   <SiInstagram size={14} className="text-primarytext" />
@@ -110,7 +111,7 @@ export default function InfluencerCard({
                 </span>
               ) : influencer?.platform === 'tiktok' ? (
                 <span className="inline-flex items-center gap-1">
-                  <SiTiktok size={14} className="text-white" />
+                  <SiTiktok size={14} className="text-foreground/95" />
                   <span className="capitalize">{influencer?.platform}</span>
                 </span>
               ) : (
@@ -124,17 +125,17 @@ export default function InfluencerCard({
         </div>
 
         {/* Followers / Engage / Price */}
-        <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-white/10 bg-white/[0.04] p-3">
+        <div className="mt-4 grid grid-cols-3 gap-2 rounded-xl border border-foreground/30 bg-white/4 p-3">
           <div className="text-center">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/50">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/95/50">
               Followers
             </p>
-            <p className="mt-1 text-base font-semibold text-white">
+            <p className="mt-1 text-base font-semibold text-foreground/95">
               {formatFollowers(influencer?.followers || 0)}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/50">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/95/50">
               Engage
             </p>
             <p className="mt-1 text-base font-semibold text-primarytext">
@@ -142,10 +143,10 @@ export default function InfluencerCard({
             </p>
           </div>
           <div className="text-center">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-white/50">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-foreground/95/50">
               Price
             </p>
-            <p className="mt-1 text-base font-semibold text-white">
+            <p className="mt-1 text-base font-semibold text-foreground/95">
               ${influencer?.pricing ?? 0}
             </p>
           </div>
@@ -153,21 +154,21 @@ export default function InfluencerCard({
 
         {/* Min/Max/Approved Price */}
         {/* <div className="mt-3 grid grid-cols-3 gap-2">
-          <div className="rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center">
-            <p className="text-[11px] font-bold text-white/60">Min Price</p>
-            <p className="mt-1 text-sm font-bold text-white">
+          <div className="rounded-xl border border-foreground/30 bg-white/5 px-2 py-3 text-center">
+            <p className="text-[11px] font-bold text-foreground/95/60">Min Price</p>
+            <p className="mt-1 text-sm font-bold text-foreground/95">
               ${influencer?.min_price ?? 0}
             </p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center">
-            <p className="text-[11px] font-bold text-white/60">Max Price</p>
-            <p className="mt-1 text-sm font-bold text-white">
+          <div className="rounded-xl border border-foreground/30 bg-white/5 px-2 py-3 text-center">
+            <p className="text-[11px] font-bold text-foreground/95/60">Max Price</p>
+            <p className="mt-1 text-sm font-bold text-foreground/95">
               ${influencer?.max_price ?? 0}
             </p>
           </div>
-          <div className="rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center">
-            <p className="text-[11px] font-bold text-white/60">Approved Price</p>
-            <p className="mt-1 text-sm font-bold text-white">
+          <div className="rounded-xl border border-foreground/30 bg-white/5 px-2 py-3 text-center">
+            <p className="text-[11px] font-bold text-foreground/95/60">Approved Price</p>
+            <p className="mt-1 text-sm font-bold text-foreground/95">
               ${influencer?.last_offered_price ?? 0}
             </p>
           </div>
@@ -175,8 +176,8 @@ export default function InfluencerCard({
 
         {/* iShout / Brand Status */}
         <div className="mt-3 grid grid-cols-3 gap-2">
-          <div className="rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center">
-            <p className="text-[12px] font-bold text-white/70">iShout</p>
+          <div className="rounded-xl border border-foreground/30 bg-white/5 px-2 py-3 text-center">
+            <p className="text-[12px] font-bold text-foreground/95/70">iShout</p>
             <p
               className={`mt-1 text-[11px] font-bold ${
                 influencer?.admin_approved ? 'text-emerald-300' : 'text-red-300'
@@ -186,8 +187,8 @@ export default function InfluencerCard({
             </p>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center">
-            <p className="text-[12px] font-bold text-white/70">Brand</p>
+          <div className="rounded-xl border border-foreground/30 bg-white/5 px-2 py-3 text-center">
+            <p className="text-[12px] font-bold text-foreground/95/70">Brand</p>
             <p
               className={`mt-1 text-[11px] font-bold ${
                 influencer?.company_approved ? 'text-emerald-300' : 'text-red-300'
@@ -197,8 +198,8 @@ export default function InfluencerCard({
             </p>
           </div>
 
-          <div className="rounded-xl border border-white/10 bg-white/5 px-2 py-3 text-center">
-            <p className="text-[12px] font-bold text-white/70">Influencer</p>
+          <div className="rounded-xl border border-foreground/30 bg-white/5 px-2 py-3 text-center">
+            <p className="text-[12px] font-bold text-foreground/95/70">Influencer</p>
             <p
               className={`mt-1 text-[11px] font-bold capitalize ${
                 (negotiationStatus ?? influencer?.negotiation_status)
@@ -212,17 +213,9 @@ export default function InfluencerCard({
         </div>
 
         {/* Bottom Actions */}
-        <div className="mt-4 grid grid-cols-2 gap-2">
+        <div className="mt-4 ">
           <CustomButton
-            className="h-10 rounded-full border border-white/40 bg-transparent text-white/90 hover:bg-white/[0.06] font-normal text-sm"
-            onClick={() =>
-              onMessage(influencer?.platform as PlatformType, influencer?.username)
-            }
-          >
-            Message
-          </CustomButton>
-          <CustomButton
-            className="h-10 rounded-full bg-primaryButton hover:bg-primaryHover text-white font-normal text-sm"
+            className="h-10 rounded-full w-full bg-primaryButton hover:bg-primaryHover text-white font-normal text-sm"
             onClick={handleViewProfile}
           >
             View Profile
@@ -238,9 +231,9 @@ export default function InfluencerCard({
                   : true
               }
               onClick={() => sendNegotiation(influencer)}
-              className="w-full h-12 rounded-2xl bg-[#ED3E75] text-white italic"
+              className="w-full h-12 rounded-2xl bg-[#ED3E75] text-foreground/95 italic"
             >
-              <SiWhatsapp className="text-2xl text-white" /> Start Negotiation
+              <SiWhatsapp className="text-2xl text-foreground/95" /> Start Negotiation
             </CustomButton>
           </div>
         )} */}

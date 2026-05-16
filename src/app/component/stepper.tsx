@@ -161,7 +161,7 @@ export default function Stepper({
               <div
                 className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-semibold transition-all ${
                   step.isActive
-                    ? 'bg-[#FF3B8D] text-foreground'
+                    ? 'bg-[#FF3B8D] text-white'
                     : 'bg-foreground/10 text-foreground/40 border border-foreground/20'
                 } ${clickable ? 'hover:bg-[#FF3B8D]/80' : ''}`}
               >

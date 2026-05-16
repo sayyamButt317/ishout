@@ -14,7 +14,6 @@ export default function CampaignBriefHook(user_id: string) {
 
 export function DeleteCampaignBriefHook(user_id: string) {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: (brief_id: string) => deleteCampaignBrief(brief_id),
 
