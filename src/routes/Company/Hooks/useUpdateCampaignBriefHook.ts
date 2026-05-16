@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { UpdateCampaignBriefPayload, UpdateCampaignBrief } from "@/src/types/Compnay/campaignbrieftype";
-import { UpdateCampaignBriefApi } from "../company.routes";
+import { UpdateCampaignBriefApi } from "../api/company.routes";
 
 export default function useUpdateCampaignBrief() {
   return useMutation({

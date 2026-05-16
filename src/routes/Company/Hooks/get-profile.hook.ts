@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { CompanyProfileDetailsApi } from "../company.routes";
+import { CompanyProfileDetailsApi } from "../api/company.routes";
 
 
 export default function CompanyProfileDetailsHook(user_id: string) {

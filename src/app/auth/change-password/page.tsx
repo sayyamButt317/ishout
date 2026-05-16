@@ -1,7 +1,7 @@
 'use client';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ResetPasswordHook from "@/src/routes/Company/api/Hooks/reset-password.hook";
+import ResetPasswordHook from "@/src/routes/Company/Hooks/reset-password.hook";
 import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";
 import { ShieldCheck, LockKeyhole } from "lucide-react";
 import { toast } from "sonner";

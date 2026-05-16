@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import SendEmailForgotPasswordHook from "@/src/routes/Company/api/Hooks/CompanyForgotPassword.hook";
+import SendEmailForgotPasswordHook from "@/src/routes/Company/Hooks/CompanyForgotPassword.hook";
 import { Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";

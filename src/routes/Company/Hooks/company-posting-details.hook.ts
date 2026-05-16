@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { CompanyPostingDetailsApi } from '../company.routes';
+import { CompanyPostingDetailsApi } from '../api/company.routes';
 import type {
   CompanyPostingDetailsApiResponse,
   CompanyPostingDetailsListData,

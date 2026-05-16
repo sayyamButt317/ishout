@@ -12,9 +12,11 @@ export default function AdminDashboardLayout({
     <QueryProvider>
       <NotificationBootstrap />
       <WebSocketListener />
-      <div className="flex  min-h-screen h-full">
+      <div className="flex h-screen overflow-hidden">
         <AdminSidebar />
-        <main className="flex-1 overflow-x-hidden md:ml-80 p-3 border-amber-200 pt-2 h-full">{children}</main>
+        <main className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto md:ml-80 p-3 pt-2">
+          {children}
+        </main>
       </div>
     </QueryProvider>
   );

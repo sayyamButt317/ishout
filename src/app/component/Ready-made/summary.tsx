@@ -4,7 +4,7 @@ import Spinner from "../custom-component/spinner";
 import { useReadyMadeTemplateStore } from "@/src/store/Campaign/campaign.store";
 import { X } from "lucide-react";
 import { toast } from "sonner";
-import CreateCampaignHook from "@/src/routes/Company/api/Hooks/create-campaign.hook";
+import CreateCampaignHook from "@/src/routes/Company/Hooks/create-campaign.hook";
 import useAuthStore from "@/src/store/AuthStore/authStore";
 
 const Summary = () => {
@@ -233,8 +233,8 @@ const Summary = () => {
                 onClick={() => handleLaunchCampaign()}
                 disabled={!isFormComplete || isPending}
                 className={`flex-1 px-4 py-3 rounded-xl font-medium transition-all duration-200 hover:scale-105 ${isFormComplete
-                    ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-500/25"
-                    : "bg-slate-600 text-slate-400 cursor-not-allowed"
+                  ? "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg shadow-green-500/25"
+                  : "bg-slate-600 text-slate-400 cursor-not-allowed"
                   }`}
               >
                 {isPending ? (

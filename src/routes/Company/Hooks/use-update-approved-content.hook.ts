@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
-import { updateApprovedContentApi } from '../company.routes';
+import { updateApprovedContentApi } from '../api/company.routes';
 import type { UpdateApprovedContentPayload } from '@/src/types/Compnay/approved-video-type';
 
 type UpdateApprovedContentVariables = {

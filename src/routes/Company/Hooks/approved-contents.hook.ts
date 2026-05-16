@@ -1,4 +1,4 @@
-import { getApprovedContentsApi } from '../company.routes';
+import { getApprovedContentsApi } from '../api/company.routes';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';

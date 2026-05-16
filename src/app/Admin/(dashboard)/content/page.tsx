@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { useRouter } from 'next/navigation';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
-import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import CampaignBriefDetailHook from '@/src/routes/Company/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
@@ -52,7 +52,7 @@ export default function InfluencersContentPage() {
   if (isLoading) return <TablePageSkeleton columns={6} />;
 
   return (
-    <>
+    <div className="mt-5">
       <PageHeader
         title="Content Feedback & Pipeline"
         description={`Showing ${campaigns.length} of ${totalCount} campaigns waiting for content feedback review`}
@@ -92,9 +92,9 @@ export default function InfluencersContentPage() {
             campaign.followers,
             campaign.country,
             <CountButton key={`count-${id}`} count={campaign.limit} />,
-            campaign.content == true ? <StatusBadge key={`content-status-${id}`} status="True" /> : <StatusBadge key={`content-status-${id}`} status="Not Content" />,
-            campaign.negotiation == true ? <StatusBadge key={`negotiation-status-${id}`} status="True" /> : <StatusBadge key={`negotiation-status-${id}`} status="Not Negotiation" />,
-            campaign.report == true ? <StatusBadge key={`report-status-${id}`} status="True" /> : <StatusBadge key={`report-status-${id}`} status="No Report Yet" />,
+            campaign.content == true ? <StatusBadge key={`content-status-${id}`} status="Content Submitted" /> : <StatusBadge key={`content-status-${id}`} status="No Content Yet" />,
+            campaign.negotiation == true ? <StatusBadge key={`negotiation-status-${id}`} status="Negotiation Agreed" /> : <StatusBadge key={`negotiation-status-${id}`} status="Not Negotiated Yet" />,
+            campaign.report == true ? <StatusBadge key={`report-status-${id}`} status="Report Submitted" /> : <StatusBadge key={`report-status-${id}`} status="No Report Yet" />,
             <Button
               key={`delete-${id}`}
               variant="ghost"
@@ -169,6 +169,6 @@ export default function InfluencersContentPage() {
         briefData={adminBrief}
         onUpdate={(updatedBrief) => setAdminBrief(updatedBrief)}
       />
-    </>
+    </div>
   );
 }

@@ -16,7 +16,7 @@ import CustomButton from '@/src/app/component/button';
 import { useReadyMadeTemplateStore } from '@/src/store/Campaign/campaign.store';
 import { ApprovedInfluencersStore } from '@/src/store/Campaign/influencers.store';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
-import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import CampaignBriefDetailHook from '@/src/routes/Company/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import { Trash } from 'lucide-react';
@@ -60,7 +60,7 @@ export default function AdminPendingCampaigns() {
   if (isLoading) return <TablePageSkeleton columns={10} />;
 
   return (
-    <>
+    <div className="mt-5">
       <PageHeader
         title="Pending Campaigns"
         description={`Showing ${campaigns.length} of ${totalCount} pending campaigns`}
@@ -216,6 +216,6 @@ export default function AdminPendingCampaigns() {
           setAdminBrief(updatedBrief);
         }}
       />
-    </>
+    </div>
   );
 }

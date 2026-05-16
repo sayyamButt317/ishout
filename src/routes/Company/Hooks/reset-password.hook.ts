@@ -3,7 +3,7 @@ import { ChangePasswordRequestProps } from "@/src/types/Compnay/password-type";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
-import { CompanyResetPasswordApi } from "../company.routes";
+import { CompanyResetPasswordApi } from "../api/company.routes";
 import { useRouter } from "next/navigation";
 import { useForgotPasswordStore } from "@/src/store/User/forgot-password.store";
 

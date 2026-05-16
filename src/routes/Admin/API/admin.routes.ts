@@ -51,8 +51,6 @@ import type {
   AdminCreateCampaignApiResponse,
   AdminCreateCampaignRequest,
 } from '@/src/types/Admin-Type/create-campaign-type';
-import { InfluencerPostingDetailsRequest } from '@/src/types/Posting/posting-type';
-
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   headers: {
@@ -660,21 +658,6 @@ export const SendRevisionMessage = async (data: SendRevisionPayload) => {
   return response.data;
 };
 
-export const ExtractContentRevisionforInfluencer = async (
-  negotiation_id: string,
-  message_id?: string,
-) => {
-  const response = await api.get(
-    AdminENDPOINT.CONTENTDETAILSFORINFLUENCER(negotiation_id),
-    {
-      params: {
-        message_id: message_id,
-      },
-    },
-  );
-
-  return response.data;
-};
 
 export const ExtractDemoGraphics = async (
   campaign_id: string,
@@ -808,18 +791,6 @@ export const AdminCreateCampaignApi = async (
     AdminENDPOINT.ADMIN_GENERATE_CAMPAIGN,
     payload,
   );
-  return response.data;
-};
-
-
-export const InfluencerPostingDetailsApi = async (
-  payload: InfluencerPostingDetailsRequest
-) => {
-  const response = await api.post(
-    AdminENDPOINT.INFLUENCER_POSTING_DETAILS,
-    payload
-  );
-
   return response.data;
 };
 

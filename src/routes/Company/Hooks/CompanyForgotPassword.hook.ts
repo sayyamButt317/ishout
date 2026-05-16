@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { CompanyForgotPasswordApi } from "../company.routes";
+import { CompanyForgotPasswordApi } from "../api/company.routes";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";

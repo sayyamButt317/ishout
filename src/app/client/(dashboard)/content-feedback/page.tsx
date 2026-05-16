@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import PageHeader from '@/src/app/component/PageHeader';
 import ContentHeader from '@/src/app/component/custom-component/ContentHeader';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
-import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import CampaignBriefDetailHook from '@/src/routes/Company/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { MessageSquare, MoreHorizontal, Search } from 'lucide-react';
 import Image from 'next/image';
@@ -156,8 +156,8 @@ function ContentFeedbackPageContent() {
                   </h3>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
-                        ? 'bg-(--color-primaryButton) text-white'
-                        : countStyles[col.color]
+                      ? 'bg-(--color-primaryButton) text-white'
+                      : countStyles[col.color]
                       }`}
                   >
                     {combinedCards.length}

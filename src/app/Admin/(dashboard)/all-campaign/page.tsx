@@ -13,9 +13,9 @@ import { DropDownCustomStatus } from '@/src/app/component/custom-component/dropd
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
 import CustomButton from '@/src/app/component/button';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
-import CampaignBriefDetailHook from '@/src/routes/Company/api/Hooks/get-campaign-brief-detail-hook';
+import CampaignBriefDetailHook from '@/src/routes/Company/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
-import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
+import UploadCampaignLogoHook from '@/src/routes/Company/Hooks/upload-campaign-logo-hook';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import { TablePageWithFiltersSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
@@ -144,7 +144,7 @@ export default function AllCampaignPage() {
   if (isLoading) return <TablePageWithFiltersSkeleton columns={10} />;
 
   return (
-    <>
+    <div className="mt-5">
       <PageHeader
         title="Company Generated Report"
         description={
@@ -357,6 +357,6 @@ export default function AllCampaignPage() {
           );
         }}
       />
-    </>
+    </div>
   );
 }

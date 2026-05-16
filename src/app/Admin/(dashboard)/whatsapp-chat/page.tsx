@@ -26,7 +26,7 @@ export default function WhatsAppChat() {
   const unreadMap = useWhatsAppChatStore((s) => s.unread);
 
   return (
-    <>
+    <div className="mt-5">
       <PageHeader
         title="WhatsApp User Sessions"
         description={`Showing ${data?.users?.length ?? 0} of ${data?.total ?? 0} user sessions`}
@@ -116,6 +116,6 @@ export default function WhatsAppChat() {
         }}
         isLoading={isLoading}
       />
-    </>
+    </div>
   );
 }

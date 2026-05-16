@@ -7,14 +7,13 @@ import { ArrowUpDown, Search, Trash } from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { FileText } from 'lucide-react';
 import useAuthStore from '@/src/store/AuthStore/authStore';
-import CampaignBriefHook, {
-  DeleteCampaignBriefHook,
-} from '@/src/routes/Company/api/Hooks/get-campaign-brief-hook';
 import { CampaignBriefItem } from '@/src/types/Compnay/campaign-brief.types';
 import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBriefDialog';
 import Image from 'next/image';
 import ImageUploadModal from '@/src/app/component/custom-component/image-upload-modal';
-import UploadCampaignLogoHook from '@/src/routes/Company/api/Hooks/upload-campaign-logo-hook';
+import CampaignBriefHook, { DeleteCampaignBriefHook } from '@/src/routes/Company/Hooks/get-campaign-brief-hook';
+import UploadCampaignLogoHook from '@/src/routes/Company/Hooks/upload-campaign-logo-hook';
+
 
 export default function CampaignBriefPage() {
   const { user_id } = useAuthStore();
@@ -57,7 +56,7 @@ export default function CampaignBriefPage() {
 
 
   return (
-    <div className="min-h-screen text-foreground/80 rounded-2xl">
+    <div className="min-h-screen text-foreground/80 rounded-2xl mt-5">
       <PageHeader
         title="Campaign Briefs"
         description="Search, manage and download your AI-generated campaign strategies."
@@ -215,12 +214,12 @@ export default function CampaignBriefPage() {
                   prev.map((b) =>
                     b.id === uploadModalOpen
                       ? {
-                          ...b,
-                          response: {
-                            ...b.response,
-                            campaign_logo_url: newLogoUrl,
-                          },
-                        }
+                        ...b,
+                        response: {
+                          ...b.response,
+                          campaign_logo_url: newLogoUrl,
+                        },
+                      }
                       : b,
                   ),
                 );

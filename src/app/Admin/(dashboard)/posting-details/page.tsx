@@ -131,7 +131,7 @@ export default function PostingDetailsPage() {
     const total = postingData?.count ?? details.length;
 
     return (
-        <>
+        <div className="mt-5">
             <PageHeader
                 title="Posting Details"
                 description={`${filtered.length} of ${total} posting ${total === 1 ? 'record' : 'records'}`}
@@ -149,7 +149,7 @@ export default function PostingDetailsPage() {
                 }
             />
 
-            <div className=" pb-12 sm:px-2">
+            <div className=" pb-12">
                 {/* <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
                     <StatCard
                         label="Total postings"
@@ -315,6 +315,6 @@ export default function PostingDetailsPage() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

@@ -1,7 +1,7 @@
 import { CampaignSBriefStore } from "@/src/store/Campaign/brief.store";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { UploadImageToCampaign } from "../company.routes";
+import { UploadImageToCampaign } from "../api/company.routes";
 import type { AxiosError } from "axios";
 
 export default function UploadCampaignImageHook() {

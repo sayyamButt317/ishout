@@ -5,7 +5,7 @@ import TableComponent from '@/src/app/component/CustomTable';
 import PlatformBadge from '@/src/app/component/custom-component/platformbadge';
 import StatusBadge from '@/src/app/component/custom-component/statusbadge';
 import PageHeader from '@/src/app/component/PageHeader';
-import CompanyCampaignHook from '@/src/routes/Company/api/Hooks/companyCampaign.hook';
+import CompanyCampaignHook from '@/src/routes/Company/Hooks/companyCampaign.hook';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
 import { LayoutList, Filter, Search, ArrowUpDown } from 'lucide-react';
 import React, { useMemo, useState } from 'react';

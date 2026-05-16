@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { CompanyCampaign } from "../company.routes";
+import { CompanyCampaign } from "../api/company.routes";
 
 export default function CompanyCampaignHook(page: number = 1) {
     return useQuery({

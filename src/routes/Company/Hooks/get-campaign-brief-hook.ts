@@ -1,5 +1,5 @@
 import { GetCampaignBriefResponse } from "@/src/types/Compnay/campaign-brief.types";
-import { getCampaignBrief,deleteCampaignBrief } from "../company.routes";
+import { getCampaignBrief, deleteCampaignBrief } from "../api/company.routes";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner"
 

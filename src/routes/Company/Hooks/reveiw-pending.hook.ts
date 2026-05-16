@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ReviewPendingInfluencers } from "../company.routes";
+import { ReviewPendingInfluencers } from "../api/company.routes";
 
 export default function ApprovedCampaignHook(page: number = 1, campaign_id: string) {
     return useQuery({

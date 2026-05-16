@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { CampaignBriefItem } from "@/src/types/Compnay/campaign-brief.types";
-import { getCampaignBriefDetail } from "../company.routes";
+import { getCampaignBriefDetail } from "../api/company.routes";
 
 export default function CampaignBriefDetailHook(brief_id: string) {
   return useQuery<CampaignBriefItem>({

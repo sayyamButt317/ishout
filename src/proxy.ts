@@ -5,7 +5,11 @@ export function proxy(request: NextRequest) {
     const accessToken = request.cookies.get('access_token')?.value;
     const path = request.nextUrl.pathname;
 
-    if (path.startsWith('/auth/callback')) {
+    if (
+        path.startsWith('/auth/callback') ||
+        path.startsWith('/posting') ||
+        path.startsWith('/feedback')
+    ) {
         return NextResponse.next();
     }
 
