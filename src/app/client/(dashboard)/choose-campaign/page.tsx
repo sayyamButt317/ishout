@@ -1,7 +1,5 @@
 'use client';
-
-import { Star, ArrowRight } from 'lucide-react';
-import PageHeader from '@/src/app/component/PageHeader';
+import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import openWhatsApp from '@/src/app/component/custom-component/companywhastapp';
@@ -21,25 +19,33 @@ export default function ChooseCampaign() {
 
 function Header() {
   return (
-    <>
-      <PageHeader
-        title="Choose how you want to create your Campaign"
-        description="Whether you need AI-powered creative direction or direct engagement via WhatsApp, we've got you covered."
-        icon={<Star className="size-5" />}
+    <div className="relative mx-auto mb-2 max-w-3xl px-2 text-center sm:mb-3 md:mb-4 lg:mb-8">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 size-56 -translate-x-1/2 rounded-full bg-primaryButton/15 blur-3xl"
       />
-
-      <div className="text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primaryButton/10 border border-primaryButton/20 text-primarytext text-xs font-extralight tracking-widest uppercase">
-          Campaign Builder
-        </div>
+      <div className="relative mx-auto mb-4 flex flex-wrap items-center justify-center gap-4 sm:gap-5">
+        <h1
+          className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl"
+          style={{ letterSpacing: '-0.03em' }}
+        >
+          Campaign{' '}
+          <span className="bg-linear-to-r from-primarytext via-white to-primaryButton bg-clip-text text-transparent">
+            Builder
+          </span>
+        </h1>
       </div>
-    </>
+      <p className="relative mx-auto max-w-3xl text-xs italic leading-relaxed text-white/45 sm:text-sm">
+        Choose how you want to create your campaign Whether you need AI-powered creative direction or direct engagement via
+        WhatsApp, we&apos;ve got you covered.
+      </p>
+    </div >
   );
 }
 
 function CampaignList() {
   return (
-    <div className="w-full mx-auto flex flex-col gap-4 border-t border-white/10 mt-3 pt-3">
+    <div className="w-full mx-auto flex flex-col gap-4">
       {OPTIONS.map((option) => (
         <CampaignCard key={option.id} option={option} />
       ))}
@@ -60,13 +66,11 @@ function CampaignCard({ option }: { option: CampaignOption }) {
 
   return (
     <div className="group relative">
-      {/* Glow */}
       <div
         className={`absolute -inset-0.5 bg-linear-to-r ${a.glow} ${a.glowOpacity} transition-opacity duration-500 rounded-3xl blur-xl`}
       />
-      {/* Card */}
       <div
-        className={` bg-black/40 backdrop-blur-xl border border-gray-500/30 ${a.border} rounded-3xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1.5 ${a.cardGlow} flex flex-col gap-x-30 gap-y-6 p-4 md:flex-row`}
+        className={` bg-black/40 backdrop-blur-xl border border-gray-500/30 ${a.border} rounded-3xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1.5 ${a.cardGlow} flex flex-col gap-x-30 p-4 md:flex-row`}
       >
         {/* Content */}
         <div className="flex-1 md:px-6 md:py-4 md:pl-10 flex flex-col justify-center">
