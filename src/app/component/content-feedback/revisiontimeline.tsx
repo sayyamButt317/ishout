@@ -1,8 +1,7 @@
 'use client';
-import { useCallback, useState } from 'react';
-import Image from 'next/image';
-import { MessageSquarePlus } from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   Dialog,
   DialogContent,
@@ -16,10 +15,9 @@ import {
 } from '@/src/app/component/content-feedback/timeline-scrub';
 import { formatVideoDuration } from '@/src/utils/video-duration';
 import { VideoFeedbackWorkspaceProps } from '@/src/types/Admin-Type/Content-type';
-import { captureVideoFrameDataUrl } from '@/src/utils/content-feedback-chat';
-
 import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
-import { RevisionMessage } from './revision-message';
+import TimelineMarker from '@/src/app/component/content-feedback/TimelineMarker';
+import type { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
 
 export default function RevisionTimelineandVideoPlayer({
   videoRef,
@@ -33,7 +31,6 @@ export default function RevisionTimelineandVideoPlayer({
   markers,
   sendEnabled,
   contentUrl,
-  onSubmitTimedFeedback,
   onMarkerSeek,
 }: VideoFeedbackWorkspaceProps) {
   const {
@@ -52,12 +49,43 @@ export default function RevisionTimelineandVideoPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [composerOpen, setComposerOpen] = useState(false);
   const [composerTime, setComposerTime] = useState(0);
-  const [composerSnapshot, setComposerSnapshot] = useState<string | null>(null);
   const [commentText, setCommentText] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const { addTimestamp, } = useRevisionMessageStore()
+  const { addTimestamp, timestamps: pendingTimestamps } = useRevisionMessageStore();
 
+  const timelineMarkers = useMemo((): Array<
+    TimelineMarkerData & { variant: 'saved' | 'pending' }
+  > => {
+    const saved = markers.map((m) => ({
+      ...m,
+      variant: 'saved' as const,
+    }));
+
+    const pending = pendingTimestamps
+      .filter((t) => typeof t.time === 'number' && t.time >= 0 && Boolean(t.feedback?.trim()))
+      .map((t, index) => ({
+        id: `pending-${index}-${t.time}`,
+        timestamp: t.time,
+        text: t.feedback,
+        variant: 'pending' as const,
+      }));
+
+    return [...saved, ...pending];
+  }, [markers, pendingTimestamps]);
+
+  const seekToMarker = useCallback(
+    (timestamp: number) => {
+      onMarkerSeek?.(timestamp);
+      const v = videoRef.current;
+      if (v) {
+        v.currentTime = timestamp;
+        v.pause();
+        setIsPlaying(false);
+      }
+    },
+    [onMarkerSeek, setIsPlaying, videoRef],
+  );
 
   const openComposerAtTime = useCallback(
     (t: number) => {
@@ -68,9 +96,7 @@ export default function RevisionTimelineandVideoPlayer({
       setIsPlaying(false);
       const capture = () => {
         requestAnimationFrame(() => {
-          const snapshot = captureVideoFrameDataUrl(video);
           setComposerTime(clamped);
-          setComposerSnapshot(snapshot);
           setCommentText('');
           setComposerOpen(true);
         });
@@ -93,7 +119,7 @@ export default function RevisionTimelineandVideoPlayer({
         video.currentTime = clamped;
       }
     },
-    [duration, setIsPlaying, videoRef]
+    [duration, setIsPlaying, videoRef],
   );
 
   const handlePinComment = useCallback(() => {
@@ -121,23 +147,22 @@ export default function RevisionTimelineandVideoPlayer({
   );
 
   const handleSubmit = async () => {
-    const text = commentText.trim()
-    if (!text) return
-    setSubmitting(true)
+    const text = commentText.trim();
+    if (!text) return;
+    setSubmitting(true);
     try {
       addTimestamp({
         time: Number(composerTime.toFixed(2)),
         feedback: text,
+      });
 
-      })
-
-      setComposerOpen(false)
-      setPinMode(false)
-      setCommentText("")
+      setComposerOpen(false);
+      setPinMode(false);
+      setCommentText('');
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   const progressPct =
     duration && duration > 0
@@ -150,8 +175,53 @@ export default function RevisionTimelineandVideoPlayer({
     !!duration &&
     duration > 0;
 
+  const timelineSlot =
+    showVideoTools && sendEnabled ? (
+      <div>
+        <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-white/45">
+          Timeline - hover for preview, click to add feedback
+        </p>
+        <div
+          className="relative h-9 w-full overflow-visible"
+          onMouseMove={handleTrackMouseMove}
+          onMouseLeave={clearScrubHover}
+        >
+          <div
+            ref={trackRef}
+            className="absolute inset-0 cursor-crosshair rounded-md bg-white/15 ring-1 ring-white/10"
+            onClick={handleTrackClick}
+            title="Hover for frame preview · click to add feedback"
+          >
+            <div
+              className="pointer-events-none absolute inset-y-0 left-0 rounded-l-md bg-(--color-primaryButton)/35"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+          <TooltipProvider delayDuration={100}>
+            <div className="pointer-events-none absolute inset-0">
+              {timelineMarkers.map((m) => (
+                <TimelineMarker
+                  key={m.id}
+                  comment={{
+                    id: m.id,
+                    text: m.text,
+                    timestamp: m.timestamp,
+                    snapshot: m.snapshot,
+                  }}
+                  duration={duration}
+                  variant={m.variant}
+                  cardPlacement="below"
+                  onClick={(c) => seekToMarker(c.timestamp)}
+                />
+              ))}
+            </div>
+          </TooltipProvider>
+        </div>
+      </div>
+    ) : null;
+
   return (
-    <div className="flex min-h-0 w-full flex-1 flex-col gap-2">
+    <div className="flex w-full shrink-0 flex-col gap-2">
       <VideoPanel
         ref={videoRef}
         selectedPreviewMediaUrl={selectedPreviewMediaUrl}
@@ -163,59 +233,8 @@ export default function RevisionTimelineandVideoPlayer({
         pinCommentMode={pinMode && sendEnabled && !!contentUrl}
         onPinComment={handlePinComment}
         onTimeUpdate={(t) => setCurrentTime(t)}
+        timelineSlot={timelineSlot}
       />
-
-      {showVideoTools && sendEnabled && (
-        <div className="px-1 pb-1">
-          <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-white/45">
-            Timeline — hover for preview, click to add feedback
-          </p>
-          <div
-            className="relative h-9 w-full"
-            onMouseMove={handleTrackMouseMove}
-            onMouseLeave={clearScrubHover}
-          >
-            <div
-              ref={trackRef}
-              className="absolute inset-0 cursor-crosshair rounded-md bg-white/15 ring-1 ring-white/10"
-              onClick={handleTrackClick}
-              title="Hover for frame preview · click to add feedback"
-            >
-              <div
-                className="pointer-events-none absolute inset-y-0 left-0 rounded-l-md bg-(--color-primaryButton)/35"
-                style={{ width: `${progressPct}%` }}
-              />
-            </div>
-            <div className="pointer-events-none absolute inset-0">
-              {markers.map((m) => {
-                const left =
-                  duration > 0
-                    ? Math.min(100, Math.max(0, (m.timestamp / duration) * 100))
-                    : 0;
-                return (
-                  <button
-                    key={m.id}
-                    type="button"
-                    title={m.text}
-                    className="pointer-events-auto absolute top-1/2 z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/80 bg-red-500 shadow-md transition hover:scale-110"
-                    style={{ left: `${left}%` }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onMarkerSeek?.(m.timestamp);
-                      const v = videoRef.current;
-                      if (v) {
-                        v.currentTime = m.timestamp;
-                        v.pause();
-                        setIsPlaying(false);
-                      }
-                    }}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
 
       {showVideoTools && scrubHover && selectedPreviewMediaUrl && (
         <TimelineScrubPreview
@@ -225,33 +244,16 @@ export default function RevisionTimelineandVideoPlayer({
           scrubVideoRef={scrubVideoRef}
           pendingScrubTimeRef={pendingScrubTimeRef}
         />
-
       )}
-
 
       <Dialog open={composerOpen} onOpenChange={setComposerOpen}>
         <DialogContent className="max-w-md border-white/10 bg-(--color-background) text-white sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add video feedback</DialogTitle>
+            <DialogTitle>Add Your Feedback</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-white/60">
             Timecode {formatVideoDuration(composerTime)}
           </p>
-          {composerSnapshot ? (
-            <Image
-              src={composerSnapshot}
-              alt="Frame"
-              width={640}
-              height={360}
-              unoptimized
-              className="max-h-48 w-full rounded-lg object-contain bg-black"
-            />
-          ) : (
-            <p className="text-xs text-amber-200/90">
-              Snapshot unavailable. Feedback will still
-              include the timecode.
-            </p>
-          )}
           <textarea
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
@@ -262,7 +264,7 @@ export default function RevisionTimelineandVideoPlayer({
             <Button
               type="button"
               variant="ghost"
-              className="text-white/80"
+              className="cursor-pointer text-white/80"
               onClick={() => setComposerOpen(false)}
             >
               Cancel
@@ -270,7 +272,7 @@ export default function RevisionTimelineandVideoPlayer({
             <Button
               type="button"
               disabled={submitting || !commentText.trim()}
-              className="bg-primaryButton text-white hover:opacity-90"
+              className="cursor-pointer bg-primaryButton text-white hover:opacity-90"
               onClick={() => void handleSubmit()}
             >
               Add Feedback
@@ -278,7 +280,6 @@ export default function RevisionTimelineandVideoPlayer({
           </div>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }

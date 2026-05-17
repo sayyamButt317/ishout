@@ -45,7 +45,7 @@ type TabType = (typeof tabs)[number];
 
 const TAB_META: Record<TabType, { label: string; icon: LucideIcon }> = {
   chat: { label: 'Chat', icon: MessageSquare },
-  revisions: { label: 'Content Revisions', icon: FileCheck2 },
+  revisions: { label: ' Revisions', icon: FileCheck2 },
   brandfeedback: { label: 'Brand Feedback', icon: MessagesSquare },
   media: { label: 'Media', icon: Clapperboard },
   guidelines: { label: 'Guidelines', icon: ScrollText },
@@ -84,11 +84,10 @@ export default function FeedbackTabsSection({
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`shrink-0 whitespace-nowrap px-4 py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest transition-colors ${
-                  activeTab === tab
+                className={`shrink-0 whitespace-nowrap px-4 py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest transition-colors ${activeTab === tab
                     ? 'border-b-2 border-primaryButton cursor-pointer bg-white/5 text-white'
                     : 'text-white/40 hover:text-white/70'
-                }`}
+                  }`}
               >
                 <span className="inline-flex items-center gap-1.5">
                   <TabIcon className="size-3.5" />
@@ -100,9 +99,8 @@ export default function FeedbackTabsSection({
         )}
       </div>
       <div
-        className={`flex min-h-130 flex-col overflow-hidden lg:min-h-0 lg:flex-1 ${
-          activeTab === 'chat' ? 'flex' : 'hidden'
-        }`}
+        className={`flex min-h-130 flex-col overflow-hidden lg:min-h-0 lg:flex-1 ${activeTab === 'chat' ? 'flex' : 'hidden'
+          }`}
       >
         <ChatPanel
           className="h-full"
