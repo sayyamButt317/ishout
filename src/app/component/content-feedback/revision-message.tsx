@@ -93,7 +93,7 @@ function PendingRevisionCard({
   return (
     <article
       className={cn(
-        'relative overflow-hidden rounded-2xl border border-white/[0.08]',
+        'relative overflow-hidden rounded-2xl border border-white/8',
         'bg-[#12141c] shadow-[0_8px_32px_rgba(0,0,0,0.35)]',
       )}
     >
@@ -301,14 +301,14 @@ export const RevisionMessage = ({
               />
             ))
           ) : (
-            <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] px-4 py-10 text-center">
+            <div className="rounded-2xl border border-dashed border-white/10 bg-white/2 px-4 py-10 text-center">
               <p className="text-sm text-white/35">
                 Pin comments on the timeline to add revision feedback.
               </p>
             </div>
           )
         ) : (
-          <article className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#12141c] shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+          <article className="relative overflow-hidden rounded-2xl border border-white/8 bg-[#12141c] shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
             <div className={cn('absolute inset-y-0 left-0 w-1', accentStyles.action.bar)} />
             <div className="p-4 pl-5">
               <div className="mb-3 flex flex-wrap items-center gap-2">
