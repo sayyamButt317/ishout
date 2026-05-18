@@ -44,7 +44,7 @@ export default function ClientInfluencersContentPage() {
           'Requested ',
           'Status',
           'Created At',
-          'View Feedback',
+          ' ',
         ]}
         campaigns={campaigns}
         imageUrls={campaigns.map(
