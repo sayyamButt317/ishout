@@ -22,20 +22,20 @@ function Header() {
     <div className="relative mx-auto mb-2 max-w-3xl px-2 text-center sm:mb-3 md:mb-4 lg:mb-8">
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 size-56 -translate-x-1/2 rounded-full bg-primaryButton/15 blur-3xl"
+        className="pointer-events-none absolute left-1/2 top-0 size-56 -translate-x-1/2 rounded-full bg-primaryButton/30 blur-3xl"
       />
       <div className="relative mx-auto mb-4 flex flex-wrap items-center justify-center gap-4 sm:gap-5">
         <h1
-          className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl"
+          className="text-4xl font-bold tracking-tight text-primaryButton dark:text-white sm:text-5xl md:text-6xl"
           style={{ letterSpacing: '-0.03em' }}
         >
           Campaign{' '}
-          <span className="bg-linear-to-r from-primarytext via-white to-primaryButton bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-primarytext via-foreground/95 to-primaryButton bg-clip-text text-transparent">
             Builder
           </span>
         </h1>
       </div>
-      <p className="relative mx-auto max-w-3xl text-xs italic leading-relaxed text-white/45 sm:text-sm">
+      <p className="relative mx-auto max-w-3xl text-xs italic leading-relaxed text-slate/70 dark:text-white/45 sm:text-sm">
         Choose how you want to create your campaign Whether you need AI-powered creative direction or direct engagement via
         WhatsApp, we&apos;ve got you covered.
       </p>
@@ -67,10 +67,10 @@ function CampaignCard({ option }: { option: CampaignOption }) {
   return (
     <div className="group relative">
       <div
-        className={`absolute -inset-0.5 bg-linear-to-r ${a.glow} ${a.glowOpacity} transition-opacity duration-500 rounded-3xl blur-xl`}
+        className={`absolute -inset-0.5 bg-linear-to-r ${a.glow} ${a.glowOpacity} transition-opacity duration-500 rounded-3xl blur-3xl`}
       />
       <div
-        className={` bg-black/40 backdrop-blur-xl border border-gray-500/30 ${a.border} rounded-3xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1.5 ${a.cardGlow} flex flex-col gap-x-30 p-4 md:flex-row`}
+        className={` bg-white/65 dark:bg-black/40 backdrop-blur-xl border border-gray-500/30 ${a.border} rounded-3xl overflow-hidden transition-all duration-500 group-hover:-translate-y-1.5 ${a.cardGlow} flex flex-col gap-x-30 p-4 md:flex-row`}
       >
         {/* Content */}
         <div className="flex-1 md:px-6 md:py-4 md:pl-10 flex flex-col justify-center">
@@ -79,12 +79,12 @@ function CampaignCard({ option }: { option: CampaignOption }) {
           </div>
 
           <h3
-            className={`text-2xl md:text-2xl font-bold tracking-wide text-white mb-2 transition ${a.titleGlow}`}
+            className={`text-2xl md:text-2xl font-bold tracking-widetext-black dark:text-white mb-2 transition ${a.titleGlow}`}
           >
             {option.title}
           </h3>
 
-          <p className="text-white/60 text-sm italic mb-2 max-w-md">
+          <p className="text-slate-700 dark:text-white/60 text-sm italic mb-2 max-w-md">
             {option.description}
           </p>
 

@@ -44,7 +44,7 @@ export default function ClientPostingDetailsCampaignsPage() {
           'Requested ',
           'Status',
           'Created At',
-          'View Content',
+          ' ',
         ]}
         imageUrls={campaigns.map((campaign) => campaign?.campaign_logo_url || null)}
         statuses={campaigns.map((campaign) => campaign.status)}
