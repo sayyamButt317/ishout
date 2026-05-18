@@ -364,6 +364,7 @@ export default function NegotiationPage() {
         heading="Delete Negotiation"
         subheading="Are you sure you want to delete this conversation?"
         open={deleteOpen}
+        isDeleting={deleteNegotiationHook.isPending}
         onClose={() => {
           setDeleteOpen(false);
           setSelectedThreadId(null);

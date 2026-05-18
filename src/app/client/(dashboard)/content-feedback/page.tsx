@@ -11,30 +11,30 @@ import { MessageSquare, MoreHorizontal, Search } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/negotiation-agreed-by-campaign-hook';
-import {
-  CardType,
-  NegotiationItem,
-} from '@/src/types/Compnay/feeedback-content-type';
+import { CardType, NegotiationItem } from '@/src/types/Compnay/feeedback-content-type';
 import { KanbanSkeleton } from '@/src/app/component/skeletons/admin-skeletons';
 
 const COLUMNS = [
   { id: 'review', label: 'Under Review', color: 'primary' },
   { id: 'revision', label: 'Revision', color: 'amber' },
   { id: 'approved', label: 'Approved', color: 'emerald' },
+  { id: 'posted', label: 'Posted', color: 'green' },
 ];
 
 const countStyles: Record<string, string> = {
   slate:
     'bg-slate-100 border border-slate-200 text-slate-600 dark:bg-white/10 dark:border-white/10 dark:text-white/70',
 
-  primary:
-    'bg-[var(--color-primaryButton)] text-white',
+  primary: 'bg-[var(--color-primaryButton)] text-white',
 
   amber:
     'bg-amber-100 border border-amber-200 text-amber-700 dark:bg-amber-500/10 dark:border-amber-500/20 dark:text-amber-300',
 
   emerald:
     'bg-emerald-100 border border-emerald-200 text-emerald-700 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-300',
+
+  green:
+    'bg-green-100 border border-green-200 text-green-700 dark:bg-green-500/10 dark:border-green-500/20 dark:text-green-300',
 };
 
 const handleViewProfile = (username?: string, platform?: string) => {
@@ -61,23 +61,23 @@ function ContentFeedbackPageContent() {
   const [selectedBriefId, setSelectedBriefId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data, isPending } =
-    NegotiationAgreedByCampaignHook(campaignIdFromQuery);
+  const { data, isPending } = NegotiationAgreedByCampaignHook(campaignIdFromQuery);
 
-  const { data: briefData } = CampaignBriefDetailHook(
-    selectedBriefId ?? '',
-  );
+  const { data: briefData } = CampaignBriefDetailHook(selectedBriefId ?? '');
 
   const negotiationItems = data?.negotiations ?? [];
 
   type CardWithSource = CardType & { source: NegotiationItem };
 
   if (campaignIdFromQuery && isPending) {
-    return <KanbanSkeleton columnsCount={3} cardsPerColumn={3} />;
+    return <KanbanSkeleton columnsCount={4} cardsPerColumn={3} />;
   }
 
   const apiCards: CardWithSource[] = negotiationItems
-    .filter((item) => item.admin_approved === 'Approved')
+    .filter((item) => {
+      const adminStatus = (item.admin_approved ?? '').toLowerCase();
+      return adminStatus === 'approved' || adminStatus === 'posted';
+    })
     .map((item) => ({
       id: item._id,
       campaign_id: item.campaign_id,
@@ -92,9 +92,9 @@ function ContentFeedbackPageContent() {
 
   const brief: UpdateCampaignBrief | null = briefData?.response
     ? {
-      ...briefData.response,
-      id: briefData.id,
-    }
+        ...briefData.response,
+        id: briefData.id,
+      }
     : null;
 
   return (
@@ -149,30 +149,41 @@ function ContentFeedbackPageContent() {
       <div className="mt-6 flex items-start gap-6 overflow-x-auto pb-4">
         {COLUMNS.map((col) => {
           const combinedCards: CardWithSource[] =
-            col.id === 'approved'
+            col.id === 'posted'
               ? apiCards.filter(
-                (card) =>
-                  (card.Brand_approved ?? '').toLowerCase() ===
-                  'approved',
-              )
-              : col.id === 'revision'
-                ? apiCards.filter(
-                  (card) =>
-                    (card.Brand_approved ?? '').toLowerCase() ===
-                    'revision',
+                  (card) => (card.source.admin_approved ?? '').toLowerCase() === 'posted',
                 )
-                : col.id === 'review'
-                  ? apiCards.filter((card) => {
-                    const status = (
-                      card.Brand_approved ?? ''
-                    ).toLowerCase();
-
+              : col.id === 'approved'
+                ? apiCards.filter((card) => {
+                    const adminStatus = (card.source.admin_approved ?? '').toLowerCase();
                     return (
-                      status !== 'approved' &&
-                      status !== 'revision'
+                      adminStatus !== 'posted' &&
+                      (card.Brand_approved ?? '').toLowerCase() === 'approved'
                     );
                   })
-                  : [];
+                : col.id === 'revision'
+                  ? apiCards.filter((card) => {
+                      const adminStatus = (
+                        card.source.admin_approved ?? ''
+                      ).toLowerCase();
+                      return (
+                        adminStatus !== 'posted' &&
+                        (card.Brand_approved ?? '').toLowerCase() === 'revision'
+                      );
+                    })
+                  : col.id === 'review'
+                    ? apiCards.filter((card) => {
+                        const brandStatus = (card.Brand_approved ?? '').toLowerCase();
+                        const adminStatus = (
+                          card.source.admin_approved ?? ''
+                        ).toLowerCase();
+                        return (
+                          adminStatus !== 'posted' &&
+                          brandStatus !== 'approved' &&
+                          brandStatus !== 'revision'
+                        );
+                      })
+                    : [];
 
           return (
             <div
@@ -187,10 +198,11 @@ function ContentFeedbackPageContent() {
                   </h3>
 
                   <span
-                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${col.color === 'primary'
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                      col.color === 'primary'
                         ? 'bg-(--color-primaryButton) text-white'
                         : countStyles[col.color]
-                      }`}
+                    }`}
                   >
                     {combinedCards.length}
                   </span>
@@ -207,8 +219,7 @@ function ContentFeedbackPageContent() {
                   <div
                     key={card.id}
                     onClick={() => {
-                      const campaignId =
-                        card.campaign_id ?? campaignIdFromQuery;
+                      const campaignId = card.campaign_id ?? campaignIdFromQuery;
 
                       if (!campaignId) return;
 
@@ -241,14 +252,8 @@ function ContentFeedbackPageContent() {
                       <div className="mb-6 flex items-center gap-4">
                         <div className="relative h-20 w-20 overflow-hidden rounded-full border border-slate-200 dark:border-white/10">
                           <Image
-                            src={
-                              card.source?.influencer?.picture ??
-                              ''
-                            }
-                            alt={
-                              card.source?.influencer?.username ??
-                              ''
-                            }
+                            src={card.source?.influencer?.picture ?? ''}
+                            alt={card.source?.influencer?.username ?? ''}
                             fill
                             className="object-cover"
                           />
@@ -256,9 +261,7 @@ function ContentFeedbackPageContent() {
 
                         <div className="min-w-0 flex-1">
                           <h4 className="truncate text-base font-semibold text-slate-900 dark:text-white">
-                            @
-                            {card.source?.influencer?.username ??
-                              ''}
+                            @{card.source?.influencer?.username ?? ''}
                           </h4>
                         </div>
                       </div>
@@ -271,12 +274,10 @@ function ContentFeedbackPageContent() {
                           </span>
 
                           <span className="text-sm text-slate-700 dark:text-white/90">
-                            {card.source?.influencer
-                              ?.engagementRate
-                              ? `${(
-                                card.source.influencer
-                                  .engagementRate * 100
-                              ).toFixed(2)}%`
+                            {card.source?.influencer?.engagementRate
+                              ? `${(card.source.influencer.engagementRate * 100).toFixed(
+                                  2,
+                                )}%`
                               : 'N/A'}
                           </span>
                         </div>
@@ -287,8 +288,7 @@ function ContentFeedbackPageContent() {
                           </span>
 
                           <span className="text-sm text-slate-700 dark:text-white/90">
-                            {card.source?.influencer?.country ||
-                              'N/A'}
+                            {card.source?.influencer?.country || 'N/A'}
                           </span>
                         </div>
 
@@ -298,8 +298,7 @@ function ContentFeedbackPageContent() {
                           </span>
 
                           <span className="text-sm capitalize text-slate-700 dark:text-white/90">
-                            {card.source?.influencer?.platform ||
-                              'N/A'}
+                            {card.source?.influencer?.platform || 'N/A'}
                           </span>
                         </div>
                       </div>
@@ -327,9 +326,7 @@ function ContentFeedbackPageContent() {
                         onClick={(e) => {
                           e.stopPropagation();
 
-                          const campaignId =
-                            card.campaign_id ??
-                            campaignIdFromQuery;
+                          const campaignId = card.campaign_id ?? campaignIdFromQuery;
 
                           if (!campaignId) return;
 
@@ -337,8 +334,7 @@ function ContentFeedbackPageContent() {
                             item: card.source,
                             title: card.title,
                             campaign: card.campaign,
-                            briefId:
-                              data?.campaign?.brief_id ?? '',
+                            briefId: data?.campaign?.brief_id ?? '',
                           };
 
                           if (typeof window !== 'undefined') {
@@ -374,7 +370,7 @@ function ContentFeedbackPageContent() {
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         briefData={brief}
-        onUpdate={() => { }}
+        onUpdate={() => {}}
       />
     </div>
   );
@@ -382,14 +378,7 @@ function ContentFeedbackPageContent() {
 
 export default function ContentFeedbackPage() {
   return (
-    <Suspense
-      fallback={
-        <KanbanSkeleton
-          columnsCount={3}
-          cardsPerColumn={2}
-        />
-      }
-    >
+    <Suspense fallback={<KanbanSkeleton columnsCount={4} cardsPerColumn={2} />}>
       <ContentFeedbackPageContent />
     </Suspense>
   );

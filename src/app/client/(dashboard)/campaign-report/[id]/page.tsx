@@ -18,6 +18,7 @@ import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotia
 import useInfluencerDemographicsAssets from '@/src/routes/Admin/Hooks/Report/influencer-demographics-assets-hook';
 import DemographicsAssetsDialog from '@/src/app/component/custom-component/DemographicsAssetsDialog';
 import { Play, ExternalLink, Trophy } from 'lucide-react';
+import CaptionBlock from '@/src/app/component/campaign-report/CaptionBlock';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -343,9 +344,7 @@ export default function InfluencerReportHeader() {
 
                 {/* FOOTER — caption + actions */}
                 <div className="mt-auto shrink-0 space-y-4 border-t border-border pt-4 dark:border-white/10">
-                  <blockquote className="border-l-2 border-primaryButton/70 pl-3 text-xs italic leading-relaxed text-muted-foreground sm:text-sm dark:text-white/45">
-                    {reel.caption}
-                  </blockquote>
+                  <CaptionBlock caption={reel.caption} />
 
                   <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/70 p-3 ring-1 ring-inset ring-border dark:bg-black/25 dark:ring-white/5">
                     <a
