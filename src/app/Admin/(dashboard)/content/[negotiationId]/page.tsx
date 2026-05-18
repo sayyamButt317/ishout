@@ -21,7 +21,6 @@ import {
   ChatMessage,
   NegotiationResponse,
 } from '@/src/types/Admin-Type/Content-type';
-import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/revisiontimeline';
 import { AnalyzeURL, formatVideoDuration } from '@/src/utils/video-duration';
 import {
   extractTimelineMarkersFromMessages,
@@ -36,7 +35,6 @@ import useReportStore from '@/src/store/Report/report-store';
 import useInfluencerMediaUrlsHook from '@/src/routes/Admin/Hooks/content/media';
 import useStoreInfluencerDemographicsHook from '@/src/routes/Admin/Hooks/feedback/store-influencer-demographics-hook';
 import type { StoreInfluencerDemographicsResponse } from '@/src/types/Admin-Type/Feedback-Type';
-import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
 import { RevisionMessage } from '@/src/app/component/content-feedback/revision-message';
 import RevisionTimelineandVideoPlayer from '@/src/app/component/content-feedback/revisiontimeline';
 
@@ -507,21 +505,23 @@ export default function ContentFeedbackDetailPage() {
   }
 
   return (
-    <div className="flex w-full flex-col font-sans overflow-y-auto lg:h-[calc(100vh-24px)] lg:flex-row lg:overflow-hidden">
-      <div className="flex w-full flex-col lg:flex-1 lg:overflow-hidden lg:border-r lg:border-white/10">
-        <FeedbackDetailHeader
-          title={selectedCard.title}
-          campaign={selectedCard.campaign}
-          onBack={() => router.back()}
-          contentType={contentPreviewKind}
-          onContentTypeChange={setContentPreviewKind}
-          version={contentVersion}
-          onVersionChange={setContentVersion}
-        />
+    <div className="flex w-full flex-col font-sans lg:h-[calc(100vh-24px)] lg:flex-row lg:overflow-hidden">
+      <div className="flex w-full min-h-0 flex-col lg:flex-1 lg:overflow-hidden lg:border-r lg:border-white/10">
+        <div className="shrink-0">
+          <FeedbackDetailHeader
+            title={selectedCard.title}
+            campaign={selectedCard.campaign}
+            onBack={() => router.back()}
+            contentType={contentPreviewKind}
+            onContentTypeChange={setContentPreviewKind}
+            version={contentVersion}
+            onVersionChange={setContentVersion}
+          />
+        </div>
 
-        {/* Video workspace */}
-        <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
-          <div className="aspect-9/16 w-full lg:aspect-auto lg:flex lg:flex-1">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+          {/* Video + timeline feedback line */}
+          <div className="shrink-0 p-2">
             <RevisionTimelineandVideoPlayer
               videoRef={videoRef}
               selectedPreviewMediaUrl={selectedPreviewMediaUrl}
@@ -538,27 +538,31 @@ export default function ContentFeedbackDetailPage() {
               onMarkerSeek={handleSeekPreviewToTime}
             />
           </div>
+          <div className="shrink-0 border-t border-white/10 px-3 pb-3">
+            <RevisionMessage
+              reviewSide="admin"
+              negotiationId={negotiationId}
+              threadId={threadId}
+            />
+          </div>
         </div>
-        <RevisionMessage
-          reviewSide="admin"
-          negotiationId={negotiationId}
-          threadId={threadId}
-        />
 
-        <FeedbackDetailFooter
-          durationText={durationText}
-          resolutionText={resolutionText}
-          canForward={canForwardToBrand}
-          isForwardLoading={isForwardToBrandLoading}
-          onForwardToBrand={handleForwardToBrand}
-          isDemographicsView={isDemographicsView}
-          canSaveDemographics={canSaveDemographics}
-          isSavingDemographics={isSavingDemographics}
-          onSaveDemographics={handleSaveDemographics}
-          contentUrl={selectedPreviewMediaUrl}
-          threadId={threadId}
-          negotiationId={negotiationId}
-        />
+        <div className="shrink-0 border-t border-white/10">
+          <FeedbackDetailFooter
+            durationText={durationText}
+            resolutionText={resolutionText}
+            canForward={canForwardToBrand}
+            isForwardLoading={isForwardToBrandLoading}
+            onForwardToBrand={handleForwardToBrand}
+            isDemographicsView={isDemographicsView}
+            canSaveDemographics={canSaveDemographics}
+            isSavingDemographics={isSavingDemographics}
+            onSaveDemographics={handleSaveDemographics}
+            contentUrl={selectedPreviewMediaUrl}
+            threadId={threadId}
+            negotiationId={negotiationId}
+          />
+        </div>
       </div>
 
       <FeedbackTabsSection

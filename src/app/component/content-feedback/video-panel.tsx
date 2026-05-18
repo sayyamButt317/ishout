@@ -34,9 +34,19 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoP
     return value.startsWith('data:');
   }
 
+  const hasTimeline = Boolean(timelineSlot);
+
   return (
-    <div className="flex min-h-[min(560px,68vh)] w-full flex-1 flex-col overflow-hidden rounded-lg border border-white/10 bg-slate-800">
-      <div className="relative flex min-h-[min(480px,56vh)] flex-1 items-center justify-center overflow-hidden bg-black">
+    <div
+      className={`flex w-full flex-col rounded-lg border border-white/10 bg-slate-800 ${
+        hasTimeline ? 'shrink-0' : 'min-h-[min(350px,58vh)] flex-1 overflow-hidden'
+      }`}
+    >
+      <div
+        className={`relative flex items-center justify-center overflow-hidden bg-black ${
+          hasTimeline ? 'min-h-[min(320px,42vh)]' : 'min-h-[min(480px,56vh)] flex-1'
+        }`}
+      >
         {selectedPreviewMediaUrl ? (
           isDataUrl(selectedPreviewMediaUrl) || (isValidMediaUrl(selectedPreviewMediaUrl) && selectedPreviewMediaType === 'image') ? (
             <Image
@@ -120,10 +130,7 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoP
       </div>
 
       {timelineSlot ? (
-        <div className="shrink-0 border-t border-white/10 bg-black/50 px-3 py-2">
-          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-white/45">
-            Feedback on timeline
-          </p>
+        <div className="shrink-0 overflow-visible border-t border-white/10 bg-black/50 px-3 py-2.5">
           {timelineSlot}
         </div>
       ) : null}

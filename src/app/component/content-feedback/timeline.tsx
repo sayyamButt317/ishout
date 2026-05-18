@@ -1,6 +1,6 @@
 
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Marker from "./TimelineMarker";
+import TimelineMarker from "./TimelineMarker";
 
 interface TimelineProps {
     comments: {
@@ -16,11 +16,16 @@ export default function Timeline({ comments, duration, onClick }: TimelineProps)
         <TooltipProvider>
             <div className="relative w-full h-2 bg-gray-700 rounded">
                 {comments.map((comment, i) => (
-                    <Marker
+                    <TimelineMarker
                         key={i}
-                        comment={comment}
+                        comment={{
+                            id: `legacy-${i}`,
+                            text: comment.text,
+                            timestamp: comment.timestamp,
+                            snapshot: comment.snapshot,
+                        }}
                         duration={duration}
-                        onClick={(comment) => onClick(comment.timestamp)}
+                        onClick={(c) => onClick(c.timestamp)}
                     />
                 ))}
             </div>
