@@ -138,11 +138,19 @@ export default function AllCampaign() {
         heading="Delete Campaign"
         subheading="Are you sure you want to delete this campaign?"
         open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
+        isDeleting={deleteCampaignHook.isPending}
+        onClose={() => {
+          setDeleteOpen(false);
+          setSelectedCampaignId(null);
+        }}
         ondelete={() => {
           if (selectedCampaignId) {
-            deleteCampaignHook.mutate(selectedCampaignId);
-            setDeleteOpen(false);
+            deleteCampaignHook.mutate(selectedCampaignId, {
+              onSuccess: () => {
+                setDeleteOpen(false);
+                setSelectedCampaignId(null);
+              },
+            });
           }
         }}
       />
