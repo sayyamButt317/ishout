@@ -29,7 +29,7 @@ export const OPTIONS: CampaignOption[] = [
         id: 'whatsapp',
         title: 'WhatsApp Campaign',
         description:
-            'Reach creators where they are most active. Direct-to-messaging campaigns with automated tracking and high response rates.',
+            'Reach creators where they are most active. Direct-to-WhatsApp campaigns with automated tracking, high response rates, and outreach powered through +971503054372',
         icon: MessageCircle,
         img: '/assets/whatsapp-logo-1.png',
         imgWidth: 300,

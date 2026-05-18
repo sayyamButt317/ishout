@@ -56,7 +56,7 @@ export default function OnboardingInfluencerPage() {
           'Unapproved',
           'Status',
           'Approved At',
-          'View Influencers',
+          ' ',
         ]}
         statuses={campaigns.map((campaign) => campaign.status)}
         campaignIds={campaigns.map((campaign) => campaign._id ?? campaign.campaign_id)}
