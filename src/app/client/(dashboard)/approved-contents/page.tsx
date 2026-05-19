@@ -47,7 +47,7 @@ function ApprovedContentsPageContent() {
       />
 
       {!campaignId && (
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-[#0f0f10] px-4 py-4 text-sm text-white/70">
+        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-slate-50 dark:bg-[#0f0f10] px-4 py-4 text-sm text-white/70">
           <span>Open a campaign from</span>
           <Button
             asChild

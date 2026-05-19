@@ -73,7 +73,7 @@ function ContentFeedbackPageContent() {
   type CardWithSource = CardType & { source: NegotiationItem };
 
   if (campaignIdFromQuery && isPending) {
-    return <KanbanSkeleton columnsCount={3} cardsPerColumn={3} />;
+    return <KanbanSkeleton columnsCount={2} cardsPerColumn={2} />;
   }
 
   const apiCards: CardWithSource[] = negotiationItems
