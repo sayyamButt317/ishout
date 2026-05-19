@@ -73,7 +73,7 @@ export default function InfluencersContentPage() {
 
       <TableComponent<CompanyCampaignResponse>
         header={[
-          'Company Name', 'Campaign Name', 'Platform', 'Category', 'Followers', 'Country', 'Requested', 'Content', 'Negotiation', 'Report', 'Delete', ' ', ' ', ' ']}
+          'Company Name', 'Campaign Name', 'Platform', 'Category', 'Followers', 'Country', 'Requested', 'Content', 'Negotiation', 'Report', ' ', ' ', ' ', ' ']}
         imageUrls={campaigns.map(
           (campaign: CompanyCampaignResponse) => campaign?.campaign_logo_url || null,
         )}

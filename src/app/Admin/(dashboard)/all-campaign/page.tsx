@@ -248,7 +248,7 @@ export default function AllCampaignPage() {
           'Status',
           'Created At',
           'Chat',
-          'Delete',
+          ' ',
           ' ',
         ]}
         imageUrls={filteredAndSortedCampaigns.map(

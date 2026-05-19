@@ -182,7 +182,7 @@ export default function ClientCampaignReportPage() {
           'Requested',
           'Status',
           'Created At',
-          'View Report',
+          ' ',
         ]}
         imageUrls={filteredAndSortedCampaigns.map(
           (campaign) => campaign?.campaign_logo_url || null,

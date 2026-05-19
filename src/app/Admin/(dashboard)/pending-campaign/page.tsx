@@ -90,7 +90,7 @@ export default function AdminPendingCampaigns() {
           'Requested',
           'Created At',
           'Chat',
-          'Delete',
+          ' ',
           ' ',
           ' ',
         ]}
