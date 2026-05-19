@@ -23,23 +23,10 @@ export default function NoInfluencerContentCard() {
             </h2>
             <p className="text-sm leading-relaxed text-muted-foreground dark:text-white/50">
               Once influencers submit approved content for this campaign, you will see
-              demographics, engagement metrics, and downloadable reports on this page.
+              demographics, engagement metrics, and reports on this page.
             </p>
           </div>
-          <div className="flex w-full max-w-sm flex-col gap-2 sm:flex-row sm:justify-center">
-            <Link
-              href="/Admin/content"
-              className="inline-flex h-10 items-center justify-center rounded-xl bg-primaryButton px-4 text-sm font-semibold text-white shadow-md shadow-primaryButton/20 transition hover:bg-primaryHover"
-            >
-              Go to content
-            </Link>
-            <Link
-              href="/Admin/campaign-report"
-              className="inline-flex h-10 items-center justify-center rounded-xl border border-border bg-muted/50 px-4 text-sm font-semibold text-foreground transition hover:bg-muted dark:border-white/15 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
-            >
-              All campaigns
-            </Link>
-          </div>
+
         </div>
       </div>
     </div>
