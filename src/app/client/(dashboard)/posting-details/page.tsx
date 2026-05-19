@@ -35,6 +35,12 @@ export default function ClientPostingDetailsCampaignsPage() {
         icon={<ClipboardList className="size-5" />}
       />
       <TableComponent<CompanyCampaignResponse>
+        emptyState={{
+          icon: ClipboardList,
+          title: 'No posting details yet',
+          description:
+            'When influencers share posting details for your campaigns, they will appear here so you can review them.',
+        }}
         header={[
           'Campaign Name',
           'followers',

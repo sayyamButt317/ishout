@@ -46,6 +46,12 @@ export default function OnboardingInfluencerPage() {
       />
 
       <TableComponent<CompanyCampaignResponse>
+        emptyState={{
+          icon: UserCheck,
+          title: 'No onboarded influencers yet',
+          description:
+            'When influencers are onboarded for your campaigns, they will appear here for you to review.',
+        }}
         header={[
           'Campaign Name',
           'Followers',
