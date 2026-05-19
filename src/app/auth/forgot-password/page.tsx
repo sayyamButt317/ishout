@@ -34,9 +34,7 @@ export default function ForgetPassword() {
               unoptimized
             />
             <h2 className="text-3xl font-bold text-white tracking-tight">
-              i
-              <span className="text-primarytext font-extrabold">S</span>
-              hout
+              iShout
               <span className="text-primarytext font-extrabold">.</span>
             </h2>
           </div>

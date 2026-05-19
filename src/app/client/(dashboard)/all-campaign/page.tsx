@@ -60,7 +60,7 @@ export default function AllCampaign() {
           // "Rejected ",
           'Status',
           'Created At',
-          'Delete',
+          ' ',
           'View',
         ]}
         imageUrls={campaigns.map((campaign) => campaign?.campaign_logo_url || null)}

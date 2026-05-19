@@ -252,7 +252,7 @@ export default function CampaignReport() {
           'Status',
           'Created At',
           'Chat',
-          'Delete',
+          ' ',
           ' ',
         ]}
         imageUrls={filteredAndSortedCampaigns.map(

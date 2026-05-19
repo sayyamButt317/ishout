@@ -79,7 +79,7 @@ export default function OnboardingCampaignPage() {
           'Requested',
           'Onboarded',
           'Created At',
-          'Delete',
+          ' ',
           ' ',
           ' ',
         ]}

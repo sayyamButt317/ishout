@@ -36,16 +36,16 @@ export default function LogoutDialogue({
         <AlertDialogHeader>
           <AlertDialogTitle className=" text-center flex flex-row items-center justify-center gap-2">
             <Image
-              src="/assets/favicon.png"
+              src="/assets/iShout-gif-black-background.gif"
               alt="logo"
               width={40}
               height={40}
             />
-            Logout?
+            Logout
           </AlertDialogTitle>
           <hr className="my-4 w-full bg-[#1E4B8E] h-px" />
           <AlertDialogDescription className=" font-open-sans font-normal text-base text-center text-white">
-            Are you sure you want to Logout?
+            Are you sure you want to logout?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
