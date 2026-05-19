@@ -125,7 +125,7 @@ const CampaignBreifPage = () => {
 
           {/* Input card */}
           <div className="w-full bg-foreground/10 dark:bg-[#131318] rounded-2xl p-1 border border-white/0.06 shadow-2xl shadow-black/40">
-            <div className="bg-foreground/5 rounded-2xl p-6 space-y-4 text-left dark:bg-[#13131a]">
+            <div className="bg-slate-100 rounded-2xl p-6 space-y-4 text-left dark:bg-[#13131a]">
 
               <textarea
                 placeholder="e.g., A summer launch for our sustainable activewear brand featuring gen-z yoga influencers in urban settings..."

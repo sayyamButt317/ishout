@@ -53,7 +53,7 @@ export default function WhatsAppChat() {
           'Campaign Created',
           'Mode',
           'Human Takeover',
-          'Delete',
+          ' ',
           'Conversation',
         ]}
         subheader={data?.users?.map((userSession: WhatsAppUserSessionResponse) => [
