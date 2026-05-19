@@ -46,6 +46,12 @@ export default function RevieInfluencer() {
         }
       />
       <TableComponent<CompanyCampaignResponse>
+        emptyState={{
+          icon: UserRoundSearch,
+          title: 'No influencers to review yet',
+          description:
+            'When onboarded influencers are ready for your review, their campaigns will appear here.',
+        }}
         header={[
           'Campaign Name',
           'followers',
