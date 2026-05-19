@@ -109,27 +109,27 @@ export default function ClientCampaignReportPage() {
           <div className="flex w-full min-w-0 flex-col gap-2 xl:w-auto xl:flex-row xl:flex-wrap xl:items-center xl:gap-3">
             <div className="flex w-full min-w-0 items-center gap-2 xl:w-auto">
               <div className="relative min-w-0 flex-1 xl:w-56 xl:flex-none">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-white/40" />
+                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-grey/60 dark:text-white/40" />
                 <input
                   type="text"
                   placeholder="Search campaigns..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-10 w-full rounded-lg border border-white/15 bg-white/5 pl-9 pr-3 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
+                  className="h-10 w-full rounded-lg border border-grey/20 dark:border-white/15 dark:bg-white/5 pl-9 pr-3 text-sm dark:text-white outline-none transition-colors dark:placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20"
                 />
               </div>
             </div>
 
             <div className="flex w-full min-w-0 items-center gap-2 xl:w-auto">
-              <ArrowUpDown className="size-4 shrink-0 text-white/50" aria-hidden />
-              <label htmlFor="client-campaign-sort" className="text-sm text-white/70">
+              <ArrowUpDown className="size-4 shrink-0 text-grey/60 dark:text-white/50" aria-hidden />
+              <label htmlFor="client-campaign-sort" className="text-sm text-slate-600 dark:text-white/70">
                 Sort by
               </label>
               <select
                 id="client-campaign-sort"
                 defaultValue=""
                 onChange={handleSortChange}
-                className="h-10 min-w-0 flex-1 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20 xl:w-56 xl:flex-none"
+                className="h-10 min-w-0 flex-1 rounded-lg border border-grey/20 dark:border-white/15 dark:bg-white/5 pl-3 pr-9 text-sm dark:text-white outline-none transition-colors focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20 xl:w-56 xl:flex-none"
               >
                 {SORT_OPTIONS.map((option) => (
                   <option
@@ -144,10 +144,10 @@ export default function ClientCampaignReportPage() {
             </div>
 
             <div className="flex w-full min-w-0 items-center gap-2 xl:w-auto">
-              <Filter className="size-4 shrink-0 text-white/50" aria-hidden />
+              <Filter className="size-4 shrink-0 text-grey/60 dark:text-white/50" aria-hidden />
               <label
                 htmlFor="client-campaign-status-filter"
-                className="text-sm text-white/70"
+                className="text-sm text-slate-600 dark:text-white/70"
               >
                 Filter by status
               </label>
@@ -155,7 +155,7 @@ export default function ClientCampaignReportPage() {
                 id="client-campaign-status-filter"
                 value={statusFilter}
                 onChange={(event) => setStatusFilter(event.target.value)}
-                className="h-10 min-w-0 flex-1 rounded-lg border border-white/15 bg-white/5 pl-3 pr-9 text-sm text-white outline-none transition-colors placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20 xl:w-48 xl:flex-none"
+                className="h-10 min-w-0 flex-1 rounded-lg border border-grey/20 dark:border-white/15 dark:bg-white/5 pl-3 pr-9 text-sm dark:text-white outline-none transition-colors dark:placeholder:text-white/40 focus:border-primaryButton focus:bg-white/10 focus:ring-2 focus:ring-primaryButton/20 xl:w-48 xl:flex-none"
               >
                 {STATUS_OPTIONS.map((option) => (
                   <option

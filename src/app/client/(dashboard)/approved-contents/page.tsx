@@ -35,7 +35,7 @@ function ApprovedContentsPageContent() {
     : isLoading
       ? 'Loading approved content…'
       : data
-        ? `${data.total} approved item${data.total === 1 ? '' : 's'} · campaign ${data.campaign_id.slice(-8)}`
+        ? `${data.total} approved item${data.total === 1 ? '' : 's'} for this campaign`
         : 'Approved content for this campaign';
 
   return (
@@ -65,7 +65,7 @@ function ApprovedContentsPageContent() {
       )}
 
       {campaignId && data && !data.approved_contents.length && (
-        <div className="rounded-2xl border border-dashed border-white/15 bg-white/2 px-6 py-12 text-center text-sm text-white/50">
+        <div className="rounded-2xl border border-dashed border-slate/60 dark:border-white/15 bg-white/2 px-6 py-12 text-center text-sm text-grey/60 dark:text-white/50">
           No approved content to show.
         </div>
       )}
