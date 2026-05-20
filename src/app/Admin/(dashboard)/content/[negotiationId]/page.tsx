@@ -40,13 +40,13 @@ import RevisionTimelineandVideoPlayer from '@/src/app/component/content-feedback
 
 type ContentPreviewKind = 'story' | 'post' | 'demographics';
 
-
 export default function ContentFeedbackDetailPage() {
   const router = useRouter();
   const params = useParams<{ negotiationId: string }>();
   const negotiationIdParam = params?.negotiationId ?? '';
 
   const [chatMode, setChatMode] = useState<'influencer' | 'brand'>('influencer');
+  const [selectedForwardText, setSelectedForwardText] = useState<string | null>(null);
   const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
   const [selectedPreviewMediaUrl, setSelectedPreviewMediaUrl] = useState<string | null>(
     null,
@@ -86,18 +86,18 @@ export default function ContentFeedbackDetailPage() {
 
     const fromLegacyUrls = Array.isArray(payload.media_urls)
       ? payload.media_urls.filter(
-        (url): url is string => typeof url === 'string' && url.length > 0,
-      )
+          (url): url is string => typeof url === 'string' && url.length > 0,
+        )
       : [];
 
     const fromMediaItems = Array.isArray(payload.media_items)
       ? payload.media_items
-        .map((item) =>
-          item && typeof item === 'object' && 'media_url' in item
-            ? (item as { media_url?: unknown }).media_url
-            : null,
-        )
-        .filter((url): url is string => typeof url === 'string' && url.length > 0)
+          .map((item) =>
+            item && typeof item === 'object' && 'media_url' in item
+              ? (item as { media_url?: unknown }).media_url
+              : null,
+          )
+          .filter((url): url is string => typeof url === 'string' && url.length > 0)
       : [];
 
     return Array.from(new Set([...fromLegacyUrls, ...fromMediaItems]));
@@ -156,8 +156,10 @@ export default function ContentFeedbackDetailPage() {
       (n: { _id: string; influencer?: { username?: string } }) =>
         n._id === negotiationIdParam,
     );
-    return (neg as { influencer?: { username?: string } } | undefined)
-      ?.influencer?.username ?? '';
+    return (
+      (neg as { influencer?: { username?: string } } | undefined)?.influencer?.username ??
+      ''
+    );
   }, [negotiationIdParam, data?.negotiations]);
 
   const backToList = () => {
@@ -195,10 +197,8 @@ export default function ContentFeedbackDetailPage() {
       ? influencerChatQuery.isLoading
       : companyChatQuery.isLoading;
 
-  const { sendMessage: sendInfluencerMessage } = useSendAdminMessage(
-    threadId,
-    negotiationId,
-  );
+  const { sendMessage: sendInfluencerMessage, isPending: isForwardingToInfluencer } =
+    useSendAdminMessage(threadId, negotiationId);
   const { sendMessage: sendCompanyMessage } = useSendAdminCompanyMessage(
     brandThreadId,
     negotiationId,
@@ -246,6 +246,7 @@ export default function ContentFeedbackDetailPage() {
 
   useEffect(() => {
     setChatMode('influencer');
+    setSelectedForwardText(null);
     setSelectedContentFeedback('');
     setSelectedPreviewMediaUrl(null);
     setSelectedPreviewMediaType(null);
@@ -368,6 +369,23 @@ export default function ContentFeedbackDetailPage() {
       '',
     [briefIdFromQuery, data],
   );
+
+  useEffect(() => {
+    if (chatMode !== 'brand') setSelectedForwardText(null);
+  }, [chatMode]);
+
+  const handleForwardToInfluencer = async () => {
+    const text = selectedForwardText?.trim();
+    if (!text || !threadId) return;
+    try {
+      await sendInfluencerMessage({ message: text });
+      await influencerChatQuery.refetch();
+      setSelectedForwardText(null);
+      toast.success('Message sent to influencer chat.');
+    } catch (error) {
+      toast.error(mapAdminInfluencerMessageError(error));
+    }
+  };
 
   const handleSendMessage = async (textOrFile: string | File) => {
     if (textOrFile instanceof File) {
@@ -575,6 +593,10 @@ export default function ContentFeedbackDetailPage() {
         threadId={threadId}
         sendEnabled={sendEnabled}
         onSendMessage={handleSendMessage}
+        selectedForwardText={selectedForwardText}
+        onSelectForwardText={setSelectedForwardText}
+        onForwardToInfluencer={handleForwardToInfluencer}
+        isForwardingToInfluencer={isForwardingToInfluencer}
         onSeekToTime={handleSeekPreviewToTime}
         onSelectMedia={(url, type) => {
           setSelectedPreviewMediaUrl(url);
