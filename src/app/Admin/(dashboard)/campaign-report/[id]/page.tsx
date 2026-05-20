@@ -3,7 +3,7 @@
 import CampaignAllInfluencerHook from '@/src/routes/Admin/Hooks/feedback/CampaignInfluencer-hook';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { Influencer } from '@/src/types/Admin-Type/Feedback/influencer-type';
+import type { CampaignReportInfluencer } from '@/src/types/Admin-Type/Reports-tyes';
 import useCampaignAnalytics from '@/src/routes/Admin/Hooks/Report/analytics-hook';
 import useCampaignBriefStats from '@/src/routes/Admin/Hooks/Report/campaign-brief-stats-hook';
 import { useMemo, useState } from 'react';
@@ -19,12 +19,18 @@ import DemographicsAssetsDialog from '@/src/app/component/custom-component/Demog
 import { Play, ExternalLink, Trophy } from 'lucide-react';
 import useOverallCampaignOutcomes from '@/src/routes/Admin/Hooks/Report/overall-campaign-outcomes-hook';
 import NoInfluencerContentCard from '@/src/app/component/campaign-report/NoInfluencerContentCard';
+import CaptionBlock from '@/src/app/component/campaign-report/CaptionBlock';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
   return String(n);
+}
+
+function formatMetric(n: number | undefined): string {
+  if (n == null || Number.isNaN(n)) return 'N/A';
+  return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
 }
 
 function getEngagementLabel(rate: number) {
@@ -61,7 +67,6 @@ export default function InfluencerReportHeader() {
     refetch: refetchNegotiation,
   } = NegotiationAgreedByCampaignHook(id);
   const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
-
 
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
@@ -108,7 +113,7 @@ export default function InfluencerReportHeader() {
 
   const renderableInfluencerCount = useMemo(() => {
     const list = influencerData?.influencers ?? [];
-    return list.filter((inf: Influencer) => inf?.data?.profile && inf?.data?.reel).length;
+    return list.filter((inf) => inf?.data?.profile && inf?.data?.reel).length;
   }, [influencerData?.influencers]);
 
   const isInitialLoading = isLoading || isInfluencersLoading;
@@ -186,8 +191,7 @@ export default function InfluencerReportHeader() {
               </CustomButton>
             </div>
           </div>
-
-          {/* STATS */}
+          STATS
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-6 md:gap-3 lg:gap-4">
             <MiniCard label="Influencers" value={analytics.total_influencers} />
             <MiniCard label="Likes" value={analytics.total_likes} />
@@ -199,7 +203,6 @@ export default function InfluencerReportHeader() {
             />
             <MiniCard label="Engagement %" value={`${analytics.engagement_rate}%`} />
           </div>
-
           {/* TOP PERFORMER */}
           {top && (
             <div className="relative overflow-hidden rounded-2xl border border-border bg-primary/5 px-5 py-5 sm:min-h-26 sm:px-6 sm:py-6 dark:border-white/10 dark:bg-linear-to-r dark:from-[#FF3B8D]/8 dark:via-violet-600/6 dark:to-transparent">
@@ -247,9 +250,10 @@ export default function InfluencerReportHeader() {
       )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 lg:gap-8">
-        {influencerData?.influencers?.map((inf: Influencer, index: number) => {
+        {influencerData?.influencers?.map((inf: CampaignReportInfluencer, index: number) => {
           const profile = inf?.data?.profile;
           const reel = inf?.data?.reel;
+          const analytics = inf?.data?.analytics;
 
           if (!profile || !reel) return null;
 
@@ -306,8 +310,6 @@ export default function InfluencerReportHeader() {
                   )}
                 </div>
               </div>
-
-              {/* DETAILS */}
               <div className="flex min-h-0 min-w-0 flex-1 flex-col p-5 sm:p-6">
                 <div className="min-w-0 flex-1 space-y-4">
                   <div className="flex items-center gap-3">
@@ -344,7 +346,25 @@ export default function InfluencerReportHeader() {
                     <Stat label="Likes" value={formatNumber(reel.likes)} />
                     <Stat label="Comments" value={formatNumber(reel.comments)} />
                     <Stat label="Interactions" value={formatNumber(reel.interaction)} />
-                    {/* <Stat label="Views" value={formatNumber(reel.views)} /> */}
+                  </div>
+
+                  <div className="flex gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 dark:border-white/10 dark:bg-white/5">
+                    {(
+                      [
+                        { label: 'CPV', value: analytics?.CPV },
+                        { label: 'CPE', value: analytics?.CPE },
+                        { label: 'CPM', value: analytics?.CPM },
+                      ] as const
+                    ).map((item) => (
+                      <div key={item.label} className="min-w-0 flex-1 text-center">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground dark:text-white/40">
+                          {item.label}
+                        </p>
+                        <p className="mt-1 text-sm font-bold tabular-nums text-foreground dark:text-white">
+                          {formatMetric(item.value)}
+                        </p>
+                      </div>
+                    ))}
                   </div>
 
                   {/* ENGAGEMENT */}
@@ -363,9 +383,7 @@ export default function InfluencerReportHeader() {
 
                 {/* FOOTER — caption + actions */}
                 <div className="mt-auto shrink-0 space-y-4 border-t border-border pt-4 dark:border-white/10">
-                  <blockquote className="border-l-2 border-primaryButton/70 pl-3 text-xs italic leading-relaxed text-muted-foreground sm:text-sm dark:text-white/45">
-                    {reel.caption}
-                  </blockquote>
+                  <CaptionBlock caption={reel.caption} />
 
                   <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/70 p-3 ring-1 ring-inset ring-border dark:bg-black/25 dark:ring-white/5">
                     <a

@@ -93,6 +93,9 @@ export default function ClientCampaignReportPage() {
     return result;
   }, [campaigns, searchQuery, sortConfig, statusFilter]);
 
+  const isFilteredEmpty =
+    campaigns.length > 0 && filteredAndSortedCampaigns.length === 0;
+
   if (isLoading) return <TablePageWithFiltersSkeleton columns={9} />;
 
   return (
@@ -173,6 +176,15 @@ export default function ClientCampaignReportPage() {
       />
 
       <TableComponent<CompanyCampaignResponse>
+        emptyState={{
+          icon: LayoutList,
+          title: isFilteredEmpty
+            ? 'No campaigns match your filters'
+            : 'No campaign reports yet',
+          description: isFilteredEmpty
+            ? 'Try adjusting your search, status filter, or sort options to find campaigns.'
+            : 'When your campaigns have reportable influencer content, they will appear here so you can view analytics and insights.',
+        }}
         header={[
           'Campaign Name',
           'Followers',

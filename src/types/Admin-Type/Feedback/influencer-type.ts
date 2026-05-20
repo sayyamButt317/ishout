@@ -14,11 +14,22 @@ export interface Reel {
     media_url: string;
     likes: number;
     comments: number;
-    views: number | "N/A";
+    views: number | string;
     interaction: number;
     caption: string;
     timestamp: string;
 }
+
+export type ExtractReportRequest = {
+    campaign_id: string;
+    username: string;
+    url: string;
+};
+
+export type ExtractReportResponse = {
+    profile: Profile;
+    reel: Reel;
+};
 
 export interface InfluencerData {
     profile: Profile;

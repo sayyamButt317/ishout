@@ -5,7 +5,7 @@ import TableComponent from '@/src/app/component/CustomTable';
 import CompanyCampaignHook from '@/src/routes/Company/Hooks/companyCampaign.hook';
 import { useState } from 'react';
 import PageHeader from '@/src/app/component/PageHeader';
-import { LayoutGrid } from 'lucide-react';
+import { CheckCircle, LayoutGrid } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CompanyCampaignResponse } from '@/src/types/Admin-Type/Campaign-type';
@@ -34,6 +34,12 @@ export default function ClientInfluencersContentPage() {
         icon={<LayoutGrid className="size-5" />}
       />
       <TableComponent<CompanyCampaignResponse>
+        emptyState={{
+          icon: CheckCircle,
+          title: 'No approved content yet',
+          description:
+            'When influencers have approved content for your campaigns, they will appear here so you can view them.',
+        }}
         header={[
           'Campaign Name',
           'followers',

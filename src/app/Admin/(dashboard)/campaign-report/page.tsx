@@ -315,6 +315,7 @@ export default function CampaignReport() {
         heading="Delete Campaign"
         subheading="Are you sure you want to delete this campaign?"
         open={deleteOpen}
+        isDeleting={deleteCampaignHook.isPending}
         onClose={() => {
           setDeleteOpen(false);
           setSelectedCampaignId(null);

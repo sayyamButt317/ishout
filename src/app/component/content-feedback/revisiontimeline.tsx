@@ -19,7 +19,7 @@ import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store'
 import TimelineMarker from '@/src/app/component/content-feedback/TimelineMarker';
 import type { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
 
-export default function RevisionTimelineandVideoPlayer({
+export default function VideoPlayerWithRevisionTimeline({
   videoRef,
   selectedPreviewMediaUrl,
   selectedPreviewMediaType,

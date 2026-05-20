@@ -35,6 +35,12 @@ export default function ClientInfluencersContentPage() {
         icon={<MessageSquareMore className="size-5" />}
       />
       <TableComponent
+        emptyState={{
+          icon: MessageSquareMore,
+          title: 'No content Feedback Provided yet',
+          description:
+            'When influencers submit content for your campaigns, they will appear here so you can review and provide feedback.',
+        }}
         header={[
           'Campaign Name',
           'Followers',
