@@ -28,6 +28,10 @@ type FeedbackTabsSectionProps = {
   threadId?: string;
   sendEnabled: boolean;
   onSendMessage: (textOrFile: string | File) => Promise<void>;
+  selectedForwardText?: string | null;
+  onSelectForwardText?: (text: string | null) => void;
+  onForwardToInfluencer?: () => void | Promise<void>;
+  isForwardingToInfluencer?: boolean;
   onSeekToTime: (time: number) => void;
   onSelectMedia: (url: string, type: 'video' | 'image') => void;
   activeFeedbackId: string;
@@ -61,6 +65,10 @@ export default function FeedbackTabsSection({
   threadId,
   sendEnabled,
   onSendMessage,
+  selectedForwardText,
+  onSelectForwardText,
+  onForwardToInfluencer,
+  isForwardingToInfluencer,
   onSeekToTime,
   onSelectMedia,
   activeFeedbackId,
@@ -84,10 +92,11 @@ export default function FeedbackTabsSection({
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`shrink-0 whitespace-nowrap px-4 py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest transition-colors ${activeTab === tab
+                className={`shrink-0 whitespace-nowrap px-4 py-3 cursor-pointer text-[11px] font-bold uppercase tracking-widest transition-colors ${
+                  activeTab === tab
                     ? 'border-b-2 border-primaryButton cursor-pointer bg-white/5 text-white'
                     : 'text-white/40 hover:text-white/70'
-                  }`}
+                }`}
               >
                 <span className="inline-flex items-center gap-1.5">
                   <TabIcon className="size-3.5" />
@@ -99,8 +108,9 @@ export default function FeedbackTabsSection({
         )}
       </div>
       <div
-        className={`flex min-h-130 flex-col overflow-hidden lg:min-h-0 lg:flex-1 ${activeTab === 'chat' ? 'flex' : 'hidden'
-          }`}
+        className={`flex min-h-130 flex-col overflow-hidden lg:min-h-0 lg:flex-1 ${
+          activeTab === 'chat' ? 'flex' : 'hidden'
+        }`}
       >
         <ChatPanel
           className="h-full"
@@ -115,6 +125,14 @@ export default function FeedbackTabsSection({
           sendEnabled={sendEnabled}
           onSend={onSendMessage}
           bubbleMaxWidthClassName="max-w-[100%] lg:max-w-[80%]"
+          selectedForwardText={chatMode === 'brand' ? selectedForwardText : null}
+          onSelectForwardText={
+            chatMode === 'brand' ? onSelectForwardText : undefined
+          }
+          onForwardToInfluencer={
+            chatMode === 'brand' ? onForwardToInfluencer : undefined
+          }
+          isForwardingToInfluencer={isForwardingToInfluencer}
         />
       </div>
 
