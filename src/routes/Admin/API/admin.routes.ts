@@ -37,10 +37,12 @@ import type {
   ContentRevisionHistoryResponse,
   StoreInfluencerDemographicsRequest,
 } from '@/src/types/Admin-Type/Feedback-Type';
+import type { ExtractReportResponse } from '@/src/types/Admin-Type/Feedback/influencer-type';
 import { AdminInfluencerMessagesResponse } from '@/src/types/Admin-Type/Feedback/admin-influencer-messages-type';
 import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-messages-type';
 import type { CompanyNegotiationMediaResponse } from '@/src/types/Compnay/feeedback-content-type';
 import type {
+  CampaignInfluencerReportResponse,
   InfluencerDemographicsAssetsResponse,
   OverallCampaignOutcomesResponse,
 } from '@/src/types/Admin-Type/Reports-tyes';
@@ -664,17 +666,18 @@ export const ExtractDemoGraphics = async (
   username: string,
   url: string,
 ) => {
-  const response = await api.post(AdminENDPOINT.EXTRACTDEMOGRAPHICS, {
+  const response = await api.post<ExtractReportResponse>(AdminENDPOINT.EXTRACTDEMOGRAPHICS, {
     campaign_id,
     username,
     url,
   });
-
   return response.data;
 };
 
-export const ExtractAllInfluencerDemoGraphics = async (campaign_id: string) => {
-  const response = await api.get(
+export const ExtractAllInfluencerDemoGraphics = async (
+  campaign_id: string,
+): Promise<CampaignInfluencerReportResponse> => {
+  const response = await api.get<CampaignInfluencerReportResponse>(
     AdminENDPOINT.EXTRACTCAMPAIGNALLINFLUENCERREPORT(campaign_id),
   );
   return response.data;

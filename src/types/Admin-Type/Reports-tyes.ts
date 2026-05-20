@@ -1,4 +1,4 @@
-export class ReportsTyes {}
+import type { Profile, Reel } from '@/src/types/Admin-Type/Feedback/influencer-type';
 
 export interface OverallCampaignOutcomesResponse {
   total_influencers: number;
@@ -18,4 +18,37 @@ export interface InfluencerDemographicsAsset {
 
 export interface InfluencerDemographicsAssetsResponse {
   demographics: InfluencerDemographicsAsset[];
+}
+
+/** Per-reel cost metrics from campaign influencer report API */
+export interface InfluencerReelAnalytics {
+  CPV: number;
+  CPE: number;
+  CPM: number;
+}
+
+export interface CampaignReportProfile extends Profile {
+  pricing?: number;
+  engagementRate?: number;
+}
+
+export interface CampaignReportInfluencerData {
+  profile: CampaignReportProfile;
+  reel: Reel;
+  analytics?: InfluencerReelAnalytics;
+}
+
+export interface CampaignReportInfluencer {
+  username: string;
+  influencer_id?: string;
+  shortcode: string;
+  data: CampaignReportInfluencerData;
+  updated_at: string;
+}
+
+/** GET /admin/campaign-influncersReport?campaign_id=... */
+export interface CampaignInfluencerReportResponse {
+  campaign_id: string;
+  total: number;
+  influencers: CampaignReportInfluencer[];
 }

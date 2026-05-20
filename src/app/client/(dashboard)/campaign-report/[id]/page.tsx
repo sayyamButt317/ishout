@@ -3,7 +3,7 @@
 import CampaignAllInfluencerHook from '@/src/routes/Admin/Hooks/feedback/CampaignInfluencer-hook';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { Influencer } from '@/src/types/Admin-Type/Feedback/influencer-type';
+import type { CampaignReportInfluencer } from '@/src/types/Admin-Type/Reports-tyes';
 import useCampaignAnalytics from '@/src/routes/Admin/Hooks/Report/analytics-hook';
 import useCampaignBriefStats from '@/src/routes/Admin/Hooks/Report/campaign-brief-stats-hook';
 import useOverallCampaignOutcomes from '@/src/routes/Admin/Hooks/Report/overall-campaign-outcomes-hook';
@@ -26,6 +26,11 @@ function formatNumber(n: number | string): string {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
   return String(n);
+}
+
+function formatMetric(n: number | undefined): string {
+  if (n == null || Number.isNaN(n)) return 'N/A';
+  return n.toLocaleString(undefined, { maximumFractionDigits: 4 });
 }
 
 function getEngagementLabel(rate: number) {
@@ -233,9 +238,10 @@ export default function InfluencerReportHeader() {
       )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 lg:gap-8">
-        {influencerData?.influencers?.map((inf: Influencer, index: number) => {
+        {influencerData?.influencers?.map((inf: CampaignReportInfluencer, index: number) => {
           const profile = inf?.data?.profile;
           const reel = inf?.data?.reel;
+          const analytics = inf?.data?.analytics;
 
           if (!profile || !reel) return null;
 
@@ -331,6 +337,25 @@ export default function InfluencerReportHeader() {
                     <Stat label="Comments" value={formatNumber(reel.comments)} />
                     <Stat label="Interactions" value={formatNumber(reel.interaction)} />
                     <Stat label="Views" value={formatNumber(reel.views)} />
+                  </div>
+
+                  <div className="flex gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 dark:border-white/10 dark:bg-white/5">
+                    {(
+                      [
+                        { label: 'CPV', value: analytics?.CPV },
+                        { label: 'CPE', value: analytics?.CPE },
+                        { label: 'CPM', value: analytics?.CPM },
+                      ] as const
+                    ).map((item) => (
+                      <div key={item.label} className="min-w-0 flex-1 text-center">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground dark:text-white/40">
+                          {item.label}
+                        </p>
+                        <p className="mt-1 text-sm font-bold tabular-nums text-foreground dark:text-white">
+                          {formatMetric(item.value)}
+                        </p>
+                      </div>
+                    ))}
                   </div>
 
                   {/* ENGAGEMENT */}
