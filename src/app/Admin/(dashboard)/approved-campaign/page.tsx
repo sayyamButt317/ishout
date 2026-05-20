@@ -79,7 +79,7 @@ const ApprovedCampaignPage = () => {
           'Requested',
           'Status',
           'Created At',
-          'Delete',
+          ' ',
           ' ',
           ' ',
         ]}

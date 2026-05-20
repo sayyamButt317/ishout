@@ -38,14 +38,12 @@ const VideoPanel = forwardRef<HTMLVideoElement, VideoPanelProps>(function VideoP
 
   return (
     <div
-      className={`flex w-full flex-col rounded-lg border border-white/10 bg-slate-800 ${
-        hasTimeline ? 'shrink-0' : 'min-h-[min(350px,58vh)] flex-1 overflow-hidden'
-      }`}
+      className={`flex w-full flex-col rounded-lg border border-white/10 bg-slate-800 ${hasTimeline ? 'shrink-0' : 'min-h-[min(350px,58vh)] flex-1 overflow-hidden'
+        }`}
     >
       <div
-        className={`relative flex items-center justify-center overflow-hidden bg-black ${
-          hasTimeline ? 'min-h-[min(320px,42vh)]' : 'min-h-[min(480px,56vh)] flex-1'
-        }`}
+        className={`relative flex items-center justify-center overflow-hidden bg-black ${hasTimeline ? 'min-h-[min(320px,42vh)]' : 'min-h-[min(480px,56vh)] flex-1'
+          }`}
       >
         {selectedPreviewMediaUrl ? (
           isDataUrl(selectedPreviewMediaUrl) || (isValidMediaUrl(selectedPreviewMediaUrl) && selectedPreviewMediaType === 'image') ? (

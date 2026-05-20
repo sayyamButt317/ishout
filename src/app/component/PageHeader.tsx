@@ -103,7 +103,7 @@ export default function PageHeader({
                 </h1>
                 {badge != null && (
                   <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${badgeVariants[badge.variant ?? 'default']}`}
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-11 font-semibold uppercase tracking-wide ${badgeVariants[badge.variant ?? 'default']}`}
                   >
                     {badge.label}
                   </span>

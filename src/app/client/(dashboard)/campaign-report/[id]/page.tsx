@@ -19,6 +19,7 @@ import useInfluencerDemographicsAssets from '@/src/routes/Admin/Hooks/Report/inf
 import DemographicsAssetsDialog from '@/src/app/component/custom-component/DemographicsAssetsDialog';
 import { Play, ExternalLink, Trophy } from 'lucide-react';
 import CaptionBlock from '@/src/app/component/campaign-report/CaptionBlock';
+import NoInfluencerContentCard from '@/src/app/component/campaign-report/NoInfluencerContentCard';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -112,6 +113,10 @@ export default function InfluencerReportHeader() {
   }
 
   if (isLoading) return <AnalyticsDashboardSkeleton />;
+
+  if (influencerData?.influencers?.length === 0) {
+    return <NoInfluencerContentCard />;
+  }
 
   return (
     <div className="space-y-6">

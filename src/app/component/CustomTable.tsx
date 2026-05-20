@@ -7,6 +7,12 @@ import Image from 'next/image';
 import ImageUploadModal from './custom-component/image-upload-modal';
 import { useRouter } from 'next/navigation';
 import Stepper, { StepperCompatibleCampaign } from './stepper';
+import EmptyDataCard, { type EmptyDataCardProps } from './empty-data-card';
+
+export type TableEmptyState = Pick<
+  EmptyDataCardProps,
+  'title' | 'description' | 'icon' | 'className' | 'minHeight'
+>;
 
 interface TableProps<T extends StepperCompatibleCampaign = StepperCompatibleCampaign> {
   header: string[];
@@ -29,6 +35,7 @@ interface TableProps<T extends StepperCompatibleCampaign = StepperCompatibleCamp
   error?: {
     message: string;
   };
+  emptyState?: TableEmptyState;
 }
 
 export default function TableComponent<
@@ -52,6 +59,7 @@ export default function TableComponent<
   onPageChange,
   isLoading = false,
   error,
+  emptyState,
 }: TableProps<T>) {
   const router = useRouter();
 
@@ -90,9 +98,16 @@ export default function TableComponent<
 
   if (!subheader || subheader.length === 0) {
     return (
-      <div className="w-full min-h-100 flex items-center justify-center text-muted-foreground">
-        No data available
-      </div>
+      <EmptyDataCard
+        minHeight="min-h-100"
+        title={emptyState?.title ?? 'No data available'}
+        description={
+          emptyState?.description ??
+          'There are no records to display right now. Try adjusting your filters or check back later.'
+        }
+        icon={emptyState?.icon}
+        className={emptyState?.className}
+      />
     );
   }
 

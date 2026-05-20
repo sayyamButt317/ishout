@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Check, ChevronLeft, RefreshCw } from 'lucide-react';
+import { Check, ChevronLeft } from 'lucide-react';
 import useAuthStore from '@/src/store/AuthStore/authStore';
 import useAdminCompanyMessagesHook from '@/src/routes/Admin/Hooks/feedback/whatsapp-admin-company-hook';
 import useSendCompanyAdminMessage from '@/src/routes/Admin/Hooks/feedback/whatsapp-company-admin-send-message-hook';
@@ -13,11 +13,10 @@ import useUpdateApprovedContent from '@/src/routes/Company/Hooks/use-update-appr
 import useFeedbackIdMap from '@/src/routes/Admin/Hooks/feedback/use-feedback-id-map';
 import ChatMessagesList from '@/src/app/component/content-feedback/chat-messages-list';
 import ContentFeedbackBrandSidebar from '@/src/app/component/content-feedback-client/content-feedback-brand-sidebar';
-import type { NegotiationItem } from '@/src/types/Compnay/feeedback-content-type';
 import type { ChatMessage } from '@/src/types/Admin-Type/Content-type';
 import type { WhatsAppAdminCompanyApproveVideoResponse } from '@/src/types/Compnay/approved-video-type';
 import type { CompanyAdminMessageItem } from '@/src/types/Compnay/company-admin-messages-type';
-import VideoFeedbackWorkspace from '@/src/app/component/content-feedback/revisiontimeline';
+import VideoPlayerWithRevisionTimeline from '@/src/app/component/content-feedback/revisiontimeline';
 import { RevisionBox } from '@/src/app/component/content-feedback/revisionbox';
 import BrandFeedbackGuidelinesTab from '@/src/app/component/content-feedback-client/brand-feedback-guidelines-tab';
 import BrandFeedbackMediaTab from '@/src/app/component/content-feedback-client/brand-feedback-media-tab';
@@ -31,6 +30,8 @@ import {
   normalizeMediaUrlKey,
 } from '@/src/utils/content-feedback-chat';
 import { ContentFeedbackModalProps } from '@/src/types/Admin-Type/Feedback/content-card-type';
+import { RevisionMessage } from '@/src/app/component/content-feedback/revision-message';
+import CustomButton from '@/src/app/component/button';
 
 export default function ContentFeedbackModal({
   selectedCard,
@@ -94,7 +95,18 @@ export default function ContentFeedbackModal({
   const saveContentFeedbackMutation = useSaveContentFeedbackHook();
 
   const { setFeedbackId } = useFeedbackIdMap('brand-content-feedback-id-map');
-  const { setAll } = useRevisionMessageStore();
+  const { setAll, timestamps: revisionTimestamps } = useRevisionMessageStore();
+
+  const hasPendingRevisions = useMemo(
+    () =>
+      revisionTimestamps.some(
+        (item) =>
+          typeof item.time === 'number' &&
+          item.time >= 0 &&
+          Boolean(item.feedback?.trim()),
+      ),
+    [revisionTimestamps],
+  );
 
   const selectedMediaKey = selectedPreviewMediaUrl
     ? normalizeMediaUrlKey(selectedPreviewMediaUrl)
@@ -251,14 +263,65 @@ export default function ContentFeedbackModal({
     setAll,
   ]);
 
+
+  const approveContent = async (selectedPreviewMediaUrl: string) => {
+    if (
+      effectiveBrandThreadId &&
+      negotiationId &&
+      selectedPreviewMediaUrl
+    ) {
+      if (threadId && !isBrandAlreadyApproved) {
+        approveNegotiation({
+          thread_id: threadId,
+          payload: { Brand_approved: 'Approved' },
+        });
+      }
+      approveVideoMutation.mutate(
+        {
+          brand_thread_id: effectiveBrandThreadId,
+          campaign_id: campaignId ?? '',
+          negotiation_id: negotiationId,
+          video_url: selectedPreviewMediaUrl,
+          video_approve_brand: 'approved',
+        },
+        {
+          onSuccess: (
+            data: WhatsAppAdminCompanyApproveVideoResponse,
+            variables,
+          ) => {
+            const key = normalizeMediaUrlKey(variables.video_url);
+            if (
+              data?.success &&
+              (data.video_approve_brand ?? '').toLowerCase().trim() ===
+              'approved'
+            ) {
+              setBrandApprovedByVideoUrl((prev) => ({
+                ...prev,
+                [key]: true,
+              }));
+            }
+            setApproveVideoResponseByUrl((prev) => {
+              const next = { ...prev };
+              if (data.approved_content_id) {
+                next[key] = data;
+              } else {
+                delete next[key];
+              }
+              return next;
+            });
+          },
+        },
+      );
+    }
+  }
   if (!selectedCard) return null;
 
   return (
     <div
       className={
         asPage
-          ? 'h-full min-h-[calc(100vh-120px)] overflow-y-auto'
-          : 'fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4'
+          ? 'flex flex-col'
+          : 'fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-md'
       }
       onClick={asPage ? undefined : onClose}
     >
@@ -270,66 +333,109 @@ export default function ContentFeedbackModal({
         }`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex min-h-0 flex-1 flex-col border-b border-white/10 bg-[#0f1014] lg:border-r lg:border-b-0">
-          <div className="flex items-center justify-between border-b border-white/10 bg-black px-4 py-3">
-            <div className="flex items-center gap-3">
-              <button
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
+          <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden border-b border-white/10 bg-[#0f1014] lg:border-b-0 lg:border-r lg:border-white/10">
+            <div className="flex items-center gap-3 mb-2">
+              <CustomButton
                 onClick={onClose}
-                className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                className="bg-primaryButton cursor-pointer flex items-center gap-2 px-4 py-2 disabled:opacity-50"
               >
                 <ChevronLeft className="size-5" />
-              </button>
+                Back to list
+              </CustomButton>
+            </div>
+
+            <div className="flex flex-col">
               <div>
-                <h3 className="text-sm font-bold text-white">{selectedCard.title}</h3>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">
-                  {selectedCard.campaign} Campaign
-                </p>
+                <VideoPlayerWithRevisionTimeline
+                  key={selectedPreviewMediaUrl ?? 'no-media'}
+                  videoRef={videoRef}
+                  selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                  selectedPreviewMediaType={selectedPreviewMediaType}
+                  isPlaying={isPlaying}
+                  setIsPlaying={setIsPlaying}
+                  setSelectedVideoDuration={setSelectedVideoDuration}
+                  setSelectedVideoResolution={setSelectedVideoResolution}
+                  duration={selectedVideoDuration}
+                  markers={timelineMarkers}
+                  sendEnabled={!!effectiveBrandThreadId && !!negotiationId}
+                  contentUrl={selectedPreviewMediaUrl}
+                  onSubmitTimedFeedback={handleTimedFeedbackSubmit}
+                  onMarkerSeek={handleSeekPreviewToTime}
+                />
+              </div>
+
+              <div className="mt-auto shrink-0 border-t border-white/10 bg-yellow px-4 py-3">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex gap-6 rounded-xl border border-white/10 bg-white/5 px-3 py-2 sm:gap-8">
+                    <div>
+                      <p className="text-[10px] font-bold uppercase text-white/40">
+                        Duration
+                      </p>
+                      <p className="text-sm font-bold text-white">
+                        {selectedPreviewMediaType === 'video'
+                          ? formatVideoDuration(selectedVideoDuration)
+                          : '--:--'}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase text-white/40">
+                        Resolution
+                      </p>
+                      <p className="text-sm font-bold text-white">
+                        {selectedPreviewMediaType === 'video'
+                          ? selectedVideoResolution
+                          : 'Image'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <CustomButton
+                    onClick={() => {
+                      approveContent(selectedPreviewMediaUrl ?? '');
+                    }}
+                    disabled={
+                      isApproving ||
+                      approveVideoMutation.isPending ||
+                      !selectedPreviewMediaUrl ||
+                      !effectiveBrandThreadId ||
+                      isSelectedContentBrandApproved
+                    }
+                    className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Check className="size-4" />
+                    {selectedPreviewMediaType === 'image'
+                      ? 'Image Approve'
+                      : 'Video Approve'}
+                  </CustomButton>
+                </div>
+              </div>
+              <div className="flex flex-1 flex-col border-t border-white/10 px-3 py-3">
+                <RevisionMessage
+                  reviewSide="brand"
+                  negotiationId={negotiationId}
+                  threadId={threadId}
+                />
               </div>
             </div>
+
+
           </div>
-          <div className="relative w-full lg:flex lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:p-2">
-            <div className="aspect-9/16 w-full lg:aspect-auto lg:flex lg:flex-1">
-              <VideoFeedbackWorkspace
-                videoRef={videoRef}
-                selectedPreviewMediaUrl={selectedPreviewMediaUrl}
-                selectedPreviewMediaType={selectedPreviewMediaType}
-                isPlaying={isPlaying}
-                setIsPlaying={setIsPlaying}
-                setSelectedVideoDuration={setSelectedVideoDuration}
-                setSelectedVideoResolution={setSelectedVideoResolution}
-                duration={selectedVideoDuration}
-                markers={timelineMarkers}
-                sendEnabled={!!effectiveBrandThreadId && !!negotiationId}
-                contentUrl={selectedPreviewMediaUrl}
-                onSubmitTimedFeedback={handleTimedFeedbackSubmit}
-                onMarkerSeek={handleSeekPreviewToTime}
-              />
+          <div className="flex min-h-0 w-full flex-col overflow-hidden border-l border-white/10 bg-[#111217] lg:max-w-md lg:flex-1">
+            <div className="border-b border-white/10 px-5 py-3">
+              <h4 className="text-sm font-semibold text-white">Conversation</h4>
+              <p className="text-[11px] text-white/50">Brand and admin feedback thread</p>
             </div>
-          </div>
-          <div className="flex items-center justify-between border-t border-white/10 bg-black/30 p-4">
-            <div className="flex gap-8 rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-              <div>
-                <p className="text-[10px] font-bold uppercase text-white/40">Duration</p>
-                <p className="text-sm font-bold text-white">
-                  {selectedPreviewMediaType === 'video'
-                    ? formatVideoDuration(selectedVideoDuration)
-                    : '--:--'}
-                </p>
-              </div>
-              <div>
-                <p className="text-[10px] font-bold uppercase text-white/40">
-                  Resolution
-                </p>
-                <p className="text-sm font-bold text-white">
-                  {selectedPreviewMediaType === 'video'
-                    ? selectedVideoResolution
-                    : 'Image'}
-                </p>
-              </div>
-            </div>
-            <div className="flex flex-col items-end gap-2 text-white/50">
-              <div className="flex items-center gap-2">
+            <div className="grid grid-cols-5 gap-1 border-b border-white/10 bg-black/20 px-2 py-2">
+              {[
+                ['chat', 'Chat'],
+                ['revisions', 'Revisions'],
+                ['brandfeedback', 'Feedback'],
+                ['media', 'Media'],
+                ['guidelines', 'Guidelines'],
+              ].map(([key, label]) => (
                 <button
+                  key={key}
                   type="button"
                   onClick={() => {
                     if (
@@ -388,14 +494,14 @@ export default function ContentFeedbackModal({
                     !effectiveBrandThreadId ||
                     isSelectedContentBrandApproved
                   }
-                  className="flex items-center justify-center gap-2 rounded-xl bg-(--color-primaryButton) px-4 py-2 text-sm font-bold text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                  className={`rounded-lg px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition ${activeTab === key
+                    ? 'bg-violet-500/20 text-violet-200'
+                    : 'text-white/55 hover:bg-white/5 hover:text-white'
+                    }`}
                 >
-                  <Check className="size-4" />
-                  {selectedPreviewMediaType === 'image'
-                    ? 'Image Approve'
-                    : 'Video Approve'}
+                  {label}
                 </button>
-              </div>
+              ))}
             </div>
           </div>
         </div>
@@ -436,53 +542,60 @@ export default function ContentFeedbackModal({
             ))}
           </div>
 
-          {activeTab === 'chat' && (
-            <>
-              <div className="flex-1 space-y-4 overflow-y-auto p-5">
-                <ChatMessagesList
-                  messages={chatData?.messages}
-                  isLoading={chatLoading}
-                  isRightMessage={(msg) => msg.sender !== 'ADMIN'}
-                  roleLabels={{ right: 'Brand', left: 'Admin' }}
-                  onSelectMedia={(url, type) => {
-                    setSelectedPreviewMediaUrl(normalizeMediaUrlKey(url));
-                    setSelectedPreviewMediaType(type);
-                    setIsPlaying(false);
-                  }}
-                />
-              </div>
-              <div className="space-y-4 border-t border-white/10 bg-black/30 p-5">
-                <div className="relative">
-                  <textarea
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    placeholder="Type your feedback..."
-                    className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
-                  />
-                  <button
-                    onClick={async () => {
-                      if (!feedback.trim()) return;
-                      setIsSending(true);
-                      try {
-                        await sendMessage(feedback);
-                        setFeedback('');
-                        await refetchChat();
-                      } catch (error) {
-                        console.error('Failed to send message:', error);
-                      } finally {
-                        setIsSending(false);
-                      }
+            {activeTab === 'chat' && (
+              <>
+                <div className="flex-1 space-y-4 overflow-y-auto p-5">
+                  <ChatMessagesList
+                    messages={chatData?.messages}
+                    isLoading={chatLoading}
+                    isRightMessage={(msg) => msg.sender !== 'ADMIN'}
+                    roleLabels={{ right: 'Brand', left: 'Admin' }}
+                    onSelectMedia={(url, type) => {
+                      setSelectedPreviewMediaUrl(normalizeMediaUrlKey(url));
+                      setSelectedPreviewMediaType(type);
+                      setIsPlaying(false);
                     }}
-                    disabled={isSending}
-                    className={`absolute bottom-4 right-4 flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors
-${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'}`}
-                  >
-                    Send
-                  </button>
+                  />
                 </div>
+                <div className="space-y-4 border-t border-white/10 bg-black/30 p-5">
+                  <div className="relative">
+                    <textarea
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      placeholder="Type your feedback..."
+                      className="h-24 w-full resize-none rounded-xl border border-white/10 bg-white/5 p-4 pr-12 text-sm text-white placeholder:text-white/40 focus:border-primaryButton focus:outline-none focus:ring-1 focus:ring-primaryButton"
+                    />
+                    <button
+                      onClick={async () => {
+                        if (!feedback.trim()) return;
+                        setIsSending(true);
+                        try {
+                          await sendMessage(feedback);
+                          setFeedback('');
+                          await refetchChat();
+                        } catch (error) {
+                          console.error('Failed to send message:', error);
+                        } finally {
+                          setIsSending(false);
+                        }
+                      }}
+                      disabled={isSending}
+                      className={`absolute bottom-4 right-4 flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors
+${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'}`}
+                    >
+                      Send
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+
+
+            {activeTab === 'revisions' && (
+              <div className="flex-1 overflow-y-auto p-3">
+                <RevisionBox reviewSide="brand" negotiationId={negotiationId} threadId={threadId} />
               </div>
-            </>
-          )}
+            )}
 
           {activeTab === 'revisions' && (
             <div className="flex-1 overflow-y-auto p-3">
@@ -502,37 +615,20 @@ ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-prim
                 saveContentFeedbackMutation={saveContentFeedbackMutation}
                 selectedPreviewMediaUrl={selectedPreviewMediaUrl}
                 negotiationId={negotiationId}
-                contentId={selectedCompanyMessageContentId}
-                setFeedbackId={setFeedbackId}
-                activeFeedbackId={selectedCompanyMessageContentId}
-                refetchBrandFeedback={refetchBrandFeedback}
-                brandFeedbackData={brandFeedbackData}
-                selectedMediaKey={selectedMediaKey}
-                approveVideoResponseByUrl={approveVideoResponseByUrl}
-                approvedCopyDraft={approvedCopyDraft}
-                setApprovedCopyDraftField={setApprovedCopyDraftField}
-                setApprovedCopyDraftByUrl={setApprovedCopyDraftByUrl}
-                updateApprovedContentMutation={updateApprovedContentMutation}
+                onSelectMedia={(url, type) => {
+                  setSelectedPreviewMediaUrl(url);
+                  setSelectedPreviewMediaType(type);
+                  setIsPlaying(false);
+                }}
               />
-            </div>
-          )}
+            )}
 
-          {activeTab === 'media' && (
-            <BrandFeedbackMediaTab
-              negotiationId={negotiationId}
-              onSelectMedia={(url, type) => {
-                setSelectedPreviewMediaUrl(url);
-                setSelectedPreviewMediaType(type);
-                setIsPlaying(false);
-              }}
-            />
-          )}
-
-          {activeTab === 'guidelines' && (
-            <div className="flex-1 overflow-y-auto p-2">
-              <BrandFeedbackGuidelinesTab briefId={guidelinesBriefId} />
-            </div>
-          )}
+            {activeTab === 'guidelines' && (
+              <div className="flex-1 overflow-y-auto p-2">
+                <BrandFeedbackGuidelinesTab briefId={guidelinesBriefId} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
