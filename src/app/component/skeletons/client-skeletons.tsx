@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export function ClientDashboardHomeSkeleton() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays p-6">
+      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-slate-200 dark:bg-section-overlays p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
             <Skeleton className="h-10 w-10 shrink-0 rounded-lg bg-slate-200 dark:bg-white/8" />
@@ -25,7 +25,7 @@ export function ClientDashboardHomeSkeleton() {
 export function ChooseCampaignSkeleton() {
   return (
     <div className="w-full space-y-6 animate-in fade-in duration-300">
-      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays p-6">
+      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-slate-100 dark:bg-section-overlays p-6">
         <div className="flex items-start gap-3">
           <Skeleton className="h-10 w-10 shrink-0 rounded-lg bg-slate-200 dark:bg-white/8" />
           <div className="space-y-2">
@@ -63,7 +63,7 @@ export function ChooseCampaignSkeleton() {
 export function StudioLibrarySkeleton({ cards = 6 }: { cards?: number }) {
   return (
     <div className="space-y-6 animate-in fade-in duration-300 font-sans">
-      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays p-6">
+      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-slate-100 dark:bg-section-overlays p-6">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start gap-3">
             <Skeleton className="h-10 w-10 shrink-0 rounded-lg bg-slate-200 dark:bg-white/8" />
@@ -89,7 +89,7 @@ export function StudioLibrarySkeleton({ cards = 6 }: { cards?: number }) {
         {Array.from({ length: cards }).map((_, i) => (
           <div
             key={i}
-            className="overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f12] shadow-lg"
+            className="overflow-hidden rounded-2xl border border-white/10 bg-slate-100 dark:bg-[#0f0f12] shadow-lg"
           >
             <Skeleton className="aspect-video w-full rounded-none bg-slate-200 dark:bg-white/6" />
             <div className="space-y-3 p-4">
@@ -111,7 +111,7 @@ export function StudioLibrarySkeleton({ cards = 6 }: { cards?: number }) {
 export function ClientProfileSkeleton() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays p-6">
+      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-slate-100 dark:bg-section-overlays p-6">
         <div className="flex items-start gap-3">
           <Skeleton className="h-10 w-10 shrink-0 rounded-lg bg-slate-200 dark:bg-white/8" />
           <div className="space-y-2">
@@ -155,7 +155,7 @@ export function ClientProfileSkeleton() {
 export function CampaignBriefGeneratorSkeleton() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays p-6">
+      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-slate-100 dark:bg-section-overlays p-6">
         <div className="flex items-start gap-3">
           <Skeleton className="h-10 w-10 shrink-0 rounded-lg bg-slate-200 dark:bg-white/8" />
           <div className="space-y-2">
@@ -165,12 +165,12 @@ export function CampaignBriefGeneratorSkeleton() {
         </div>
       </div>
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="space-y-4 rounded-2xl border border-white/10 bg-black/25 p-6">
+        <div className="space-y-4 rounded-2xl border border-white/10 bg-slate-100 dark:bg-black/25 p-6">
           <Skeleton className="h-4 w-32 bg-slate-200 dark:bg-white/8" />
           <Skeleton className="h-36 w-full rounded-xl bg-slate-100 dark:bg-white/5" />
           <Skeleton className="h-11 w-full rounded-xl bg-slate-200 dark:bg-white/8 sm:max-w-xs" />
         </div>
-        <div className="min-h-[280px] space-y-4 rounded-2xl border border-white/10 bg-black/20 p-6">
+        <div className="min-h-70 space-y-4 rounded-2xl border border-white/10 bg-slate-100 dark:bg-black/20 p-6">
           <Skeleton className="h-4 w-40 bg-slate-200 dark:bg-white/8" />
           <Skeleton className="h-3 w-full bg-slate-100 dark:bg-white/5" />
           <Skeleton className="h-3 w-full bg-slate-100 dark:bg-white/5" />
@@ -229,7 +229,7 @@ export function ClientBriefsListSkeleton({ items = 6 }: { items?: number }) {
 export function ApprovedContentGridSkeleton({ cards = 6 }: { cards?: number }) {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays p-6">
+      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-slate-100 dark:bg-section-overlays p-6">
         <div className="flex items-start gap-3">
           <Skeleton className="h-10 w-10 shrink-0 rounded-lg bg-slate-200 dark:bg-white/8" />
           <div className="space-y-2">
@@ -242,7 +242,7 @@ export function ApprovedContentGridSkeleton({ cards = 6 }: { cards?: number }) {
         {Array.from({ length: cards }).map((_, i) => (
           <div
             key={i}
-            className="overflow-hidden rounded-2xl border border-white/10 bg-[#0f0f10] p-4 space-y-3"
+            className="overflow-hidden rounded-2xl border border-white/10 bg-slate-100 dark:bg-[#0f0f10] p-4 space-y-3"
           >
             <Skeleton className="aspect-video w-full rounded-xl bg-slate-200 dark:bg-white/6" />
             <Skeleton className="h-4 w-2/3 bg-slate-200 dark:bg-white/8" />
@@ -258,7 +258,7 @@ export function ApprovedContentGridSkeleton({ cards = 6 }: { cards?: number }) {
 export function ClientPlaceholderPageSkeleton() {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
-      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-section-overlays p-6">
+      <div className="relative overflow-hidden rounded-2xl border border-white/6 bg-slate-100 dark:bg-section-overlays p-6">
         <div className="space-y-2">
           <Skeleton className="h-7 w-40 bg-slate-200 dark:bg-white/8" />
           <Skeleton className="h-4 w-56 bg-slate-100 dark:bg-white/5" />
