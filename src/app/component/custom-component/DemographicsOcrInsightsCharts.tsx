@@ -106,9 +106,25 @@ export default function DemographicsOcrInsightsCharts({
   );
   const extra = useMemo(() => data.extra ?? {}, [data.extra]);
   const gender = data.demographics?.gender_split;
+  const ageGroups = data.demographics?.age_groups;
 
   const malePct = parsePercentValue(gender?.male);
   const femalePct = parsePercentValue(gender?.female);
+
+  const ageGroupData = useMemo(() => {
+    if (!ageGroups) return [];
+    return Object.entries(ageGroups)
+      .map(([name, label]) => ({
+        name,
+        value: parsePercentValue(label),
+        label: String(label ?? ''),
+      }))
+      .filter((d) => d.value > 0);
+  }, [ageGroups]);
+
+  const ageGroupConfig = {
+    value: { label: 'Share', color: ACCENT },
+  } satisfies ChartConfig;
   const followerPct = parsePercentValue(metrics.followers_percent);
   const nonFollowerPct = parsePercentValue(metrics.non_followers_percent);
 
@@ -198,6 +214,7 @@ export default function DemographicsOcrInsightsCharts({
     engagementData.length > 0 ||
     viewSources.length > 0 ||
     genderData.length > 0 ||
+    ageGroupData.length > 0 ||
     followerData.length > 0 ||
     skipRate > 0 ||
     funnelData.length > 1;
@@ -315,6 +332,41 @@ export default function DemographicsOcrInsightsCharts({
                 </span>
               ))}
             </div>
+          </section>
+        ) : null}
+
+        {ageGroupData.length > 0 ? (
+          <section className={cn(CHART_SHELL, 'min-h-0')}>
+            <ChartSectionTitle icon={Users} title="Age groups" subtitle="Audience age distribution" />
+            <ChartContainer
+              config={ageGroupConfig}
+              className="h-[260px] w-full aspect-auto! max-w-full [&_.recharts-cartesian-axis-tick_text]:fill-white/55"
+            >
+              <BarChart
+                accessibilityLayer
+                data={ageGroupData}
+                margin={{ left: 4, right: 16, top: 8, bottom: 8 }}
+              >
+                <XAxis
+                  dataKey="name"
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fontSize: 10 }}
+                />
+                <YAxis type="number" domain={[0, 100]} tickFormatter={(v) => `${v}%`} hide />
+                <ChartTooltip
+                  cursor={false}
+                  content={
+                    <ChartTooltipContent
+                      formatter={(value, _n, item) => (
+                        <span className="text-white">{item?.payload?.label ?? `${value}%`}</span>
+                      )}
+                    />
+                  }
+                />
+                <Bar dataKey="value" radius={[6, 6, 0, 0]} barSize={28} fill="var(--color-value)" />
+              </BarChart>
+            </ChartContainer>
           </section>
         ) : null}
 

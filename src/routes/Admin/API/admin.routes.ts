@@ -46,6 +46,7 @@ import type {
   InfluencerDemographicsAssetsResponse,
   OverallCampaignOutcomesResponse,
 } from '@/src/types/Admin-Type/Reports-tyes';
+import type { StoredInsightsRecord } from '@/src/types/Admin-Type/demographics-ocr-type';
 import type {
   AdminAllCompaniesNamesResponse,
   AdminCampaignBriefApiResponse,
@@ -813,5 +814,12 @@ export const AddInfluencerByUrlApi = async (campaign_id: string, username: strin
     campaign_id,
     username,
   });
+  return response.data;
+};
+
+export const ExtractInsightsApi = async (campaign_id: string, influencer_id: string) => {
+  const response = await api.get<StoredInsightsRecord>(
+    AdminENDPOINT.ADMIN_EXTRACT_INSIGHTS(campaign_id, influencer_id),
+  );
   return response.data;
 };
