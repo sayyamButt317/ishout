@@ -744,8 +744,16 @@ export const AdminCampaignBriefDeliverablesApi = async (
   return response.data;
 };
 
-export const DemographicsOcrApi = async (image_url: string[]) => {
-  const response = await api.post(AdminENDPOINT.ADMIN_DEMOGRAPHICS_OCR, { image_url });
+export const DemographicsOcrApi = async (
+  image_url: string[],
+  campaign_id: string,
+  influencer_id: string,
+) => {
+  const response = await api.post(AdminENDPOINT.ADMIN_DEMOGRAPHICS_OCR, {
+    image_url,
+    campaign_id,
+    influencer_id,
+  });
   return response.data;
 };
 

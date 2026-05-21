@@ -13,6 +13,8 @@ interface DemographicsAssetsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   imageUrls: string[];
+  campaign_id: string;
+  influencer_id: string;
   isLoading?: boolean;
   username?: string | null;
   onExtractOcr?: () => void;
@@ -23,6 +25,8 @@ export default function DemographicsAssetsDialog({
   open,
   onOpenChange,
   imageUrls,
+  campaign_id,
+  influencer_id,
   isLoading = false,
   username,
   onExtractOcr,
@@ -51,13 +55,17 @@ export default function DemographicsAssetsDialog({
       toast.error('No demographics images to process');
       return;
     }
-    demographicsOcrMutation(urls, {
+    if (!campaign_id || !influencer_id) {
+      toast.error('Missing campaign or influencer context for OCR');
+      return;
+    }
+    demographicsOcrMutation({ image_url: urls, campaign_id, influencer_id }, {
       onSuccess: (payload) => {
         setOcrResult(payload as DemographicsOcrResponse);
         toast.success('Demographics data extracted from images');
       },
     });
-  }, [onExtractOcr, imageUrls, demographicsOcrMutation]);
+  }, [onExtractOcr, imageUrls, campaign_id, influencer_id, demographicsOcrMutation]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
