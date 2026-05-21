@@ -22,7 +22,13 @@ import BrandFeedbackGuidelinesTab from '@/src/app/component/content-feedback-cli
 import BrandFeedbackMediaTab from '@/src/app/component/content-feedback-client/brand-feedback-media-tab';
 import useRevisionMessageStore from '@/src/store/Feedback/revisionmessage-store';
 import type { TimelineMarkerData } from '@/src/types/Admin-Type/timeline-type';
-import { extractTimelineMarkersFromMessages, formatVideoDuration, isImageUrl, isVideoUrl, normalizeMediaUrlKey } from '@/src/utils/content-feedback-chat';
+import {
+  extractTimelineMarkersFromMessages,
+  formatVideoDuration,
+  isImageUrl,
+  isVideoUrl,
+  normalizeMediaUrlKey,
+} from '@/src/utils/content-feedback-chat';
 import { ContentFeedbackModalProps } from '@/src/types/Admin-Type/Feedback/content-card-type';
 import { RevisionMessage } from '@/src/app/component/content-feedback/revision-message';
 import CustomButton from '@/src/app/component/button';
@@ -32,7 +38,7 @@ export default function ContentFeedbackModal({
   onClose,
   asPage = false,
 }: ContentFeedbackModalProps) {
-  const { company_user_id } = useAuthStore();
+  const { user_id } = useAuthStore();
 
   const [feedback, setFeedback] = useState('');
   const [selectedContentFeedback, setSelectedContentFeedback] = useState('');
@@ -81,13 +87,12 @@ export default function ContentFeedbackModal({
     isLoading: chatLoading,
     refetch: refetchChat,
   } = useAdminCompanyMessagesHook(effectiveBrandThreadId, negotiationId, 1, 20);
-  const { sendMessage } = useSendCompanyAdminMessage(company_user_id, negotiationId);
+  const { sendMessage } = useSendCompanyAdminMessage(user_id, negotiationId);
   const { mutate: approveNegotiation, isPending: isApproving } =
     useAdminNegotiationApprovalStatus();
   const approveVideoMutation = useWhatsAppAdminCompanyApproveVideo();
   const updateApprovedContentMutation = useUpdateApprovedContent();
   const saveContentFeedbackMutation = useSaveContentFeedbackHook();
-
 
   const { setFeedbackId } = useFeedbackIdMap('brand-content-feedback-id-map');
   const { setAll, timestamps: revisionTimestamps } = useRevisionMessageStore();
@@ -127,7 +132,7 @@ export default function ContentFeedbackModal({
     return chatData.messages.some((msg: ChatMessage) => {
       const contentUrl =
         typeof msg.message === 'string' &&
-          (isVideoUrl(msg.message) || isImageUrl(msg.message))
+        (isVideoUrl(msg.message) || isImageUrl(msg.message))
           ? msg.message
           : (msg.video_url ?? '');
       const brandOk = (msg.video_approve_brand ?? '').toLowerCase() === 'approved';
@@ -199,8 +204,8 @@ export default function ContentFeedbackModal({
   const approvedCopyDraft =
     selectedMediaKey != null
       ? (approvedCopyDraftByUrl[selectedMediaKey] ?? {
-        hashtags: '',
-      })
+          hashtags: '',
+        })
       : { hashtags: '' };
   const setApprovedCopyDraftField = (field: 'hashtags', value: string) => {
     if (!selectedMediaKey) return;
@@ -258,13 +263,8 @@ export default function ContentFeedbackModal({
     setAll,
   ]);
 
-
   const approveContent = async (selectedPreviewMediaUrl: string) => {
-    if (
-      effectiveBrandThreadId &&
-      negotiationId &&
-      selectedPreviewMediaUrl
-    ) {
+    if (effectiveBrandThreadId && negotiationId && selectedPreviewMediaUrl) {
       if (threadId && !isBrandAlreadyApproved) {
         approveNegotiation({
           thread_id: threadId,
@@ -280,15 +280,11 @@ export default function ContentFeedbackModal({
           video_approve_brand: 'approved',
         },
         {
-          onSuccess: (
-            data: WhatsAppAdminCompanyApproveVideoResponse,
-            variables,
-          ) => {
+          onSuccess: (data: WhatsAppAdminCompanyApproveVideoResponse, variables) => {
             const key = normalizeMediaUrlKey(variables.video_url);
             if (
               data?.success &&
-              (data.video_approve_brand ?? '').toLowerCase().trim() ===
-              'approved'
+              (data.video_approve_brand ?? '').toLowerCase().trim() === 'approved'
             ) {
               setBrandApprovedByVideoUrl((prev) => ({
                 ...prev,
@@ -308,7 +304,7 @@ export default function ContentFeedbackModal({
         },
       );
     }
-  }
+  };
   if (!selectedCard) return null;
 
   return (
@@ -321,10 +317,11 @@ export default function ContentFeedbackModal({
       onClick={asPage ? undefined : onClose}
     >
       <div
-        className={`flex h-full min-h-0 w-full flex-col overflow-hidden bg-(--color-background) ${asPage
-          ? 'rounded-none border-0 shadow-none'
-          : 'max-h-[90vh] max-w-7xl rounded-2xl border border-white/10 shadow-2xl'
-          }`}
+        className={`flex h-full min-h-0 w-full flex-col overflow-hidden bg-(--color-background) ${
+          asPage
+            ? 'rounded-none border-0 shadow-none'
+            : 'max-h-[90vh] max-w-7xl rounded-2xl border border-white/10 shadow-2xl'
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:flex-row">
@@ -412,8 +409,6 @@ export default function ContentFeedbackModal({
                 />
               </div>
             </div>
-
-
           </div>
           <div className="flex min-h-0 w-full flex-col overflow-hidden border-l border-white/10 bg-[#111217] lg:max-w-md lg:flex-1">
             <div className="border-b border-white/10 px-5 py-3">
@@ -434,17 +429,18 @@ export default function ContentFeedbackModal({
                   onClick={() =>
                     setActiveTab(
                       key as
-                      | 'chat'
-                      | 'revisions'
-                      | 'brandfeedback'
-                      | 'media'
-                      | 'guidelines',
+                        | 'chat'
+                        | 'revisions'
+                        | 'brandfeedback'
+                        | 'media'
+                        | 'guidelines',
                     )
                   }
-                  className={`rounded-lg px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition ${activeTab === key
-                    ? 'bg-violet-500/20 text-violet-200'
-                    : 'text-white/55 hover:bg-white/5 hover:text-white'
-                    }`}
+                  className={`rounded-lg px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition ${
+                    activeTab === key
+                      ? 'bg-violet-500/20 text-violet-200'
+                      : 'text-white/55 hover:bg-white/5 hover:text-white'
+                  }`}
                 >
                   {label}
                 </button>
@@ -499,13 +495,15 @@ ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-prim
               </>
             )}
 
-
             {activeTab === 'revisions' && (
               <div className="flex-1 overflow-y-auto p-3">
-                <RevisionBox reviewSide="brand" negotiationId={negotiationId} threadId={threadId} />
+                <RevisionBox
+                  reviewSide="brand"
+                  negotiationId={negotiationId}
+                  threadId={threadId}
+                />
               </div>
             )}
-
 
             {activeTab === 'brandfeedback' && (
               <div className="flex-1 overflow-y-auto p-3">

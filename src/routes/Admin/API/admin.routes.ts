@@ -507,12 +507,12 @@ export const WhatsAppAdminCompanyMessagesApi = async (
 };
 
 export const WhatsAppCompanyAdminSendHumanMessageApi = async (
-  User_id: string,
+  user_id: string,
   message: string,
   negotiation_id: string,
 ) => {
   const response = await api.post(
-    AdminENDPOINT.ADMIN_WHATSAPP_COMPANY_ADMIN_SEND_HUMAN_MESSAGE(User_id),
+    AdminENDPOINT.ADMIN_WHATSAPP_COMPANY_ADMIN_SEND_HUMAN_MESSAGE(user_id),
     { message, negotiation_id },
   );
   return response.data;
@@ -660,17 +660,19 @@ export const SendRevisionMessage = async (data: SendRevisionPayload) => {
   return response.data;
 };
 
-
 export const ExtractDemoGraphics = async (
   campaign_id: string,
   username: string,
   url: string,
 ) => {
-  const response = await api.post<ExtractReportResponse>(AdminENDPOINT.EXTRACTDEMOGRAPHICS, {
-    campaign_id,
-    username,
-    url,
-  });
+  const response = await api.post<ExtractReportResponse>(
+    AdminENDPOINT.EXTRACTDEMOGRAPHICS,
+    {
+      campaign_id,
+      username,
+      url,
+    },
+  );
   return response.data;
 };
 
@@ -788,12 +790,13 @@ export const AdminCreateCampaignBriefApi = async (
   return response.data;
 };
 
-export const AdminAllCompaniesNamesApi = async (): Promise<AdminAllCompaniesNamesResponse> => {
-  const response = await api.get<AdminAllCompaniesNamesResponse>(
-    AdminENDPOINT.ADMIN_ALL_COMPANIES_NAMES,
-  );
-  return response.data;
-};
+export const AdminAllCompaniesNamesApi =
+  async (): Promise<AdminAllCompaniesNamesResponse> => {
+    const response = await api.get<AdminAllCompaniesNamesResponse>(
+      AdminENDPOINT.ADMIN_ALL_COMPANIES_NAMES,
+    );
+    return response.data;
+  };
 
 export const AdminCreateCampaignApi = async (
   payload: AdminCreateCampaignRequest,
@@ -805,10 +808,7 @@ export const AdminCreateCampaignApi = async (
   return response.data;
 };
 
-export const AddInfluencerByUrlApi = async (
-  campaign_id: string,
-  username: string
-) => {
+export const AddInfluencerByUrlApi = async (campaign_id: string, username: string) => {
   const response = await api.post(AdminENDPOINT.ADMIN_ADD_INFLUENCER_BY_URL, {
     campaign_id,
     username,
