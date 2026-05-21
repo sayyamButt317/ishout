@@ -7,6 +7,10 @@ import type {
   InfluencerSummary,
   CampaignDemographicPreview,
 } from '@/src/types/Admin-Type/Campaign-type';
+import { InfluencerReportInsightsPage } from './reportinsights';
+import type { ReportInsightsByUsername } from './reportinsights';
+
+export type { ReportInsightsByUsername };
 
 function formatCount(n: number | null | undefined): string {
   if (n == null) return '—';
@@ -28,9 +32,9 @@ interface DemographicsSectionProps {
     influencers?: InfluencerSummary[];
     demographics?: CampaignDemographicPreview[];
   };
+  insightsByUsername?: ReportInsightsByUsername;
 }
 
-/** API may use alternate keys; keep PDF section working. */
 function pickInfluencerList(
   summaryData: DemographicsSectionProps['summaryData'],
 ): InfluencerSummary[] {
@@ -87,14 +91,20 @@ function DemographicsPhoneFrame({ src }: { src: string }) {
   );
 }
 
-/** First page: title, avatar (proxied URL), Analytics block. Further pages: demographics images, 3 per page, centered. */
-function InfluencerPages({ inf }: { inf: InfluencerSummary }) {
+function InfluencerPages({
+  inf,
+  insightsByUsername,
+}: {
+  inf: InfluencerSummary;
+  insightsByUsername?: ReportInsightsByUsername;
+}) {
   const profileSrc = pdfProxyImageSrc(inf.profile_image);
   const analytics = inf.analytics;
   const demos = (inf.demographics ?? []).filter((d) => d.image_url?.trim());
   const demoChunks = chunkArray(demos, 3);
 
   const displayName = inf.profile_name?.trim() || inf.username;
+  const insightsData = insightsByUsername?.[inf.username];
 
   return (
     <>
@@ -191,18 +201,33 @@ function InfluencerPages({ inf }: { inf: InfluencerSummary }) {
           </View>
         </Page>
       ))}
+
+      {insightsData ? (
+        <InfluencerReportInsightsPage
+          username={inf.username}
+          displayName={displayName}
+          data={insightsData}
+        />
+      ) : null}
     </>
   );
 }
 
-export default function DemographicsSection({ summaryData }: DemographicsSectionProps) {
+export default function DemographicsSection({
+  summaryData,
+  insightsByUsername,
+}: DemographicsSectionProps) {
   const influencers = pickInfluencerList(summaryData);
 
   if (influencers.length > 0) {
     return (
       <>
         {influencers.map((inf, idx) => (
-          <InfluencerPages key={`${inf.username}-${idx}`} inf={inf} />
+          <InfluencerPages
+            key={`${inf.username}-${idx}`}
+            inf={inf}
+            insightsByUsername={insightsByUsername}
+          />
         ))}
       </>
     );
