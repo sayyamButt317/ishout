@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AddInfluencerByUrlApi, PostingDetailsApi } from "../API/admin.routes";
+import { ExtractInsightsApi, PostingDetailsApi } from "../API/admin.routes";
 
 
 export function PostingDetailsHook() {
@@ -11,3 +11,16 @@ export function PostingDetailsHook() {
     })
 }
 
+export function ExtractInsightsHook(
+    campaign_id: string,
+    influencer_id: string,
+    enabled = true,
+) {
+    return useQuery({
+        queryKey: ['extract-insights', campaign_id, influencer_id],
+        queryFn: () => ExtractInsightsApi(campaign_id, influencer_id),
+        enabled: enabled && !!campaign_id && !!influencer_id,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+    })
+}

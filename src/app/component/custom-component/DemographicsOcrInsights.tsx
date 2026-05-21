@@ -1,8 +1,12 @@
 'use client';
 
 import { useMemo, type ComponentType } from 'react';
-import { BarChart3, Sparkles, Target } from 'lucide-react';
-import type { DemographicsOcrMetrics, DemographicsOcrResponse } from '@/src/types/Admin-Type/demographics-ocr-type';
+import { BarChart3, Sparkles, Target, Users } from 'lucide-react';
+import type {
+  DemographicsOcrDemographicsBlock,
+  DemographicsOcrMetrics,
+  DemographicsOcrResponse,
+} from '@/src/types/Admin-Type/demographics-ocr-type';
 import DemographicsOcrInsightsCharts from '@/src/app/component/custom-component/DemographicsOcrInsightsCharts';
 
 export interface DemographicsOcrInsightsProps {
@@ -99,7 +103,12 @@ export default function DemographicsOcrInsights({
           {data.content_type ? (
             <span className="rounded-full bg-white/10 px-3 py-1 text-white/80">{data.content_type}</span>
           ) : null}
-          {data.posted_at ? <span className="text-white/45">Posted {data.posted_at}</span> : null}
+          {data.period ? (
+            <span className="rounded-full bg-white/10 px-3 py-1 text-white/80">{data.period}</span>
+          ) : null}
+          {data.posted_at && !data.period ? (
+            <span className="text-white/45">Posted {data.posted_at}</span>
+          ) : null}
         </div>
         {data.caption ? (
           <p className="mt-4 text-sm leading-relaxed text-white/80">{data.caption}</p>
@@ -147,7 +156,7 @@ export default function DemographicsOcrInsights({
                 {extraEntries.map(([key, value]) => (
                   <tr key={key} className="hover:bg-white/3">
                     <th className="w-[40%] px-4 py-2.5 align-top text-xs font-medium text-white/45">
-                      {key}
+                      {formatMetricLabel(key)}
                     </th>
                     <td className="px-4 py-2.5 text-xs text-white/85">{value}</td>
                   </tr>
@@ -157,6 +166,153 @@ export default function DemographicsOcrInsights({
           </div>
         </section>
       ) : null}
+
+      <DemographicsAudienceTables demographics={data.demographics} />
     </div>
+  );
+}
+
+function isDisplayableValue(value: unknown): value is string {
+  if (value == null) return false;
+  const s = String(value).trim();
+  return s !== '' && s.toLowerCase() !== 'unknown';
+}
+
+function DemographicsAudienceTables({
+  demographics,
+}: {
+  demographics?: DemographicsOcrDemographicsBlock;
+}) {
+  if (!demographics) return null;
+
+  const ageRows = demographics.age_groups
+    ? Object.entries(demographics.age_groups).filter(([, v]) => isDisplayableValue(v))
+    : [];
+
+  const listSections: { title: string; rows: { label: string; value: string }[] }[] = [];
+
+  const mapList = (
+    title: string,
+    items?: Array<{ name?: string; value?: string; percent?: string } | string>,
+  ) => {
+    if (!items?.length) return;
+    const rows = items
+      .map((item, index) => {
+        if (typeof item === 'string') {
+          return isDisplayableValue(item) ? { label: `Item ${index + 1}`, value: item } : null;
+        }
+        const label = item.name?.trim() || `Item ${index + 1}`;
+        const value = item.percent ?? item.value;
+        return isDisplayableValue(value) ? { label, value: String(value) } : null;
+      })
+      .filter(Boolean) as { label: string; value: string }[];
+    if (rows.length) listSections.push({ title, rows });
+  };
+
+  mapList('Top countries', demographics.top_countries);
+  mapList('Top cities', demographics.top_cities);
+  mapList('Top languages', demographics.top_languages);
+
+  const growth = demographics.follower_growth;
+  const hasGrowth =
+    growth && (isDisplayableValue(growth.value) || isDisplayableValue(growth.change));
+
+  const activeDays = demographics.most_active_times?.days?.filter(isDisplayableValue) ?? [];
+  const activeHours = demographics.most_active_times?.hours?.filter(isDisplayableValue) ?? [];
+
+  const hasAny =
+    ageRows.length > 0 ||
+    listSections.length > 0 ||
+    hasGrowth ||
+    activeDays.length > 0 ||
+    activeHours.length > 0 ||
+    isDisplayableValue(demographics.total_followers);
+
+  if (!hasAny) return null;
+
+  return (
+    <section className={METRICS_GRID_SHELL}>
+      <SectionTitle icon={Users} title="Audience breakdown" subtitle="Demographics from insights" />
+
+      {isDisplayableValue(demographics.total_followers) ? (
+        <div className="mb-4">
+          <KpiCard label="Total followers" value={String(demographics.total_followers)} />
+        </div>
+      ) : null}
+
+      {hasGrowth ? (
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:max-w-md">
+          {isDisplayableValue(growth?.value) ? (
+            <KpiCard label="Follower growth" value={String(growth?.value)} />
+          ) : null}
+          {isDisplayableValue(growth?.change) ? (
+            <KpiCard label="Growth change" value={String(growth?.change)} />
+          ) : null}
+        </div>
+      ) : null}
+
+      {ageRows.length > 0 ? (
+        <div className="mb-6 overflow-hidden rounded-xl border border-white/10 bg-black/25">
+          <p className="border-b border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/50">
+            Age groups
+          </p>
+          <table className="w-full text-left text-sm">
+            <tbody className="divide-y divide-white/5">
+              {ageRows.map(([label, value]) => (
+                <tr key={label} className="hover:bg-white/3">
+                  <th className="w-[40%] px-4 py-2.5 text-xs font-medium text-white/45">{label}</th>
+                  <td className="px-4 py-2.5 text-xs text-white/85">{value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+
+      {listSections.map((section) => (
+        <div
+          key={section.title}
+          className="mb-6 overflow-hidden rounded-xl border border-white/10 bg-black/25"
+        >
+          <p className="border-b border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/50">
+            {section.title}
+          </p>
+          <table className="w-full text-left text-sm">
+            <tbody className="divide-y divide-white/5">
+              {section.rows.map((row) => (
+                <tr key={`${section.title}-${row.label}`} className="hover:bg-white/3">
+                  <th className="w-[40%] px-4 py-2.5 text-xs font-medium text-white/45">
+                    {row.label}
+                  </th>
+                  <td className="px-4 py-2.5 text-xs text-white/85">{row.value}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+
+      {(activeDays.length > 0 || activeHours.length > 0) && (
+        <div className="overflow-hidden rounded-xl border border-white/10 bg-black/25">
+          <p className="border-b border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white/50">
+            Most active times
+          </p>
+          <div className="space-y-3 px-4 py-3 text-xs text-white/80">
+            {activeDays.length > 0 ? (
+              <p>
+                <span className="font-medium text-white/50">Days: </span>
+                {activeDays.join(', ')}
+              </p>
+            ) : null}
+            {activeHours.length > 0 ? (
+              <p>
+                <span className="font-medium text-white/50">Hours: </span>
+                {activeHours.join(', ')}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      )}
+    </section>
   );
 }

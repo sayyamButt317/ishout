@@ -17,30 +17,10 @@ import { PlatformType } from '@/src/types/readymadeinfluencers-type';
 const COLUMN_ICON_CLASS = 'size-3.5 shrink-0 md:size-3';
 
 const COLUMNS = [
-  {
-    icon: <CircleDashed className={COLUMN_ICON_CLASS} />,
-    id: 'review',
-    label: 'Under Review',
-    color: 'primary',
-  },
-  {
-    icon: <RefreshCcw className={COLUMN_ICON_CLASS} />,
-    id: 'revision',
-    label: 'Revision',
-    color: 'amber',
-  },
-  {
-    icon: <CircleCheck className={COLUMN_ICON_CLASS} />,
-    id: 'approved',
-    label: 'Approved',
-    color: 'emerald',
-  },
-  {
-    icon: <CircleCheckBig className={COLUMN_ICON_CLASS} />,
-    id: 'posted',
-    label: 'Posted',
-    color: 'green',
-  },
+  { icon: <CircleDashed className={COLUMN_ICON_CLASS} />, id: 'review', label: 'Under Review', color: 'primary' },
+  { icon: <RefreshCcw className={COLUMN_ICON_CLASS} />, id: 'revision', label: 'Revision', color: 'amber' },
+  { icon: <CircleCheck className={COLUMN_ICON_CLASS} />, id: 'approved', label: 'Approved', color: 'emerald' },
+  { icon: <CircleCheckBig className={COLUMN_ICON_CLASS} />, id: 'posted', label: 'Posted', color: 'green' },
 ];
 
 function ContentFeedbackPageContent() {
@@ -92,29 +72,31 @@ function ContentFeedbackPageContent() {
 
   return (
     <div className="font-sans w-full min-w-0">
-      <div className="grid w-full min-w-0 grid-cols-1 gap-4 pb-4 md:grid-cols-2 md:gap-3 lg:grid-cols-4 lg:gap-2 lg:pb-3">
+      <div
+        className="grid w-full min-w-0 grid-cols-1 gap-4 pb-4 md:grid-cols-2 md:gap-3 lg:grid-cols-4 lg:gap-2 lg:pb-3"
+      >
         {COLUMNS.map((col) => {
           const combinedCards =
             col.id === 'approved'
               ? apiCards.filter(
-                  (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
-                )
+                (card) => (card.admin_approved ?? '').toLowerCase() === 'approved',
+              )
               : col.id === 'revision'
                 ? apiCards.filter(
-                    (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
-                  )
+                  (card) => (card.admin_approved ?? '').toLowerCase() === 'revision',
+                )
                 : col.id === 'posted'
                   ? apiCards.filter(
-                      (card) => (card.admin_approved ?? '').toLowerCase() === 'posted',
-                    )
+                    (card) => (card.admin_approved ?? '').toLowerCase() === 'posted',
+                  )
                   : apiCards.filter((card) => {
-                      const adminStatus = (card.admin_approved ?? '').toLowerCase();
-                      return (
-                        adminStatus !== 'approved' &&
-                        adminStatus !== 'revision' &&
-                        adminStatus !== 'posted'
-                      );
-                    });
+                    const adminStatus = (card.admin_approved ?? '').toLowerCase();
+                    return (
+                      adminStatus !== 'approved' &&
+                      adminStatus !== 'revision' &&
+                      adminStatus !== 'posted'
+                    );
+                  });
 
           return (
             <div
@@ -128,11 +110,10 @@ function ContentFeedbackPageContent() {
                 </h3>
 
                 <span
-                  className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold md:px-1.5 md:py-px md:text-[9px] lg:px-2 lg:text-[10px] ${
-                    col.color === 'primary'
-                      ? 'bg-(--color-primaryButton) text-white'
-                      : countStyles[col.color]
-                  }`}
+                  className={`shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold md:px-1.5 md:py-px md:text-[9px] lg:px-2 lg:text-[10px] ${col.color === 'primary'
+                    ? 'bg-(--color-primaryButton) text-white'
+                    : countStyles[col.color]
+                    }`}
                 >
                   {combinedCards.length}
                 </span>
@@ -148,9 +129,7 @@ function ContentFeedbackPageContent() {
                   >
                     <div className="absolute right-2 top-2 md:right-1.5 md:top-1.5 md:origin-top-right md:scale-90 lg:right-2 lg:top-2 lg:scale-100">
                       <PlatformBadge
-                        key={card.id}
-                        platform={card.platform as PlatformType}
-                      />
+                        key={card.id} platform={card.platform as PlatformType} />
                     </div>
                     <div className="mb-3 flex items-center gap-3 pr-9 md:mb-2 md:gap-2 md:pr-7 lg:mb-2.5 lg:gap-2.5 lg:pr-8">
                       <div className="relative size-10 shrink-0 overflow-hidden rounded-full border border-white/10 md:size-8 lg:size-9">
@@ -232,9 +211,7 @@ function ContentFeedbackPageContent() {
                 ))}
 
                 {combinedCards.length === 0 && (
-                  <p className="py-4 text-center text-xs text-white/40 md:py-3 md:text-[10px] lg:text-xs">
-                    No items
-                  </p>
+                  <p className="py-4 text-center text-xs text-white/40 md:py-3 md:text-[10px] lg:text-xs">No items</p>
                 )}
               </div>
             </div>
@@ -246,7 +223,6 @@ function ContentFeedbackPageContent() {
         heading="Delete Chat"
         subheading={`This will delete all chat history between admin and influencer.\nAre you sure?`}
         open={deleteOpen}
-        isDeleting={deleteAdminInfluencerMessagesHook.isPending}
         onClose={() => {
           setDeleteOpen(false);
           setSelectedThreadId(null);

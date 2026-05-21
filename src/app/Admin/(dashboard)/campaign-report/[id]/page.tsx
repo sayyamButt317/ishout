@@ -20,6 +20,13 @@ import { Play, ExternalLink, Trophy } from 'lucide-react';
 import useOverallCampaignOutcomes from '@/src/routes/Admin/Hooks/Report/overall-campaign-outcomes-hook';
 import NoInfluencerContentCard from '@/src/app/component/campaign-report/NoInfluencerContentCard';
 import CaptionBlock from '@/src/app/component/campaign-report/CaptionBlock';
+import InsightsDialog from '@/src/app/component/demographics/insightsdialog';
+import type { ReportInsightsByUsername } from '@/src/app/component/reporting/reportinsights';
+import {
+  fetchReportInsightsByUsername,
+  hasSavedInsights,
+  resolveReportInfluencerId,
+} from '@/src/helper/fetch-report-insights';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -61,25 +68,30 @@ export default function InfluencerReportHeader() {
 
   const { data: influencerData, isLoading: isInfluencersLoading } =
     CampaignAllInfluencerHook(id ?? '');
+
   const {
     data: negotiationData,
     isLoading: isNegotiationLoading,
     refetch: refetchNegotiation,
   } = NegotiationAgreedByCampaignHook(id);
   const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
-
+  const { data: overallOutcomes, refetch: refetchOverallOutcomes } =
+    useOverallCampaignOutcomes(id);
 
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
   const [reportPdfKey, setReportPdfKey] = useState(0);
   const [demographicsOpen, setDemographicsOpen] = useState(false);
+  const [insightsOpen, setInsightsOpen] = useState(false);
   const [selectedInfluencerUsername, setSelectedInfluencerUsername] = useState<
     string | null
   >(null);
   const [selectedInfluencerId, setSelectedInfluencerId] = useState<string | null>(null);
+  const [reportInsightsByUsername, setReportInsightsByUsername] =
+    useState<ReportInsightsByUsername>({});
+  const [isFetchingReportInsights, setIsFetchingReportInsights] = useState(false);
   const summaryMutation = useCampaignBriefStats();
-  const { data: overallOutcomes, refetch: refetchOverallOutcomes } =
-    useOverallCampaignOutcomes(id);
+
   const { data: demographicsData, isLoading: isDemographicsLoading } =
     useInfluencerDemographicsAssets(
       id,
@@ -88,6 +100,7 @@ export default function InfluencerReportHeader() {
     );
 
   const handleViewReport = async () => {
+    setIsFetchingReportInsights(true);
     try {
       const tasks: Promise<unknown>[] = [
         summaryMutation.mutateAsync(id),
@@ -95,15 +108,25 @@ export default function InfluencerReportHeader() {
       ];
       if (!negotiationData) tasks.push(refetchNegotiation());
       await Promise.all(tasks);
+
+      const insights = await fetchReportInsightsByUsername(
+        id ?? '',
+        influencerData?.influencers ?? [],
+      );
+      setReportInsightsByUsername(insights);
       setReportPdfKey((k) => k + 1);
       setReportOpen(true);
     } catch {
+      setReportInsightsByUsername({});
       setReportPdfKey((k) => k + 1);
       setReportOpen(true);
+    } finally {
+      setIsFetchingReportInsights(false);
     }
   };
 
-  const isReportLoading = summaryMutation.isPending || isNegotiationLoading;
+  const isReportLoading =
+    summaryMutation.isPending || isNegotiationLoading || isFetchingReportInsights;
   const demographicsImageUrls = useMemo(
     () =>
       demographicsData?.demographics?.map((item) => item.image_url).filter(Boolean) ?? [],
@@ -124,12 +147,13 @@ export default function InfluencerReportHeader() {
     renderableInfluencerCount === 0 &&
     (!analytics || analytics.total_influencers < 1);
 
+
+
+
   if (isError) {
     return <div className="text-red-500">Failed to load analytics</div>;
   }
-
   if (isInitialLoading) return <AnalyticsDashboardSkeleton />;
-
   if (showEmptyState) {
     return <NoInfluencerContentCard />;
   }
@@ -151,6 +175,7 @@ export default function InfluencerReportHeader() {
                   negotiationData={negotiationData as AgreedNegotiationResponse}
                   summaryData={summaryMutation.data}
                   overallOutcomes={overallOutcomes}
+                  insightsByUsername={reportInsightsByUsername}
                 />
               </PDFViewer>
             ) : (
@@ -174,6 +199,19 @@ export default function InfluencerReportHeader() {
         }}
         imageUrls={demographicsImageUrls}
         isLoading={isDemographicsLoading}
+        username={selectedInfluencerUsername}
+      />
+      <InsightsDialog
+        campaign_id={id ?? ''}
+        influencer_id={selectedInfluencerId ?? ''}
+        open={insightsOpen}
+        onOpenChange={(open) => {
+          setInsightsOpen(open);
+          if (!open) {
+            setSelectedInfluencerUsername(null);
+            setSelectedInfluencerId(null);
+          }
+        }}
         username={selectedInfluencerUsername}
       />
 
@@ -260,7 +298,9 @@ export default function InfluencerReportHeader() {
           const profile = inf?.data?.profile;
           const reel = inf?.data?.reel;
           const analytics = inf?.data?.analytics;
-          const hasInsights = inf?.data?.insights === true;
+          const influencerId = resolveReportInfluencerId(inf);
+          const showInsightsButton = hasSavedInsights(inf);
+
           if (!profile || !reel) return null;
           const isPlaying = playingIndex === index;
           const engRateNumber = profile.followers
@@ -404,19 +444,21 @@ export default function InfluencerReportHeader() {
                         className="bg-primaryButton hover:bg-primaryHover text-white shadow-md shadow-primaryButton/25"
                         onClick={() => {
                           setSelectedInfluencerUsername(profile.username);
-                          setSelectedInfluencerId(inf.influencer_id ?? '');
+                          setSelectedInfluencerId(influencerId);
                           setDemographicsOpen(true);
                         }}
                       >
                         View Demographics
                       </CustomButton>
-                      {hasInsights ? (
+                      {showInsightsButton ? (
                         <CustomButton
-                          className="border border-primaryButton/40 bg-primaryButton/10 text-primaryButton shadow-sm hover:bg-primaryButton/20"
+                          className="border border-primaryButton/40 bg-primaryButton/10 text-primaryButton shadow-sm hover:bg-primaryButton/20 disabled:cursor-not-allowed disabled:opacity-40"
+                          disabled={!influencerId}
                           onClick={() => {
+                            if (!influencerId) return;
                             setSelectedInfluencerUsername(profile.username);
-                            setSelectedInfluencerId(inf.influencer_id ?? '');
-                            setDemographicsOpen(true);
+                            setSelectedInfluencerId(influencerId);
+                            setInsightsOpen(true);
                           }}
                         >
                           View Insights
