@@ -11,7 +11,6 @@ import CampaignBriefDialog from '@/src/app/component/custom-component/CampaignBr
 import CampaignBriefDetailHook from '@/src/routes/Company/Hooks/get-campaign-brief-detail-hook';
 import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import DeleteCampaignHook from '@/src/routes/Admin/Hooks/Campaign/deleteCampaign.hook';
-import CustomButton from '@/src/app/component/button';
 import { Trash } from 'lucide-react';
 import { DeleteDialogue } from '@/src/app/component/DeleteDialogue';
 import { TablePageSkeleton } from '@/src/app/component/skeletons/admin-skeletons';

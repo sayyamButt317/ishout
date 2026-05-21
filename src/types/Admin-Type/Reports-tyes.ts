@@ -36,6 +36,7 @@ export interface CampaignReportInfluencerData {
   profile: CampaignReportProfile;
   reel: Reel;
   analytics?: InfluencerReelAnalytics;
+  insights?: boolean;
 }
 
 export interface CampaignReportInfluencer {
