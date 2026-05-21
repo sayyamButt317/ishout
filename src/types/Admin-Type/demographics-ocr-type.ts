@@ -1,3 +1,9 @@
+export interface DemographicsOcrPayload {
+  image_url: string[];
+  campaign_id: string;
+  influencer_id: string;
+}
+
 export interface DemographicsOcrMetrics {
   views?: string;
   watch_time?: string;

@@ -3,11 +3,13 @@ import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { AddInfluencerByUrlApi, DemographicsOcrApi, PostingDetailsApi, ReadyForPostingApi } from "../API/admin.routes";;
 import useAddInfluencerStore from "@/src/store/Influencer/AddInfluencer.store";
+import type { DemographicsOcrPayload } from "@/src/types/Admin-Type/demographics-ocr-type";
 
 export default function DemographicsOcrHook() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (url: string[]) => DemographicsOcrApi(url),
+        mutationFn: ({ image_url, campaign_id, influencer_id }: DemographicsOcrPayload) =>
+            DemographicsOcrApi(image_url, campaign_id, influencer_id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["demographics-ocr"] });
         },

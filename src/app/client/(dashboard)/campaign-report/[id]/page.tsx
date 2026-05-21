@@ -75,6 +75,7 @@ export default function InfluencerReportHeader() {
   const [selectedInfluencerUsername, setSelectedInfluencerUsername] = useState<
     string | null
   >(null);
+  const [selectedInfluencerId, setSelectedInfluencerId] = useState<string | null>(null);
   const summaryMutation = useCampaignBriefStats();
   const { data: overallOutcomes, refetch: refetchOverallOutcomes } =
     useOverallCampaignOutcomes(id);
@@ -146,10 +147,15 @@ export default function InfluencerReportHeader() {
         </DialogContent>
       </Dialog>
       <DemographicsAssetsDialog
+        campaign_id={id ?? ''}
+        influencer_id={selectedInfluencerId ?? ''}
         open={demographicsOpen}
         onOpenChange={(open) => {
           setDemographicsOpen(open);
-          if (!open) setSelectedInfluencerUsername(null);
+          if (!open) {
+            setSelectedInfluencerUsername(null);
+            setSelectedInfluencerId(null);
+          }
         }}
         imageUrls={demographicsImageUrls}
         isLoading={isDemographicsLoading}
@@ -390,6 +396,7 @@ export default function InfluencerReportHeader() {
                       className="bg-primaryButton hover:bg-primaryHover text-white shadow-md shadow-primaryButton/25"
                       onClick={() => {
                         setSelectedInfluencerUsername(profile.username);
+                        setSelectedInfluencerId(inf.influencer_id ?? '');
                         setDemographicsOpen(true);
                       }}
                     >
