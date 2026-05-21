@@ -263,13 +263,8 @@ export default function ContentFeedbackModal({
     setAll,
   ]);
 
-
   const approveContent = async (selectedPreviewMediaUrl: string) => {
-    if (
-      effectiveBrandThreadId &&
-      negotiationId &&
-      selectedPreviewMediaUrl
-    ) {
+    if (effectiveBrandThreadId && negotiationId && selectedPreviewMediaUrl) {
       if (threadId && !isBrandAlreadyApproved) {
         approveNegotiation({
           thread_id: threadId,
@@ -285,15 +280,11 @@ export default function ContentFeedbackModal({
           video_approve_brand: 'approved',
         },
         {
-          onSuccess: (
-            data: WhatsAppAdminCompanyApproveVideoResponse,
-            variables,
-          ) => {
+          onSuccess: (data: WhatsAppAdminCompanyApproveVideoResponse, variables) => {
             const key = normalizeMediaUrlKey(variables.video_url);
             if (
               data?.success &&
-              (data.video_approve_brand ?? '').toLowerCase().trim() ===
-              'approved'
+              (data.video_approve_brand ?? '').toLowerCase().trim() === 'approved'
             ) {
               setBrandApprovedByVideoUrl((prev) => ({
                 ...prev,
@@ -313,7 +304,7 @@ export default function ContentFeedbackModal({
         },
       );
     }
-  }
+  };
   if (!selectedCard) return null;
 
   return (
@@ -326,9 +317,9 @@ export default function ContentFeedbackModal({
       onClick={asPage ? undefined : onClose}
     >
       <div
-        className={`flex h-full w-full min-h-0 overflow-hidden bg-(--color-background) ${
+        className={`flex h-full min-h-0 w-full flex-col overflow-hidden bg-(--color-background) ${
           asPage
-            ? 'max-h-[min(920px,96vh)] rounded-none border-0 shadow-none'
+            ? 'rounded-none border-0 shadow-none'
             : 'max-h-[90vh] max-w-7xl rounded-2xl border border-white/10 shadow-2xl'
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -418,8 +409,6 @@ export default function ContentFeedbackModal({
                 />
               </div>
             </div>
-
-
           </div>
           <div className="flex min-h-0 w-full flex-col overflow-hidden border-l border-white/10 bg-[#111217] lg:max-w-md lg:flex-1">
             <div className="border-b border-white/10 px-5 py-3">
@@ -437,110 +426,26 @@ export default function ContentFeedbackModal({
                 <button
                   key={key}
                   type="button"
-                  onClick={() => {
-                    if (
-                      effectiveBrandThreadId &&
-                      negotiationId &&
-                      selectedPreviewMediaUrl
-                    ) {
-                      if (threadId && !isBrandAlreadyApproved) {
-                        approveNegotiation({
-                          thread_id: threadId,
-                          payload: { Brand_approved: 'Approved' },
-                        });
-                      }
-                      approveVideoMutation.mutate(
-                        {
-                          brand_thread_id: effectiveBrandThreadId,
-                          campaign_id: campaignId ?? '',
-                          negotiation_id: negotiationId,
-                          video_url: selectedPreviewMediaUrl,
-                          video_approve_brand: 'approved',
-                        },
-                        {
-                          onSuccess: (
-                            data: WhatsAppAdminCompanyApproveVideoResponse,
-                            variables,
-                          ) => {
-                            const key = normalizeMediaUrlKey(variables.video_url);
-                            if (
-                              data?.success &&
-                              (data.video_approve_brand ?? '').toLowerCase().trim() ===
-                                'approved'
-                            ) {
-                              setBrandApprovedByVideoUrl((prev) => ({
-                                ...prev,
-                                [key]: true,
-                              }));
-                            }
-                            setApproveVideoResponseByUrl((prev) => {
-                              const next = { ...prev };
-                              if (data.approved_content_id) {
-                                next[key] = data;
-                              } else {
-                                delete next[key];
-                              }
-                              return next;
-                            });
-                          },
-                        },
-                      );
-                    }
-                  }}
-                  disabled={
-                    isApproving ||
-                    approveVideoMutation.isPending ||
-                    !selectedPreviewMediaUrl ||
-                    !effectiveBrandThreadId ||
-                    isSelectedContentBrandApproved
+                  onClick={() =>
+                    setActiveTab(
+                      key as
+                        | 'chat'
+                        | 'revisions'
+                        | 'brandfeedback'
+                        | 'media'
+                        | 'guidelines',
+                    )
                   }
-                  className={`rounded-lg px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition ${activeTab === key
-                    ? 'bg-violet-500/20 text-violet-200'
-                    : 'text-white/55 hover:bg-white/5 hover:text-white'
-                    }`}
+                  className={`rounded-lg px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition ${
+                    activeTab === key
+                      ? 'bg-violet-500/20 text-violet-200'
+                      : 'text-white/55 hover:bg-white/5 hover:text-white'
+                  }`}
                 >
                   {label}
                 </button>
               ))}
             </div>
-          </div>
-        </div>
-        <div className="flex w-full min-h-0 shrink-0 flex-col border-l border-white/10 bg-[#111217] lg:max-w-md">
-          <div className="border-b border-white/10 px-5 py-3">
-            <h4 className="text-sm font-semibold text-white">Conversation</h4>
-            <p className="text-[11px] text-white/50">Brand and admin feedback thread</p>
-          </div>
-          <div className="grid grid-cols-5 gap-1 border-b border-white/10 bg-black/20 px-2 py-2">
-            {[
-              ['chat', 'Chat'],
-              ['revisions', 'Revisions'],
-              ['brandfeedback', 'Feedback'],
-              ['media', 'Media'],
-              ['guidelines', 'Guidelines'],
-            ].map(([key, label]) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() =>
-                  setActiveTab(
-                    key as
-                      | 'chat'
-                      | 'revisions'
-                      | 'brandfeedback'
-                      | 'media'
-                      | 'guidelines',
-                  )
-                }
-                className={`rounded-lg px-2 py-1.5 text-[11px] font-semibold uppercase tracking-wide transition ${
-                  activeTab === key
-                    ? 'bg-violet-500/20 text-violet-200'
-                    : 'text-white/55 hover:bg-white/5 hover:text-white'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
 
             {activeTab === 'chat' && (
               <>
@@ -590,30 +495,41 @@ ${isSending ? 'bg-white/10 text-white/50 cursor-not-allowed' : 'bg-(--color-prim
               </>
             )}
 
-
             {activeTab === 'revisions' && (
               <div className="flex-1 overflow-y-auto p-3">
-                <RevisionBox reviewSide="brand" negotiationId={negotiationId} threadId={threadId} />
+                <RevisionBox
+                  reviewSide="brand"
+                  negotiationId={negotiationId}
+                  threadId={threadId}
+                />
               </div>
             )}
 
-          {activeTab === 'revisions' && (
-            <div className="flex-1 overflow-y-auto p-3">
-              <RevisionBox
-                reviewSide="brand"
-                negotiationId={negotiationId}
-                threadId={threadId}
-              />
-            </div>
-          )}
+            {activeTab === 'brandfeedback' && (
+              <div className="flex-1 overflow-y-auto p-3">
+                <ContentFeedbackBrandSidebar
+                  selectedContentFeedback={selectedContentFeedback}
+                  onSelectedContentFeedbackChange={setSelectedContentFeedback}
+                  saveContentFeedbackMutation={saveContentFeedbackMutation}
+                  selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+                  negotiationId={negotiationId}
+                  contentId={selectedCompanyMessageContentId}
+                  setFeedbackId={setFeedbackId}
+                  activeFeedbackId={selectedCompanyMessageContentId}
+                  refetchBrandFeedback={refetchBrandFeedback}
+                  brandFeedbackData={brandFeedbackData}
+                  selectedMediaKey={selectedMediaKey}
+                  approveVideoResponseByUrl={approveVideoResponseByUrl}
+                  approvedCopyDraft={approvedCopyDraft}
+                  setApprovedCopyDraftField={setApprovedCopyDraftField}
+                  setApprovedCopyDraftByUrl={setApprovedCopyDraftByUrl}
+                  updateApprovedContentMutation={updateApprovedContentMutation}
+                />
+              </div>
+            )}
 
-          {activeTab === 'brandfeedback' && (
-            <div className="flex-1 overflow-y-auto p-3">
-              <ContentFeedbackBrandSidebar
-                selectedContentFeedback={selectedContentFeedback}
-                onSelectedContentFeedbackChange={setSelectedContentFeedback}
-                saveContentFeedbackMutation={saveContentFeedbackMutation}
-                selectedPreviewMediaUrl={selectedPreviewMediaUrl}
+            {activeTab === 'media' && (
+              <BrandFeedbackMediaTab
                 negotiationId={negotiationId}
                 onSelectMedia={(url, type) => {
                   setSelectedPreviewMediaUrl(url);
