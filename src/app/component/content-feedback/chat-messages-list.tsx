@@ -3,7 +3,6 @@ import { MessageListProps } from '@/src/types/Admin-Type/chat/chat-type';
 import ChatMessageContent from './chat-message-content';
 import { Loader2 } from 'lucide-react';
 
-
 export default function ChatMessagesList({
   messages,
   isLoading,
@@ -13,11 +12,15 @@ export default function ChatMessagesList({
   onSelectMedia,
   onSeekToTime,
   bubbleMaxWidthClassName,
+  selectedForwardText,
+  onSelectForwardText,
 }: MessageListProps) {
   if (isLoading) {
-    return <p className="text-sm text-white/50">
-      <Loader2 className='animate-spin' />
-    </p>;
+    return (
+      <p className="text-sm text-white/50">
+        <Loader2 className="animate-spin" />
+      </p>
+    );
   }
 
   if (!messages?.length) {
@@ -28,6 +31,10 @@ export default function ChatMessagesList({
     <>
       {messages.map((msg) => {
         const isRight = isRightMessage(msg);
+        const text =
+          typeof msg.message === 'string' ? msg.message.trim() : '';
+        const canSelect = Boolean(onSelectForwardText && text);
+        const isSelected = canSelect && selectedForwardText === msg.message;
 
         const headerLabel = roleLabels
           ? isRight
@@ -45,7 +52,15 @@ export default function ChatMessagesList({
             <div className={bubbleMaxWidthClassName ?? 'max-w-[80%]'}>
               <span className="text-xs font-bold text-white/80">{headerLabel}</span>
 
-              <div className="mt-1 rounded-2xl p-2 text-xs bg-white/5">
+              <div
+                onClick={() => {
+                  if (!canSelect) return;
+                  onSelectForwardText?.(isSelected ? null : (msg.message as string));
+                }}
+                className={`mt-1 rounded-2xl p-2 text-xs bg-white/5 ${
+                  canSelect ? 'cursor-pointer hover:bg-white/10' : ''
+                } ${isSelected ? 'ring-2 ring-primaryButton/50' : ''}`}
+              >
                 <ChatMessageContent
                   message={msg.message}
                   onSelectMedia={onSelectMedia}

@@ -4,7 +4,6 @@ import ChatMessagesList from './chat-messages-list';
 import { Mic, Paperclip, X } from 'lucide-react';
 import { ChatPanelProps } from '@/src/types/Admin-Type/chat/chat-type';
 
-
 export default function ChatPanel({
   className,
   modeToggle,
@@ -20,6 +19,10 @@ export default function ChatPanel({
   onSend,
   afterComposer,
   bubbleMaxWidthClassName,
+  selectedForwardText,
+  onSelectForwardText,
+  onForwardToInfluencer,
+  isForwardingToInfluencer,
 }: ChatPanelProps) {
   const [draft, setDraft] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -30,9 +33,9 @@ export default function ChatPanel({
     messageRoleLabels ??
     (modeToggle
       ? {
-        right: 'Admin',
-        left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
-      }
+          right: 'Admin',
+          left: modeToggle.value === 'brand' ? 'Brand' : 'Influencer',
+        }
       : undefined);
 
   const handleSend = async () => {
@@ -71,20 +74,22 @@ export default function ChatPanel({
             <button
               type="button"
               onClick={() => modeToggle.onChange('influencer')}
-              className={`flex-1 rounded-full py-2 text-center cursor-pointer text-xs font-bold transition-colors ${modeToggle.value === 'influencer'
-                ? 'bg-primaryButton text-white shadow-sm'
-                : 'text-white/45 cursor-pointer  hover:text-white/70'
-                }`}
+              className={`flex-1 rounded-full py-2 text-center cursor-pointer text-xs font-bold transition-colors ${
+                modeToggle.value === 'influencer'
+                  ? 'bg-primaryButton text-white shadow-sm'
+                  : 'text-white/45 cursor-pointer  hover:text-white/70'
+              }`}
             >
               Influencer Chat
             </button>
             <button
               type="button"
               onClick={() => modeToggle.onChange('brand')}
-              className={`flex-1 rounded-full py-2 text-center cursor-pointer text-xs font-bold transition-colors ${modeToggle.value === 'brand'
-                ? 'bg-primaryButton text-white shadow-sm'
-                : 'text-white/45 hover:text-white/70'
-                }`}
+              className={`flex-1 rounded-full py-2 text-center cursor-pointer text-xs font-bold transition-colors ${
+                modeToggle.value === 'brand'
+                  ? 'bg-primaryButton text-white shadow-sm'
+                  : 'text-white/45 hover:text-white/70'
+              }`}
             >
               Brand Chat
             </button>
@@ -102,6 +107,8 @@ export default function ChatPanel({
             onSelectMedia={onSelectMedia}
             onSeekToTime={onSeekToTime}
             bubbleMaxWidthClassName={bubbleMaxWidthClassName}
+            selectedForwardText={selectedForwardText}
+            onSelectForwardText={onSelectForwardText}
           />
         ) : (
           <p className="text-white/50 text-sm">{messagesUnavailableText}</p>
@@ -109,6 +116,17 @@ export default function ChatPanel({
       </div>
 
       <div className="space-y-4 border-t border-white/10 p-5">
+        {selectedForwardText ? (
+          <button
+            type="button"
+            onClick={() => void onForwardToInfluencer?.()}
+            disabled={isForwardingToInfluencer}
+            className="w-full rounded-lg bg-primaryButton py-2 text-xs font-bold text-white hover:bg-primaryHover disabled:opacity-50"
+          >
+            {isForwardingToInfluencer ? 'Sending…' : 'Forward to influencer'}
+          </button>
+        ) : null}
+
         <div className="relative">
           <textarea
             value={draft}
@@ -160,10 +178,11 @@ export default function ChatPanel({
               type="button"
               onClick={handleSend}
               disabled={!sendEnabled || isSending}
-              className={`flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors ${!sendEnabled || isSending
-                ? 'bg-white/10 text-white/50 cursor-not-allowed'
-                : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'
-                }`}
+              className={`flex h-8 items-center justify-center rounded-lg px-3 text-xs font-bold uppercase tracking-wide transition-colors ${
+                !sendEnabled || isSending
+                  ? 'bg-white/10 text-white/50 cursor-not-allowed'
+                  : 'bg-(--color-primaryButton)/10 text-(--color-primaryButton) hover:bg-(--color-primaryButton) hover:text-white'
+              }`}
             >
               Send
             </button>
