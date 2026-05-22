@@ -102,6 +102,7 @@ export const AdminENDPOINT = {
   EXTRACTDEMOGRAPHICS: `/${ROLE}/extract-report`,
   EXTRACTCAMPAIGNALLINFLUENCERREPORT: (campaign_id: string) =>
     `/${ROLE}/campaign-influncersReport?campaign_id=${campaign_id}`,
+  ADMIN_DELETE_CAMPAIGN_REPORT: (id: string) => `/${ROLE}/reports/delete/${id}`,
   CAMPAIGNANALTICS: (campaign_id: string) => `/${ROLE}/campaign-analytics/${campaign_id}`,
   CAMPAIGN_INFLUENCER_ANALYTICS_DEMOGRAPHICS: (
     campaign_id: string,
@@ -127,6 +128,7 @@ export const AdminENDPOINT = {
   ADMIN_ALL_COMPANIES_NAMES: `/${ROLE}/all-companies-names`,
   ADMIN_ALLCOMPANY_NAME: `/${ROLE}/all-company-name`,
   ADMIN_POSTING_DETAILS: `/${ROLE}/posting/get-details`,
+  ADMIN_DELETE_POSTING_DETAIL: (id: string) => `/${ROLE}/posting/delete-details/${id}`,
   ADMIN_ADD_INFLUENCER_BY_URL: `/${ROLE}/extract-information-by-username`,
   ADMIN_EXTRACT_INSIGHTS: (campaign_id: string, influencer_id: string) => `/${ROLE}/extract-insights/${campaign_id}/${influencer_id}`,
 };

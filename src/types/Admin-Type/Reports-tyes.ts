@@ -41,6 +41,8 @@ export interface CampaignReportInfluencerData {
 }
 
 export interface CampaignReportInfluencer {
+  /** MongoDB report document id — used for DELETE /admin/reports/delete/{id} */
+  _id: string;
   username: string;
   influencer_id?: string;
   shortcode: string;
@@ -48,6 +50,13 @@ export interface CampaignReportInfluencer {
   updated_at: string;
   /** When true at root level (some API shapes) */
   demographics?: boolean;
+}
+
+/** DELETE /admin/reports/delete/{id} and DELETE /company/reports/delete/{id} */
+export interface DeleteCampaignReportResponse {
+  success: boolean;
+  message: string;
+  id: string;
 }
 
 /** GET /admin/campaign-influncersReport?campaign_id=... */

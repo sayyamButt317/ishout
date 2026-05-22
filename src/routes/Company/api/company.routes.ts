@@ -25,6 +25,7 @@ import { UpdateCampaignBrief } from '@/src/types/Compnay/campaignbrieftype';
 import { ApprovedContentsResponse } from '@/src/types/Compnay/approved-content-type';
 import type { UpdateApprovedContentPayload } from '@/src/types/Compnay/approved-video-type';
 import type { CompanyPostingDetailsApiResponse } from '@/src/types/Posting/posting-details-type';
+import type { DeleteCampaignReportResponse } from '@/src/types/Admin-Type/Reports-tyes';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -293,5 +294,14 @@ export const UploadProfilePictureFunction = async (user_id: string, file: File) 
     },
   );
 
+  return response.data;
+};
+
+export const deleteCompanyCampaignReportApi = async (
+  report_id: string,
+): Promise<DeleteCampaignReportResponse> => {
+  const response = await api.delete<DeleteCampaignReportResponse>(
+    CompanyENDPOINT.COMPANY_DELETE_CAMPAIGN_REPORT(report_id),
+  );
   return response.data;
 };
