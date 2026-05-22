@@ -142,7 +142,7 @@ function ClientCampaignPostingDetailsContent() {
     <>
       <PageHeader
         title="Posting Details"
-        description={`${filtered.length} of ${rowTotal} posting ${rowTotal === 1 ? 'record' : 'records'} · campaign ${campaignId}`}
+        description={`${filtered.length} of ${rowTotal} posting ${rowTotal === 1 ? 'record' : 'records'} for the selected campaign.`}
         icon={<ClipboardList className="size-5" />}
         actions={
           <button
@@ -170,8 +170,7 @@ function ClientCampaignPostingDetailsContent() {
       <div className="pb-12 sm:px-2">
         {isError && !isLoading ? (
           <div className="rounded-2xl border border-red/5 bg-foreground/5 px-8 py-16 text-center text-sm text-foreground/60">
-            Could not load posting details. If this persists, the company posting endpoint
-            may not be configured yet.
+            Could not load posting details. If this persists, the company posting endpoint may not be configured yet.
           </div>
         ) : (
           <div className="overflow-hidden rounded-2xl border border-red/5 bg-foreground/5 shadow-2xl shadow-black/40">

@@ -71,13 +71,13 @@ export default function ImageStudioPage() {
         icon={<ImageIcon className="size-5" />}
         actions={
           <div className="relative w-full max-w-2xl">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-white/40" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-black dark:text-white/40" />
             <input
               type="text"
               placeholder="Describe the image you want to create..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="h-11 w-full rounded-xl border border-white/10 bg-white/5 pl-10 pr-4 text-sm text-white placeholder:text-white/40 focus:border-[var(--color-primaryButton)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primaryButton)]"
+              className="h-11 w-full rounded-xl border dark:border-white/10 bg-white/5 pl-10 pr-4 text-sm text-black placeholder:text-black/50 dark:placeholder:text-rose dark:text-white/40 focus:border-(--color-primaryButton) focus:outline-none focus:ring-1 focus:ring-(--color-primaryButton)"
             />
 
           </div>
@@ -101,8 +101,8 @@ export default function ImageStudioPage() {
             key={t.id}
             onClick={() => setActiveTheme(t.id)}
             className={`flex shrink-0 items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all ${activeTheme === t.id || (t.active && activeTheme === 'all')
-              ? 'bg-(--color-primaryButton) text-white shadow-lg'
-              : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+              ? 'bg-(--color-primaryButton) text-black dark:text-white shadow-lg'
+              : 'border border-white/10 bg-white/5 text-black hover:bg-white/10 hover:text-black dark:text-white'
               }`}
           >
             <t.icon className="size-4" />
@@ -115,12 +115,12 @@ export default function ImageStudioPage() {
         Sidebar
         <aside className="space-y-8">
           <div>
-            <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-white/60">
+            <h3 className="mb-4 text-sm font-bold uppercase tracking-widest text-black dark:text-white/60">
               Style & Settings
             </h3>
             <div className="rounded-xl border border-white/10 bg-white/4 p-4 space-y-6">
               <div>
-                <p className="mb-3 text-xs font-medium text-white/50">ASPECT RATIO</p>
+                <p className="mb-3 text-xs font-medium text-black dark:text-white/50">ASPECT RATIO</p>
                 <div className="grid grid-cols-3 gap-2">
                   {['1:1', '16:9', '9:16'].map((r) => (
                     <button
@@ -128,7 +128,7 @@ export default function ImageStudioPage() {
                       onClick={() => setRatio(r)}
                       className={`flex aspect-square flex-col items-center justify-center rounded-lg border transition-colors ${ratio === r
                         ? 'border-(--color-primaryButton) bg-(--color-primaryButton)/10 text-(--color-primaryButton)'
-                        : 'border-white/10 text-white/40 hover:border-white/20'
+                        : 'border-white/10 text-black dark:text-white/40 hover:border-white/20'
                         }`}
                     >
                       <div
@@ -141,15 +141,15 @@ export default function ImageStudioPage() {
                 </div>
               </div>
               <div>
-                <p className="mb-3 text-xs font-medium text-white/50">ARTISTIC STYLE</p>
+                <p className="mb-3 text-xs font-medium text-black dark:text-white/50">ARTISTIC STYLE</p>
                 <div className="space-y-2">
                   {ART_STYLES.map((s) => (
                     <button
                       key={s.id}
                       onClick={() => setArtStyle(s.id)}
                       className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-sm transition-colors ${artStyle === s.id
-                        ? 'border-(--color-primaryButton)/30 bg-(--color-primaryButton)/20 text-white'
-                        : 'border-white/10 text-white/50 hover:border-white/20 hover:text-white/80'
+                        ? 'border-(--color-primaryButton)/30 bg-(--color-primaryButton)/20 text-black dark:text-white'
+                        : 'border-white/10 text-black dark:text-white/50 hover:border-white/20 hover:text-black dark:text-white/80'
                         }`}
                     >
                       {s.label}
@@ -164,7 +164,7 @@ export default function ImageStudioPage() {
           </div>
           <div>
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-sm font-bold uppercase tracking-widest text-white/60">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-black dark:text-white/60">
                 Recent
               </h3>
               <button className="text-[10px] font-bold text-(--color-primaryButton) hover:underline">
@@ -194,14 +194,14 @@ export default function ImageStudioPage() {
         <div className="lg:col-span-3">
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-white">Trending Templates</h2>
-              <p className="text-sm text-white/50">Curated by top industry designers</p>
+              <h2 className="text-2xl font-bold text-black dark:text-white">Trending Templates</h2>
+              <p className="text-sm text-black dark:text-white/50">Curated by top industry designers</p>
             </div>
             <div className="flex gap-2">
-              <button className="rounded-lg bg-white/5 p-2 text-white/50 transition-colors hover:bg-white/10 hover:text-white">
+              <button className="rounded-lg bg-white/5 p-2 text-black dark:text-white/50 transition-colors hover:bg-white/10 hover:text-black dark:text-white">
                 <Filter className="size-5" />
               </button>
-              <button className="rounded-lg bg-white/5 p-2 text-white/50 transition-colors hover:bg-white/10 hover:text-white">
+              <button className="rounded-lg bg-white/5 p-2 text-black dark:text-white/50 transition-colors hover:bg-white/10 hover:text-black dark:text-white">
                 <ArrowUpDown className="size-5" />
               </button>
             </div>
@@ -230,15 +230,15 @@ export default function ImageStudioPage() {
                   )}
                 </div>
                 <div className="p-5">
-                  <h4 className="mb-1 text-lg font-bold text-white">{tpl.title}</h4>
+                  <h4 className="mb-1 text-lg font-bold text-black dark:text-white">{tpl.title}</h4>
                   <div className="mb-4 flex items-center gap-2">
-                    <span className="text-xs text-white/50">Used by {tpl.usedBy}</span>
+                    <span className="text-xs text-black dark:text-white/50">Used by {tpl.usedBy}</span>
                   </div>
                   <button
                     onClick={() => router.push(`/image-studio/style`)}
                     className={`flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all ${tpl.primary
-                      ? 'bg-(--color-primaryButton) text-white hover:opacity-90'
-                      : 'border border-white/10 bg-white/5 text-white hover:bg-white/10'
+                      ? 'bg-(--color-primaryButton) text-black dark:text-white hover:opacity-90'
+                      : 'border border-white/10 bg-white/5 text-black dark:text-white hover:bg-white/10'
                       }`}
 
                   >
@@ -250,7 +250,7 @@ export default function ImageStudioPage() {
             ))}
           </div>
           <div className="mt-12 flex justify-center">
-            <button className="rounded-xl border border-white/10 bg-white/5 px-8 py-3 text-sm font-bold text-white/60 transition-all hover:bg-white/10 hover:text-white">
+            <button className="rounded-xl border border-white/10 bg-white/5 px-8 py-3 text-sm font-bold text-black dark:text-white/60 transition-all hover:bg-white/10 hover:text-black dark:text-white">
               Load More Templates
             </button>
           </div>
@@ -267,7 +267,7 @@ export default function ImageStudioPage() {
             <span className="mb-1 text-[10px] font-bold uppercase text-(--color-primaryButton)">
               Live Feed
             </span>
-            <span className="text-[8px] text-white/40">Recent Creations</span>
+            <span className="text-[8px] text-black dark:text-white/40">Recent Creations</span>
           </div>
           <div className="flex gap-4">
             {[

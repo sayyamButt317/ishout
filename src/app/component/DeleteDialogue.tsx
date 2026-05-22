@@ -30,7 +30,7 @@ export const DeleteDialogue = ({
         <div className="flex flex-col items-center p-6">
           <h2 className="text-2xl font-semibold mb-4">{heading}</h2>
 
-          <p className="mb-6 whitespace-pre-line text-center text-sm text-gray-500">
+          <p className="mb-6 whitespace-pre-line text-center text-sm text-gray-900 dark:text-gray-500">
             {subheading}
           </p>
 

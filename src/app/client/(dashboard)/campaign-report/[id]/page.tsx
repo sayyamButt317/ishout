@@ -20,6 +20,7 @@ import DemographicsAssetsDialog from '@/src/app/component/custom-component/Demog
 import { Play, ExternalLink, Trash2, Trophy } from 'lucide-react';
 import useDeleteCompanyCampaignReportHook from '@/src/routes/Company/Hooks/delete-campaign-report-hook';
 import CaptionBlock from '@/src/app/component/campaign-report/CaptionBlock';
+import NoInfluencerContentCard from '@/src/app/component/campaign-report/NoInfluencerContentCard';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -77,6 +78,7 @@ export default function InfluencerReportHeader() {
   const [selectedInfluencerUsername, setSelectedInfluencerUsername] = useState<
     string | null
   >(null);
+  const [selectedInfluencerId, setSelectedInfluencerId] = useState<string | null>(null);
   const summaryMutation = useCampaignBriefStats();
   const { data: overallOutcomes, refetch: refetchOverallOutcomes } =
     useOverallCampaignOutcomes(id);
@@ -116,6 +118,10 @@ export default function InfluencerReportHeader() {
 
   if (isLoading) return <AnalyticsDashboardSkeleton />;
 
+  if (influencerData?.influencers?.length === 0) {
+    return <NoInfluencerContentCard />;
+  }
+
   return (
     <div className="space-y-6">
       <Dialog open={reportOpen} onOpenChange={setReportOpen}>
@@ -144,10 +150,15 @@ export default function InfluencerReportHeader() {
         </DialogContent>
       </Dialog>
       <DemographicsAssetsDialog
+        campaign_id={id ?? ''}
+        influencer_id={selectedInfluencerId ?? ''}
         open={demographicsOpen}
         onOpenChange={(open) => {
           setDemographicsOpen(open);
-          if (!open) setSelectedInfluencerUsername(null);
+          if (!open) {
+            setSelectedInfluencerUsername(null);
+            setSelectedInfluencerId(null);
+          }
         }}
         imageUrls={demographicsImageUrls}
         isLoading={isDemographicsLoading}
@@ -394,30 +405,30 @@ export default function InfluencerReportHeader() {
                     </div>
                   </div>
 
-                  {/* FOOTER — caption + actions */}
-                  <div className="mt-auto shrink-0 space-y-4 border-t border-border pt-4 dark:border-white/10">
-                    <CaptionBlock caption={reel.caption} />
+                {/* FOOTER — caption + actions */}
+                <div className="mt-auto shrink-0 space-y-4 border-t border-border pt-4 dark:border-white/10">
+                  <CaptionBlock caption={reel.caption} />
 
-                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/70 p-3 ring-1 ring-inset ring-border dark:bg-black/25 dark:ring-white/5">
-                      <a
-                        href={reel.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-primaryButton transition hover:text-primaryHover"
-                      >
-                        Open reel
-                        <ExternalLink className="h-3.5 w-3.5 opacity-80" aria-hidden />
-                      </a>
-                      <CustomButton
-                        className="bg-primaryButton hover:bg-primaryHover text-white shadow-md shadow-primaryButton/25"
-                        onClick={() => {
-                          setSelectedInfluencerUsername(profile.username);
-                          setDemographicsOpen(true);
-                        }}
-                      >
-                        Demographics
-                      </CustomButton>
-                    </div>
+                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/70 p-3 ring-1 ring-inset ring-border dark:bg-black/25 dark:ring-white/5">
+                    <a
+                      href={reel.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-primaryButton transition hover:text-primaryHover"
+                    >
+                      Open reel
+                      <ExternalLink className="h-3.5 w-3.5 opacity-80" aria-hidden />
+                    </a>
+                    <CustomButton
+                      className="bg-primaryButton hover:bg-primaryHover text-white shadow-md shadow-primaryButton/25"
+                      onClick={() => {
+                        setSelectedInfluencerUsername(profile.username);
+                        setSelectedInfluencerId(inf.influencer_id ?? '');
+                        setDemographicsOpen(true);
+                      }}
+                    >
+                      Demographics
+                    </CustomButton>
                   </div>
                 </div>
               </div>

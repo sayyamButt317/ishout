@@ -20,7 +20,6 @@ export interface InfluencerDemographicsAssetsResponse {
   demographics: InfluencerDemographicsAsset[];
 }
 
-/** Per-reel cost metrics from campaign influencer report API */
 export interface InfluencerReelAnalytics {
   CPV: number;
   CPE: number;
@@ -36,6 +35,9 @@ export interface CampaignReportInfluencerData {
   profile: CampaignReportProfile;
   reel: Reel;
   analytics?: InfluencerReelAnalytics;
+  demographics?: boolean;
+  insights?: boolean;
+  influencer_id?: string;
 }
 
 export interface CampaignReportInfluencer {
@@ -46,6 +48,8 @@ export interface CampaignReportInfluencer {
   shortcode: string;
   data: CampaignReportInfluencerData;
   updated_at: string;
+  /** When true at root level (some API shapes) */
+  demographics?: boolean;
 }
 
 /** DELETE /admin/reports/delete/{id} and DELETE /company/reports/delete/{id} */

@@ -5,7 +5,7 @@ import { CampaignBriefAndInfluencerStatsResponse } from '@/src/types/Admin-Type/
 import CampaignBriefTimelinePage from '@/src/app/component/reporting/CampaignBriefTimelinePage';
 import { styles } from './reporty_style';
 import CampaignCoverPage from './CampaignCoverPage';
-import DemographicsSection from './DemographicsSection';
+import DemographicsSection, { ReportInsightsByUsername } from './DemographicsSection';
 import CampaignOverallOutcomesPage from './CampaignOverallOutcomesPage';
 import CampaignThankYouPage from './CampaignThankYouPage';
 import type { OverallCampaignOutcomesResponse } from '@/src/types/Admin-Type/Reports-tyes';
@@ -14,10 +14,13 @@ interface CampaignReportProps {
   negotiationData: AgreedNegotiationResponse;
   summaryData?: CampaignBriefAndInfluencerStatsResponse;
   overallOutcomes?: OverallCampaignOutcomesResponse | null;
+  insightsByUsername?: ReportInsightsByUsername;
 }
 
 export default function CampaignReport(props: CampaignReportProps) {
-  const { negotiationData, summaryData, overallOutcomes } = props;
+
+
+  const { negotiationData, summaryData, overallOutcomes, insightsByUsername } = props;
   if (!negotiationData) {
     return (
       <Document>
@@ -38,7 +41,10 @@ export default function CampaignReport(props: CampaignReportProps) {
         negotiationData={negotiationData}
         summaryData={summaryData}
       />
-      <DemographicsSection summaryData={summaryData} />
+      <DemographicsSection
+        summaryData={summaryData}
+        insightsByUsername={insightsByUsername}
+      />
       <CampaignOverallOutcomesPage
         outcomes={overallOutcomes}
         brandLabel={

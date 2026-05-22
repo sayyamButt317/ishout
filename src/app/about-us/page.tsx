@@ -36,7 +36,7 @@ const stats = [
 
 export default function AboutPage() {
   return (
-    <div className="relative min-h-screen w-full bg-white dark:bg-black/90 overflow-hidden text-white font-family-poppins" >
+    <div className="relative min-h-screen w-full bg-black overflow-hidden text-white font-family-poppins" >
       <Header />
 
       {/* ─── Hero Banner ─── */}
@@ -62,9 +62,6 @@ export default function AboutPage() {
         />
 
         <div className="relative z-10 flex flex-col items-center text-center max-w-4xl px-6 gap-6">
-          <span className="text-xs font-semibold tracking-widest uppercase text-[#ff3b8d] border border-[#ff3b8d]/30 rounded-full px-4 py-1">
-            About iShout
-          </span>
           <h1 className=" text-6xl font-extrabold text-transparent tracking-wide bg-clip-text bg-linear-to-r from-[#ff3b8d]  to-[#1e3a6e] italic">
             The Next Era of Influencer
             <br />

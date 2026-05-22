@@ -21,6 +21,13 @@ import useDeleteCampaignReportHook from '@/src/routes/Admin/Hooks/Report/delete-
 import useOverallCampaignOutcomes from '@/src/routes/Admin/Hooks/Report/overall-campaign-outcomes-hook';
 import NoInfluencerContentCard from '@/src/app/component/campaign-report/NoInfluencerContentCard';
 import CaptionBlock from '@/src/app/component/campaign-report/CaptionBlock';
+import InsightsDialog from '@/src/app/component/demographics/insightsdialog';
+import type { ReportInsightsByUsername } from '@/src/app/component/reporting/reportinsights';
+import {
+  fetchReportInsightsByUsername,
+  hasSavedInsights,
+  resolveReportInfluencerId,
+} from '@/src/helper/fetch-report-insights';
 
 function formatNumber(n: number | string): string {
   if (typeof n === 'string') return n;
@@ -70,17 +77,23 @@ export default function InfluencerReportHeader() {
     refetch: refetchNegotiation,
   } = NegotiationAgreedByCampaignHook(id);
   const { data: campaignAnalytics, isLoading, isError } = useCampaignAnalytics(id);
+  const { data: overallOutcomes, refetch: refetchOverallOutcomes } =
+    useOverallCampaignOutcomes(id);
 
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const [reportOpen, setReportOpen] = useState(false);
   const [reportPdfKey, setReportPdfKey] = useState(0);
   const [demographicsOpen, setDemographicsOpen] = useState(false);
+  const [insightsOpen, setInsightsOpen] = useState(false);
   const [selectedInfluencerUsername, setSelectedInfluencerUsername] = useState<
     string | null
   >(null);
+  const [selectedInfluencerId, setSelectedInfluencerId] = useState<string | null>(null);
+  const [reportInsightsByUsername, setReportInsightsByUsername] =
+    useState<ReportInsightsByUsername>({});
+  const [isFetchingReportInsights, setIsFetchingReportInsights] = useState(false);
   const summaryMutation = useCampaignBriefStats();
-  const { data: overallOutcomes, refetch: refetchOverallOutcomes } =
-    useOverallCampaignOutcomes(id);
+
   const { data: demographicsData, isLoading: isDemographicsLoading } =
     useInfluencerDemographicsAssets(
       id,
@@ -89,6 +102,7 @@ export default function InfluencerReportHeader() {
     );
 
   const handleViewReport = async () => {
+    setIsFetchingReportInsights(true);
     try {
       const tasks: Promise<unknown>[] = [
         summaryMutation.mutateAsync(id),
@@ -96,15 +110,25 @@ export default function InfluencerReportHeader() {
       ];
       if (!negotiationData) tasks.push(refetchNegotiation());
       await Promise.all(tasks);
+
+      const insights = await fetchReportInsightsByUsername(
+        id ?? '',
+        influencerData?.influencers ?? [],
+      );
+      setReportInsightsByUsername(insights);
       setReportPdfKey((k) => k + 1);
       setReportOpen(true);
     } catch {
+      setReportInsightsByUsername({});
       setReportPdfKey((k) => k + 1);
       setReportOpen(true);
+    } finally {
+      setIsFetchingReportInsights(false);
     }
   };
 
-  const isReportLoading = summaryMutation.isPending || isNegotiationLoading;
+  const isReportLoading =
+    summaryMutation.isPending || isNegotiationLoading || isFetchingReportInsights;
   const demographicsImageUrls = useMemo(
     () =>
       demographicsData?.demographics?.map((item) => item.image_url).filter(Boolean) ?? [],
@@ -125,12 +149,13 @@ export default function InfluencerReportHeader() {
     renderableInfluencerCount === 0 &&
     (!analytics || analytics.total_influencers < 1);
 
+
+
+
   if (isError) {
     return <div className="text-red-500">Failed to load analytics</div>;
   }
-
   if (isInitialLoading) return <AnalyticsDashboardSkeleton />;
-
   if (showEmptyState) {
     return <NoInfluencerContentCard />;
   }
@@ -152,6 +177,7 @@ export default function InfluencerReportHeader() {
                   negotiationData={negotiationData as AgreedNegotiationResponse}
                   summaryData={summaryMutation.data}
                   overallOutcomes={overallOutcomes}
+                  insightsByUsername={reportInsightsByUsername}
                 />
               </PDFViewer>
             ) : (
@@ -163,13 +189,31 @@ export default function InfluencerReportHeader() {
         </DialogContent>
       </Dialog>
       <DemographicsAssetsDialog
+        campaign_id={id ?? ''}
+        influencer_id={selectedInfluencerId ?? ''}
         open={demographicsOpen}
         onOpenChange={(open) => {
           setDemographicsOpen(open);
-          if (!open) setSelectedInfluencerUsername(null);
+          if (!open) {
+            setSelectedInfluencerUsername(null);
+            setSelectedInfluencerId(null);
+          }
         }}
         imageUrls={demographicsImageUrls}
         isLoading={isDemographicsLoading}
+        username={selectedInfluencerUsername}
+      />
+      <InsightsDialog
+        campaign_id={id ?? ''}
+        influencer_id={selectedInfluencerId ?? ''}
+        open={insightsOpen}
+        onOpenChange={(open) => {
+          setInsightsOpen(open);
+          if (!open) {
+            setSelectedInfluencerUsername(null);
+            setSelectedInfluencerId(null);
+          }
+        }}
         username={selectedInfluencerUsername}
       />
 
@@ -194,7 +238,6 @@ export default function InfluencerReportHeader() {
               </CustomButton>
             </div>
           </div>
-          STATS
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-6 md:gap-3 lg:gap-4">
             <MiniCard label="Influencers" value={analytics.total_influencers} />
             <MiniCard label="Likes" value={analytics.total_likes} />
@@ -253,20 +296,18 @@ export default function InfluencerReportHeader() {
       )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 lg:gap-8">
-        {influencerData?.influencers?.map(
-          (inf: CampaignReportInfluencer, index: number) => {
-            const profile = inf?.data?.profile;
-            const reel = inf?.data?.reel;
-            const analytics = inf?.data?.analytics;
+        {influencerData?.influencers?.map((inf: CampaignReportInfluencer, index: number) => {
+          const profile = inf?.data?.profile;
+          const reel = inf?.data?.reel;
+          const analytics = inf?.data?.analytics;
+          const influencerId = resolveReportInfluencerId(inf);
+          const showInsightsButton = hasSavedInsights(inf);
 
-            if (!profile || !reel) return null;
-
-            const isPlaying = playingIndex === index;
-
-            const engRateNumber = profile.followers
-              ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) *
-                100
-              : 0;
+          if (!profile || !reel) return null;
+          const isPlaying = playingIndex === index;
+          const engRateNumber = profile.followers
+            ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) * 100
+            : 0;
 
             const engRate = profile.followers ? engRateNumber.toFixed(2) + '%' : 'N/A';
             const engTone = engagementTone(engRateNumber);
@@ -409,29 +450,45 @@ export default function InfluencerReportHeader() {
                     </div>
                   </div>
 
-                  {/* FOOTER — caption + actions */}
-                  <div className="mt-auto shrink-0 space-y-4 border-t border-border pt-4 dark:border-white/10">
-                    <CaptionBlock caption={reel.caption} />
+                {/* FOOTER — caption + actions */}
+                <div className="mt-auto shrink-0 space-y-4 border-t border-border pt-4 dark:border-white/10">
+                  <CaptionBlock caption={reel.caption} />
 
-                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/70 p-3 ring-1 ring-inset ring-border dark:bg-black/25 dark:ring-white/5">
-                      <a
-                        href={reel.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-primaryButton transition hover:text-primaryHover"
-                      >
-                        Open reel
-                        <ExternalLink className="h-3.5 w-3.5 opacity-80" aria-hidden />
-                      </a>
+                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/70 p-3 ring-1 ring-inset ring-border dark:bg-black/25 dark:ring-white/5">
+                    <a
+                      href={reel.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-primaryButton transition hover:text-primaryHover"
+                    >
+                      Open reel
+                      <ExternalLink className="h-3.5 w-3.5 opacity-80" aria-hidden />
+                    </a>
+                    <div className="flex flex-wrap items-center gap-2">
                       <CustomButton
                         className="bg-primaryButton hover:bg-primaryHover text-white shadow-md shadow-primaryButton/25"
                         onClick={() => {
                           setSelectedInfluencerUsername(profile.username);
+                          setSelectedInfluencerId(influencerId);
                           setDemographicsOpen(true);
                         }}
                       >
                         View Demographics
                       </CustomButton>
+                      {showInsightsButton ? (
+                        <CustomButton
+                          className="border border-primaryButton/40 bg-primaryButton/10 text-primaryButton shadow-sm hover:bg-primaryButton/20 disabled:cursor-not-allowed disabled:opacity-40"
+                          disabled={!influencerId}
+                          onClick={() => {
+                            if (!influencerId) return;
+                            setSelectedInfluencerUsername(profile.username);
+                            setSelectedInfluencerId(influencerId);
+                            setInsightsOpen(true);
+                          }}
+                        >
+                          View Insights
+                        </CustomButton>
+                      ) : null}
                     </div>
                   </div>
                 </div>

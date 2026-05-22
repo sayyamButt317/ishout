@@ -28,7 +28,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur px-4 sm:px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-white/90 dark:bg-black/90">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur px-4 sm:px-6 py-4 bg-black/90">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link href="https://app.ishout.ae/">
         {/* Logo */}
@@ -44,7 +44,7 @@ const Header = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-8 text-md font-thin text-black dark:text-white">
+        <div className="hidden lg:flex items-center gap-8 text-md font-thin text-white">
           <Link href="https://app.ishout.ae/about-us" className=" hover:text-pink-400">
             About Us
           </Link>
@@ -84,7 +84,7 @@ const Header = () => {
               </>
             )}
                     <button
-          className="lg:hidden text-black dark:text-white text-2xl"
+          className="lg:hidden text-white text-2xl"
           onClick={() => setMenuOpen(!menuOpen)}
         >
           ☰
