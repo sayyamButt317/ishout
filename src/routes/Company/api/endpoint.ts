@@ -35,4 +35,7 @@ export const CompanyENDPOINT = {
   UPLOADCAMPAIGNIMAGE: (brief_id: string) =>
     `/company/uploadCampaign-productImage/${brief_id}`,
   UPLOADPROFILEPICTURE: (user_id: string) => `/company/${user_id}/upload-logo`,
+
+  /** DELETE /company/reports/delete/{id} — report document _id */
+  COMPANY_DELETE_CAMPAIGN_REPORT: (id: string) => `/company/reports/delete/${id}`,
 };

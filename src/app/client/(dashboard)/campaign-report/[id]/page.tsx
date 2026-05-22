@@ -17,7 +17,8 @@ import NegotiationAgreedByCampaignHook from '@/src/routes/Admin/Hooks/Whatsapp/n
 import { AgreedNegotiationResponse } from '@/src/types/Admin-Type/agreed-negotiation-type';
 import useInfluencerDemographicsAssets from '@/src/routes/Admin/Hooks/Report/influencer-demographics-assets-hook';
 import DemographicsAssetsDialog from '@/src/app/component/custom-component/DemographicsAssetsDialog';
-import { Play, ExternalLink, Trophy } from 'lucide-react';
+import { Play, ExternalLink, Trash2, Trophy } from 'lucide-react';
+import useDeleteCompanyCampaignReportHook from '@/src/routes/Company/Hooks/delete-campaign-report-hook';
 import CaptionBlock from '@/src/app/component/campaign-report/CaptionBlock';
 
 function formatNumber(n: number | string): string {
@@ -59,6 +60,8 @@ export default function InfluencerReportHeader() {
   const { id } = useParams<{ id: string }>();
 
   const { data: influencerData } = CampaignAllInfluencerHook(id);
+  const { mutate: deleteReport, isPending: isDeletingReport } =
+    useDeleteCompanyCampaignReportHook(id ?? '');
   const {
     data: negotiationData,
     isLoading: isNegotiationLoading,
@@ -233,169 +236,194 @@ export default function InfluencerReportHeader() {
       )}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-6 lg:gap-8">
-        {influencerData?.influencers?.map((inf: CampaignReportInfluencer, index: number) => {
-          const profile = inf?.data?.profile;
-          const reel = inf?.data?.reel;
-          const analytics = inf?.data?.analytics;
+        {influencerData?.influencers?.map(
+          (inf: CampaignReportInfluencer, index: number) => {
+            const profile = inf?.data?.profile;
+            const reel = inf?.data?.reel;
+            const analytics = inf?.data?.analytics;
 
-          if (!profile || !reel) return null;
+            if (!profile || !reel) return null;
 
-          const isPlaying = playingIndex === index;
+            const isPlaying = playingIndex === index;
 
-          const engRateNumber = profile.followers
-            ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) * 100
-            : 0;
+            const engRateNumber = profile.followers
+              ? ((reel.likes + reel.comments + reel.interaction) / profile.followers) *
+                100
+              : 0;
 
-          const engRate = profile.followers ? engRateNumber.toFixed(2) + '%' : 'N/A';
-          const engTone = engagementTone(engRateNumber);
+            const engRate = profile.followers ? engRateNumber.toFixed(2) + '%' : 'N/A';
+            const engTone = engagementTone(engRateNumber);
+            const reportId = inf._id;
 
-          return (
-            <div
-              key={`${profile.username}-${reel.url}-${index}`}
-              className="group flex overflow-hidden rounded-2xl border border-border bg-card shadow-md ring-1 ring-border/40 transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-border hover:shadow-lg dark:border-white/10 dark:bg-linear-to-br dark:from-[#1c1c24] dark:via-[#16161d] dark:to-[#101014] dark:shadow-[0_4px_28px_-10px_rgba(0,0,0,0.55)] dark:ring-white/4 dark:hover:border-white/15 dark:hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.65)]"
-            >
-              {/* VIDEO */}
+            return (
               <div
-                className="relative w-[42%] shrink-0 cursor-pointer border-r border-border bg-muted dark:border-white/10 dark:bg-zinc-950 sm:w-[45%]"
-                onClick={() => setPlayingIndex(index)}
+                key={reportId ?? `${profile.username}-${reel.url}-${index}`}
+                className="group flex overflow-hidden rounded-2xl border border-border bg-card shadow-md ring-1 ring-border/40 transition-[border-color,box-shadow,transform] hover:-translate-y-0.5 hover:border-border hover:shadow-lg dark:border-white/10 dark:bg-linear-to-br dark:from-[#1c1c24] dark:via-[#16161d] dark:to-[#101014] dark:shadow-[0_4px_28px_-10px_rgba(0,0,0,0.55)] dark:ring-white/4 dark:hover:border-white/15 dark:hover:shadow-[0_12px_40px_-12px_rgba(0,0,0,0.65)]"
               >
-                <div className="relative aspect-9/16 h-full min-h-[220px] w-full sm:min-h-[260px]">
-                  {!isPlaying ? (
-                    <>
-                      <Image
-                        src={reel.thumbnail}
-                        alt="thumbnail"
-                        fill
-                        sizes="(max-width: 768px) 100vw, 45vw"
-                        priority={index === 0}
-                        loading={index === 0 ? 'eager' : 'lazy'}
-                        className="object-cover transition duration-500 ease-out group-hover:scale-[1.03]"
+                {/* VIDEO */}
+                <div
+                  className="relative w-[42%] shrink-0 cursor-pointer border-r border-border bg-muted dark:border-white/10 dark:bg-zinc-950 sm:w-[45%]"
+                  onClick={() => setPlayingIndex(index)}
+                >
+                  <div className="relative aspect-9/16 h-full min-h-[220px] w-full sm:min-h-[260px]">
+                    {!isPlaying ? (
+                      <>
+                        <Image
+                          src={reel.thumbnail}
+                          alt="thumbnail"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 45vw"
+                          priority={index === 0}
+                          loading={index === 0 ? 'eager' : 'lazy'}
+                          className="object-cover transition duration-500 ease-out group-hover:scale-[1.03]"
+                        />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-black/20" />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/25 transition duration-300 group-hover:bg-black/40">
+                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-primaryButton shadow-lg shadow-black/30 ring-2 ring-white/40 backdrop-blur-sm transition duration-300 group-hover:scale-110">
+                            <Play
+                              className="ml-0.5 h-6 w-6 text-primaryButton"
+                              strokeWidth={2.25}
+                              fill="currentColor"
+                              aria-hidden
+                            />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <video
+                        src={reel.media_url}
+                        controls
+                        autoPlay
+                        className="h-full w-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-black/20" />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/25 transition duration-300 group-hover:bg-black/40">
-                        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/95 text-primaryButton shadow-lg shadow-black/30 ring-2 ring-white/40 backdrop-blur-sm transition duration-300 group-hover:scale-110">
-                          <Play
-                            className="ml-0.5 h-6 w-6 text-primaryButton"
-                            strokeWidth={2.25}
-                            fill="currentColor"
-                            aria-hidden
+                    )}
+                  </div>
+                </div>
+
+                {/* DETAILS */}
+                <div className="flex min-h-0 min-w-0 flex-1 flex-col p-5 sm:p-6">
+                  <div className="min-w-0 flex-1 space-y-4">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex min-w-0 flex-1 items-center gap-3">
+                        <div className="relative shrink-0">
+                          <Image
+                            src={profile.profile_image}
+                            alt={profile.username}
+                            width={52}
+                            height={52}
+                            className="rounded-full ring-2 ring-border ring-offset-2 ring-offset-background dark:ring-white/15 dark:ring-offset-[#16161d]"
                           />
                         </div>
+                        <div className="min-w-0">
+                          <p className="truncate text-base font-semibold tracking-tight text-foreground sm:text-lg dark:text-white">
+                            {profile.name || profile.username}
+                          </p>
+                          <p className="truncate text-sm text-primaryButton/80">
+                            @{profile.username}
+                          </p>
+                        </div>
                       </div>
-                    </>
-                  ) : (
-                    <video
-                      src={reel.media_url}
-                      controls
-                      autoPlay
-                      className="h-full w-full object-cover"
-                    />
-                  )}
-                </div>
-              </div>
-
-              {/* DETAILS */}
-              <div className="flex min-h-0 min-w-0 flex-1 flex-col p-5 sm:p-6">
-                <div className="min-w-0 flex-1 space-y-4">
-                  <div className="flex items-center gap-3">
-                    <div className="relative shrink-0">
-                      <Image
-                        src={profile.profile_image}
-                        alt={profile.username}
-                        width={52}
-                        height={52}
-                        className="rounded-full ring-2 ring-border ring-offset-2 ring-offset-background dark:ring-white/15 dark:ring-offset-[#16161d]"
-                      />
+                      <button
+                        type="button"
+                        title="Delete report"
+                        disabled={!reportId || isDeletingReport}
+                        onClick={() => {
+                          if (!reportId) return;
+                          if (
+                            !window.confirm(
+                              'Delete this influencer report from the campaign?',
+                            )
+                          ) {
+                            return;
+                          }
+                          deleteReport(reportId);
+                        }}
+                        className="inline-flex shrink-0 items-center justify-center rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-600 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-40 dark:text-red-300"
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden />
+                      </button>
                     </div>
-                    <div className="min-w-0">
-                      <p className="truncate text-base font-semibold tracking-tight text-foreground sm:text-lg dark:text-white">
-                        {profile.name || profile.username}
-                      </p>
-                      <p className="truncate text-sm text-primaryButton/80">
-                        @{profile.username}
+
+                    <div className="rounded-xl border border-border bg-muted/50 px-3 py-2.5 dark:border-white/8 dark:bg-white/3">
+                      <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground dark:text-white/60">
+                        {profile.biography}
                       </p>
                     </div>
-                  </div>
 
-                  <div className="rounded-xl border border-border bg-muted/50 px-3 py-2.5 dark:border-white/8 dark:bg-white/3">
-                    <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground dark:text-white/60">
-                      {profile.biography}
-                    </p>
-                  </div>
+                    {/* STATS */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <Stat label="Followers" value={formatNumber(profile.followers)} />
+                      <Stat label="Following" value={formatNumber(profile.following)} />
+                      <Stat label="Posts" value={formatNumber(profile.media_count)} />
+                      <Stat label="Likes" value={formatNumber(reel.likes)} />
+                      <Stat label="Comments" value={formatNumber(reel.comments)} />
+                      <Stat label="Interactions" value={formatNumber(reel.interaction)} />
+                      <Stat label="Views" value={formatNumber(reel.views)} />
+                    </div>
 
-                  {/* STATS */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <Stat label="Followers" value={formatNumber(profile.followers)} />
-                    <Stat label="Following" value={formatNumber(profile.following)} />
-                    <Stat label="Posts" value={formatNumber(profile.media_count)} />
-                    <Stat label="Likes" value={formatNumber(reel.likes)} />
-                    <Stat label="Comments" value={formatNumber(reel.comments)} />
-                    <Stat label="Interactions" value={formatNumber(reel.interaction)} />
-                    <Stat label="Views" value={formatNumber(reel.views)} />
-                  </div>
+                    <div className="flex gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 dark:border-white/10 dark:bg-white/5">
+                      {(
+                        [
+                          { label: 'CPV', value: analytics?.CPV },
+                          { label: 'CPE', value: analytics?.CPE },
+                          { label: 'CPM', value: analytics?.CPM },
+                        ] as const
+                      ).map((item) => (
+                        <div key={item.label} className="min-w-0 flex-1 text-center">
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground dark:text-white/40">
+                            {item.label}
+                          </p>
+                          <p className="mt-1 text-sm font-bold tabular-nums text-foreground dark:text-white">
+                            {formatMetric(item.value)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
 
-                  <div className="flex gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 dark:border-white/10 dark:bg-white/5">
-                    {(
-                      [
-                        { label: 'CPV', value: analytics?.CPV },
-                        { label: 'CPE', value: analytics?.CPE },
-                        { label: 'CPM', value: analytics?.CPM },
-                      ] as const
-                    ).map((item) => (
-                      <div key={item.label} className="min-w-0 flex-1 text-center">
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground dark:text-white/40">
-                          {item.label}
-                        </p>
-                        <p className="mt-1 text-sm font-bold tabular-nums text-foreground dark:text-white">
-                          {formatMetric(item.value)}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* ENGAGEMENT */}
-                  <div
-                    className={`rounded-xl border px-3 py-2.5 text-sm text-muted-foreground dark:text-white/60 ${engTone.bar}`}
-                  >
-                    Engagement:{' '}
-                    <span className={`font-semibold ${engTone.label}`}>
-                      {engRate}{' '}
-                      <span className="text-muted-foreground dark:text-white/50">
-                        ({getEngagementLabel(engRateNumber)})
+                    {/* ENGAGEMENT */}
+                    <div
+                      className={`rounded-xl border px-3 py-2.5 text-sm text-muted-foreground dark:text-white/60 ${engTone.bar}`}
+                    >
+                      Engagement:{' '}
+                      <span className={`font-semibold ${engTone.label}`}>
+                        {engRate}{' '}
+                        <span className="text-muted-foreground dark:text-white/50">
+                          ({getEngagementLabel(engRateNumber)})
+                        </span>
                       </span>
-                    </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* FOOTER — caption + actions */}
-                <div className="mt-auto shrink-0 space-y-4 border-t border-border pt-4 dark:border-white/10">
-                  <CaptionBlock caption={reel.caption} />
+                  {/* FOOTER — caption + actions */}
+                  <div className="mt-auto shrink-0 space-y-4 border-t border-border pt-4 dark:border-white/10">
+                    <CaptionBlock caption={reel.caption} />
 
-                  <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/70 p-3 ring-1 ring-inset ring-border dark:bg-black/25 dark:ring-white/5">
-                    <a
-                      href={reel.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-primaryButton transition hover:text-primaryHover"
-                    >
-                      Open reel
-                      <ExternalLink className="h-3.5 w-3.5 opacity-80" aria-hidden />
-                    </a>
-                    <CustomButton
-                      className="bg-primaryButton hover:bg-primaryHover text-white shadow-md shadow-primaryButton/25"
-                      onClick={() => {
-                        setSelectedInfluencerUsername(profile.username);
-                        setDemographicsOpen(true);
-                      }}
-                    >
-                      Demographics
-                    </CustomButton>
+                    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-muted/70 p-3 ring-1 ring-inset ring-border dark:bg-black/25 dark:ring-white/5">
+                      <a
+                        href={reel.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-primaryButton transition hover:text-primaryHover"
+                      >
+                        Open reel
+                        <ExternalLink className="h-3.5 w-3.5 opacity-80" aria-hidden />
+                      </a>
+                      <CustomButton
+                        className="bg-primaryButton hover:bg-primaryHover text-white shadow-md shadow-primaryButton/25"
+                        onClick={() => {
+                          setSelectedInfluencerUsername(profile.username);
+                          setDemographicsOpen(true);
+                        }}
+                      >
+                        Demographics
+                      </CustomButton>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          },
+        )}
       </div>
     </div>
   );

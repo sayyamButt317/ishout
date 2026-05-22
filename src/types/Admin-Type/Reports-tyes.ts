@@ -39,11 +39,20 @@ export interface CampaignReportInfluencerData {
 }
 
 export interface CampaignReportInfluencer {
+  /** MongoDB report document id — used for DELETE /admin/reports/delete/{id} */
+  _id: string;
   username: string;
   influencer_id?: string;
   shortcode: string;
   data: CampaignReportInfluencerData;
   updated_at: string;
+}
+
+/** DELETE /admin/reports/delete/{id} and DELETE /company/reports/delete/{id} */
+export interface DeleteCampaignReportResponse {
+  success: boolean;
+  message: string;
+  id: string;
 }
 
 /** GET /admin/campaign-influncersReport?campaign_id=... */

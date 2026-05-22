@@ -43,6 +43,7 @@ import { CompanyAdminMessagesResponse } from '@/src/types/Compnay/company-admin-
 import type { CompanyNegotiationMediaResponse } from '@/src/types/Compnay/feeedback-content-type';
 import type {
   CampaignInfluencerReportResponse,
+  DeleteCampaignReportResponse,
   InfluencerDemographicsAssetsResponse,
   OverallCampaignOutcomesResponse,
 } from '@/src/types/Admin-Type/Reports-tyes';
@@ -53,6 +54,7 @@ import type {
   AdminCreateCampaignApiResponse,
   AdminCreateCampaignRequest,
 } from '@/src/types/Admin-Type/create-campaign-type';
+import type { DeletePostingDetailResponse } from '@/src/types/Posting/posting-details-type';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
   headers: {
@@ -685,6 +687,16 @@ export const ExtractAllInfluencerDemoGraphics = async (
   return response.data;
 };
 
+export const deleteCampaignReportApi = async (
+  report_id: string,
+): Promise<DeleteCampaignReportResponse> => {
+  const response = await api.delete<DeleteCampaignReportResponse>(
+    AdminENDPOINT.ADMIN_DELETE_CAMPAIGN_REPORT(report_id),
+    { params: { report_id } },
+  );
+  return response.data;
+};
+
 export const CampaignAnalytics = async (campaign_id: string) => {
   const response = await api.get(AdminENDPOINT.CAMPAIGNANALTICS(campaign_id));
   return response.data;
@@ -769,6 +781,16 @@ export const ReadyForPostingApi = async (
 
 export const PostingDetailsApi = async () => {
   const response = await api.get(AdminENDPOINT.ADMIN_POSTING_DETAILS);
+  return response.data;
+};
+
+export const deletePostingDetailApi = async (
+  posting_id: string,
+): Promise<DeletePostingDetailResponse> => {
+  const response = await api.delete<DeletePostingDetailResponse>(
+    AdminENDPOINT.ADMIN_DELETE_POSTING_DETAIL(posting_id),
+    { params: { posting_id } },
+  );
   return response.data;
 };
 

@@ -4,11 +4,22 @@ import { Suspense, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { RefreshCcw, ClipboardList, Search, Loader2, LayoutGrid } from 'lucide-react';
+import {
+  RefreshCcw,
+  ClipboardList,
+  Search,
+  Loader2,
+  LayoutGrid,
+  Trash2,
+} from 'lucide-react';
 import PageHeader from '@/src/app/component/PageHeader';
 import { CompanyPostingDetailsHook } from '@/src/routes/Company/Hooks/company-posting-details.hook';
+import useDeletePostingDetailHook from '@/src/routes/Admin/Hooks/posting/delete-posting-detail-hook';
 import { Button } from '@/components/ui/button';
-import type { CompanyPostingDetailsListData, PostingDetail } from '@/src/types/Posting/posting-details-type';
+import type {
+  CompanyPostingDetailsListData,
+  PostingDetail,
+} from '@/src/types/Posting/posting-details-type';
 
 function SkeletonRow() {
   return (
@@ -40,6 +51,9 @@ function SkeletonRow() {
       <td className="px-6 py-4">
         <div className="h-3 w-36 rounded bg-foreground/10" />
       </td>
+      <td className="px-8 py-4 text-right">
+        <div className="ml-auto h-8 w-8 rounded-lg bg-foreground/10" />
+      </td>
     </tr>
   );
 }
@@ -58,6 +72,8 @@ function ClientCampaignPostingDetailsContent() {
   const { data, isLoading, refetch, isRefetching, isError } = CompanyPostingDetailsHook(
     campaignId || null,
   );
+  const { mutate: deletePostingDetail, isPending: isDeletingPostingDetail } =
+    useDeletePostingDetailHook();
   const postingData = data as CompanyPostingDetailsListData | undefined;
 
   const rawDetails = useMemo(
@@ -184,6 +200,7 @@ function ClientCampaignPostingDetailsContent() {
                         ['Hashtags', 'px-6 py-5'],
                         ['Tagged', 'px-6 py-5'],
                         ['Caption', 'px-6 py-5'],
+                        ['Actions', 'px-8 py-5 text-right'],
                       ] as const
                     ).map(([h, cls]) => (
                       <th
@@ -200,7 +217,7 @@ function ClientCampaignPostingDetailsContent() {
                     [...Array(5)].map((_, i) => <SkeletonRow key={i} />)
                   ) : filtered.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-8 py-24 text-center">
+                      <td colSpan={7} className="px-8 py-24 text-center">
                         <div className="flex flex-col items-center gap-3 text-foreground/25">
                           <ClipboardList className="h-10 w-10 opacity-30" />
                           <p className="text-sm">No posting details found</p>
@@ -308,6 +325,25 @@ function ClientCampaignPostingDetailsContent() {
                                 ? new Date(detail.created_at).toLocaleString()
                                 : ''}
                             </p>
+                          </td>
+                          <td className="px-8 py-4 text-right">
+                            <button
+                              type="button"
+                              title="Delete posting detail"
+                              disabled={!detail._id || isDeletingPostingDetail}
+                              onClick={() => {
+                                if (!detail._id) return;
+                                if (!window.confirm('Delete this posting detail?')) {
+                                  return;
+                                }
+                                deletePostingDetail(detail._id, {
+                                  onSuccess: () => refetch(),
+                                });
+                              }}
+                              className="inline-flex items-center justify-center rounded-lg border border-red-500/30 bg-red-500/10 p-2 text-red-600 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-40 dark:text-red-300"
+                            >
+                              <Trash2 className="h-4 w-4" aria-hidden />
+                            </button>
                           </td>
                         </tr>
                       );
