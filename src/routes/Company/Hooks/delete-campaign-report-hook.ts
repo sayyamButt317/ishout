@@ -1,0 +1,18 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { deleteCompanyCampaignReportApi } from '../api/company.routes';
+
+export default function useDeleteCompanyCampaignReportHook(campaign_id: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (reportId: string) => deleteCompanyCampaignReportApi(reportId),
+    onSuccess: (data) => {
+      toast.success(data.message ?? 'Report deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['all-influencers', campaign_id] });
+    },
+    onError: () => {
+      toast.error('Failed to delete report');
+    },
+  });
+}

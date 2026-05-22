@@ -23,3 +23,16 @@ export interface CompanyPostingDetailsListData {
   success: boolean;
   posting_details: PostingDetail[];
 }
+
+/** DELETE /admin/posting/delete-details/{id} — query: posting_id */
+export interface DeletePostingDetailResponse {
+  success: boolean;
+  message: string;
+  id: string;
+}
+
+export interface AdminPostingDetailsListResponse {
+  success: boolean;
+  count: number;
+  posting_details: PostingDetail[];
+}
